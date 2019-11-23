@@ -1,0 +1,38 @@
+#include "Scene.h"
+
+namespace MT
+{
+	Scene::Scene() : Scene(std::string())
+	{
+	}
+
+	Scene::Scene(std::string sceneName)
+	{
+		this->sceneName = sceneName;
+		activate();
+		enableSerialization<Scene>();
+	}
+
+	std::shared_ptr<SceneContainer> Scene::getSceneContainer()
+	{
+		return findFirstInParentChain<SceneContainer>();
+	}
+
+	std::string Scene::getSceneName()
+	{
+		return sceneName;
+	}
+
+	void Scene::setSceneName(std::string name)
+	{
+		sceneName = name;
+	}
+
+	std::shared_ptr<SerializationClient> Scene::doSerialize(SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__scene__", hint);
+		sceneName = client->serializeString("sn", sceneName);
+
+		return ApplicationObject::doSerialize(hint);
+	}
+}

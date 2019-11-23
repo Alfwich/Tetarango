@@ -1,0 +1,303 @@
+#include "SceneMainGame.h"
+
+#include "GameImports.h"
+
+namespace
+{
+	const auto masterSceneContainerId = "global_scene_container";
+	const auto starSystemId = "global_system";
+	const auto mainMenuId = "global_game_menu";
+	const auto globalTransitionId = "global_game_transition";
+	const auto hudId = "global_hud";
+	const auto playerGameStateId = "playerGameState";
+}
+
+namespace MTGame
+{
+	std::string SceneMainGame::getSaveSlotFilePath()
+	{
+		const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
+
+		std::string storageFileLocation;
+		switch (currentSaveSlotId)
+		{
+		case 1:
+			return filePath(StorePaths::System_SaveSlot1);
+			break;
+
+		case 2:
+			return filePath(StorePaths::System_SaveSlot2);
+			break;
+
+		case 3:
+			return filePath(StorePaths::System_SaveSlot3);
+			break;
+		}
+
+		return std::string();
+	}
+
+	SceneMainGame::SceneMainGame() : BaseScene(SceneGame::MainGame)
+	{
+		enableSerialization<SceneMainGame>();
+	}
+
+	void SceneMainGame::onInitialAttach()
+	{
+		modules->input->keyboard->registerKey(SDL_SCANCODE_ESCAPE, baseSceneWeakThisRef());
+
+		setTimeScope(MT::TimeScope::Game);
+		modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+
+		const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
+
+		switch (currentSaveSlotId)
+		{
+		case 1:
+			storageScopeName = filePath(StorePaths::System_SaveSlot1);
+			break;
+
+		case 2:
+			storageScopeName = filePath(StorePaths::System_SaveSlot2);
+			break;
+
+		case 3:
+			storageScopeName = filePath(StorePaths::System_SaveSlot3);
+			break;
+		}
+
+		bool hasLoaded = serializationClient->getBool(storagePath(StorePaths::HasLoaded));
+
+		if (!hasLoaded)
+		{
+			const auto storageClient = modules->storage->getClient(storageScopeName);
+
+			serializationClient->setInt(storagePath(StorePaths::SlotId), currentSaveSlotId);
+			serializationClient->setBool(storagePath(StorePaths::HasLoaded), true);
+			serializationClient->setInt(storagePath(StorePaths::GameState), 1);
+
+			storageClient->writeInt(storagePath(StorePaths::SlotId), currentSaveSlotId);
+		}
+	}
+
+	void SceneMainGame::onCreateChildren()
+	{
+		gameMainMenu = std::make_shared<GameMainMenu>();
+		gameMainMenu->name = mainMenuId;
+		gameMainMenu->zIndex = 18;
+		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		gameMainMenu->renderPositionMode = MT::RenderPositionMode::Absolute;
+		gameMainMenu->visible = false;
+		add(gameMainMenu);
+
+		globalTransition = std::make_shared<TransitionFade>();
+		globalTransition->name = globalTransitionId;
+		globalTransition->setDuration(350.0);
+		globalTransition->setColor(0, 0, 0);
+		globalTransition->zIndex = 20;
+		globalTransition->listener = std::dynamic_pointer_cast<INotifyOnFade>(shared_from_this());
+		globalTransition->setSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
+		globalTransition->renderPositionMode = MT::RenderPositionMode::Absolute;
+		add(globalTransition);
+
+		gameLabel = std::make_shared<MT::Text>();
+		gameLabel->setTextRenderMode(MT::TextRenderMode::Fast);
+		gameLabel->setFont("medium", 80);
+		int i = serializationClient->getInt(storagePath(StorePaths::SlotId));
+		gameLabel->setTextColor(0, 0, 0xff);
+		gameLabel->setText(std::to_string(i));
+		gameLabel->setPosition(gameLabel->getWidth(), gameLabel->getHeight());
+		add(gameLabel);
+
+		masterSceneContainer = std::make_shared<MT::SceneContainer>();
+		masterSceneContainer->name = masterSceneContainerId;
+		masterSceneContainer->notifyOnTransition = weak_from_this();
+		add(masterSceneContainer);
+
+		globalParticleSystem = std::make_shared<MT::ParticleSystem>();
+		globalParticleSystem->name = starSystemId;
+		globalParticleSystem->setGlobalReceiver(true);
+		add(globalParticleSystem);
+
+		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::StartFlowShipSelection));
+		globalTransition->fadeOut();
+	}
+
+	void SceneMainGame::onChildrenHydrated()
+	{
+		masterSceneContainer = findChildWithName<MT::SceneContainer>(masterSceneContainerId);
+		globalParticleSystem = findChildWithName<MT::ParticleSystem>(starSystemId);
+		gameMainMenu = findChildWithName<GameMainMenu>(mainMenuId);
+		gameMainMenu->hide();
+
+		globalTransition = findChildWithName<TransitionFade>(globalTransitionId);
+		globalTransition->listener = std::dynamic_pointer_cast<INotifyOnFade>(shared_from_this());
+		globalTransition->fadeInImmediately();
+		globalTransition->fadeOut();
+
+		hud = findChildWithName<BaseHud>(hudId);
+		//hud->setTarget(player);
+	}
+
+	void SceneMainGame::onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code)
+	{
+		// TODO
+	}
+
+	void SceneMainGame::onWorkDone(MT::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<MT::AsyncResultBundle> result)
+	{
+		switch (code)
+		{
+		case WorkerTaskCode::SERIALIZATION:
+		{
+			const auto scope = getSaveSlotFilePath();
+			const auto storageClient = modules->storage->getClient(scope);
+			storageClient->writeString(storagePath(StorePaths::GameData), *result->getResult<std::string>());
+			hasSavedData = true;
+
+			if (backOutToMainMenuAfterSave && hasFinishedTransition)
+			{
+				const auto applicationSceneContainer = findFirstInParentChain<MT::SceneContainer>();
+				modules->storage->cleanupScopeAsync(storageScopeName);
+				removeFromParent();
+				applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
+			}
+			else
+			{
+				modules->storage->saveScopeAsync(storageScopeName, weak_from_this());
+			}
+		}
+		break;
+
+		case WorkerTaskCode::STORE_SAVE_SCOPE:
+			isSavingData = false;
+			break;
+		}
+	}
+
+	void SceneMainGame::onFadeOut()
+	{
+		this->modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
+		hasFinishedTransition = true;
+	}
+
+	void SceneMainGame::onFadeIn()
+	{
+		globalParticleSystem->clear();
+
+		if (backOutToMainMenuAfterSave && hasSavedData)
+		{
+			const auto applicationSceneContainer = findFirstInParentChain<MT::SceneContainer>();
+			removeFromParent();
+			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
+			hasFinishedTransition = true;
+		}
+		else if (!nextSceneName.empty())
+		{
+			masterSceneContainer->transitionToSceneWithBundle(nextSceneName, transitionBundle);
+			nextSceneName = std::string();
+			transitionBundle = MT::SceneTransitionBundle();
+			globalTransition->fadeOut();
+		}
+		else
+		{
+			hasFinishedTransition = true;
+		}
+	}
+
+	bool SceneMainGame::isTransitioning()
+	{
+		return hasFinishedTransition == false;
+	}
+
+	void SceneMainGame::transitionToScene(SceneGame sceneName)
+	{
+		transitionToScene(BaseScene::sceneToStr(sceneName));
+	}
+
+	void SceneMainGame::transitionToScene(std::string scene)
+	{
+		MT::SceneTransitionBundle bundle;
+		transitionToSceneWithBundle(scene, bundle);
+	}
+
+	void SceneMainGame::transitionToSceneWithBundle(std::string scene, MT::SceneTransitionBundle& bundle)
+	{
+		hasFinishedTransition = false;
+
+		this->modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+		transitionBundle = bundle;
+		nextSceneName = scene;
+		globalTransition->fadeIn();
+	}
+
+	void SceneMainGame::backOutToMainMenu()
+	{
+		backOutToMainMenuAfterSave = true;
+		hasFinishedTransition = false;
+
+		this->modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+		saveGameData();
+		globalTransition->fadeIn();
+	}
+
+	void SceneMainGame::saveGameData()
+	{
+		if (isSavingData)
+		{
+			return;
+		}
+
+		modules->logger->log("SceneGame::Saving Game Data");
+		hasSavedData = false;
+		isSavingData = true;
+		this->modules->serialization->serializeAsync(this->shared_from_this(), weak_from_this());
+	}
+
+	void SceneMainGame::enableMenu()
+	{
+		menuEnabled = true;
+	}
+
+	void SceneMainGame::disableMenu()
+	{
+		menuEnabled = false;
+	}
+
+	std::shared_ptr<MT::SerializationClient> SceneMainGame::doSerialize(MT::SerializationHint hint)
+	{
+		if (!nextSceneName.empty())
+		{
+			masterSceneContainer->transitionToSceneWithBundle(nextSceneName, transitionBundle);
+			nextSceneName = std::string();
+			transitionBundle = MT::SceneTransitionBundle();
+		}
+
+		const auto client = serializationClient->getClient("scene_main_game", hint);
+		menuEnabled = client->serializeBool("menu_enabled", menuEnabled);
+
+		return BaseScene::doSerialize(hint);
+	}
+
+	void SceneMainGame::onKeyPressed(SDL_Scancode key)
+	{
+		switch (key)
+		{
+		case SDL_SCANCODE_ESCAPE:
+			if (!menuEnabled)
+			{
+				return;
+			}
+
+			if (gameMainMenu->visible)
+			{
+				gameMainMenu->hide();
+			}
+			else
+			{
+				gameMainMenu->show();
+			}
+			break;
+		}
+	}
+}

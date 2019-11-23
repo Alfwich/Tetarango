@@ -1,0 +1,35 @@
+#include "AnimationSet.h"
+
+
+namespace MT
+{
+
+
+
+	std::shared_ptr<Animation> AnimationSet::startNewAnimation(std::string name)
+	{
+		std::shared_ptr<Animation> newAnimation = std::make_unique<Animation>();
+		animations[name] = newAnimation;
+		return newAnimation;
+	}
+
+	void AnimationSet::load()
+	{
+		if (!isLoaded)
+		{
+			isLoaded = true;
+			onLoadAnimations();
+		}
+	}
+
+	std::shared_ptr<Animation> AnimationSet::getAnimation(std::string name)
+	{
+		if (animations.count(name) == 0)
+		{
+			Logger::instance()->log("AnimationSet::Failed to find Animation for key: " + name);
+			return nullptr;
+		}
+
+		return animations[name];
+	}
+}

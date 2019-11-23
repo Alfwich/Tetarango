@@ -1,0 +1,41 @@
+#pragma once
+
+#include <memory>
+#include "engine/module/SystemModuleBundle.h"
+#include "Guis.h"
+
+namespace MTGame
+{
+
+	class BaseGui
+	{
+		static bool isLoaded;
+
+		enum class GuiType
+		{
+			Button,
+			Camera,
+			Menu,
+			Transition,
+			Hud
+		};
+
+	protected:
+		static const Guis& getGuis();
+
+		const GuiType guiType;
+		const std::string guiBaseName;
+
+	public:
+		static void primeGuis();
+		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> modules);
+
+		BaseGui(GuiButton button);
+		BaseGui(GuiCamera camera);
+		BaseGui(GuiMenu menu);
+		BaseGui(GuiTransition transition);
+		BaseGui(GuiHud hud);
+	};
+
+}
+

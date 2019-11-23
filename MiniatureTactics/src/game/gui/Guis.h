@@ -1,0 +1,61 @@
+#pragma once
+
+#include <string>
+#include <map>
+
+namespace MTGame
+{
+
+	enum class GuiButton
+	{
+		ButtonBasic
+	};
+
+	enum class GuiCamera
+	{
+		CameraBasic
+	};
+
+	enum class GuiMenu
+	{
+		MenuGame
+	};
+
+	enum class GuiTransition
+	{
+		TransitionFade
+	};
+
+	enum class GuiHud
+	{
+		HudCombat,
+		HudInventory
+	};
+
+	class Guis
+	{
+	public:
+
+		const std::map<GuiButton, std::string> buttons{
+			{ GuiButton::ButtonBasic, "button-basic" },
+		};
+
+		const std::map<GuiCamera, std::string> cameras{
+			{ GuiCamera::CameraBasic, "camera-basic" },
+		};
+
+		const std::map<GuiMenu, std::string> menus{
+			{ GuiMenu::MenuGame, "menu-game" },
+		};
+
+		const std::map<GuiTransition, std::string> transitions{
+			{ GuiTransition::TransitionFade, "transition-fade" },
+		};
+
+		const std::map<GuiHud, std::string> huds{
+			{ GuiHud::HudCombat, "hud-combat" },
+			{ GuiHud::HudInventory, "hud-inventory" },
+		};
+	};
+
+}
