@@ -109,10 +109,30 @@ namespace MTGame
 
 			{
 				auto text = std::make_shared<MT::Text>("medium", 28);
-				text->setText("Rotating Hello World!");
+				text->setText("Tetris Test");
 				text->setTextColor(0xff, 0xff, 0xff);
 				text->setPosition(hatEle->getWidth() / 2.0, hatEle->getHeight() / 2.0);
 				hatEle->add(text);
+			}
+
+			{
+
+				std::shared_ptr<MTGame::Block> block;
+				for (auto i = 0; i < 5; ++i)
+				{
+					auto newBlock = std::make_shared<MTGame::Block>();
+					if (block == nullptr) {
+						newBlock->name = "block-root";
+						newBlock->setPosition(0, 0);
+					}
+					else
+					{
+						newBlock->toRightOf(block, block->getHalfWidth());
+					}
+					newBlock->setColor(MT::Color::random());
+					add(newBlock);
+					block = newBlock;
+				}
 			}
 		}
 
@@ -197,6 +217,16 @@ namespace MTGame
 	void TestScene::onChildrenHydrated()
 	{
 		camera = findChildWithName<GameCamera>("camera");
+	}
+
+	void TestScene::onEnterFrame(double deltaTime)
+	{
+		auto child = findChildWithName<MT::ApplicationObject>("block-root");
+		auto renderable = std::dynamic_pointer_cast<MT::Renderable>(child);
+		if (renderable != nullptr)
+		{
+			renderable->rotate(deltaTime);
+		}
 	}
 
 	void TestScene::onKeyPressed(SDL_Scancode key)

@@ -14,7 +14,6 @@ namespace MTGame
 
 	void BaseProp::primeProps()
 	{
-
 		std::make_unique<TestParticleFactory>();
 		std::make_unique<ParticleFiringFactory>();
 		std::make_unique<ParticleBulletTrailParticleFactory>();
@@ -22,6 +21,8 @@ namespace MTGame
 		std::make_unique<ParticleHitHardFactory>();
 		std::make_unique<ParticleHitSoftFactory>();
 		std::make_unique<ParticleSpaceBackgroundParticleFactory>();
+
+		Block::primeBlocks();
 	}
 
 	void BaseProp::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
@@ -37,7 +38,7 @@ namespace MTGame
 		modules->texture->loadTexture("res/game/img/prop/particle/particle-firing.png", "particle-firing");
 		modules->texture->loadTexture("res/game/img/prop/particle/test-particle.png", "test-particle");
 
-		modules->texture->loadTexture("res/game/img/prop/building/prop-building.png", config.buildingResourceName);
+		Block::loadResources(modules);
 
 		isLoaded = true;
 	}
@@ -55,8 +56,8 @@ namespace MTGame
 		propBaseName(config.particleFactories.at(factory)),
 		propType(PropType::ParticleFactory) {}
 
-	BaseProp::BaseProp(PropBuilding building) :
-		propBaseName(config.buildings.at(building)),
-		propType(PropType::Building) {}
+	BaseProp::BaseProp(PropBlock block) :
+		propBaseName(config.blocks.at(block)),
+		propType(PropType::Block) {}
 }
 

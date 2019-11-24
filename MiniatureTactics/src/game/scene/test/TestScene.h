@@ -25,6 +25,7 @@ namespace MTGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 
+		void onEnterFrame(double deltaTime);
 		void onKeyPressed(SDL_Scancode key);
 		void onMouseButtonLeftDown();
 	};

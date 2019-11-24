@@ -21,8 +21,7 @@ namespace MTGame
 		{
 			Unspecified,
 			ParticleFactory,
-			Building,
-			Space
+			Block
 		};
 
 	protected:
@@ -39,7 +38,7 @@ namespace MTGame
 
 		BaseProp();
 		BaseProp(PropParticleFactory factory);
-		BaseProp(PropBuilding building);
+		BaseProp(PropBlock block);
 	};
 
 }

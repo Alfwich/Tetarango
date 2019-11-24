@@ -161,6 +161,7 @@
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\prop\block\Block.cpp" />
     <ClCompile Include="src\game\prop\particles\space\ParticleSpaceBackgroundFactory.cpp" />
     <ClCompile Include="src\game\prop\particles\space\ParticleSpaceBackground.cpp" />
     <ClCompile Include="src\game\generator\block\GeneratorBlock.cpp" />
@@ -254,6 +255,9 @@
     <ClCompile Include="src\game\scene\test\TestSpaceScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\prop\block\Block.h" />
+    <ClInclude Include="src\game\prop\block\BlockAnimations.h" />
+    <ClInclude Include="src\game\prop\block\Blocks.h" />
     <ClInclude Include="src\game\prop\particles\space\ParticleSpaceBackgroundFactory.h" />
     <ClInclude Include="src\game\prop\particles\space\ParticleSpaceBackground.h" />
     <ClInclude Include="src\core\engine\module\time\TimeScope.h" />

@@ -11,9 +11,9 @@ namespace MTGame
 		ParticleFactoryTest
 	};
 
-	enum class PropBuilding
+	enum class PropBlock
 	{
-		BuildingShop
+		BasicBlock
 	};
 
 	class Props
@@ -24,9 +24,8 @@ namespace MTGame
 			{ PropParticleFactory::ParticleFactoryTest, "prop-test-particle-factory" },
 		};
 
-		const std::string buildingResourceName = "prop-building";
-		const std::map<PropBuilding, std::string> buildings{
-			{ PropBuilding::BuildingShop, "prop-building-shop-1" },
+		const std::map<PropBlock, std::string> blocks{
+			{ PropBlock::BasicBlock, "prop-basic-block" }
 		};
 	};
 

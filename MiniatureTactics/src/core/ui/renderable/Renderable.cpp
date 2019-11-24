@@ -54,7 +54,7 @@ namespace MT
 
 	double Renderable::getWidth()
 	{
-		return rect.w* scaleX;
+		return rect.w * scaleX;
 	}
 
 	void Renderable::setWidth(double newWidth)
@@ -64,7 +64,7 @@ namespace MT
 
 	double Renderable::getHeight()
 	{
-		return rect.h* scaleY;
+		return rect.h * scaleY;
 	}
 
 	void Renderable::setHeight(double newHeight)

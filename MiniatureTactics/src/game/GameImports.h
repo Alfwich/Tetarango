@@ -24,6 +24,7 @@
 
 // Props
 #include "prop/BaseProp.h"
+#include "prop/block/Block.h"
 
 // Particles
 #include "prop/particles/projectile/bullet/ParticleBulletTrailFactory.h"
