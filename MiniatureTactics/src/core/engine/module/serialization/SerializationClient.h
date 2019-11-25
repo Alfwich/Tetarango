@@ -48,10 +48,12 @@ namespace MT
 		void setInt(std::string name, int value);
 		void setBool(std::string name, bool value);
 
+		/*
 		std::string bindString(std::string name, std::string defaultValue);
 		double bindDouble(std::string name, double defaultValue);
 		int bindInt(std::string name, int defaultValue);
 		bool bindBool(std::string name, bool defaultValue);
+		*/
 
 		void addData(const std::unordered_map<std::string, std::string>& data);
 		const std::unordered_map<std::string, std::string>& getData();

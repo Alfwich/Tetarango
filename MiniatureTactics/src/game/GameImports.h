@@ -21,10 +21,14 @@
 #include "scene/menu/SceneOptionsMenu.h"
 #include "scene/menu/SceneSavedGamesMenu.h"
 #include "scene/game/SceneMainGame.h"
+#include "scene/game/tetris/SceneTetris.h"
 
 // Props
 #include "prop/BaseProp.h"
 #include "prop/block/Block.h"
+
+// Actor
+#include "actor/board/Board.h"
 
 // Particles
 #include "prop/particles/projectile/bullet/ParticleBulletTrailFactory.h"

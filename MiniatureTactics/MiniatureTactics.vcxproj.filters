@@ -115,6 +115,8 @@
     <ClCompile Include="src\game\prop\particles\space\ParticleSpaceBackgroundFactory.cpp" />
     <ClCompile Include="src\game\generator\block\GeneratorBlock.cpp" />
     <ClCompile Include="src\game\prop\block\Block.cpp" />
+    <ClCompile Include="src\game\actor\board\Board.cpp" />
+    <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\UI\Camera.h" />
@@ -243,6 +245,8 @@
     <ClInclude Include="src\game\prop\block\Block.h" />
     <ClInclude Include="src\game\prop\block\BlockAnimations.h" />
     <ClInclude Include="src\game\prop\block\Blocks.h" />
+    <ClInclude Include="src\game\actor\board\Board.h" />
+    <ClInclude Include="src\game\scene\game\tetris\SceneTetris.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

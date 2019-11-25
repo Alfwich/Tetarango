@@ -29,6 +29,8 @@ namespace MTGame
 		std::make_unique<SceneOptionsMenu>();
 		std::make_unique<SceneSavedGamesMenu>();
 		std::make_unique<SceneMainGame>();
+
+		std::make_unique<SceneTetris>();
 	}
 
 	void BaseScene::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)

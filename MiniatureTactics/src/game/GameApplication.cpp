@@ -35,6 +35,7 @@ namespace MTGame
 		BaseGui::loadResources(modules);
 		BaseScene::loadResources(modules);
 		BaseProp::loadResources(modules);
+		Board::loadResources(modules);
 	}
 
 	void GameApplication::onPrimeSerialization()
@@ -42,6 +43,7 @@ namespace MTGame
 		BaseGui::primeGuis();
 		BaseScene::primeScenes();
 		BaseProp::primeProps();
+		Board::primeBoards();
 	}
 
 	void GameApplication::onReady()

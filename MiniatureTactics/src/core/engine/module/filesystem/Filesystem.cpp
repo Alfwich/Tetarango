@@ -24,8 +24,6 @@ namespace MT
 		}
 		else
 		{
-			// TODO: Tie in exceptions into event system
-			//throw FilesystemException("SDL_GetPrefPath returned NULL, meaning there was some problem.");
 			Logger::instance()->logCritical("SDL_GetPrefPath returned NULL, meaning there was some problem.");
 		}
 	}
@@ -99,8 +97,6 @@ namespace MT
 			}
 		}
 
-		// TODO: Tie in exceptions into event system
-		//throw FilesystemException("Failed to read file on path=" + _getAbsolutePathFromRelativePath(path) + ", file could not be opened");
 		Logger::instance()->log("Failed to read file on path=" + getAbsolutePathFromRelativePath(path) + ", file could not be opened");
 		SDL_ClearError();
 
@@ -149,8 +145,6 @@ namespace MT
 			}
 		}
 
-		// TODO: Tie in exceptions into event system
-		//throw FilesystemException("Failed to write or append (" + appendOrWrite + ") file on path=" + _getAbsolutePathFromRelativePath(path) + ", file could not be opened");
 		Logger::instance()->log("Failed to write or append (" + appendOrWrite + ") file on path=" + getAbsolutePathFromRelativePath(path) + ", file could not be opened");
 		return false;
 	}
@@ -196,9 +190,7 @@ namespace MT
 	}
 
 	Filesystem::FilesystemException::FilesystemException(const std::string& incMsg)
-		: msg(incMsg)
-	{
-	}
+		: msg(incMsg) {}
 
 	const char* Filesystem::FilesystemException::what() const noexcept
 	{

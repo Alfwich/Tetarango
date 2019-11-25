@@ -161,6 +161,7 @@
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\actor\board\Board.cpp" />
     <ClCompile Include="src\game\prop\block\Block.cpp" />
     <ClCompile Include="src\game\prop\particles\space\ParticleSpaceBackgroundFactory.cpp" />
     <ClCompile Include="src\game\prop\particles\space\ParticleSpaceBackground.cpp" />
@@ -253,8 +254,10 @@
     <ClCompile Include="src\core\ui\renderable\Zone.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\trace\Trace.cpp" />
     <ClCompile Include="src\game\scene\test\TestSpaceScene.cpp" />
+    <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\actor\board\Board.h" />
     <ClInclude Include="src\game\prop\block\Block.h" />
     <ClInclude Include="src\game\prop\block\BlockAnimations.h" />
     <ClInclude Include="src\game\prop\block\Blocks.h" />
@@ -365,6 +368,7 @@
     <ClInclude Include="src\core\engine\module\serialization\SerializationTags.h" />
     <ClInclude Include="src\game\gui\button\IButtonListener.h" />
     <ClInclude Include="src\game\scene\Scenes.h" />
+    <ClInclude Include="src\game\scene\game\tetris\SceneTetris.h" />
     <ClInclude Include="src\test\Tests.h" />
     <ClInclude Include="src\test\TestActor.h" />
     <ClInclude Include="src\core\engine\module\time\Time.h" />

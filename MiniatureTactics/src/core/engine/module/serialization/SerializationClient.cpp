@@ -174,6 +174,7 @@ namespace MT
 		setValue(name, value ? SerializationTags::TYPE_BOOL_TRUE : SerializationTags::TYPE_BOOL_FALSE);
 	}
 
+	/*
 	std::string SerializationClient::bindString(std::string name, std::string defaultValue)
 	{
 		const auto myValue = getValue(name);
@@ -221,6 +222,7 @@ namespace MT
 
 		return myValue.empty() ? defaultValue : myValue == SerializationTags::TYPE_BOOL_TRUE;
 	}
+	*/
 
 	void SerializationClient::addData(const std::unordered_map<std::string, std::string>& data)
 	{

@@ -11,7 +11,6 @@ namespace MT
 
 	Thread::~Thread()
 	{
-
 		SDL_DestroySemaphore(resultQueueLock);
 		SDL_DestroySemaphore(workQueueLock);
 	}

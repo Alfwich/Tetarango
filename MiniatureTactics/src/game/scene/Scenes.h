@@ -15,14 +15,7 @@ namespace MTGame
 
 		// Game
 		MainGame,
-		StartFlowShipSelection,
-		StartFlowCrewSelection,
-		TownOrigin,
-		TownOriginShop,
-
-		// Generated
-		GeneratedStarSystem,
-		GeneratedPlanet
+		Tetris
 	};
 
 	class Scenes
@@ -35,13 +28,7 @@ namespace MTGame
 			{ SceneGame::SavedGamesMenu, "menu-saved-games" },
 
 			{ SceneGame::MainGame, "game-main" },
-			{ SceneGame::TownOrigin, "game-town-origin" },
-			{ SceneGame::TownOriginShop, "game-town-origin-shop" },
-			{ SceneGame::StartFlowShipSelection, "start-flow-ship-selection" },
-			{ SceneGame::StartFlowCrewSelection, "start-flow-crew-selection" },
-
-			{ SceneGame::GeneratedStarSystem, "generated-star-system" },
-			{ SceneGame::GeneratedPlanet, "generated-planet" },
+			{ SceneGame::Tetris, "game-tetris" }
 		};
 	};
 }

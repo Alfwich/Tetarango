@@ -53,24 +53,24 @@ namespace Config
 					{ Param::enableTestScenes, FALSE },
 			};
 
-			base[Param::storageLocation] = base[Param::gameName] + " " + base[Param::version];
+			base[Param::storageLocation] = base[Param::gameName];
 
 			if (MT_ENVIRONMENT == "DEV" || MT_ENVIRONMENT == "PROD_DEBUG")
 			{
 				base[Param::gameName] = base[Param::gameName] + " - DEV - " + base[Param::version];
 				base[Param::runTests] = TRUE;
-				base[Param::storageLocation] += " - Debug";
+				base[Param::storageLocation] += " " + base[Param::version] + " - Debug";
 				base[Param::launchToLastScene] = TRUE;
 				base[Param::useAssetPack] = FALSE;
 				base[Param::enableTestScenes] = TRUE;
-				//base[Param::saveReadableStoreFiles] = TRUE;
 				//base[Param::saveWholeSceneOnClose] = TRUE;
+				//base[Param::saveReadableStoreFiles] = TRUE;
 				//base[Param::visualizeZones] = TRUE;
 				//base[Param::hydrateOnLoad] = FALSE;
 			}
 			else if (MT_ENVIRONMENT == "PROD")
 			{
-				base[Param::enableTestScenes] = TRUE;
+				//base[Param::enableTestScenes] = TRUE;
 				//base[ConfigParam::throwOnCriticalLog] = TRUE;
 				//base[Param::visualizeZones] = TRUE;
 			}

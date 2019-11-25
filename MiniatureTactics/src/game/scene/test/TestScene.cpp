@@ -116,24 +116,20 @@ namespace MTGame
 			}
 
 			{
+				auto board = std::make_shared<Board>();
+				board->name = "board";
+				add(board);
 
-				std::shared_ptr<MTGame::Block> block;
 				for (auto i = 0; i < 5; ++i)
 				{
 					auto newBlock = std::make_shared<MTGame::Block>();
-					if (block == nullptr) {
-						newBlock->name = "block-root";
-						newBlock->setPosition(0, 0);
-					}
-					else
-					{
-						newBlock->toRightOf(block, block->getHalfWidth());
-					}
 					newBlock->setColor(MT::Color::random());
-					add(newBlock);
-					block = newBlock;
+					newBlock->setPosition(i * 64, 0);
+					newBlock->zIndex = 1;
+					board->add(newBlock);
 				}
 			}
+
 		}
 
 		/*
@@ -219,15 +215,7 @@ namespace MTGame
 		camera = findChildWithName<GameCamera>("camera");
 	}
 
-	void TestScene::onEnterFrame(double deltaTime)
-	{
-		auto child = findChildWithName<MT::ApplicationObject>("block-root");
-		auto renderable = std::dynamic_pointer_cast<MT::Renderable>(child);
-		if (renderable != nullptr)
-		{
-			renderable->rotate(deltaTime);
-		}
-	}
+	void TestScene::onEnterFrame(double deltaTime) { }
 
 	void TestScene::onKeyPressed(SDL_Scancode key)
 	{

@@ -114,12 +114,14 @@ namespace MTGame
 		masterSceneContainer->notifyOnTransition = weak_from_this();
 		add(masterSceneContainer);
 
+		masterSceneContainer->add(std::make_shared<SceneTetris>());
+
 		globalParticleSystem = std::make_shared<MT::ParticleSystem>();
 		globalParticleSystem->name = starSystemId;
 		globalParticleSystem->setGlobalReceiver(true);
 		add(globalParticleSystem);
 
-		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::StartFlowShipSelection));
+		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Tetris));
 		globalTransition->fadeOut();
 	}
 

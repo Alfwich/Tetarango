@@ -39,7 +39,7 @@ namespace MT
 				pos = nextComma;
 			}
 
-			return result;;
+			return result;
 		}
 	};
 }
