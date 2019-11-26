@@ -1,19 +1,18 @@
 #pragma once
 
-#include "ui/renderable/Container.h"
-#include "ui/scene/Scene.h"
-#include "engine/module/event/EnterFrameListener.h"
-#include "gui/button/ButtonBasic.h"
-#include "gui/button/IButtonListener.h"
-#include "ui/scene/SceneTransitionBundle.h"
-#include "gui/camera/GameCamera.h"
 #include "scene/BaseScene.h"
+#include "actor/board/Board.h"
+#include "gui/camera/GameCamera.h"
 
 namespace MTGame
 {
 
 	class SceneTetris : public BaseScene
 	{
+
+		std::shared_ptr<MT::Timer> spawnTimer;
+		std::shared_ptr<Board> board;
+		std::shared_ptr<GameCamera> camera;
 
 	public:
 		SceneTetris();

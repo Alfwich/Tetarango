@@ -62,11 +62,11 @@ namespace Config
 				base[Param::storageLocation] += " " + base[Param::version] + " - Debug";
 				base[Param::launchToLastScene] = TRUE;
 				base[Param::useAssetPack] = FALSE;
-				base[Param::enableTestScenes] = TRUE;
+				base[Param::hydrateOnLoad] = FALSE;
+				//base[Param::enableTestScenes] = TRUE;
 				//base[Param::saveWholeSceneOnClose] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
 				//base[Param::visualizeZones] = TRUE;
-				//base[Param::hydrateOnLoad] = FALSE;
 			}
 			else if (MT_ENVIRONMENT == "PROD")
 			{

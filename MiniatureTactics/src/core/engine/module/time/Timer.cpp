@@ -91,6 +91,17 @@ namespace MT
 		return (result)* getTimeFactor();
 	}
 
+	bool Timer::isAboveThresholdAndRestart(unsigned int threshold)
+	{
+		if (getTicks() >= threshold) 
+		{
+			start();
+			return true;
+		}
+
+		return false;
+	}
+
 	void Timer::setTimeScope(TimeScope scopeName)
 	{
 		if (scopeName == TimeScope::None)

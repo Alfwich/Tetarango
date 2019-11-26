@@ -13,6 +13,11 @@ namespace MTGame
 {
 	bool Block::isLoaded = false;
 
+	Block::Block()
+	{
+		enableSerialization<Block>();
+	}
+
 	void Block::primeBlocks()
 	{
 		std::make_unique<Block>();
@@ -43,5 +48,15 @@ namespace MTGame
 	void Block::onCreateChildren()
 	{
 		MT::Animated::onCreateChildren();
+	}
+
+	std::shared_ptr<MT::SerializationClient> Block::doSerialize(MT::SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__block__", hint);
+
+		blockX = client->serializeInt("block-x", blockX);
+		blockY = client->serializeInt("block-y", blockY);
+
+		return Animated::doSerialize(hint);
 	}
 }

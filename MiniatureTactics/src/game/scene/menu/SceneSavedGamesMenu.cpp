@@ -146,8 +146,11 @@ namespace MTGame
 		saveSlot1->inputEnabled = false;
 		saveSlot2->inputEnabled = false;
 		saveSlot3->inputEnabled = false;
-		testSceneButton->inputEnabled = false;
-		testSpaceSceneButton->inputEnabled = false;
+		if (testSceneButton != nullptr)
+		{
+			testSceneButton->inputEnabled = false;
+			testSpaceSceneButton->inputEnabled = false;
+		}
 	}
 
 	void SceneSavedGamesMenu::enableButtons()
@@ -155,8 +158,11 @@ namespace MTGame
 		saveSlot1->inputEnabled = true;
 		saveSlot2->inputEnabled = true;
 		saveSlot3->inputEnabled = true;
-		testSceneButton->inputEnabled = true;
-		testSpaceSceneButton->inputEnabled = true;
+		if (testSceneButton != nullptr)
+		{
+			testSceneButton->inputEnabled = true;
+			testSpaceSceneButton->inputEnabled = true;
+		}
 	}
 
 	void SceneSavedGamesMenu::onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code)

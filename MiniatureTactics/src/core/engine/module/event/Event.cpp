@@ -6,14 +6,10 @@ namespace MT
 {
 
 
-	Event::Event()
-	{
-	}
+	Event::Event() {}
 
 
-	Event::~Event()
-	{
-	}
+	Event::~Event() {}
 
 	void Event::bindInput(std::shared_ptr<Input> input)
 	{

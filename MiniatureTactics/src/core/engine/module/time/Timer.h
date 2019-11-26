@@ -30,6 +30,7 @@ namespace MT
 		bool isRunning();
 		double getTicks();
 		double getTicksAndRestart();
+		bool isAboveThresholdAndRestart(unsigned int threshold);
 
 		void setTimeScope(TimeScope scopeName);
 		void clearTimeScope();

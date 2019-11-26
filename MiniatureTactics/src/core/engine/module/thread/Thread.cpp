@@ -19,7 +19,7 @@ namespace MT
 	{
 		if (!isMainThread())
 		{
-			Logger::instance()->log("Thread::Failed to pollWorker, the calling thread is not the main thread.");
+			Logger::instance()->log("Thread::Failed to processWorkers, the calling thread is not the main thread.");
 			return;
 		}
 
@@ -89,17 +89,17 @@ namespace MT
 	{
 		SDL_SemWait(workQueueLock);
 
-		if (workQueue.size() == 0)
+		auto result = std::shared_ptr<Worker>();
+
+		if (workQueue.size() != 0)
 		{
-			SDL_SemPost(workQueueLock);
-			return std::shared_ptr<Worker>();
+			result = workQueue.front();
+			workQueue.pop();
 		}
-		const auto worker = workQueue.front();
-		workQueue.pop();
 
 		SDL_SemPost(workQueueLock);
 
-		return worker;
+		return result;
 	}
 
 	void Thread::putWorkerIntoResultQueue(std::shared_ptr<Worker> worker)

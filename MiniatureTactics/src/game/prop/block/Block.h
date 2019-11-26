@@ -11,11 +11,14 @@ namespace MTGame
 		static bool isLoaded;
 
 	public:
+		Block();
+		unsigned int blockX = 0, blockY = 0;
 
 		static void primeBlocks();
 		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
 
 		void onInitialAttach();
 		void onCreateChildren();
+		std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
 	};
 }
