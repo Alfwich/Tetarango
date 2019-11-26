@@ -25,6 +25,7 @@ namespace MT
 		std::shared_ptr<AnimationSet> getAnimationSet(std::string name);
 
 		std::shared_ptr<Transition> createTransition();
+		std::shared_ptr<Transition> createGameTransition();
 		std::shared_ptr<Transition> createTransitionForTimeScope(TimeScope scopeName);
 	};
 }

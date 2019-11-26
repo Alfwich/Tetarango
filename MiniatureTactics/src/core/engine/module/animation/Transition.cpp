@@ -17,7 +17,7 @@ namespace MT
 		return id;
 	}
 
-	void Transition::startTransition(std::shared_ptr<Renderable> target, double duration, Rect endRect, double targetAlpha)
+	void Transition::startTransition(std::shared_ptr<Renderable> target, double durationMS, Rect endRect, double targetAlpha)
 	{
 		startRect = target->getRect();
 		startAlpha = target->getAlpha();
@@ -34,7 +34,7 @@ namespace MT
 		if (!paused)
 		{
 			position = 0.0;
-			this->duration = duration;
+			this->duration = durationMS;
 			startRect = target->getRect();
 			this->endRect = endRect;
 			startAlpha = target->getAlpha();

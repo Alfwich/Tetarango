@@ -36,7 +36,7 @@ namespace MT
 
 		std::weak_ptr<INotifyOnTransitionCompleted> listener;
 
-		void startTransition(std::shared_ptr<Renderable> target, double duration, Rect targetRect, double targetAlpha = -1.0);
+		void startTransition(std::shared_ptr<Renderable> target, double durationMS, Rect targetRect, double targetAlpha = -1.0);
 		void resume();
 		void pause();
 		void stop();

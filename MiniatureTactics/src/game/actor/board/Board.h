@@ -13,12 +13,15 @@ namespace MTGame
 		static bool isLoaded;
 
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64;
+		std::vector<std::shared_ptr<MT::Transition>> transitions;
+		std::vector<std::shared_ptr<Block>> outgoingBlocks;
 		std::map<int, std::shared_ptr<Block>> blockMap;
 		std::shared_ptr<MT::Timer> actionTimer;
 		std::shared_ptr<MT::Rectangle> background;
 
 		void updateBoardIfNeeded();
 		int calcMapOffset(const std::shared_ptr<Block> blockPtr);
+		int calcMapOffset(unsigned int x, unsigned int y);
 		void positionBlock(const std::shared_ptr<Block> blockPtr);
 
 	public:
@@ -34,6 +37,7 @@ namespace MTGame
 		void onInitialAttach();
 		void onCreateChildren();
 		void onChildrenHydrated();
+		virtual std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
 		void onEnterFrame(double deltaTime);
 	};
 

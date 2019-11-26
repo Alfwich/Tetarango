@@ -15,9 +15,15 @@ namespace MTGame
 		}
 	}
 
+
 	int Board::calcMapOffset(const std::shared_ptr<Block> blockPtr)
 	{
-		return blockPtr == nullptr ? 0 : blockPtr->blockX + blockPtr->blockY * 100000;
+		return blockPtr == nullptr ? 0 : calcMapOffset(blockPtr->blockX, blockPtr->blockY);
+	}
+
+	int Board::calcMapOffset(unsigned int x, unsigned int y)
+	{
+		return x + y * 10000;
 	}
 
 	void Board::positionBlock(const std::shared_ptr<Block> blockPtr)
@@ -108,12 +114,71 @@ namespace MTGame
 		background = findChildWithName<MT::Rectangle>("background");
 	}
 
+	std::shared_ptr<MT::SerializationClient> Board::doSerialize(MT::SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__board__", hint);
+
+		boardWidth = (unsigned int)client->serializeInt("board-width", boardWidth);
+		boardHeight = (unsigned int)client->serializeInt("board-height", boardHeight);
+		cellWidth = (unsigned int)client->serializeInt("cell-width", cellWidth);
+		cellHeight = (unsigned int)client->serializeInt("cell-height", cellHeight);
+
+		return MT::Element::doSerialize(hint);
+	}
+
 	void Board::onEnterFrame(double deltaTime)
 	{
 		if (actionTimer->isAboveThresholdAndRestart(250))
 		{
+			transitions.clear();
+			outgoingBlocks.clear();
+			for (unsigned int y = 0; y <= boardHeight; ++y)
+			{
+				auto rowFilled = true;
+				for (unsigned int x = 0; x <= boardWidth; ++x)
+				{
+					auto mapping = calcMapOffset(x, y);
+					auto nextMapping = calcMapOffset(x, y + 1);
+					rowFilled = blockMap.count(mapping) == 1 && (y + 1 > boardHeight || blockMap.count(nextMapping) == 1);
+
+					if (!rowFilled)
+					{
+						break;
+					}
+				}
+
+				if (rowFilled)
+				{
+					for (unsigned int x = 0; x <= boardWidth; ++x)
+					{
+						outgoingBlocks.push_back(blockMap[calcMapOffset(x, y)]);
+					}
+				}
+			}
+
+			for (const auto outgoingBlock : outgoingBlocks)
+			{
+				blockMap.erase(calcMapOffset(outgoingBlock->blockX, outgoingBlock->blockY));
+
+				const auto t = modules->animation->createGameTransition();
+				t->startTransition(outgoingBlock, 50.0, MT::Rect(outgoingBlock->blockX * cellWidth + MT::NumberHelper::random(-200, 200), outgoingBlock->blockY * cellHeight + MT::NumberHelper::random(-200, 200), 0, 0));
+				transitions.push_back(t);
+
+				outgoingBlock->blockX = -1;
+				outgoingBlock->blockY = -1;
+			}
+
 			for (const auto child : getChildrenOfType<Block>())
 			{
+				if (child->blockX == -1 || child->blockY == -1)
+				{
+					if (child->getWidth() == 0 || child->getHeight() == 0)
+					{
+						child->removeFromParent();
+					}
+					continue;
+				}
+
 				if (child->blockY < boardHeight) {
 					const auto oldMapping = calcMapOffset(child);
 					child->blockY += 1;
@@ -122,13 +187,17 @@ namespace MTGame
 					{
 						blockMap.erase(oldMapping);
 						blockMap[newMapping] = child;
+
+						const auto t = modules->animation->createGameTransition();
+						t->startTransition(child, 50.0, MT::Rect(child->blockX * cellWidth, child->blockY * cellHeight, cellHeight, cellWidth));
+						transitions.push_back(t);
 					}
 					else
 					{
 						child->blockY -= 1;
+						positionBlock(child);
 					}
 				}
-				positionBlock(child);
 			}
 		}
 	}

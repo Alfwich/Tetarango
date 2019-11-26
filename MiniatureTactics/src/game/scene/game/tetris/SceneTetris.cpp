@@ -16,7 +16,7 @@ namespace MTGame
 			gameScene->enableMenu();
 		}
 
-		modules->input->keyboard->registerKey(SDL_SCANCODE_1, weak_from_this());
+		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4 }, weak_from_this());
 		spawnTimer = modules->time->createTimer(MT::TimeScope::Game);
 		spawnTimer->start();
 
@@ -56,7 +56,8 @@ namespace MTGame
 	{
 		switch (key)
 		{
-		case SDL_SCANCODE_1:
+		case SDL_SCANCODE_1: {
+
 			const auto block = std::make_shared<Block>();
 			block->setColor(MT::Color::random());
 			block->blockX = MT::NumberHelper::randomInt(0, 30);
@@ -66,6 +67,17 @@ namespace MTGame
 			{
 				board->add(block);
 			}
+
+		} break;
+
+		case SDL_SCANCODE_2:
+			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.25);
+			break;
+		case SDL_SCANCODE_3:
+			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 5.0);
+			break;
+		case SDL_SCANCODE_4:
+			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
 			break;
 		}
 	}

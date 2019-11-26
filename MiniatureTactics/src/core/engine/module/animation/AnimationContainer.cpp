@@ -35,6 +35,11 @@ namespace MT
 		return createTransitionForTimeScope(TimeScope::Global);
 	}
 
+	std::shared_ptr<Transition> AnimationContainer::createGameTransition()
+	{
+		return createTransitionForTimeScope(TimeScope::Game);
+	}
+
 	std::shared_ptr<Transition> AnimationContainer::createTransitionForTimeScope(TimeScope scopeName)
 	{
 		auto transition = std::make_shared<Transition>(time, scopeName);
