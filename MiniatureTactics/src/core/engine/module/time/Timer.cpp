@@ -91,8 +91,29 @@ namespace MT
 		return (result)* getTimeFactor();
 	}
 
+	bool Timer::isAboveThresholdAndStop(unsigned int threshold)
+	{
+		if (!running)
+		{
+			return false;
+		}
+
+		if (getTicks() >= threshold)
+		{
+			stop();
+			return true;
+		}
+
+		return false;
+	}
+
 	bool Timer::isAboveThresholdAndRestart(unsigned int threshold)
 	{
+		if (!running)
+		{
+			return false;
+		}
+
 		if (getTicks() >= threshold) 
 		{
 			start();

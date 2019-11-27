@@ -52,7 +52,7 @@ namespace MTGame
 			break;
 
 		case BlockColor::Yellow:
-			return MT::Color(255, 0, 255);
+			return MT::Color(255, 255, 0);
 			break;
 
 		case BlockColor::Green:

@@ -12,11 +12,10 @@ namespace MTGame
 	{
 		static bool isLoaded;
 
-		bool isFastFalling = false;
+		bool isFastFalling = false, hasFailedToPlacePiece = false;
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64;
 		std::vector<std::shared_ptr<MT::Transition>> transitions;
 		std::vector<std::shared_ptr<MT::Transition>> activeTransitions;
-		std::vector<std::shared_ptr<Block>> outgoingBlocks;
 		std::vector<std::shared_ptr<Block>> currentBlocks;
 		std::map<int, std::shared_ptr<Block>> blockMap;
 		std::shared_ptr<MT::Timer> actionTimer;
@@ -41,6 +40,10 @@ namespace MTGame
 		void rotatePiece();
 		void enableFastFall();
 		void disableFastFall();
+
+		bool getHadActivePiece();
+		bool getHasFailedToPlacePiece();
+		void resetBoard();
 
 		void add(std::shared_ptr<ApplicationObject> ao);
 		void onInitialAttach();

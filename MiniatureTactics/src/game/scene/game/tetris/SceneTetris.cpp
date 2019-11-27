@@ -22,9 +22,10 @@ namespace MTGame
 			gameScene->enableMenu();
 		}
 
-		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP }, weak_from_this());
-		spawnTimer = modules->time->createTimer(MT::TimeScope::Game);
-		spawnTimer->start();
+		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE }, weak_from_this());
+		keyRepeatTimer = modules->time->createTimer(MT::TimeScope::Game);
+		pieceTimer = modules->time->createTimer(MT::TimeScope::Game);
+		keyRepeatTimer->start();
 
 		enableEnterFrame();
 	}
@@ -52,7 +53,7 @@ namespace MTGame
 
 	void SceneTetris::onEnterFrame(double deltaTime)
 	{
-		if ((isLeftDown || isRightDown) && spawnTimer->isAboveThresholdAndRestart(60))
+		if ((isLeftDown || isRightDown) && keyRepeatTimer->isAboveThresholdAndRestart(60))
 		{
 			if (isLeftDown)
 			{
@@ -63,6 +64,16 @@ namespace MTGame
 				board->moveCurrentPiece(1);
 			}
 		}
+
+		if (!board->getHadActivePiece() && !board->getHasFailedToPlacePiece())
+		{
+			pieceTimer->startIfNotRunning();
+		}
+
+		if (pieceTimer->isAboveThresholdAndStop(500))
+		{
+			board->addTetromino(blockColorGenerator.getTetromino());
+		}
 	}
 
 	void SceneTetris::onKeyPressed(SDL_Scancode key)
@@ -70,7 +81,7 @@ namespace MTGame
 		switch (key)
 		{
 		case SDL_SCANCODE_1:
-			board->addTetromino(blockColorGenerator.getTetromino());
+			//board->addTetromino(blockColorGenerator.getTetromino());
 			break;
 
 		case SDL_SCANCODE_2:
@@ -104,6 +115,10 @@ namespace MTGame
 		case SDL_SCANCODE_UP:
 			board->rotatePiece();
 			break;
+
+		case SDL_SCANCODE_BACKSPACE:
+			board->resetBoard();
+			break;
 		}
 	}
 
@@ -114,9 +129,11 @@ namespace MTGame
 		case SDL_SCANCODE_LEFT:
 			isLeftDown = false;
 			break;
+
 		case SDL_SCANCODE_RIGHT:
 			isRightDown = false;
 			break;
+
 		case SDL_SCANCODE_DOWN:
 			board->disableFastFall();
 			break;

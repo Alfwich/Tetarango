@@ -11,7 +11,8 @@ namespace MTGame
 	{
 
 		bool isLeftDown = false, isRightDown = false;
-		std::shared_ptr<MT::Timer> spawnTimer;
+		std::shared_ptr<MT::Timer> keyRepeatTimer;
+		std::shared_ptr<MT::Timer> pieceTimer;
 		std::shared_ptr<Board> board;
 		std::shared_ptr<GameCamera> camera;
 
