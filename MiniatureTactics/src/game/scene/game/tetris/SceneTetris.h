@@ -10,6 +10,7 @@ namespace MTGame
 	class SceneTetris : public BaseScene
 	{
 
+		bool isLeftDown = false, isRightDown = false;
 		std::shared_ptr<MT::Timer> spawnTimer;
 		std::shared_ptr<Board> board;
 		std::shared_ptr<GameCamera> camera;
@@ -23,5 +24,6 @@ namespace MTGame
 
 		void onEnterFrame(double deltaTime);
 		void onKeyPressed(SDL_Scancode key);
+		void onKeyReleased(SDL_Scancode key);
 	};
 }

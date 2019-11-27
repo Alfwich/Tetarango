@@ -1,65 +1,21 @@
 #pragma once
 
 #include "util/Color.h"
+#include "prop/block/Block.h"
 
 namespace MTGame
 {
-	/*
-	enum class HumanSkinColor
+	enum class BlockColor
 	{
-		LightWhite,
-		White,
-		DarkWhite,
-		Yellow,
-		LightBlack,
-		Black,
-		DarkBlack,
-		Brown,
-		DarkBrown,
-		Red,
-		DarkRed
-	};
-
-	enum class HumanEyeColor
-	{
-		Brown,
+		None,
+		Purple,
 		Blue,
-		Hazel,
-		Amber,
-		Green,
-		Grey,
 		Red,
-		Violet
+		Yellow,
+		Green,
+		Orange,
+		Cyan
 	};
-
-	enum class HumanHairColor
-	{
-		MidnightBlack,
-		OffBlack,
-		DarkBrown,
-		MediumBrown,
-		ChestnutBrown,
-		LightChestnutBrown,
-		DarkGoldenBrown,
-		LightGoldenBrown,
-		DarkHoneyBlond,
-		BleachedBlonde,
-		LightAshBlonde,
-		LightAshBrown,
-		LightBlonde,
-		PaleGoldenBlonde,
-		StrawberryBlonde,
-		LightAuburn,
-		DarkAuburn,
-		DarkGrey,
-		MediumGrey,
-		LightGrey,
-		WhiteBlonde,
-		PlatinumBlonde,
-		RussetRed,
-		TerraCotta
-	};
-	*/
 
 	class GeneratorBlock
 	{
@@ -68,6 +24,10 @@ namespace MTGame
 
 	public:
 		GeneratorBlock();
+
+		MT::Color getBlockColor(BlockColor value = BlockColor::None);
+
+		std::vector<std::shared_ptr<Block>> getTetromino();
 	};
 
 }

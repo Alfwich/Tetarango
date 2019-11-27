@@ -1,5 +1,11 @@
 #include "SceneTetris.h"
 #include "scene/game/SceneMainGame.h"
+#include "generator/block/GeneratorBlock.h"
+
+namespace
+{
+	MTGame::GeneratorBlock blockColorGenerator;
+}
 
 namespace MTGame
 {
@@ -16,7 +22,7 @@ namespace MTGame
 			gameScene->enableMenu();
 		}
 
-		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4 }, weak_from_this());
+		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP }, weak_from_this());
 		spawnTimer = modules->time->createTimer(MT::TimeScope::Game);
 		spawnTimer->start();
 
@@ -25,7 +31,7 @@ namespace MTGame
 
 	void SceneTetris::onCreateChildren()
 	{
-		board = std::make_shared<Board>(30, 30);
+		board = std::make_shared<Board>(20, 20);
 		board->name = "board";
 		add(board);
 
@@ -46,9 +52,16 @@ namespace MTGame
 
 	void SceneTetris::onEnterFrame(double deltaTime)
 	{
-		if (spawnTimer->isAboveThresholdAndRestart(250))
+		if ((isLeftDown || isRightDown) && spawnTimer->isAboveThresholdAndRestart(60))
 		{
-			onKeyPressed(SDL_SCANCODE_1);
+			if (isLeftDown)
+			{
+				board->moveCurrentPiece(-1);
+			}
+			else if (isRightDown)
+			{
+				board->moveCurrentPiece(1);
+			}
 		}
 	}
 
@@ -56,28 +69,56 @@ namespace MTGame
 	{
 		switch (key)
 		{
-		case SDL_SCANCODE_1: {
-
-			const auto block = std::make_shared<Block>();
-			block->setColor(MT::Color::random());
-			block->blockX = MT::NumberHelper::randomInt(0, 30);
-			block->blockY = 0;
-
-			if (board != nullptr)
-			{
-				board->add(block);
-			}
-
-		} break;
+		case SDL_SCANCODE_1:
+			board->addTetromino(blockColorGenerator.getTetromino());
+			break;
 
 		case SDL_SCANCODE_2:
 			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.25);
 			break;
+
 		case SDL_SCANCODE_3:
 			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 5.0);
 			break;
+
 		case SDL_SCANCODE_4:
 			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
+			break;
+
+		case SDL_SCANCODE_5:
+			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1000.0);
+			break;
+
+		case SDL_SCANCODE_LEFT:
+			isLeftDown = true;
+			break;
+
+		case SDL_SCANCODE_RIGHT:
+			isRightDown = true;
+			break;
+
+		case SDL_SCANCODE_DOWN:
+			board->enableFastFall();
+			break;
+
+		case SDL_SCANCODE_UP:
+			board->rotatePiece();
+			break;
+		}
+	}
+
+	void SceneTetris::onKeyReleased(SDL_Scancode key)
+	{
+		switch (key)
+		{
+		case SDL_SCANCODE_LEFT:
+			isLeftDown = false;
+			break;
+		case SDL_SCANCODE_RIGHT:
+			isRightDown = false;
+			break;
+		case SDL_SCANCODE_DOWN:
+			board->disableFastFall();
 			break;
 		}
 	}

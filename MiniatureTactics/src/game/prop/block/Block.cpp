@@ -56,6 +56,7 @@ namespace MTGame
 
 		blockX = client->serializeInt("block-x", blockX);
 		blockY = client->serializeInt("block-y", blockY);
+		hasSettled = client->serializeBool("block-set", hasSettled);
 
 		return Animated::doSerialize(hint);
 	}

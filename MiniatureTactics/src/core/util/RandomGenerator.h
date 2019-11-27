@@ -89,7 +89,7 @@ namespace MT
 		}
 
 		const unsigned int rng = NumberHelper::randomInt(0, maxRngInt);
-		const unsigned int offset = maxRngInt * probOffset;
+		const unsigned int offset = (unsigned int)(maxRngInt * probOffset);
 
 		for (auto it = packedProbabilities.begin(); it != packedProbabilities.end(); ++it)
 		{

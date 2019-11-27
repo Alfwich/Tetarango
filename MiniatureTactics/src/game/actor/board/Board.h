@@ -12,13 +12,17 @@ namespace MTGame
 	{
 		static bool isLoaded;
 
+		bool isFastFalling = false;
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64;
 		std::vector<std::shared_ptr<MT::Transition>> transitions;
+		std::vector<std::shared_ptr<MT::Transition>> activeTransitions;
 		std::vector<std::shared_ptr<Block>> outgoingBlocks;
+		std::vector<std::shared_ptr<Block>> currentBlocks;
 		std::map<int, std::shared_ptr<Block>> blockMap;
 		std::shared_ptr<MT::Timer> actionTimer;
 		std::shared_ptr<MT::Rectangle> background;
 
+		std::shared_ptr<MT::Transition> getTransition();
 		void updateBoardIfNeeded();
 		int calcMapOffset(const std::shared_ptr<Block> blockPtr);
 		int calcMapOffset(unsigned int x, unsigned int y);
@@ -32,6 +36,11 @@ namespace MTGame
 		Board(unsigned int width, unsigned int height);
 
 		void setCellSize(unsigned int width, unsigned int height);
+		void addTetromino(const std::vector<std::shared_ptr<Block>>& blocks);
+		void moveCurrentPiece(int x, int y = 0);
+		void rotatePiece();
+		void enableFastFall();
+		void disableFastFall();
 
 		void add(std::shared_ptr<ApplicationObject> ao);
 		void onInitialAttach();
