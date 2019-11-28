@@ -4,6 +4,7 @@
 #include "actor/board/Board.h"
 #include "gui/camera/GameCamera.h"
 #include "ui/renderable/element/Text.h"
+#include "ui/renderable/primitive/particle/ParticleSystem.h"
 
 namespace MTGame
 {
@@ -14,9 +15,13 @@ namespace MTGame
 		bool isLeftDown = false, isRightDown = false;
 		std::shared_ptr<MT::Timer> keyRepeatTimer;
 		std::shared_ptr<MT::Text> scoreText;
+		std::shared_ptr<MT::ParticleSystem> particleSystem;
+		std::shared_ptr<MT::ParticleSystem> blockParticleSystem;
 		std::shared_ptr<Board> board;
 		std::shared_ptr<Board> previewBoard;
 		std::shared_ptr<GameCamera> camera;
+
+		void updateScoreText();
 
 	public:
 		SceneTetris();

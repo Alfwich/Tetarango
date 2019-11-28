@@ -62,15 +62,15 @@ namespace MT
 		const auto textureHeight = 64.0;
 		const auto cornerBoxWidth = cornerSize;//std::floor((cornerSize / textureWidth) * getWidth());
 		const auto cornerBoxHeight = cornerSize;//std::floor((cornerSize / textureHeight) * getHeight());
-		const auto centerBoxWidth = std::floor(getWidth() - 2 * cornerBoxWidth);
-		const auto centerBoxHeight = std::floor(getHeight() - 2 * cornerBoxHeight);
+		const auto centerBoxWidth = getWidth() - 2 * cornerBoxWidth;
+		const auto centerBoxHeight = getHeight() - 2 * cornerBoxHeight;
 
 		const auto topLeft = std::make_shared<MT::Animated>();
 		topLeft->sizeToAnimation = false;
 		topLeft->setAnimationSet(nineSliceAnimationName);
 		topLeft->play("top-left");
 		topLeft->setTexture(currentTextureName);
-		topLeft->setSizeAndPosition(cornerBoxWidth / 2, cornerBoxHeight / 2, cornerBoxWidth, cornerBoxHeight);
+		topLeft->setSizeAndPosition(cornerBoxWidth / 2.0, cornerBoxHeight / 2.0, cornerBoxWidth, cornerBoxHeight);
 		add(topLeft);
 
 		const auto top = std::make_shared<MT::Animated>();

@@ -38,6 +38,7 @@
 #include "prop/particles/hit/hard/ParticleHitHardFactory.h"
 #include "prop/particles/hit/soft/ParticleHitSoftFactory.h"
 #include "prop/particles/space/ParticleSpaceBackgroundFactory.h"
+#include "prop/particles/block/BlockParticleFactory.h"
 
 // General
 #include "gui/camera/GameCamera.h"

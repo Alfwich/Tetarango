@@ -24,7 +24,7 @@ namespace MT
 
 	public:
 
-		void registerCase(T outcome, double probability);
+		void registerCase(T outcome, double probability = 1.0);
 		void registerSubGenerator(T outcome, std::shared_ptr<RandomGenerator> generator);
 		T get(double probOffset = 0.0);
 	};

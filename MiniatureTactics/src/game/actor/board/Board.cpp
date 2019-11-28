@@ -103,16 +103,19 @@ namespace MTGame
 		return hasFailedToPlacePiece;
 	}
 
-	int Board::getEliminatedPieces()
+	std::vector<std::shared_ptr<Block>> Board::getEliminatedPieces()
 	{
-		if (eliminatedPieces > 0)
+		auto result = std::vector<std::shared_ptr<Block>>();
+		if (eliminiatedBlocks.size() > 0)
 		{
-			const auto result = eliminatedPieces;
-			eliminatedPieces = 0;
-			return result;
+			for (const auto block : eliminiatedBlocks)
+			{
+				result.push_back(block);
+			}
+			eliminiatedBlocks.clear();
 		}
 
-		return 0;
+		return result;
 	}
 
 	void Board::resetBoard()
@@ -400,7 +403,7 @@ namespace MTGame
 				outgoingBlock->blockX = -1;
 				outgoingBlock->blockY = -1;
 
-				eliminatedPieces++;
+				eliminiatedBlocks.push_back(outgoingBlock);
 			}
 
 			std::list<std::shared_ptr<Block>> blocksToDrop;

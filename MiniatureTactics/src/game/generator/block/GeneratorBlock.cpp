@@ -13,13 +13,13 @@ namespace MTGame
 	void GeneratorBlock::initGenerators()
 	{
 		hasInit = true;
-		defaultColorGenerator.registerCase(BlockColor::Purple, 1);
-		defaultColorGenerator.registerCase(BlockColor::Blue, 1);
-		defaultColorGenerator.registerCase(BlockColor::Red, 1);
-		defaultColorGenerator.registerCase(BlockColor::Yellow, 1);
-		defaultColorGenerator.registerCase(BlockColor::Green, 1);
-		defaultColorGenerator.registerCase(BlockColor::Orange, 1);
-		defaultColorGenerator.registerCase(BlockColor::Cyan, 1);
+		defaultColorGenerator.registerCase(BlockColor::Purple);
+		defaultColorGenerator.registerCase(BlockColor::Blue);
+		defaultColorGenerator.registerCase(BlockColor::Red);
+		defaultColorGenerator.registerCase(BlockColor::Yellow);
+		defaultColorGenerator.registerCase(BlockColor::Green);
+		defaultColorGenerator.registerCase(BlockColor::Orange);
+		defaultColorGenerator.registerCase(BlockColor::Cyan);
 	}
 
 	GeneratorBlock::GeneratorBlock()

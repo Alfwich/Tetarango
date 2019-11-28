@@ -1,6 +1,8 @@
 #include "SceneTetris.h"
 #include "scene/game/SceneMainGame.h"
 #include "generator/block/GeneratorBlock.h"
+#include "prop/particles/space/ParticleSpaceBackgroundFactory.h"
+#include "prop/particles/block/BlockParticleFactory.h"
 
 namespace
 {
@@ -11,7 +13,18 @@ namespace MTGame
 {
 	SceneTetris::SceneTetris() : BaseScene(SceneGame::Tetris)
 	{
+		rebuildOnLoad = true;
 		enableSerialization<SceneTetris>();
+	}
+
+	void SceneTetris::updateScoreText()
+	{
+		if (scoreText == nullptr)
+		{
+			return;
+		}
+
+		scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
 	}
 
 	void SceneTetris::onInitialAttach()
@@ -35,7 +48,7 @@ namespace MTGame
 		board->name = "board";
 		add(board);
 
-		previewBoard = std::make_shared<Board>(4, 4);
+		previewBoard = std::make_shared<Board>(5, 5);
 		previewBoard->name = "preview-board";
 		previewBoard->disableBoardFalling();
 		previewBoard->addTetromino(blockColorGenerator.getTetromino());
@@ -52,9 +65,25 @@ namespace MTGame
 		scoreText->setTextColor(255, 255, 255);
 		scoreText->setFont("medium", 100);
 		scoreText->setTextRenderMode(MT::TextRenderMode::Fast);
-		scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
+		updateScoreText();
 		scoreText->toRightOf(board, 10);
 		add(scoreText);
+
+		particleSystem = std::make_shared<MT::ParticleSystem>();
+		particleSystem->zIndex = -5;
+		particleSystem->name = "p-system";
+		particleSystem->setSize(modules->screen->getWidth() * 2.0, modules->screen->getHeight() * 2.0);
+		particleSystem->setParticleFactory(std::make_shared<ParticleSpaceBackgroundParticleFactory>());
+		particleSystem->setParticlesPerSecond(2);
+		particleSystem->emitImmediately(40);
+		particleSystem->start();
+		add(particleSystem);
+
+		blockParticleSystem = std::make_shared<MT::ParticleSystem>();
+		blockParticleSystem->zIndex = -5;
+		blockParticleSystem->name = "p-b-system";
+		blockParticleSystem->matchSizeAndCenter(board);
+		add(blockParticleSystem);
 	}
 
 	void SceneTetris::onChildrenHydrated()
@@ -63,6 +92,9 @@ namespace MTGame
 		previewBoard = findChildWithName<Board>("preview-board");
 		camera = findChildWithName<GameCamera>("camera");
 		scoreText = findChildWithName<MT::Text>("score-text");
+		particleSystem = findChildWithName<MT::ParticleSystem>("p-system");
+		particleSystem->emitImmediately(40);
+		blockParticleSystem = findChildWithName<MT::ParticleSystem>("p-b-system");
 	}
 
 	std::shared_ptr<MT::SerializationClient> SceneTetris::doSerialize(MT::SerializationHint hint)
@@ -75,7 +107,7 @@ namespace MTGame
 
 	void SceneTetris::onEnterFrame(double deltaTime)
 	{
-		if ((isLeftDown || isRightDown) && keyRepeatTimer->isAboveThresholdAndRestart(60))
+		if ((isLeftDown || isRightDown) && keyRepeatTimer->isAboveThresholdAndRestart(120))
 		{
 			if (isLeftDown)
 			{
@@ -94,15 +126,20 @@ namespace MTGame
 		}
 
 		auto eliminatedPieces = board->getEliminatedPieces();
-		if (eliminatedPieces > 0)
+		if (eliminatedPieces.size() > 0)
 		{
+			const auto blockParticleFactory = std::make_shared<BlockParticleFactory>();
 			auto blockScore = 5;
-			while (eliminatedPieces-- > 0)
+			while (eliminatedPieces.size() > 0)
 			{
+				const auto block = eliminatedPieces.back();
 				score += blockScore;
-				blockScore += 1;
+				blockScore++;
+				blockParticleFactory->setModColor(block->getColor());
+				blockParticleSystem->emitImmediatelyWithFactory(blockScore, blockParticleFactory);
+				eliminatedPieces.pop_back();
 			}
-			scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
+			updateScoreText();
 		}
 	}
 
@@ -148,7 +185,7 @@ namespace MTGame
 
 		case SDL_SCANCODE_BACKSPACE:
 			score = 0;
-			scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
+			updateScoreText();
 			board->resetBoard();
 			break;
 		}

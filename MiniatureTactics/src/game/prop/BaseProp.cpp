@@ -21,6 +21,7 @@ namespace MTGame
 		std::make_unique<ParticleHitHardFactory>();
 		std::make_unique<ParticleHitSoftFactory>();
 		std::make_unique<ParticleSpaceBackgroundParticleFactory>();
+		std::make_unique<BlockParticleFactory>();
 
 		Block::primeBlocks();
 	}
