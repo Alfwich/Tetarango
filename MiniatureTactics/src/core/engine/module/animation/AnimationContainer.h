@@ -23,6 +23,7 @@ namespace MT
 
 		void addAnimationSet(std::shared_ptr<AnimationSet> animationSet, std::string name);
 		std::shared_ptr<AnimationSet> getAnimationSet(std::string name);
+		bool hasAnimationSet(std::string name);
 
 		std::shared_ptr<Transition> createTransition();
 		std::shared_ptr<Transition> createGameTransition();

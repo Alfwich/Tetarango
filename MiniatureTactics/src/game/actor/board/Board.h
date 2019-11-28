@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/element/NineSlice.h"
 #include "ui/renderable/element/Element.h"
 #include "engine/module/SystemModuleBundle.h"
 #include "prop/block/Block.h"
@@ -12,14 +12,13 @@ namespace MTGame
 	{
 		static bool isLoaded;
 
-		bool isFastFalling = false, hasFailedToPlacePiece = false;
+		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true;
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64;
 		std::vector<std::shared_ptr<MT::Transition>> transitions;
-		std::vector<std::shared_ptr<MT::Transition>> activeTransitions;
 		std::vector<std::shared_ptr<Block>> currentBlocks;
 		std::map<int, std::shared_ptr<Block>> blockMap;
 		std::shared_ptr<MT::Timer> actionTimer;
-		std::shared_ptr<MT::Rectangle> background;
+		std::shared_ptr<MT::NineSlice> background;
 
 		std::shared_ptr<MT::Transition> getTransition();
 		void updateBoardIfNeeded();
@@ -36,12 +35,15 @@ namespace MTGame
 
 		void setCellSize(unsigned int width, unsigned int height);
 		void addTetromino(const std::vector<std::shared_ptr<Block>>& blocks);
+		std::vector<std::shared_ptr<Block>> getCurrentBlock();
 		void moveCurrentPiece(int x, int y = 0);
 		void rotatePiece();
 		void enableFastFall();
 		void disableFastFall();
+		void enableBoardFalling();
+		void disableBoardFalling();
 
-		bool getHadActivePiece();
+		bool hasAnActivePiece();
 		bool getHasFailedToPlacePiece();
 		void resetBoard();
 

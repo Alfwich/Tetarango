@@ -12,7 +12,7 @@ namespace MT
 	class Texture
 	{
 	private:
-		std::string path;
+		std::string path, name;
 
 	protected:
 		std::shared_ptr<Screen> screen;

@@ -21,10 +21,11 @@ namespace MT
 		void updateFrame(double frameTime);
 
 	protected:
-		bool sizeToAnimation = true;
 		std::string currentAnimationName, defaultAnimationName, currentAnimationSetName;
 
 	public:
+		bool sizeToAnimation = true;
+
 		Animated();
 		void play(std::string animationName = "");
 		void pause();

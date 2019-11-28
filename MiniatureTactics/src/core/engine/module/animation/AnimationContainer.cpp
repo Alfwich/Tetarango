@@ -30,6 +30,11 @@ namespace MT
 		return animationSets[name];
 	}
 
+	bool AnimationContainer::hasAnimationSet(std::string name)
+	{
+		return animationSets.count(name) == 1;
+	}
+
 	std::shared_ptr<Transition> AnimationContainer::createTransition()
 	{
 		return createTransitionForTimeScope(TimeScope::Global);

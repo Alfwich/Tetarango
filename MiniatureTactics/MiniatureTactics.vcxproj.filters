@@ -117,6 +117,7 @@
     <ClCompile Include="src\game\prop\block\Block.cpp" />
     <ClCompile Include="src\game\actor\board\Board.cpp" />
     <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
+    <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\UI\Camera.h" />
@@ -247,6 +248,7 @@
     <ClInclude Include="src\game\prop\block\Blocks.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
     <ClInclude Include="src\game\scene\game\tetris\SceneTetris.h" />
+    <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

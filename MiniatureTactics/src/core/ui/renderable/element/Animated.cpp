@@ -150,6 +150,7 @@ namespace MT
 		paused = client->serializeBool("isPaused", paused);
 		frame = client->serializeInt("frame", frame);
 		fpsOffset = client->serializeInt("fpsOffset", fpsOffset);
+		sizeToAnimation = client->serializeBool("sizeToAnimation", sizeToAnimation);
 
 		return Element::doSerialize(hint);
 	}

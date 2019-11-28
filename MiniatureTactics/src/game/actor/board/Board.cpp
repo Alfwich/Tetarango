@@ -1,5 +1,4 @@
 #include "Board.h"
-#include "ui/renderable/element/Rectangle.h"
 
 namespace MTGame
 {
@@ -8,13 +7,6 @@ namespace MTGame
 
 	std::shared_ptr<MT::Transition> Board::getTransition()
 	{
-		if (transitions.size() > 0)
-		{
-			auto result = transitions.back();
-			transitions.pop_back();
-			return result;
-		}
-
 		return modules->animation->createGameTransition();
 	}
 
@@ -22,8 +14,8 @@ namespace MTGame
 	{
 		if (background != nullptr)
 		{
-			setSize(boardWidth * cellWidth, boardHeight * cellHeight);
-			background->matchSizeAndCenter(this);
+			setSize(boardWidth * cellWidth + cellWidth, boardHeight * cellHeight + cellHeight);
+			background->matchSizeAndCenter(this, 0.0, 0.0, -(cellWidth / 2.0), -(cellHeight / 2.0));
 		}
 	}
 
@@ -55,6 +47,9 @@ namespace MTGame
 		if (isLoaded) {
 			return;
 		}
+
+		modules->texture->loadTexture("res/game/img/actor/board/board-background.png", "board-background");
+		//modules->animation->addAnimationSet(std::make_shared<BlockAnimations>(config), blockAnimationName);
 
 		isLoaded = true;
 	}
@@ -88,7 +83,17 @@ namespace MTGame
 		isFastFalling = false;
 	}
 
-	bool Board::getHadActivePiece()
+	void Board::enableBoardFalling()
+	{
+		isFallingEnabled = true;
+	}
+
+	void Board::disableBoardFalling()
+	{
+		isFallingEnabled = false;
+	}
+
+	bool Board::hasAnActivePiece()
 	{
 		return currentBlocks.size() > 0;
 	}
@@ -111,9 +116,9 @@ namespace MTGame
 				continue;
 			}
 
-			const auto t = getTransition();
+			const auto t = modules->animation->createTransition();
 			t->startTransition(child, 200.0, MT::Rect(child->getX() + (cellWidth * boardWidth) * MT::NumberHelper::random(-1, 1), child->getY() + (cellHeight * boardHeight) * MT::NumberHelper::random(-1, 1), 0, 0), 0.0);
-			activeTransitions.push_back(t);
+			transitions.push_back(t);
 
 			child->blockX = -1;
 			child->blockY = -1;
@@ -123,10 +128,10 @@ namespace MTGame
 	void Board::add(std::shared_ptr<ApplicationObject> ao)
 	{
 		const auto blockPtr = std::dynamic_pointer_cast<Block>(ao);
-		if (!hasFailedToPlacePiece && blockPtr != nullptr)
+		if (blockPtr != nullptr)
 		{
 			const auto mapOffset = calcMapOffset(blockPtr);
-			if (blockMap.count(calcMapOffset(blockPtr)) != 0)
+			if (hasFailedToPlacePiece || blockMap.count(calcMapOffset(blockPtr)) != 0)
 			{
 				hasFailedToPlacePiece = true;
 			}
@@ -159,6 +164,35 @@ namespace MTGame
 		{
 			currentBlocks.clear();
 		}
+	}
+
+	std::vector<std::shared_ptr<Block>> Board::getCurrentBlock()
+	{
+		auto result = std::vector<std::shared_ptr<Block>>();
+
+		if (currentBlocks.size() == 0)
+		{
+			return result;
+		}
+
+		const auto rotationPoint = currentBlocks[0];
+		const auto xOffset = rotationPoint->blockX;
+		const auto yOffset = rotationPoint->blockY;
+
+		bool shouldAllowRotation = !hasFailedToPlacePiece;
+		for (const auto currentPiece : currentBlocks)
+		{
+			blockMap.erase(calcMapOffset(currentPiece));
+			currentPiece->blockX -= xOffset;
+			currentPiece->blockY -= yOffset;
+			result.push_back(currentPiece);
+
+			remove(currentPiece);
+		}
+
+		currentBlocks.clear();
+
+		return result;
 	}
 
 	void Board::moveCurrentPiece(int x, int y)
@@ -261,17 +295,17 @@ namespace MTGame
 
 	void Board::onCreateChildren()
 	{
-		background = std::make_shared<MT::Rectangle>();
+		background = std::make_shared<MT::NineSlice>();
 		background->name = "background";
 		background->zIndex = -2;
 		updateBoardIfNeeded();
-		background->setColor(255, 255, 255);
+		background->setTexture("board-background");
 		add(background);
 	}
 
 	void Board::onChildrenHydrated()
 	{
-		background = findChildWithName<MT::Rectangle>("background");
+		background = findChildWithName<MT::NineSlice>("background");
 
 		for (const auto child : getChildrenOfType<Block>())
 		{
@@ -290,21 +324,22 @@ namespace MTGame
 		boardHeight = (unsigned int)client->serializeInt("board-height", boardHeight);
 		cellWidth = (unsigned int)client->serializeInt("cell-width", cellWidth);
 		cellHeight = (unsigned int)client->serializeInt("cell-height", cellHeight);
+		isFallingEnabled = client->serializeBool("board-is-falling-enabled", isFallingEnabled);
+		hasFailedToPlacePiece = client->serializeBool("board-has-failed-to-place-piece", hasFailedToPlacePiece);
 
 		return MT::Element::doSerialize(hint);
 	}
 
 	void Board::onEnterFrame(double deltaTime)
 	{
-		if (!hasFailedToPlacePiece && actionTimer->isAboveThresholdAndRestart(isFastFalling ? 50 : 250))
+		if (isFallingEnabled && !hasFailedToPlacePiece && actionTimer->isAboveThresholdAndRestart(isFastFalling ? 25 : 250))
 		{
-			for (auto it = activeTransitions.begin(); it != activeTransitions.end();)
+			for (auto it = transitions.begin(); it != transitions.end();)
 			{
 				const auto transition = (*it);
 				if (!transition->isPlaying())
 				{
-					it = activeTransitions.erase(it);
-					transitions.push_back(transition);
+					it = transitions.erase(it);
 				}
 				else
 				{
@@ -315,31 +350,29 @@ namespace MTGame
 			std::vector<std::shared_ptr<Block>> outgoingBlocks;
 			int lowestRowToOutgo = -1;
 			unsigned int numRowsToDrop = 0;
-			if (currentBlocks.size() == 0)
+			for (int y = 0; y <= (int)boardHeight; ++y)
 			{
-				for (int y = 0; y <= (int)boardHeight; ++y)
-				{
-					auto x = 0;
-					auto rowFilled = true;
+				auto x = 0;
+				auto rowFilled = true;
 
-					while (rowFilled && x <= (int)boardWidth)
+				while (rowFilled && x <= (int)boardWidth)
+				{
+					const auto pos = calcMapOffset(x++, y);
+					rowFilled = blockMap.count(pos) == 1 && blockMap[pos]->hasSettled;
+				}
+
+				if (rowFilled)
+				{
+					if (y > lowestRowToOutgo)
 					{
-						rowFilled = blockMap.count(calcMapOffset(x++, y)) == 1;
+						lowestRowToOutgo = y;
 					}
 
-					if (rowFilled)
+					numRowsToDrop++;
+
+					for (unsigned int x = 0; x <= boardWidth; ++x)
 					{
-						if (y > lowestRowToOutgo)
-						{
-							lowestRowToOutgo = y;
-						}
-
-						numRowsToDrop++;
-
-						for (unsigned int x = 0; x <= boardWidth; ++x)
-						{
-							outgoingBlocks.push_back(blockMap[calcMapOffset(x, y)]);
-						}
+						outgoingBlocks.push_back(blockMap[calcMapOffset(x, y)]);
 					}
 				}
 			}
@@ -348,9 +381,9 @@ namespace MTGame
 			{
 				blockMap.erase(calcMapOffset(outgoingBlock->blockX, outgoingBlock->blockY));
 
-				const auto t = getTransition();
+				const auto t = modules->animation->createTransition();
 				t->startTransition(outgoingBlock, 200.0, MT::Rect(outgoingBlock->getX() + (cellWidth * boardWidth) * MT::NumberHelper::random(-1, 1), outgoingBlock->getY(), cellWidth, 0), 0.0);
-				activeTransitions.push_back(t);
+				transitions.push_back(t);
 
 				outgoingBlock->blockX = -1;
 				outgoingBlock->blockY = -1;

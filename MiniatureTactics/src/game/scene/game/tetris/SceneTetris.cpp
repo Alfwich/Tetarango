@@ -24,7 +24,6 @@ namespace MTGame
 
 		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE }, weak_from_this());
 		keyRepeatTimer = modules->time->createTimer(MT::TimeScope::Game);
-		pieceTimer = modules->time->createTimer(MT::TimeScope::Game);
 		keyRepeatTimer->start();
 
 		enableEnterFrame();
@@ -32,22 +31,27 @@ namespace MTGame
 
 	void SceneTetris::onCreateChildren()
 	{
-		board = std::make_shared<Board>(20, 20);
+		board = std::make_shared<Board>(10, 24);
 		board->name = "board";
 		add(board);
 
+		previewBoard = std::make_shared<Board>(5, 5);
+		previewBoard->name = "preview-board";
+		previewBoard->disableBoardFalling();
+		previewBoard->addTetromino(blockColorGenerator.getTetromino());
+		add(previewBoard);
+
+		previewBoard->toRightTopOf(board, 10);
+
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
-		camera->setZoomLimits(4.0, 1.0);
-		camera->setDefaultsAndReset(2.0, 0.0, 0.0);
-		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		camera->setTimeScope(MT::TimeScope::Camera);
 		add(camera);
 	}
 
 	void SceneTetris::onChildrenHydrated()
 	{
 		board = findChildWithName<Board>("board");
+		previewBoard = findChildWithName<Board>("preview-board");
 		camera = findChildWithName<GameCamera>("camera");
 	}
 
@@ -65,14 +69,10 @@ namespace MTGame
 			}
 		}
 
-		if (!board->getHadActivePiece() && !board->getHasFailedToPlacePiece())
+		if (!board->getHasFailedToPlacePiece() && !board->hasAnActivePiece() && previewBoard->hasAnActivePiece())
 		{
-			pieceTimer->startIfNotRunning();
-		}
-
-		if (pieceTimer->isAboveThresholdAndStop(500))
-		{
-			board->addTetromino(blockColorGenerator.getTetromino());
+			board->addTetromino(previewBoard->getCurrentBlock());
+			previewBoard->addTetromino(blockColorGenerator.getTetromino());
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace MTGame
 		switch (key)
 		{
 		case SDL_SCANCODE_1:
-			//board->addTetromino(blockColorGenerator.getTetromino());
+			board->enableFastFall();
 			break;
 
 		case SDL_SCANCODE_2:

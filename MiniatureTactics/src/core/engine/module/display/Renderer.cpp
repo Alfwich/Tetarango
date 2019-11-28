@@ -228,13 +228,16 @@ namespace MT
 
 	void Renderer::renderOpenGL(std::shared_ptr<ApplicationObject> root, Rect rootRect, Screen* screen, RenderPackage* renderPackage)
 	{
+
+		glClearColor(clearColor.r / 255.0, clearColor.g / 255.0, clearColor.b / 255.0, clearColor.a / 255.0);
+
 		if (clearColor.a != 0)
 		{
-			if (isOpenGLEnabled())
-			{
-				glClearColor(clearColor.r / 255.0, clearColor.g / 255.0, clearColor.b / 255.0, clearColor.a / 255.0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			}
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+		else
+		{
+			glClear(GL_DEPTH_BUFFER_BIT);
 		}
 
 		const auto width = screenWidth, height = screenHeight;
