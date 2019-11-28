@@ -35,7 +35,7 @@ namespace MTGame
 		board->name = "board";
 		add(board);
 
-		previewBoard = std::make_shared<Board>(5, 5);
+		previewBoard = std::make_shared<Board>(4, 4);
 		previewBoard->name = "preview-board";
 		previewBoard->disableBoardFalling();
 		previewBoard->addTetromino(blockColorGenerator.getTetromino());
@@ -46,6 +46,15 @@ namespace MTGame
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
 		add(camera);
+
+		scoreText = std::make_shared<MT::Text>();
+		scoreText->name = "score-text";
+		scoreText->setTextColor(255, 255, 255);
+		scoreText->setFont("medium", 100);
+		scoreText->setTextRenderMode(MT::TextRenderMode::Fast);
+		scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
+		scoreText->toRightOf(board, 10);
+		add(scoreText);
 	}
 
 	void SceneTetris::onChildrenHydrated()
@@ -53,6 +62,15 @@ namespace MTGame
 		board = findChildWithName<Board>("board");
 		previewBoard = findChildWithName<Board>("preview-board");
 		camera = findChildWithName<GameCamera>("camera");
+		scoreText = findChildWithName<MT::Text>("score-text");
+	}
+
+	std::shared_ptr<MT::SerializationClient> SceneTetris::doSerialize(MT::SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__scene__", hint);
+		score = client->serializeInt("score", score);
+
+		return BaseScene::doSerialize(hint);
 	}
 
 	void SceneTetris::onEnterFrame(double deltaTime)
@@ -73,6 +91,18 @@ namespace MTGame
 		{
 			board->addTetromino(previewBoard->getCurrentBlock());
 			previewBoard->addTetromino(blockColorGenerator.getTetromino());
+		}
+
+		auto eliminatedPieces = board->getEliminatedPieces();
+		if (eliminatedPieces > 0)
+		{
+			auto blockScore = 5;
+			while (eliminatedPieces-- > 0)
+			{
+				score += blockScore;
+				blockScore += 1;
+			}
+			scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
 		}
 	}
 
@@ -117,6 +147,8 @@ namespace MTGame
 			break;
 
 		case SDL_SCANCODE_BACKSPACE:
+			score = 0;
+			scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
 			board->resetBoard();
 			break;
 		}

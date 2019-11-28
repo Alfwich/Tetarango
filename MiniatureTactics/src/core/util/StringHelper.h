@@ -113,6 +113,16 @@ namespace MT
 			return str;
 		}
 
+		std::string static inline padLeft(std::string str, const size_t num, const char paddingChar)
+		{
+			while (str.size() < num)
+			{
+				str = paddingChar + str;
+			}
+
+			return str;
+		}
+
 		std::string static inline keyToDisplayName(std::string const& value)
 		{
 			auto result = std::string();

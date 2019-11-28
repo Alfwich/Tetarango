@@ -103,6 +103,18 @@ namespace MTGame
 		return hasFailedToPlacePiece;
 	}
 
+	int Board::getEliminatedPieces()
+	{
+		if (eliminatedPieces > 0)
+		{
+			const auto result = eliminatedPieces;
+			eliminatedPieces = 0;
+			return result;
+		}
+
+		return 0;
+	}
+
 	void Board::resetBoard()
 	{
 		hasFailedToPlacePiece = false;
@@ -387,6 +399,8 @@ namespace MTGame
 
 				outgoingBlock->blockX = -1;
 				outgoingBlock->blockY = -1;
+
+				eliminatedPieces++;
 			}
 
 			std::list<std::shared_ptr<Block>> blocksToDrop;

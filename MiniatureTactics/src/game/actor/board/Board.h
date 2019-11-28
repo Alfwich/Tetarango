@@ -13,7 +13,7 @@ namespace MTGame
 		static bool isLoaded;
 
 		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true;
-		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64;
+		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64, eliminatedPieces = 0;
 		std::vector<std::shared_ptr<MT::Transition>> transitions;
 		std::vector<std::shared_ptr<Block>> currentBlocks;
 		std::map<int, std::shared_ptr<Block>> blockMap;
@@ -45,6 +45,7 @@ namespace MTGame
 
 		bool hasAnActivePiece();
 		bool getHasFailedToPlacePiece();
+		int getEliminatedPieces();
 		void resetBoard();
 
 		void add(std::shared_ptr<ApplicationObject> ao);
