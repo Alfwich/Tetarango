@@ -34,7 +34,7 @@ namespace MTGame
 			gameScene->enableMenu();
 		}
 
-		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE }, weak_from_this());
+		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE, SDL_SCANCODE_0 }, weak_from_this());
 		keyRepeatTimer = modules->time->createTimer(MT::TimeScope::Game);
 		keyRepeatTimer->start();
 
@@ -83,6 +83,19 @@ namespace MTGame
 		blockParticleSystem->name = "p-b-system";
 		blockParticleSystem->matchSizeAndCenter(board);
 		add(blockParticleSystem);
+
+		cachedImage = std::make_shared<MT::CachedImage>();
+		cachedImage->name = "cached";
+		cachedImage->setSize(2560 * 0.2, 1440 * 0.2);
+		cachedImage->toBottomOf(scoreText, 20);
+		cachedImage->setShouldScaleToImageSize(false);
+		add(cachedImage);
+
+		const auto cachedImageBG = std::make_shared<MT::Rectangle>();
+		cachedImageBG->setColor(128, 128, 128);
+		cachedImageBG->setSizeAndPosition(cachedImage->getX(), cachedImage->getY(), cachedImage->getWidth() + 10, cachedImage->getHeight() + 10);
+		cachedImageBG->zIndex = -2;
+		add(cachedImageBG);
 	}
 
 	void SceneTetris::onChildrenHydrated()
@@ -94,6 +107,7 @@ namespace MTGame
 		particleSystem = findChildWithName<MT::ParticleSystem>("p-system");
 		particleSystem->emitImmediately(40);
 		blockParticleSystem = findChildWithName<MT::ParticleSystem>("p-b-system");
+		cachedImage = findChildWithName<MT::CachedImage>("cached");
 	}
 
 	std::shared_ptr<MT::SerializationClient> SceneTetris::doSerialize(MT::SerializationHint hint)
@@ -140,6 +154,8 @@ namespace MTGame
 			}
 			updateScoreText();
 		}
+
+		cachedImage->captureWholeScreen();
 	}
 
 	void SceneTetris::onKeyPressed(SDL_Scancode key)
@@ -186,6 +202,10 @@ namespace MTGame
 			score = 0;
 			updateScoreText();
 			board->resetBoard();
+			break;
+
+		case SDL_SCANCODE_0:
+			cachedImage->captureScreen(0, 0, 1000, 1000);
 			break;
 		}
 	}

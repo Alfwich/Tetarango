@@ -1,6 +1,11 @@
 #include "Texture.h"
 namespace MT
 {
+	Texture::Texture(std::shared_ptr<Screen> screen)
+	{
+		this->screen = screen;
+		allowRebindWithRawPixelData = true;
+	}
 
 	Texture::Texture(std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset)
 	{
@@ -48,7 +53,11 @@ namespace MT
 
 	void Texture::rebindTexture()
 	{
-		SDL_Surface* tempSurface;
+		if (allowRebindWithRawPixelData) {
+			return;
+		}
+
+		SDL_Surface* tempSurface = nullptr;
 
 		const auto bitmap = asset->getAssetBundle(path);
 		if (bitmap != nullptr)
@@ -73,6 +82,36 @@ namespace MT
 		width = tempSurface->w;
 		height = tempSurface->h;
 		SDL_FreeSurface(tempSurface);
+	}
+
+	void Texture::rebindWithRawPixelData(char* data, int width, int height, int depth, int pitch, Uint32 format)
+	{
+		if (!allowRebindWithRawPixelData)
+		{
+			Logger::instance()->logCritical("Texture::Attempted to rebindWithRawPixelData with texture that forbids it");
+			return;
+		}
+
+		if (width == 0 || height == 0)
+		{
+			return;
+		}
+
+		SDL_Surface* tempSurface = SDL_CreateRGBSurfaceWithFormatFrom(data, width, height, depth, pitch, format);
+
+		if (!tempSurface)
+		{
+			Logger::instance()->logCritical("Texture::Failed to render SDL surface for path=" + path);
+			SDL_FreeSurface(tempSurface);
+			return;
+		}
+
+		bindOpenGLTexture(tempSurface);
+
+		width = tempSurface->w;
+		height = tempSurface->h;
+		SDL_FreeSurface(tempSurface);
+
 	}
 
 	void Texture::bindOpenGLTexture(SDL_Surface* tempSurface)
@@ -102,7 +141,6 @@ namespace MT
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-
 	}
 
 	int Texture::getWidth()

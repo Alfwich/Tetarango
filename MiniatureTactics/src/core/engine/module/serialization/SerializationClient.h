@@ -41,7 +41,7 @@ namespace MT
 		std::string getString(std::string name, std::string defaultValue = "");
 		double getDouble(std::string name, double defaultValue = 0.0);
 		int getInt(std::string name, int defaultValue = 0);
-		bool getBool(std::string name);
+		bool getBool(std::string name, bool defaultValue = false);
 
 		void setString(std::string name, std::string value);
 		void setDouble(std::string name, double value);

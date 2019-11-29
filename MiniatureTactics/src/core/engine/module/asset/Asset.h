@@ -19,8 +19,6 @@ namespace MT
 
 	class Asset : public IBaseModule
 	{
-
-
 		std::shared_ptr<Storage> storage;
 		std::shared_ptr<Filesystem> filesystem;
 

@@ -13,6 +13,7 @@
 #include "ui/renderable/Zone.h"
 #include "ui/renderable/primitive/trace/Trace.h"
 #include "ui/renderable/element/NineSlice.h"
+#include "ui/renderable/element/CachedImage.h"
 
 #include "Tests.h"
 
@@ -114,7 +115,6 @@ namespace MT
 	void Application::primeSerialization()
 	{
 		std::make_unique<ApplicationObject>();
-		std::make_unique<NineSlice>();
 		std::make_unique<Rectangle>();
 		std::make_unique<Scene>();
 		std::make_unique<SceneContainer>();
@@ -127,6 +127,8 @@ namespace MT
 		std::make_unique<Animated>();
 		std::make_unique<Element>();
 		std::make_unique<Trace>();
+		std::make_unique<NineSlice>();
+		std::make_unique<CachedImage>();
 	}
 
 	void Application::run(int argc, char* args[])

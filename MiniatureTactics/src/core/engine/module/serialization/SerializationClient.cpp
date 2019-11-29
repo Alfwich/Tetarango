@@ -148,10 +148,10 @@ namespace MT
 		return myValue.empty() ? defaultValue : std::stoi(myValue);
 	}
 
-	bool SerializationClient::getBool(std::string name)
+	bool SerializationClient::getBool(std::string name, bool defaultValue)
 	{
 		const auto myValue = getValue(name);
-		return myValue == SerializationTags::TYPE_BOOL_TRUE;
+		return myValue.empty() ? defaultValue : myValue == SerializationTags::TYPE_BOOL_TRUE;
 	}
 
 	void SerializationClient::setString(std::string name, std::string value)
