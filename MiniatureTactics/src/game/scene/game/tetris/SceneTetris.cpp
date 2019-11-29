@@ -13,7 +13,6 @@ namespace MTGame
 {
 	SceneTetris::SceneTetris() : BaseScene(SceneGame::Tetris)
 	{
-		rebuildOnLoad = true;
 		enableSerialization<SceneTetris>();
 	}
 

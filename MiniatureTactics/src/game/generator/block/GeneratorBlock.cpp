@@ -40,32 +40,32 @@ namespace MTGame
 		switch (value)
 		{
 		case BlockColor::Purple:
-			return MT::Color(255, 0, 255);
+			return MT::Color(0xa001efff);
 			break;
 
 		case BlockColor::Blue:
-			return MT::Color(0, 0, 255);
+			return MT::Color(0x0001f2ff);
 			break;
 
 		case BlockColor::Red:
-			return MT::Color(255, 0, 0);
+			return MT::Color(0xf00100ff);
 			break;
 
 		case BlockColor::Yellow:
-			return MT::Color(255, 255, 0);
+			return MT::Color(0xf0f001ff);
 			break;
 
 		case BlockColor::Green:
-			return MT::Color(0, 255, 0);
+			return MT::Color(0x00f000ff);
 			break;
 
 		case BlockColor::Orange:
-			return MT::Color(255, 192, 0);
+			return MT::Color(0xefa000ff);
 			break;
 
 		default:
 		case BlockColor::Cyan:
-			return MT::Color(0, 255, 255);
+			return MT::Color(0x01f0f1ff);
 			break;
 		}
 	}
