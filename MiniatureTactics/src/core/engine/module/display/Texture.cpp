@@ -111,7 +111,6 @@ namespace MT
 		width = tempSurface->w;
 		height = tempSurface->h;
 		SDL_FreeSurface(tempSurface);
-
 	}
 
 	void Texture::bindOpenGLTexture(SDL_Surface* tempSurface)

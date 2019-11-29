@@ -89,6 +89,7 @@ namespace MTGame
 		cachedImage->setSize(2560 * 0.2, 1440 * 0.2);
 		cachedImage->toBottomOf(scoreText, 20);
 		cachedImage->setShouldScaleToImageSize(false);
+		cachedImage->setShouldSerializeImage(true);
 		add(cachedImage);
 
 		const auto cachedImageBG = std::make_shared<MT::Rectangle>();
@@ -154,8 +155,6 @@ namespace MTGame
 			}
 			updateScoreText();
 		}
-
-		cachedImage->captureWholeScreen();
 	}
 
 	void SceneTetris::onKeyPressed(SDL_Scancode key)
@@ -205,7 +204,7 @@ namespace MTGame
 			break;
 
 		case SDL_SCANCODE_0:
-			cachedImage->captureScreen(0, 0, 1000, 1000);
+			cachedImage->captureWholeScreen();
 			break;
 		}
 	}
