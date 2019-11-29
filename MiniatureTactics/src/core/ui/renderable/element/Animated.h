@@ -33,6 +33,7 @@ namespace MT
 		bool isPlaying();
 		bool isPaused();
 
+		void setAnimationSet(std::shared_ptr<AnimationSet> animationSet);
 		void setAnimationSet(std::string animationSetName);
 		void setCurrentAnimation(std::string animationName);
 		std::string getCurrentAnimationName();

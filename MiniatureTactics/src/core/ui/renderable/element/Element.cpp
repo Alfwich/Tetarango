@@ -23,7 +23,7 @@ namespace MT
 	void Element::setTexture(std::string key)
 	{
 		currentTextureName = key;
-		texture = modules->texture->getTexture(key);
+		setTexture(modules->texture->getTexture(key));
 	}
 
 	bool Element::hasTexture()

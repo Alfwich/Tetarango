@@ -22,11 +22,22 @@ namespace MT
 		}
 	}
 
+	void Animated::setAnimationSet(std::shared_ptr<AnimationSet> animationSet)
+	{
+		this->animationSet = animationSet;
+
+		if (currentAnimationName != "")
+		{
+			pause();
+			play(currentAnimationName);
+		}
+	}
+
 	void Animated::setAnimationSet(std::string animationSetName)
 	{
 		std::shared_ptr<AnimationSet> animationSet = modules->animation->getAnimationSet(animationSetName);
-		this->animationSet = animationSet;
 		this->currentAnimationSetName = animationSetName;
+		setAnimationSet(animationSet);
 	}
 
 	void Animated::play(std::string animationName)

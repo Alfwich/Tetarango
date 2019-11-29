@@ -24,8 +24,8 @@ namespace MT
 	public:
 		Element();
 
-		void setTexture(std::string key);
-		void setTexture(std::shared_ptr<Texture> texture);
+		virtual void setTexture(std::string key);
+		virtual void setTexture(std::shared_ptr<Texture> texture);
 		virtual std::shared_ptr<Rect> getClipRect();
 		bool hasTexture();
 		std::shared_ptr<Texture> getTexture();
