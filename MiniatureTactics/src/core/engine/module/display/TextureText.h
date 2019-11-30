@@ -26,6 +26,7 @@ namespace MT
 
 	class TextureText : public Texture
 	{
+		int ogWidth = 0, ogHeight = 0;
 		TextureTextRenderConfiguration config;
 
 		void bindOpenGLTexture(SDL_Surface* surface, const TextureTextRenderConfiguration& textRenderConfiguration);
@@ -36,6 +37,8 @@ namespace MT
 		~TextureText();
 
 		void updateConfiguration(TextureTextRenderConfiguration config);
+		int getOriginalWidth();
+		int getOriginalHeight();
 
 		void rebind();
 		void rebindText(TextureTextRenderConfiguration textRenderConfiguration);

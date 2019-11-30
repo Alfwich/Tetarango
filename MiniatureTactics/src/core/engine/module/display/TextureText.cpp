@@ -15,6 +15,16 @@ namespace MT
 		this->config = config;
 	}
 
+	int TextureText::getOriginalWidth()
+	{
+		return ogWidth;
+	}
+
+	int TextureText::getOriginalHeight()
+	{
+		return ogHeight;
+	}
+
 	void TextureText::rebind()
 	{
 		rebindText(config);
@@ -55,8 +65,9 @@ namespace MT
 
 		bindOpenGLTexture(tempSurface, textRenderConfiguration);
 
-		width = tempSurface->w;
-		height = tempSurface->h;
+		ogWidth = tempSurface->w;
+		ogHeight = tempSurface->h;
+
 		SDL_FreeSurface(tempSurface);
 	}
 
@@ -90,12 +101,40 @@ namespace MT
 			}
 
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tempSurface->w, tempSurface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.get());
+
+			width = tempSurface->w;
+			height = tempSurface->h;
 		}
 		break;
 
 		case TextRenderMode::SlowAlpha:
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tempSurface->w, tempSurface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, tempSurface->pixels);
-			break;
+		{
+			const auto isTexturePowerOf2 = std::ceil(std::log2(tempSurface->w)) == std::floor(std::log2(tempSurface->w)) && std::ceil(std::log2(tempSurface->h)) == std::floor(std::log2(tempSurface->w));
+			if (isTexturePowerOf2)
+			{
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tempSurface->w, tempSurface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, tempSurface->pixels);
+			}
+			else
+			{
+				const auto nextPow2Width = (int)std::pow(2, std::ceil(std::log2(tempSurface->w)));
+				const auto nextPow2Height = (int)std::pow(2, std::ceil(std::log2(tempSurface->h)));
+				const auto newSurface = SDL_CreateRGBSurfaceWithFormat(0, nextPow2Width, nextPow2Height, 32, SDL_PIXELFORMAT_BGRA32);
+				SDL_FillRect(newSurface, NULL, 0x0000FFFF);
+				auto destRect = SDL_Rect();
+				destRect.x = (nextPow2Width - tempSurface->w) / 2;
+				destRect.y = (nextPow2Height - tempSurface->h) / 2;
+				destRect.w = tempSurface->w;
+				destRect.h = tempSurface->h;
+				SDL_BlitSurface(tempSurface, NULL, newSurface, &destRect);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, newSurface->w, newSurface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, newSurface->pixels);
+
+				width = newSurface->w;
+				height = newSurface->h;
+
+				SDL_FreeSurface(newSurface);
+			}
+		}
+		break;
 		}
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

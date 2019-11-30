@@ -65,7 +65,6 @@ namespace MTGame
 		scoreText->name = "score-text";
 		scoreText->setTextColor(255, 255, 255);
 		scoreText->setFont("medium", 100);
-		scoreText->setTextRenderMode(MT::TextRenderMode::Fast);
 		updateScoreText();
 		scoreText->toRightOf(board, 10);
 		add(scoreText);
