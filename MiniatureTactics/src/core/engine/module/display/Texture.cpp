@@ -103,7 +103,7 @@ namespace MT
 		{
 		case ImageBundleType::Png:
 		{
-			SDL_RWops* rw = SDL_RWFromMem(&bundle->data[0], bundle->data.size());
+			SDL_RWops* rw = SDL_RWFromMem(&bundle->data[0], (int)bundle->data.size());
 			tempSurface = IMG_LoadPNG_RW(rw);
 		}
 		break;
