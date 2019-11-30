@@ -55,9 +55,9 @@ namespace MT
 		return modules->asset->compressRawImageToPng(w, h, imageData);
 	}
 
-	void CachedImage::updateImageDataBuffer(int w, int h)
+	void CachedImage::updateImageDataBuffer(int size)
 	{
-		if (imageData == nullptr || serializationClient->getInt(imageDataSizeParamName) < w * h * 3)
+		if (imageData == nullptr || serializationClient->getInt(imageDataSizeParamName) < size)
 		{
 			if (imageData != nullptr)
 			{
@@ -65,9 +65,14 @@ namespace MT
 			}
 
 			// HACK: Manual memory is MUCH faster than std::unique_ptr
-			imageData = new char[w * h * 3];
-			serializationClient->setInt(imageDataSizeParamName, w * h * 3);
+			imageData = new char[size];
+			serializationClient->setInt(imageDataSizeParamName, size);
 		}
+	}
+
+	void CachedImage::updateImageDataBuffer(int w, int h)
+	{
+		updateImageDataBuffer(w * h * 3);
 	}
 
 	bool CachedImage::captureScreenData(int x, int y, int w, int h)
@@ -157,8 +162,7 @@ namespace MT
 
 			if (!data.empty() && w > 0 && h > 0 && end > 0)
 			{
-				serializationClient->setInt(imageDataSizeParamName, (int)end);
-				updateImageDataBuffer(w, h);
+				updateImageDataBuffer((int)end);
 
 				for (int i = 0; i < end; ++i)
 				{
@@ -205,6 +209,7 @@ namespace MT
 		if (captureScreenData(x, y, w, h))
 		{
 			updateCachedImageWithRawData(imageData, w, h);
+			compressImage();
 		}
 	}
 

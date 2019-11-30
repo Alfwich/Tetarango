@@ -23,8 +23,10 @@ namespace MTGame
 			}
 		}
 
-		screenConfig.width = defaultScreenWidth;
-		screenConfig.height = defaultScreenHeight;
+		screenConfig.width = 1024;
+		screenConfig.height = 768;
+		//screenConfig.width = defaultScreenWidth;
+		//screenConfig.height = defaultScreenHeight;
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
 		//screenConfig.isFullscreen = true;
 		//screenConfig.openGlWireframeMode = true;

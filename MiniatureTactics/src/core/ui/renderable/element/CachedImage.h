@@ -12,6 +12,7 @@ namespace MT
 		std::shared_ptr<MT::Texture> cachedTexture;
 
 		std::vector<unsigned char> compressImage();
+		void updateImageDataBuffer(int size);
 		void updateImageDataBuffer(int w, int h);
 		bool captureScreenData(int x, int y, int w, int h);
 		void updateCachedImageWithRawData(char* data, int w, int h);
