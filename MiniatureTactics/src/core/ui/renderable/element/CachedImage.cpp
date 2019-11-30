@@ -1,7 +1,5 @@
 #include "CachedImage.h"
 
-#include "png.h"
-
 namespace
 {
 	const auto qualityFactorParamName = "qualityFactor";
@@ -14,7 +12,7 @@ namespace
 
 namespace MT
 {
-	void CachedImage::updateCachedImageData(char* data, int w, int h)
+	void CachedImage::updateCachedImageWithRawData(char* data, int w, int h)
 	{
 		if (cachedTexture == nullptr)
 		{
@@ -28,65 +26,33 @@ namespace MT
 		{
 			setSize(w, h);
 		}
+
+		rawDataIsPng = false;
 	}
 
-	void CachedImage::compressImage()
+	void CachedImage::updateCachedImageWithPngData(char* data, int dataSize, int w, int h)
 	{
-		/* create file
-		FILE *fp = fopen(file_name, "wb");
-		if (!fp)
-			return //("[write_png_file] File %s could not be opened for writing", file_name);
-			*/
+		if (cachedTexture == nullptr)
+		{
+			cachedTexture = std::make_shared<MT::Texture>(modules->screen);
+		}
 
+		cachedTexture->rebindWithPngPixelData(data, dataSize);
+		setTexture(cachedTexture);
 
-			// initialize stuff 
-		auto png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+		if (serializationClient->getBool(shouldScaleToImageParamName, true))
+		{
+			setSize(w, h);
+		}
 
-		if (!png_ptr)
-			return;//("[write_png_file] png_create_write_struct failed");
+		rawDataIsPng = true;
+	}
 
-		auto info_ptr = png_create_info_struct(png_ptr);
-		if (!info_ptr)
-			return;//("[write_png_file] png_create_info_struct failed");
-
-			/*
-		if (setjmp(png_jmpbuf(png_ptr)))
-			return//("[write_png_file] Error during init_io");
-
-		png_init_io(png_ptr, fp);
-
-
-		// write header
-		if (setjmp(png_jmpbuf(png_ptr)))
-			return//("[write_png_file] Error during writing header");
-
-		png_set_IHDR(png_ptr, info_ptr, width, height,
-			bit_depth, color_type, PNG_INTERLACE_NONE,
-			PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-
-		png_write_info(png_ptr, info_ptr);
-
-
-		// write bytes
-		if (setjmp(png_jmpbuf(png_ptr)))
-			return//("[write_png_file] Error during writing bytes");
-
-		png_write_image(png_ptr, row_pointers);
-
-
-		// end write
-		if (setjmp(png_jmpbuf(png_ptr)))
-			return//("[write_png_file] Error during end of write");
-
-		png_write_end(png_ptr, NULL);
-
-		// cleanup heap allocation
-		for (y = 0; y < height; y++)
-			free(row_pointers[y]);
-		free(row_pointers);
-
-		fclose(fp);
-			*/
+	std::vector<unsigned char> CachedImage::compressImage()
+	{
+		const auto w = serializationClient->getInt(imageWidthParamName);
+		const auto h = serializationClient->getInt(imageHeightParamName);
+		return modules->asset->compressRawImageToPng(w, h, imageData);
 	}
 
 	void CachedImage::updateImageDataBuffer(int w, int h)
@@ -187,10 +153,11 @@ namespace MT
 			const auto data = serializationClient->getString("image-data");
 			const auto w = serializationClient->getInt(imageWidthParamName);
 			const auto h = serializationClient->getInt(imageHeightParamName);
-			const auto end = serializationClient->getInt(imageDataSizeParamName);
+			const auto end = data.size();
 
 			if (!data.empty() && w > 0 && h > 0 && end > 0)
 			{
+				serializationClient->setInt(imageDataSizeParamName, (int)end);
 				updateImageDataBuffer(w, h);
 
 				for (int i = 0; i < end; ++i)
@@ -198,7 +165,7 @@ namespace MT
 					imageData[i] = data[i];
 				}
 
-				updateCachedImageData(imageData, w, h);
+				updateCachedImageWithPngData(imageData, (int)end, w, h);
 			}
 		}
 	}
@@ -237,24 +204,35 @@ namespace MT
 
 		if (captureScreenData(x, y, w, h))
 		{
-			updateCachedImageData(imageData, w, h);
+			updateCachedImageWithRawData(imageData, w, h);
 		}
 	}
 
 	std::shared_ptr<MT::SerializationClient> CachedImage::doSerialize(MT::SerializationHint hint)
 	{
-		if (serializationClient->getBool(shouldSerializeImageParamName) && hint == MT::SerializationHint::SERIALIZE)
+		if (imageData != nullptr && serializationClient->getBool(shouldSerializeImageParamName) && hint == MT::SerializationHint::SERIALIZE)
 		{
-			compressImage();
-			/*
-			const auto client = serializationClient->getClient("__cached_image__", hint);
 			std::string data;
-			for (int i = 0, end = serializationClient->getInt(imageDataSizeParamName); i < end; ++i)
+			const auto client = serializationClient->getClient("__cached_image__", hint);
+			if (rawDataIsPng)
 			{
-				data += imageData[i];
+				const auto end = serializationClient->getInt(imageDataSizeParamName);
+				for (int i = 0; i < end; ++i)
+				{
+					data += imageData[i];
+				}
 			}
+			else
+			{
+
+				const auto v = compressImage();
+				for (const auto c : v)
+				{
+					data += c;
+				}
+			}
+
 			serializationClient->setString("image-data", data);
-			*/
 		}
 
 		return Element::doSerialize(hint);

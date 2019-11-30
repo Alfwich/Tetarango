@@ -49,6 +49,7 @@ namespace MT
 		void onInit();
 
 		std::shared_ptr<ResourceBundle> getAssetBundle(std::string path);
+		std::vector<unsigned char> compressRawImageToPng(size_t w, size_t h, char *dataRGB);
 	};
 
 }

@@ -7,13 +7,15 @@ namespace MT
 
 	class CachedImage : public Element
 	{
+		bool rawDataIsPng = false;
 		char* imageData = nullptr;
 		std::shared_ptr<MT::Texture> cachedTexture;
 
-		void compressImage();
+		std::vector<unsigned char> compressImage();
 		void updateImageDataBuffer(int w, int h);
 		bool captureScreenData(int x, int y, int w, int h);
-		void updateCachedImageData(char* data, int w, int h);
+		void updateCachedImageWithRawData(char* data, int w, int h);
+		void updateCachedImageWithPngData(char* data, int dataSize, int w, int h);
 
 	public:
 		CachedImage();

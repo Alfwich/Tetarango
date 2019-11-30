@@ -155,6 +155,8 @@ namespace MTGame
 			}
 			updateScoreText();
 		}
+
+		//cachedImage->captureWholeScreen();
 	}
 
 	void SceneTetris::onKeyPressed(SDL_Scancode key)

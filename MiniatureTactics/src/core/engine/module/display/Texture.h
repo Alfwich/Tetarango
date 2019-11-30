@@ -41,6 +41,7 @@ namespace MT
 		bool isLoaded();
 
 		virtual void rebindWithRawPixelData(char* data, int width, int height, int depth = 24, int pitch = 3, Uint32 format = SDL_PIXELFORMAT_RGB24);
+		virtual void rebindWithPngPixelData(char* data, int size);
 	};
 }
 

@@ -108,9 +108,34 @@ namespace MT
 
 		bindOpenGLTexture(tempSurface);
 
+		this->width = tempSurface->w;
+		this->height = tempSurface->h;
+		SDL_FreeSurface(tempSurface);
+	}
+
+	void Texture::rebindWithPngPixelData(char* data, int size)
+	{
+		if (!allowRebindWithRawPixelData) {
+			return;
+		}
+
+		SDL_Surface* tempSurface = nullptr;
+		SDL_RWops* rw = SDL_RWFromMem(data, size);
+		tempSurface = IMG_LoadPNG_RW(rw);
+
+		if (!tempSurface)
+		{
+			Logger::instance()->logCritical("Texture::Failed to render SDL surface for path=" + path);
+			SDL_FreeSurface(tempSurface);
+			return;
+		}
+
+		bindOpenGLTexture(tempSurface);
+
 		width = tempSurface->w;
 		height = tempSurface->h;
 		SDL_FreeSurface(tempSurface);
+
 	}
 
 	void Texture::bindOpenGLTexture(SDL_Surface* tempSurface)
