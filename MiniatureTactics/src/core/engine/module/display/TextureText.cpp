@@ -119,7 +119,6 @@ namespace MT
 				const auto nextPow2Width = (int)std::pow(2, std::ceil(std::log2(tempSurface->w)));
 				const auto nextPow2Height = (int)std::pow(2, std::ceil(std::log2(tempSurface->h)));
 				const auto newSurface = SDL_CreateRGBSurfaceWithFormat(0, nextPow2Width, nextPow2Height, 32, SDL_PIXELFORMAT_BGRA32);
-				SDL_FillRect(newSurface, NULL, 0x0000FFFF);
 				auto destRect = SDL_Rect();
 				destRect.x = (nextPow2Width - tempSurface->w) / 2;
 				destRect.y = (nextPow2Height - tempSurface->h) / 2;
