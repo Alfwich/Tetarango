@@ -10,6 +10,7 @@ namespace MT
 		char* imageData = nullptr;
 		std::shared_ptr<MT::Texture> cachedTexture;
 
+		void compressImage();
 		void updateImageDataBuffer(int w, int h);
 		bool captureScreenData(int x, int y, int w, int h);
 		void updateCachedImageData(char* data, int w, int h);
