@@ -1,6 +1,7 @@
 #include "SceneSavedGamesMenu.h"
 
 #include "scene/game/SceneMainGame.h"
+#include "ui/renderable/element/CachedImage.h"
 
 namespace
 {
@@ -49,6 +50,19 @@ namespace MTGame
 		saveSlot1->clickListener = baseSceneWeakThisRef();
 		centerContainer->add(saveSlot1);
 
+		const auto img1 = client->readSring(storagePath(StorePaths::System_SaveSlot1_Image));
+		if (!img1.empty())
+		{
+			const auto cachedImage = std::dynamic_pointer_cast<MT::CachedImage>(modules->serialization->hydrate(img1));
+			if (cachedImage != nullptr)
+			{
+				cachedImage->setShouldScaleToImageSize(false);
+				cachedImage->setSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
+				cachedImage->toRightOf(saveSlot1, 10.0, 0.0);
+				centerContainer->add(cachedImage);
+			}
+		}
+
 		saveSlot2 = std::make_shared<ButtonBasic>();
 		saveSlot2->toBottomOf(saveSlot1, 0, buttonOffset);
 		if (client->readBool(storagePath(StorePaths::System_SaveSlot2)))
@@ -62,6 +76,19 @@ namespace MTGame
 		saveSlot2->clickListener = baseSceneWeakThisRef();
 		centerContainer->add(saveSlot2);
 
+		const auto img2 = client->readSring(storagePath(StorePaths::System_SaveSlot2_Image));
+		if (!img2.empty())
+		{
+			const auto cachedImage = std::dynamic_pointer_cast<MT::CachedImage>(modules->serialization->hydrate(img2));
+			if (cachedImage != nullptr)
+			{
+				cachedImage->setShouldScaleToImageSize(false);
+				cachedImage->setSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
+				cachedImage->toRightOf(saveSlot2, 10.0, 0.0);
+				centerContainer->add(cachedImage);
+			}
+		}
+
 		saveSlot3 = std::make_shared<ButtonBasic>();
 		saveSlot3->toBottomOf(saveSlot2, 0, buttonOffset);
 		if (client->readBool(storagePath(StorePaths::System_SaveSlot3)))
@@ -74,6 +101,19 @@ namespace MTGame
 		}
 		saveSlot3->clickListener = baseSceneWeakThisRef();
 		centerContainer->add(saveSlot3);
+
+		const auto img3 = client->readSring(storagePath(StorePaths::System_SaveSlot3_Image));
+		if (!img3.empty())
+		{
+			const auto cachedImage = std::dynamic_pointer_cast<MT::CachedImage>(modules->serialization->hydrate(img3));
+			if (cachedImage != nullptr)
+			{
+				cachedImage->setShouldScaleToImageSize(false);
+				cachedImage->setSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
+				cachedImage->toRightOf(saveSlot3, 10.0, 0.0);
+				centerContainer->add(cachedImage);
+			}
+		}
 
 		backButton = std::make_shared<ButtonBasic>();
 		backButton->toBottomOf(saveSlot3, 0, buttonOffset);

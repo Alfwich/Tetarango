@@ -137,6 +137,11 @@ namespace MT
 		return nullptr;
 	}
 
+	std::shared_ptr<Scene> SceneContainer::getCurrentScene()
+	{
+		return currentScene;
+	}
+
 	void SceneContainer::disableCurrentScene()
 	{
 		if (!currentScene)

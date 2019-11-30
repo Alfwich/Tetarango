@@ -31,7 +31,7 @@ namespace MT
 
 		if (textureId != 0)
 		{
-			glDeleteTextures(0, &textureId);
+			glDeleteTextures(1, &textureId);
 			textureId = 0;
 		}
 	}
@@ -84,7 +84,7 @@ namespace MT
 		SDL_FreeSurface(tempSurface);
 	}
 
-	void Texture::rebindWithRawPixelData(char* data, int width, int height, int depth, int pitch, Uint32 format)
+	void Texture::rebindWithImageBundle(std::shared_ptr<ImageBundle> bundle)
 	{
 		if (!allowRebindWithRawPixelData)
 		{
@@ -92,40 +92,30 @@ namespace MT
 			return;
 		}
 
-		if (width == 0 || height == 0)
+		if (bundle->width == 0 || bundle->height == 0 || bundle->type == ImageBundleType::Unspecificed)
 		{
-			return;
-		}
-
-		SDL_Surface* tempSurface = SDL_CreateRGBSurfaceWithFormatFrom(data, width, height, depth, pitch, format);
-
-		if (!tempSurface)
-		{
-			Logger::instance()->logCritical("Texture::Failed to render SDL surface for path=" + path);
-			SDL_FreeSurface(tempSurface);
-			return;
-		}
-
-		bindOpenGLTexture(tempSurface);
-
-		this->width = tempSurface->w;
-		this->height = tempSurface->h;
-		SDL_FreeSurface(tempSurface);
-	}
-
-	void Texture::rebindWithPngPixelData(char* data, int size)
-	{
-		if (!allowRebindWithRawPixelData) {
 			return;
 		}
 
 		SDL_Surface* tempSurface = nullptr;
-		SDL_RWops* rw = SDL_RWFromMem(data, size);
-		tempSurface = IMG_LoadPNG_RW(rw);
+
+		switch (bundle->type)
+		{
+		case ImageBundleType::Png:
+		{
+			SDL_RWops* rw = SDL_RWFromMem(&bundle->data[0], bundle->data.size());
+			tempSurface = IMG_LoadPNG_RW(rw);
+		}
+		break;
+
+		case ImageBundleType::Raw:
+			tempSurface = SDL_CreateRGBSurfaceWithFormatFrom(&bundle->data[0], bundle->width, bundle->height, 24, 3, SDL_PIXELFORMAT_RGB24);
+			break;
+		}
 
 		if (!tempSurface)
 		{
-			Logger::instance()->logCritical("Texture::Failed to render SDL surface for path=" + path);
+			Logger::instance()->logCritical("Texture::Failed to render SDL surface for image bundle");
 			SDL_FreeSurface(tempSurface);
 			return;
 		}
@@ -134,8 +124,8 @@ namespace MT
 
 		width = tempSurface->w;
 		height = tempSurface->h;
-		SDL_FreeSurface(tempSurface);
 
+		SDL_FreeSurface(tempSurface);
 	}
 
 	void Texture::bindOpenGLTexture(SDL_Surface* tempSurface)

@@ -13,12 +13,11 @@ namespace MTGame
 	class SceneTetris : public BaseScene
 	{
 		int score = 0;
-		bool isLeftDown = false, isRightDown = false;
+		bool isLeftDown = false, isRightDown = false, saveScreenOnNextEnterFrame = false;
 		std::shared_ptr<MT::Timer> keyRepeatTimer;
 		std::shared_ptr<MT::Text> scoreText;
 		std::shared_ptr<MT::ParticleSystem> particleSystem;
 		std::shared_ptr<MT::ParticleSystem> blockParticleSystem;
-		std::shared_ptr<MT::CachedImage> cachedImage;
 		std::shared_ptr<Board> board;
 		std::shared_ptr<Board> previewBoard;
 		std::shared_ptr<GameCamera> camera;
@@ -35,7 +34,9 @@ namespace MTGame
 		virtual std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
 
 		void onEnterFrame(double deltaTime);
+		void onPostRender();
 		void onKeyPressed(SDL_Scancode key);
 		void onKeyReleased(SDL_Scancode key);
+		void onAboutToSave();
 	};
 }

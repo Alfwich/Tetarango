@@ -40,5 +40,6 @@ namespace MTGame
 		std::weak_ptr<ApplicationObject> baseSceneWeakThisRef();
 
 		virtual void onButtonClicked(int id) { /* NO-OP */ };
+		virtual void onAboutToSave() {};
 	};
 }

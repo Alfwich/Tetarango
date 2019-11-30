@@ -188,58 +188,149 @@ namespace MT
 	}
 
 	//encode and write PNG to memory (std::vector) with libpng on C++
-
-	//#define ASSERT_EX(cond, error_message) do { if (!(cond)) { std::cerr << error_message; exit(1);} } while(0)
-
 	static void PngWriteCallback(png_structp  png_ptr, png_bytep data, png_size_t length) {
 		std::vector<unsigned char> *p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
 		p->insert(p->end(), data, data + length);
 	}
 
-	struct TPngDestructor {
-		png_struct *p;
-		TPngDestructor(png_struct *p) : p(p) {}
-		~TPngDestructor() { if (p) { png_destroy_write_struct(&p, NULL); } }
-	};
-
-	std::vector<unsigned char> Asset::compressRawImageToPng(size_t w, size_t h, char *data)
+	void Asset::compressRawImageToPng(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle)
 	{
-		std::vector<unsigned char> result;
+		outBundle->type = ImageBundleType::Error;
+		if (inBundle == nullptr || outBundle == nullptr || inBundle->type != ImageBundleType::Raw)
+		{
+			Logger::instance()->logCritical("Asset::Failed to compress raw image data, invalid input");
+			return;
+		}
+
+		outBundle->data.clear();
+
 		png_structp p = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		if (!p)
 		{
-			Logger::instance()->logFatal("Asset::Failed to compress raw image data, failed to create PNG write structure");
-			return result;
+			Logger::instance()->logCritical("Asset::Failed to compress raw image data, failed to create PNG write structure");
+			return;
 		}
 
 		png_infop info_ptr = png_create_info_struct(p);
 		if (!info_ptr)
 		{
-			Logger::instance()->logFatal("Asset::Failed to compress raw image data, failed to create PNG info structure");
+			Logger::instance()->logCritical("Asset::Failed to compress raw image data, failed to create PNG info structure");
 			png_destroy_write_struct(&p, NULL);
-			return result;
+			return;
 		}
 
 		if (setjmp(png_jmpbuf(p)))
 		{
-			Logger::instance()->logFatal("Asset::Failed to compress raw image data, failed to set jump buffer");
-			png_destroy_write_struct(&p, NULL);
-			return result;
+			Logger::instance()->logCritical("Asset::Failed to compress raw image data, failed to set jump buffer");
+			png_destroy_write_struct(&p, &info_ptr);
+			return;
 		}
 
-		png_set_IHDR(p, info_ptr, (png_uint_32)w, (png_uint_32)h, 8,
+		png_set_IHDR(p, info_ptr, (png_uint_32)inBundle->width, (png_uint_32)inBundle->height, 8,
 			PNG_COLOR_TYPE_RGB,
 			PNG_INTERLACE_NONE,
 			PNG_COMPRESSION_TYPE_DEFAULT,
 			PNG_FILTER_TYPE_DEFAULT);
-		std::vector<unsigned char*> rows(h);
-		for (size_t y = 0; y < h; ++y)
-			rows[y] = (unsigned char*)data + y * w * 3;
+		std::vector<unsigned char*> rows(inBundle->height);
+		for (size_t y = 0; y < inBundle->height; ++y)
+			rows[y] = (unsigned char*)&inBundle->data[y * inBundle->width * 3];
 		png_set_rows(p, info_ptr, &rows[0]);
-		png_set_write_fn(p, &result, PngWriteCallback, NULL);
+		png_set_write_fn(p, &outBundle->data, PngWriteCallback, NULL);
 		png_write_png(p, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
-		png_destroy_write_struct(&p, NULL);
 
-		return result;
+		outBundle->width = inBundle->width;
+		outBundle->height = inBundle->height;
+		outBundle->type = MT::ImageBundleType::Png;
+
+		png_destroy_write_struct(&p, &info_ptr);
+	}
+
+	//encode and write PNG to memory (std::vector) with libpng on C++
+	static void PngReadCallback(png_structp png_ptr, png_bytep data, png_size_t length)
+	{
+		std::vector<unsigned char> *p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
+		if (p == nullptr)
+		{
+			return;
+		}
+
+		for (int i = 0; i < length; ++i)
+		{
+			*(data + i) = (*p)[i];
+		}
+
+		p->erase(p->begin(), p->begin() + length);
+	}
+
+	void Asset::uncompressPngImageToRaw(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle)
+	{
+		outBundle->type = ImageBundleType::Error;
+		if (inBundle == nullptr || outBundle == nullptr || inBundle->type != ImageBundleType::Png)
+		{
+			Logger::instance()->logCritical("Asset::Failed to uncompress png image data, invalid input");
+			return;
+		}
+
+		png_structp p = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+		if (!p)
+		{
+			Logger::instance()->logCritical("Asset::Failed to uncompress png image data, failed to create PNG write structure");
+			return;
+		}
+
+		png_infop info_ptr = png_create_info_struct(p);
+		if (!info_ptr)
+		{
+			Logger::instance()->logCritical("Asset::Failed to uncompress png image data, failed to create PNG info structure");
+			png_destroy_read_struct(&p, NULL, NULL);
+			return;
+		}
+
+		if (setjmp(png_jmpbuf(p)))
+		{
+			Logger::instance()->logCritical("Asset::Failed to uncompress png image data, failed to set jump location");
+			png_destroy_read_struct(&p, &info_ptr, NULL);
+			return;
+		}
+
+		png_set_read_fn(p, &inBundle->data, PngReadCallback);
+
+		png_read_info(p, info_ptr);
+
+		png_uint_32 width = 0;
+		png_uint_32 height = 0;
+		int bitDepth = 0;
+		int colorType = -1;
+		png_uint_32 channels = png_get_channels(p, info_ptr);
+		png_uint_32 color_type = png_get_color_type(p, info_ptr);
+		png_uint_32 retval = png_get_IHDR(p, info_ptr,
+			&width,
+			&height,
+			&bitDepth,
+			&colorType,
+			NULL, NULL, NULL);
+
+		auto rowPtrs = new png_bytep[height];
+
+		auto size = width * height * bitDepth * channels / 8;
+		auto inBuff = new char[size];
+		const unsigned int stride = width * bitDepth * channels / 8;
+
+		for (size_t i = 0; i < height; i++) {
+			png_uint_32 q = (i) * stride;
+			rowPtrs[i] = (png_bytep)inBuff + q;
+		}
+
+		png_read_image(p, rowPtrs);
+
+		outBundle->data = std::vector<unsigned char>(inBuff, inBuff + size);
+		outBundle->width = width;
+		outBundle->height = height;
+		outBundle->type = ImageBundleType::Raw;
+
+		delete[](png_bytep)rowPtrs;
+		delete[] inBuff;
+
+		png_destroy_read_struct(&p, &info_ptr, NULL);
 	}
 }

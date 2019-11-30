@@ -130,6 +130,7 @@ namespace MTGame
 		masterSceneContainer = findChildWithName<MT::SceneContainer>(masterSceneContainerId);
 		globalParticleSystem = findChildWithName<MT::ParticleSystem>(starSystemId);
 		gameMainMenu = findChildWithName<GameMainMenu>(mainMenuId);
+		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		gameMainMenu->hide();
 
 		globalTransition = findChildWithName<TransitionFade>(globalTransitionId);
@@ -138,7 +139,6 @@ namespace MTGame
 		globalTransition->fadeOut();
 
 		hud = findChildWithName<BaseHud>(hudId);
-		//hud->setTarget(player);
 	}
 
 	void SceneMainGame::onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code)
@@ -253,6 +253,13 @@ namespace MTGame
 		modules->logger->log("SceneGame::Saving Game Data");
 		hasSavedData = false;
 		isSavingData = true;
+
+		const auto baseScene = std::dynamic_pointer_cast<BaseScene>(masterSceneContainer->getCurrentScene());
+		if (baseScene != nullptr)
+		{
+			baseScene->onAboutToSave();
+		}
+
 		this->modules->serialization->serializeAsync(this->shared_from_this(), weak_from_this());
 	}
 

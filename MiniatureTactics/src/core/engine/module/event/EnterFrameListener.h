@@ -18,5 +18,6 @@ namespace MT
 		};
 
 		virtual void onEnterFrame(double frameTime) { /* NO-OP */ };
+		virtual void onPostRender() { /* NO-OP */ };
 	};
 }

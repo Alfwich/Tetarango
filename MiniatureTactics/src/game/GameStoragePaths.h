@@ -6,8 +6,11 @@ namespace MTGame
 	{
 		// System
 		System_SaveSlot1,
+		System_SaveSlot1_Image,
 		System_SaveSlot2,
+		System_SaveSlot2_Image,
 		System_SaveSlot3,
+		System_SaveSlot3_Image,
 		System_CurrentSaveSlot,
 
 		// Game

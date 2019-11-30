@@ -12,61 +12,38 @@ namespace
 
 namespace MT
 {
-	void CachedImage::updateCachedImageWithRawData(char* data, int w, int h)
+	void CachedImage::updateCachedImage(std::shared_ptr<MT::ImageBundle> bundle)
 	{
-		if (cachedTexture == nullptr)
-		{
-			cachedTexture = std::make_shared<MT::Texture>(modules->screen);
-		}
-
-		cachedTexture->rebindWithRawPixelData(data, w, h);
-		setTexture(cachedTexture);
+		const auto texture = std::make_shared<MT::Texture>(modules->screen);
+		texture->rebindWithImageBundle(bundle);
+		setTexture(texture);
 
 		if (serializationClient->getBool(shouldScaleToImageParamName, true))
 		{
-			setSize(w, h);
+			setSize(bundle->width, bundle->height);
 		}
-
-		rawDataIsPng = false;
 	}
 
-	void CachedImage::updateCachedImageWithPngData(char* data, int dataSize, int w, int h)
+	std::shared_ptr<ImageBundle> CachedImage::compressImage()
 	{
-		if (cachedTexture == nullptr)
-		{
-			cachedTexture = std::make_shared<MT::Texture>(modules->screen);
-		}
+		const auto result = std::make_shared<MT::ImageBundle>();
 
-		cachedTexture->rebindWithPngPixelData(data, dataSize);
-		setTexture(cachedTexture);
+		modules->asset->compressRawImageToPng(imageData, result);
 
-		if (serializationClient->getBool(shouldScaleToImageParamName, true))
-		{
-			setSize(w, h);
-		}
-
-		rawDataIsPng = true;
-	}
-
-	std::vector<unsigned char> CachedImage::compressImage()
-	{
-		const auto w = serializationClient->getInt(imageWidthParamName);
-		const auto h = serializationClient->getInt(imageHeightParamName);
-		return modules->asset->compressRawImageToPng(w, h, imageData);
+		return result;
 	}
 
 	void CachedImage::updateImageDataBuffer(int size)
 	{
-		if (imageData == nullptr || serializationClient->getInt(imageDataSizeParamName) < size)
+		if (imageData == nullptr)
 		{
-			if (imageData != nullptr)
-			{
-				delete[] imageData;
-			}
+			imageData = std::make_shared<MT::ImageBundle>();
+		}
 
-			// HACK: Manual memory is MUCH faster than std::unique_ptr
-			imageData = new char[size];
-			serializationClient->setInt(imageDataSizeParamName, size);
+		if (imageData->data.capacity() < size)
+		{
+			imageData->data.resize(size);
+			imageData->type = MT::ImageBundleType::Unspecificed;
 		}
 	}
 
@@ -79,10 +56,8 @@ namespace MT
 	{
 		updateImageDataBuffer(w, h);
 
-		serializationClient->setInt(imageWidthParamName, w);
-		serializationClient->setInt(imageHeightParamName, h);
-
-		glReadPixels(x, y, w, h, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+		auto dataPtr = &imageData->data[0];
+		glReadPixels(x, y, w, h, GL_RGB, GL_UNSIGNED_BYTE, dataPtr);
 
 		GLenum err = glGetError();
 
@@ -98,17 +73,17 @@ namespace MT
 				dataOffset = (dataRow * w * 3);
 				while (imageDataCol < w)
 				{
-					r = *(imageData + (imageDataCol * 3) + 0 + imageDataOffset);
-					g = *(imageData + (imageDataCol * 3) + 1 + imageDataOffset);
-					b = *(imageData + (imageDataCol * 3) + 2 + imageDataOffset);
+					r = *(dataPtr + (imageDataCol * 3) + 0 + imageDataOffset);
+					g = *(dataPtr + (imageDataCol * 3) + 1 + imageDataOffset);
+					b = *(dataPtr + (imageDataCol * 3) + 2 + imageDataOffset);
 
-					*(imageData + (imageDataCol * 3) + 0 + imageDataOffset) = *(imageData + (dataCol * 3) + 0 + dataOffset);
-					*(imageData + (imageDataCol * 3) + 1 + imageDataOffset) = *(imageData + (dataCol * 3) + 1 + dataOffset);
-					*(imageData + (imageDataCol * 3) + 2 + imageDataOffset) = *(imageData + (dataCol * 3) + 2 + dataOffset);
+					*(dataPtr + (imageDataCol * 3) + 0 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 0 + dataOffset);
+					*(dataPtr + (imageDataCol * 3) + 1 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 1 + dataOffset);
+					*(dataPtr + (imageDataCol * 3) + 2 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 2 + dataOffset);
 
-					*(imageData + (dataCol * 3) + 0 + dataOffset) = r;
-					*(imageData + (dataCol * 3) + 1 + dataOffset) = g;
-					*(imageData + (dataCol * 3) + 2 + dataOffset) = b;
+					*(dataPtr + (dataCol * 3) + 0 + dataOffset) = r;
+					*(dataPtr + (dataCol * 3) + 1 + dataOffset) = g;
+					*(dataPtr + (dataCol * 3) + 2 + dataOffset) = b;
 
 					imageDataCol++;
 					dataCol++;
@@ -118,6 +93,11 @@ namespace MT
 				dataRow--;
 			}
 
+			imageData->type = MT::ImageBundleType::Raw;
+			imageData->width = w;
+			imageData->height = h;
+			serializationClient->setInt(imageWidthParamName, w);
+			serializationClient->setInt(imageHeightParamName, h);
 			return true;
 		}
 
@@ -130,12 +110,14 @@ namespace MT
 		enableSerialization<CachedImage>();
 	}
 
-	CachedImage::~CachedImage()
+	int CachedImage::cachedImageWidth()
 	{
-		if (imageData != nullptr)
-		{
-			delete[] imageData;
-		}
+		return serializationClient->getInt(imageWidthParamName);
+	}
+
+	int CachedImage::cachedImageHeight()
+	{
+		return serializationClient->getInt(imageHeightParamName);
 	}
 
 	void CachedImage::setShouldScaleToImageSize(bool flag)
@@ -163,13 +145,12 @@ namespace MT
 			if (!data.empty() && w > 0 && h > 0 && end > 0)
 			{
 				updateImageDataBuffer((int)end);
-
-				for (int i = 0; i < end; ++i)
-				{
-					imageData[i] = data[i];
-				}
-
-				updateCachedImageWithPngData(imageData, (int)end, w, h);
+				imageData->data.clear();
+				std::copy(data.begin(), data.end(), std::back_inserter(imageData->data));
+				imageData->type = MT::ImageBundleType::Png;
+				imageData->width = w;
+				imageData->height = h;
+				updateCachedImage(imageData);
 			}
 		}
 	}
@@ -208,8 +189,7 @@ namespace MT
 
 		if (captureScreenData(x, y, w, h))
 		{
-			updateCachedImageWithRawData(imageData, w, h);
-			compressImage();
+			updateCachedImage(imageData);
 		}
 	}
 
@@ -219,22 +199,20 @@ namespace MT
 		{
 			std::string data;
 			const auto client = serializationClient->getClient("__cached_image__", hint);
-			if (rawDataIsPng)
+			if (imageData->type == MT::ImageBundleType::Raw)
 			{
-				const auto end = serializationClient->getInt(imageDataSizeParamName);
-				for (int i = 0; i < end; ++i)
-				{
-					data += imageData[i];
-				}
+				auto pngImageData = std::make_shared<MT::ImageBundle>();
+				modules->asset->compressRawImageToPng(imageData, pngImageData);
+				imageData = pngImageData;
 			}
-			else
-			{
 
-				const auto v = compressImage();
-				for (const auto c : v)
+			if (imageData->type == MT::ImageBundleType::Png)
+			{
+				for (const auto c : imageData->data)
 				{
 					data += c;
 				}
+
 			}
 
 			serializationClient->setString("image-data", data);

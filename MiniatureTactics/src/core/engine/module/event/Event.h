@@ -30,11 +30,13 @@ namespace MT
 		std::shared_ptr<Input> input;
 		std::shared_ptr<Thread> thread;
 
-		bool processingOnEnterFrames = false;
+		bool processingOnEnterFrames = false, processingOnPostRenders = false;
 
 		std::set<int> enterFrameObjects;
 		std::map<int, std::list<std::shared_ptr<EnterFrameListenerBundle>>, std::greater<int>> onEnterFrameCallbacks;
 		std::list<std::shared_ptr<EnterFrameListener>> cleanupObjects;
+		std::list<std::weak_ptr<EnterFrameListener>> postRenderCallbacks;
+		std::list<std::weak_ptr<EnterFrameListener>> postRenderProcessedCallbacks;
 		std::list<std::shared_ptr<ApplicationEvent>> events;
 
 		void reportSdlErrors();
@@ -50,7 +52,10 @@ namespace MT
 		std::list<std::shared_ptr<ApplicationEvent>> processEvents();
 
 		void processEnterFrames(double frameTime);
+		void processPostRenderCallbacks();
 		void registerOnEnterFrame(std::shared_ptr<EnterFrameListener> listener, int priority = 0);
 		void unregisterOnEnterFrame(std::shared_ptr<EnterFrameListener> listener);
+
+		void registerPostRenderCallback(std::shared_ptr<EnterFrameListener> listener);
 	};
 }

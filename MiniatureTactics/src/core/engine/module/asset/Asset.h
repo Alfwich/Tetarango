@@ -6,6 +6,7 @@
 #include "engine/module/IBaseModule.h"
 #include "engine/module/filesystem/Filesystem.h"
 #include "engine/module/storage/Storage.h"
+#include "ImageBundle.h"
 
 namespace MT
 {
@@ -49,7 +50,9 @@ namespace MT
 		void onInit();
 
 		std::shared_ptr<ResourceBundle> getAssetBundle(std::string path);
-		std::vector<unsigned char> compressRawImageToPng(size_t w, size_t h, char *dataRGB);
+
+		void compressRawImageToPng(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);//size_t w, size_t h, const char *data);
+		void uncompressPngImageToRaw(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);//size_t w, size_t h, const char *data);
 	};
 
 }

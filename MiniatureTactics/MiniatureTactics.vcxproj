@@ -260,6 +260,7 @@
     <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />
     <ClInclude Include="src\core\ui\renderable\element\CachedImage.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />

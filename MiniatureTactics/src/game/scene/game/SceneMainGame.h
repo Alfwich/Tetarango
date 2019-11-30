@@ -35,13 +35,11 @@ namespace MTGame
 		SceneMainGame();
 
 		void onInitialAttach();
-
 		void onCreateChildren();
 		void onChildrenHydrated();
-
+		void onKeyPressed(SDL_Scancode key);
 		void onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code);
 		void onWorkDone(MT::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<MT::AsyncResultBundle> result);
-
 		void onFadeOut();
 		void onFadeIn();
 
@@ -49,17 +47,13 @@ namespace MTGame
 		void transitionToSceneWithBundle(std::string scene, MT::SceneTransitionBundle& bundle);
 		void transitionToScene(SceneGame scene);
 		void transitionToScene(std::string scene);
-
 		void backOutToMainMenu();
 
 		void saveGameData();
-
 		void enableMenu();
 		void disableMenu();
 
 		std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
-
-		void onKeyPressed(SDL_Scancode key);
 	};
 
 }

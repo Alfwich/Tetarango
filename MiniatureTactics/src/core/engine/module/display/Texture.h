@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "GL/glew.h"
 #include <string>
+#include "engine/module/asset/ImageBundle.h"
 
 namespace MT
 {
@@ -40,8 +41,7 @@ namespace MT
 		void rebindTexture();
 		bool isLoaded();
 
-		virtual void rebindWithRawPixelData(char* data, int width, int height, int depth = 24, int pitch = 3, Uint32 format = SDL_PIXELFORMAT_RGB24);
-		virtual void rebindWithPngPixelData(char* data, int size);
+		virtual void rebindWithImageBundle(std::shared_ptr<ImageBundle> bundle);
 	};
 }
 

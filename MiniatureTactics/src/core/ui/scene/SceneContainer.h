@@ -30,6 +30,7 @@ namespace MT
 
 		std::string getCurrentSceneName();
 		std::shared_ptr<Scene> getSceneForName(std::string name);
+		std::shared_ptr<Scene> getCurrentScene();
 		void disableCurrentScene();
 		std::vector<std::string> getAvailableScenes();
 

@@ -35,8 +35,10 @@ namespace MTGame
 		}
 
 		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE, SDL_SCANCODE_0 }, weak_from_this());
+
 		keyRepeatTimer = modules->time->createTimer(MT::TimeScope::Game);
 		keyRepeatTimer->start();
+
 
 		enableEnterFrame();
 	}
@@ -83,20 +85,6 @@ namespace MTGame
 		blockParticleSystem->name = "p-b-system";
 		blockParticleSystem->matchSizeAndCenter(board);
 		add(blockParticleSystem);
-
-		cachedImage = std::make_shared<MT::CachedImage>();
-		cachedImage->name = "cached";
-		cachedImage->setSize(2560 * 0.2, 1440 * 0.2);
-		cachedImage->toBottomOf(scoreText, 20);
-		cachedImage->setShouldScaleToImageSize(false);
-		cachedImage->setShouldSerializeImage(true);
-		add(cachedImage);
-
-		const auto cachedImageBG = std::make_shared<MT::Rectangle>();
-		cachedImageBG->setColor(128, 128, 128);
-		cachedImageBG->setSizeAndPosition(cachedImage->getX(), cachedImage->getY(), cachedImage->getWidth() + 10, cachedImage->getHeight() + 10);
-		cachedImageBG->zIndex = -2;
-		add(cachedImageBG);
 	}
 
 	void SceneTetris::onChildrenHydrated()
@@ -108,7 +96,6 @@ namespace MTGame
 		particleSystem = findChildWithName<MT::ParticleSystem>("p-system");
 		particleSystem->emitImmediately(40);
 		blockParticleSystem = findChildWithName<MT::ParticleSystem>("p-b-system");
-		cachedImage = findChildWithName<MT::CachedImage>("cached");
 	}
 
 	std::shared_ptr<MT::SerializationClient> SceneTetris::doSerialize(MT::SerializationHint hint)
@@ -155,8 +142,33 @@ namespace MTGame
 			}
 			updateScoreText();
 		}
+	}
 
-		//cachedImage->captureWholeScreen();
+	void SceneTetris::onPostRender()
+	{
+		auto imageCatcher = std::make_shared<MT::CachedImage>();
+		imageCatcher->setShouldSerializeImage(true);
+		imageCatcher->captureWholeScreen();
+
+		const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
+		std::string path;
+		switch (currentSaveSlotId)
+		{
+		case 1:
+			path = storagePath(StorePaths::System_SaveSlot1_Image);
+			break;
+		case 2:
+			path = storagePath(StorePaths::System_SaveSlot2_Image);
+			break;
+		case 3:
+			path = storagePath(StorePaths::System_SaveSlot3_Image);
+			break;
+		}
+
+		if (!path.empty())
+		{
+			modules->storage->getClient()->writeString(path, modules->serialization->serialize(imageCatcher));
+		}
 	}
 
 	void SceneTetris::onKeyPressed(SDL_Scancode key)
@@ -204,10 +216,6 @@ namespace MTGame
 			updateScoreText();
 			board->resetBoard();
 			break;
-
-		case SDL_SCANCODE_0:
-			cachedImage->captureWholeScreen();
-			break;
 		}
 	}
 
@@ -229,4 +237,8 @@ namespace MTGame
 		}
 	}
 
+	void SceneTetris::onAboutToSave()
+	{
+		modules->event->registerPostRenderCallback(shared_from_this());
+	}
 }

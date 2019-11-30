@@ -24,6 +24,7 @@ namespace MT
 	class ISerializableDataSubscriber
 	{
 	public:
+		virtual ~ISerializableDataSubscriber() {};
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient) { /* NO-OP */ };
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint) = 0;
 	};

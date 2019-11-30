@@ -253,6 +253,7 @@
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />
     <ClInclude Include="src\game\prop\particles\block\BlockParticleFactory.h" />
     <ClInclude Include="src\core\ui\renderable\element\CachedImage.h" />
+    <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />
