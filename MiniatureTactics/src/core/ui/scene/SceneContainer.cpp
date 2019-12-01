@@ -206,6 +206,18 @@ namespace MT
 		if (currentScene != nullptr)
 		{
 			currentScene->onDisplayProvisioned();
+
+			if (currentScene->rebuildOnLoad)
+			{
+				currentScene->destroyChildren();
+				currentScene->onCreateChildren();
+			}
+
+			if (currentScene->layoutOnLoad)
+			{
+				currentScene->layout();
+			}
 		}
+
 	}
 }

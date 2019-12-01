@@ -60,7 +60,7 @@ namespace MT
 		void enableSerialization();
 
 		std::string name;
-		bool loaded = false, rebuildOnLoad = false, visible = true;
+		bool loaded = false, rebuildOnLoad = false, layoutOnLoad = true, visible = true;
 
 		void activate();
 		void deactivate();
@@ -87,14 +87,15 @@ namespace MT
 		void destroyChildren();
 		virtual void enterFrame(double frameTime);
 		void attach();
+		void layout();
 		void detach();
-		void rebuild();
 
 		virtual void onWillTransitioned() { /* NO-OP */ };
 		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { /* NO-OP */ };
-		virtual void onCreateChildren() { /* NO-OP */ };
-		virtual void onDestroyChildren() { /* NO-OP */ };
 		virtual void onInitialAttach() { /* NO-OP */ };
+		virtual void onCreateChildren() { /* NO-OP */ };
+		virtual void onLayoutChildren() { /* NO-OP */ };
+		virtual void onDestroyChildren() { /* NO-OP */ };
 		virtual void onChildrenHydrated() { /* NO-OP */ };
 		virtual void onAttach() { /* NO-OP */ };
 		virtual void onDetach() { /* NO-OP */ };

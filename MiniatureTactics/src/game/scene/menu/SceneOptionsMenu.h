@@ -21,8 +21,6 @@ namespace MTGame
 		void onDestroyChildren();
 		void onCreateChildren();
 		void onButtonClicked(int id);
-
-		void onDisplayProvisioned();
 	};
 
 }

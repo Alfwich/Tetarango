@@ -208,6 +208,8 @@ namespace MT
 	{
 		onDestroyChildren();
 		this->children.clear();
+
+		hasCreatedChildren = false;
 	}
 
 	void ApplicationObject::enterFrame(double frameTime)
@@ -242,6 +244,7 @@ namespace MT
 			{
 				onCreateChildren();
 				hasCreatedChildren = true;
+				layout();
 			}
 			else
 			{
@@ -255,6 +258,7 @@ namespace MT
 				}
 
 				onChildrenHydrated();
+				layout();
 			}
 
 			softAddedChildren.clear();
@@ -283,6 +287,14 @@ namespace MT
 		onAttach();
 	}
 
+	void ApplicationObject::layout()
+	{
+		if (hasCreatedChildren) 
+		{
+			onLayoutChildren();
+		}
+	}
+
 	void ApplicationObject::detach()
 	{
 		currentActive = false;
@@ -299,14 +311,6 @@ namespace MT
 
 		commandChildren([](std::shared_ptr<ApplicationObject> ao) { ao->detach(); });
 		onDetach();
-	}
-
-	void ApplicationObject::rebuild()
-	{
-		destroyChildren();
-		onInitialAttach();
-		onAttach();
-		onCreateChildren();
 	}
 
 	std::shared_ptr<Schematic> ApplicationObject::getSchematic()
