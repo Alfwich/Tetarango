@@ -9,25 +9,6 @@ namespace MT
 		this->thread = thread;
 	}
 
-	void Filesystem::onInit()
-	{
-		char* incomingSdlPrefPath =
-			SDL_GetPrefPath(
-				gameConfig->getConfigString(Config::Param::organizationName).c_str(),
-				gameConfig->getConfigString(Config::Param::storageLocation).c_str());
-
-		if (incomingSdlPrefPath != NULL)
-		{
-			sdlPrefPath = incomingSdlPrefPath;
-
-			SDL_free(incomingSdlPrefPath);
-		}
-		else
-		{
-			Logger::instance()->logCritical("SDL_GetPrefPath returned NULL, meaning there was some problem.");
-		}
-	}
-
 	bool Filesystem::isReadyToLog()
 	{
 		return sdlPrefPath.size() > 0;
@@ -199,6 +180,26 @@ namespace MT
 
 	std::string Filesystem::getAbsolutePathFromRelativePath(const std::string& path)
 	{
+		if (sdlPrefPath.empty())
+		{
+			char* incomingSdlPrefPath =
+				SDL_GetPrefPath(
+					gameConfig->getConfigString(Config::Param::organizationName).c_str(),
+					gameConfig->getConfigString(Config::Param::storageLocation).c_str());
+
+			if (incomingSdlPrefPath != NULL)
+			{
+				sdlPrefPath = incomingSdlPrefPath;
+
+				SDL_free(incomingSdlPrefPath);
+			}
+			else
+			{
+				Logger::instance()->logCritical("SDL_GetPrefPath returned NULL, meaning there was some problem.");
+			}
+
+		}
+
 		return sdlPrefPath + path;
 	}
 }

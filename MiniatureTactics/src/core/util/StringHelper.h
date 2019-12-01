@@ -87,7 +87,7 @@ namespace MT
 		{
 			if (start + length > source->size())
 			{
-				return std::string();
+				length = (unsigned int)source->size() - start;
 			}
 
 			std::string result;
@@ -126,7 +126,7 @@ namespace MT
 		std::string static inline keyToDisplayName(std::string const& value)
 		{
 			auto result = std::string();
-			
+
 			bool upperNext = true;
 			for (const auto c : value)
 			{
@@ -149,6 +149,27 @@ namespace MT
 			}
 
 			return result;
+		}
+
+		int static inline getDisplayComponentForDisplayString(std::string* str, int cmp)
+		{
+			int delimitPos = distanceToLeft(str, "x");
+
+			if (delimitPos == -1)
+			{
+				return 0;
+			}
+
+			if (cmp == 0)
+			{
+				return std::stoi(getSliceOfCharVector(str, 0, delimitPos));
+			}
+			else if (cmp == 1)
+			{
+				return std::stoi(getSliceOfCharVector(str, delimitPos + 1, (unsigned int)str->size() - delimitPos));
+			}
+
+			return 0;
 		}
 
 	};

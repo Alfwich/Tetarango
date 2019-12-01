@@ -20,7 +20,6 @@ namespace MT
 
 		void bindThread(std::shared_ptr<Thread> thread);
 
-		void onInit();
 		bool isReadyToLog();
 		std::string readContentsFromFile(std::string path, bool isLocal = false);
 		WORKER_ID readContentsFromFileAsync(std::string path, std::weak_ptr<INotifyOnCompletion> callback = std::weak_ptr<INotifyOnCompletion>());

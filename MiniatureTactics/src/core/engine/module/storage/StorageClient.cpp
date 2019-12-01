@@ -49,7 +49,7 @@ namespace MT
 	int StorageClient::readInt(std::string key)
 	{
 		const auto value = readSring(key);
-		return std::stoi(value);
+		return value.empty() ? 0 : std::stoi(value);
 	}
 
 	void StorageClient::writeDouble(std::string key, double value)
@@ -60,7 +60,7 @@ namespace MT
 	double StorageClient::readDouble(std::string key)
 	{
 		const auto value = readSring(key);
-		return std::stod(value);
+		return value.empty() ? 0.0 : std::stod(value);
 	}
 
 	void StorageClient::writeBool(std::string key, bool value)

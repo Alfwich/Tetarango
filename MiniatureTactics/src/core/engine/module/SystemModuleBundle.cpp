@@ -54,11 +54,19 @@ namespace MT
 		bindModules();
 	}
 
-	void SystemModuleBundle::onInit(std::shared_ptr<Config::GameConfig> gameConfig)
+	void SystemModuleBundle::onAssignConfig(std::shared_ptr<Config::GameConfig> config)
+	{
+		this->gameConfig = config;
+
+		for (const auto module : modules)
+		{
+			module->gameConfig = config;
+		}
+	}
+
+	void SystemModuleBundle::onInit()
 	{
 		if (init) return;
-
-		this->gameConfig = gameConfig;
 
 		for (const auto module : modules)
 		{

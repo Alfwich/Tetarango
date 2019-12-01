@@ -18,7 +18,7 @@ namespace MTGame
 	{
 		splashText = std::make_shared<MT::Text>();
 		splashText->name = splashTextId;
-		splashText->setFont("medium", 500);
+		splashText->setFont("medium", 150);
 		splashText->setText("SPLASH");
 		splashText->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
 		add(splashText);

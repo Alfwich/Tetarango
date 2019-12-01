@@ -16,6 +16,28 @@ namespace MT
 	class Primitive;
 	class Camera;
 
+	class DisplayModeInfo
+	{
+	public:
+		DisplayModeInfo(std::vector<SDL_DisplayMode> modes) {
+			this->modes = modes;
+			for (const auto mode : modes)
+			{
+				resolutions.insert(std::to_string(mode.w) + "x" + std::to_string(mode.h));
+				refreshs.insert(mode.refresh_rate);
+				formats.insert(mode.format);
+			}
+		};
+
+		std::vector<SDL_DisplayMode> modes;
+		std::unordered_set<std::string> resolutions;
+		std::unordered_set<int> refreshs;
+		std::unordered_set<int> formats;
+
+		int widthForResolution(std::string resolution) { return StringHelper::getDisplayComponentForDisplayString(&resolution, 0); }
+		int heightForResolution(std::string resolution) { return StringHelper::getDisplayComponentForDisplayString(&resolution, 1); }
+	};
+
 	class Screen : public IBaseModule
 	{
 		SDL_Window* window;
@@ -29,13 +51,16 @@ namespace MT
 
 		void bindCollision(std::shared_ptr<Collision> collision);
 
-		void init(const ScreenConfig& config, std::string name = "Window");
+		bool init(const ScreenConfig& config, std::string name = "Window");
 		int getWidth();
 		int getHeight();
 		void setClearColor(int r, int g, int b, int a = 0xff);
 		void setWindowColorMod(int r, int g, int b);
 
 		SDL_Window* getWindow();
+
+		DisplayModeInfo getCurrentDisplayMode();
+		DisplayModeInfo getAllSupportedDisplayModes();
 
 		bool isOpenGLEnabled();
 		SDL_GLContext getOpenGLContext();

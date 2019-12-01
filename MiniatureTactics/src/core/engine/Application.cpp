@@ -52,12 +52,15 @@ namespace MT
 			modules->logger->logFatal("Application::SDL_MIX::Failed to init: " + std::string(Mix_GetError()));
 		}
 
+		modules->logger->log("Application::Assign GameConfig");
+		modules->onAssignConfig(gameConfig);
+
 		modules->logger->log("Application::onInit");
 		onInit();
 		provisionScreen();
 
 		modules->logger->log("Application::Init modules");
-		modules->onInit(gameConfig);
+		modules->onInit();
 
 		frameTimer = modules->time->createTimer(MT::TimeScope::ApplicationFrameTimer, true);
 		root = std::make_shared<DisplayRoot>();
@@ -191,7 +194,13 @@ namespace MT
 
 	void Application::provisionScreen()
 	{
-		modules->screen->init(screenConfig, gameConfig->getConfigString(Config::Param::gameName));
-		modules->texture->rebindAllTextures();
+		if (modules->screen->init(screenConfig, gameConfig->getConfigString(Config::Param::gameName)))
+		{
+			modules->texture->rebindAllTextures();
+		}
+		else if (onFailedToProvisionScreen())
+		{
+			provisionScreen();
+		}
 	}
 }

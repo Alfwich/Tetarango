@@ -63,7 +63,8 @@ namespace MT
 		std::shared_ptr<Thread> thread;
 		std::shared_ptr<Asset> asset;
 
-		void onInit(std::shared_ptr<Config::GameConfig> config);
+		void onAssignConfig(std::shared_ptr<Config::GameConfig> config);
+		void onInit();
 		void onReady();
 		void onCleanup();
 	};

@@ -1,4 +1,5 @@
 #include "Screen.h"
+
 namespace MT
 {
 
@@ -12,11 +13,28 @@ namespace MT
 		this->collision = collision;
 	}
 
-	void Screen::init(const ScreenConfig& config, std::string name)
+	bool Screen::init(const ScreenConfig& config, std::string name)
 	{
 		if (window != nullptr)
 		{
 			SDL_DestroyWindow(window);
+		}
+
+		bool isSupportedDisplayResolution = false;
+		for (const auto displayMode : getAllSupportedDisplayModes().modes)
+		{
+			isSupportedDisplayResolution = displayMode.w == config.width && displayMode.h == config.height;
+
+			if (isSupportedDisplayResolution)
+			{
+				break;
+			}
+
+		}
+
+		if (!isSupportedDisplayResolution)
+		{
+			return false;
 		}
 
 		int windowFlags = windowFlags = SDL_WINDOW_OPENGL;
@@ -43,6 +61,8 @@ namespace MT
 
 		renderer = std::make_unique<Renderer>(window, config);
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+
+		return true;
 	}
 
 	int Screen::getWidth()
@@ -75,6 +95,58 @@ namespace MT
 	{
 		return window;
 	}
+
+	DisplayModeInfo Screen::getCurrentDisplayMode()
+	{
+		std::vector<SDL_DisplayMode> result;
+		if (SDL_GetNumVideoDisplays() < 0)
+		{
+			return DisplayModeInfo(result);
+		}
+
+		SDL_DisplayMode mode = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
+		if (SDL_GetCurrentDisplayMode(0, &mode))
+		{
+			Logger::instance()->logCritical("Screen::Could not get display mode for video display: " + std::string(SDL_GetError()));
+		}
+		else
+		{
+			result.push_back(mode);
+		}
+
+		return DisplayModeInfo(result);
+	}
+
+	DisplayModeInfo Screen::getAllSupportedDisplayModes()
+	{
+		std::vector<SDL_DisplayMode> result;
+
+		if (SDL_GetNumVideoDisplays() <= 0)
+		{
+			return DisplayModeInfo(result);
+		}
+
+		const auto numModes = SDL_GetNumDisplayModes(0);
+		if (numModes <= 0)
+		{
+			return DisplayModeInfo(result);
+		}
+
+		for (auto i = 0; i < numModes; ++i)
+		{
+			SDL_DisplayMode mode = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
+
+			if (SDL_GetDisplayMode(0, i, &mode))
+			{
+				Logger::instance()->logCritical("Screen::Could not get display mode for video display: " + std::string(SDL_GetError()));
+			}
+
+			result.push_back(mode);
+		}
+
+		return DisplayModeInfo(result);
+	}
+
 
 	bool Screen::isOpenGLEnabled()
 	{

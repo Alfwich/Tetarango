@@ -57,6 +57,7 @@ namespace MT
 		std::shared_ptr<SystemModuleBundle> modules;
 		virtual void render();
 
+		virtual bool onFailedToProvisionScreen() { return false; };
 		void provisionScreen();
 	};
 }

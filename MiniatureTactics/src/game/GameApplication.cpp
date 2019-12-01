@@ -1,35 +1,27 @@
 #include "GameApplication.h"
-
 #include "GameImports.h"
+
+namespace
+{
+	const auto displayWidthParamKey = "display-width";
+	const auto displayHeightParamKey = "display-height";
+	const auto displayFullscreenParamKey = "display-fullscreen";
+}
 
 namespace MTGame
 {
 	void GameApplication::onInit()
 	{
-		int defaultScreenWidth = 1024, defaultScreenHeight = 768;
-		for (int i = 0; i < SDL_GetNumVideoDisplays(); ++i) {
-
-			SDL_DisplayMode current;
-
-			if (SDL_GetCurrentDisplayMode(i, &current) == 0)
-			{
-				defaultScreenWidth = current.w;
-				defaultScreenHeight = current.h;
-				break;
-			}
-			else
-			{
-				modules->logger->logCritical("GameApplication::Could not get display mode for video display: " + std::string(SDL_GetError()));
-			}
+		const auto storageClient = modules->storage->getClient();
+		if (!storageClient->hasKey(displayWidthParamKey))
+		{
+			onFailedToProvisionScreen();
 		}
 
-		screenConfig.width = defaultScreenWidth;
-		screenConfig.height = defaultScreenHeight;
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
-
-		//screenConfig.width = 1024;
-		//screenConfig.height = 768;
-		//screenConfig.isFullscreen = true;
+		screenConfig.width = storageClient->readInt(displayWidthParamKey);
+		screenConfig.height = storageClient->readInt(displayHeightParamKey);
+		screenConfig.isFullscreen = storageClient->readBool(displayFullscreenParamKey);
 		//screenConfig.openGlWireframeMode = true;
 	}
 
@@ -97,6 +89,41 @@ namespace MTGame
 			globalClient->writeString("whole_scene_graph", modules->serialization->serialize(masterSceneContainer));
 			masterSceneContainer->disableCurrentScene();
 		}
+	}
+
+	bool GameApplication::onFailedToProvisionScreen()
+	{
+		const auto storageClient = modules->storage->getClient();
+		auto currentDisplayMode = modules->screen->getCurrentDisplayMode();
+		int width, height;
+
+		for (const auto resolution : currentDisplayMode.resolutions)
+		{
+			if (*currentDisplayMode.formats.begin() != SDL_PIXELTYPE_UNKNOWN)
+			{
+				width = currentDisplayMode.widthForResolution(resolution);
+				height = currentDisplayMode.heightForResolution(resolution);
+			}
+		}
+
+		if (screenConfig.width == width && screenConfig.height == height)
+		{
+			screenConfig.width = 1024;
+			screenConfig.height = 768;
+			screenConfig.isFullscreen = false;
+		}
+		else
+		{
+			screenConfig.width = width;
+			screenConfig.height = height;
+			screenConfig.isFullscreen = false;
+		}
+
+		storageClient->writeInt(displayWidthParamKey, screenConfig.width);
+		storageClient->writeInt(displayHeightParamKey, screenConfig.height);
+		storageClient->writeBool(displayFullscreenParamKey, screenConfig.isFullscreen);
+
+		return true;
 	}
 
 }
