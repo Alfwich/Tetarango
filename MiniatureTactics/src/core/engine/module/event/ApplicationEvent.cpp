@@ -8,7 +8,7 @@ namespace MT
 
 	ApplicationEvent::ApplicationEvent(std::string what)
 	{
-		what = what;
+		this->what = what;
 	}
 
 	ApplicationEvent::ApplicationEvent(Events event)
@@ -18,7 +18,7 @@ namespace MT
 
 	ApplicationEvent::ApplicationEvent(std::string what, Events event)
 	{
-		what = what;
+		this->what = what;
 		code = event;
 	}
 }

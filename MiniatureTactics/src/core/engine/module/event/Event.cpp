@@ -110,14 +110,6 @@ namespace MT
 				Logger::instance()->logCritical("SDL::Error reported from SDL_MIX: " + error);
 			}
 		}
-
-		{
-			GLenum err;
-			while ((err = glGetError()) != GL_NO_ERROR)
-			{
-				Logger::instance()->logCritical("OpenGL::Error reported: " + std::to_string(err));
-			}
-		}
 	}
 
 	void Event::processEnterFrames(double frameTime)

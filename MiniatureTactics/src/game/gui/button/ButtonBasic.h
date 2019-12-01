@@ -18,6 +18,7 @@ namespace MTGame
 		ButtonBasic();
 
 		void setText(std::string text);
+		std::string getText();
 
 		void onCreateChildren();
 		void onChildrenHydrated();

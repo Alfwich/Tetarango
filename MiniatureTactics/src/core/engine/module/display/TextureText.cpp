@@ -78,8 +78,14 @@ namespace MT
 			glDeleteTextures(1, &textureId);
 		}
 
+		const auto oldTextureId = textureId;
 		glGenTextures(1, &textureId);
 		glBindTexture(GL_TEXTURE_2D, textureId);
+
+		if (oldTextureId != 0)
+		{
+
+		}
 
 		switch (textRenderConfiguration.renderMode)
 		{

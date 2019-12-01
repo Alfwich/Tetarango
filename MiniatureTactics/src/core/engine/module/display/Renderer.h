@@ -23,8 +23,8 @@ namespace MT
 		Color clearColor, globalColorMod;
 
 		mat4x4 mvp, p, pAbs, m, t, UVp, tP;
-		GLuint vertexBuffer, textureUVBuffer, vertexShader, fragmentShader, program, vao;
-		GLuint inMatrixLocation, inUVMatrixLocation, inColorModLocation;
+		GLuint vertexBuffer = 0, textureUVBuffer = 0, vertexShader = 0, fragmentShader = 0, program = 0, vao = 0;
+		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0;
 
 		std::shared_ptr<Camera> camera;
 		std::stack<RenderPositionMode> renderPositionMode;
@@ -39,6 +39,8 @@ namespace MT
 		bool renderShouldCull(Rect* r, RenderPackage* renderPackage);
 
 		void initOpenGL(SDL_Window* window, const ScreenConfig& screenConfig);
+		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
+		void releaseOpenGLObjects();
 
 		void renderOpenGL(std::shared_ptr<ApplicationObject> obj, Rect rootRect, Screen* screen, RenderPackage* package);
 		void renderElement(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage);
@@ -51,7 +53,7 @@ namespace MT
 
 		void openGLDrawArrays();
 	public:
-		Renderer(SDL_Window* window, const ScreenConfig& screenConfig);
+		Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();
 
 		bool isOpenGLEnabled();
@@ -61,6 +63,8 @@ namespace MT
 		void render(std::shared_ptr<ApplicationObject> obj, Screen* screen, std::shared_ptr<QuadMap> qm);
 
 		SDL_GLContext getOpenGLContext();
+
+		void reportOpenGLErrors();
 	};
 }
 

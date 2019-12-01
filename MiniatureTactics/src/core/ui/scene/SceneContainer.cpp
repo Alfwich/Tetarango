@@ -198,4 +198,14 @@ namespace MT
 			transitionToScene(currentSceneName);
 		}
 	}
+
+	void SceneContainer::onDisplayProvisioned()
+	{
+		ApplicationObject::onDisplayProvisioned();
+
+		if (currentScene != nullptr)
+		{
+			currentScene->onDisplayProvisioned();
+		}
+	}
 }

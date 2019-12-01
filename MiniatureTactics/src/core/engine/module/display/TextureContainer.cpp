@@ -20,8 +20,9 @@ namespace MT
 			return false;
 		}
 
-		textureCache[key] = std::make_unique<Texture>(path, screen, asset);
+		textureCache[key] = std::make_shared<Texture>(path, screen, asset);
 		Logger::instance()->log("TextureContainer::Loaded Texture key=" + key + ", path=" + path);
+
 		return textureCache[key]->isLoaded();
 	}
 
@@ -36,6 +37,20 @@ namespace MT
 		return textureCache[key];
 	}
 
+	std::shared_ptr<Texture> TextureContainer::getEmptyTextureForKey(std::string key)
+	{
+		if (textureCache.count(key) != 0)
+		{
+			Logger::instance()->logCritical("TextureContainer::Failed to get empty TextureText for key=" + key + ", attempting to rebind existing texture");
+			return nullptr;
+		}
+
+		textureCache[key] = std::make_shared<Texture>(screen);
+
+		return textureCache[key];
+
+	}
+
 	std::shared_ptr<Texture> TextureContainer::getEmptyTextureTextForKey(std::string key)
 	{
 		if (textureCache.count(key) != 0)
@@ -44,7 +59,9 @@ namespace MT
 			return nullptr;
 		}
 
-		return std::make_unique<TextureText>(screen, asset);
+		textureCache[key] = std::make_shared<TextureText>(screen, asset);
+
+		return textureCache[key];
 	}
 
 	bool TextureContainer::hasTexture(std::string key)
@@ -52,11 +69,31 @@ namespace MT
 		return textureCache.count(key) > 0;
 	}
 
+	void TextureContainer::removeTexture(std::string key)
+	{
+		if (hasTexture(key))
+		{
+			textureCache.erase(key);
+		}
+	}
+
 	void TextureContainer::rebindAllTextures()
 	{
+		if (textureCache.empty())
+		{
+			return;
+		}
+
+		Logger::instance()->log("TextureContainer::Rebinding " + std::to_string(textureCache.size()) + " textures");
+
 		for (auto texture : textureCache)
 		{
-			texture.second->rebindTexture();
+			texture.second->releaseTexture();
+		}
+
+		for (auto texture : textureCache)
+		{
+			texture.second->rebind();
 		}
 	}
 }

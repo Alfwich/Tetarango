@@ -14,7 +14,7 @@ namespace MT
 {
 	void CachedImage::updateCachedImage(std::shared_ptr<MT::ImageBundle> bundle)
 	{
-		const auto texture = std::make_shared<MT::Texture>(modules->screen);
+		const auto texture = modules->texture->getEmptyTextureForKey("__cached_image_" + std::to_string(getId()));
 		texture->rebindWithImageBundle(bundle);
 		setTexture(texture);
 
@@ -107,7 +107,13 @@ namespace MT
 
 	CachedImage::CachedImage()
 	{
+		textureBindingKey = "__cached_image__" + std::to_string(getId());
 		enableSerialization<CachedImage>();
+	}
+
+	CachedImage::~CachedImage()
+	{
+		modules->texture->removeTexture("__cached_image_" + std::to_string(getId()));
 	}
 
 	int CachedImage::cachedImageWidth()

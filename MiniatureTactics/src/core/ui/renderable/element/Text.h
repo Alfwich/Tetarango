@@ -23,6 +23,8 @@ namespace MT
 	public:
 		Text();
 		Text(std::string fontName, int fontSize);
+		~Text();
+
 		void setDynamicResizing(bool flag);
 
 		void setFont(std::string name, int fontSize);

@@ -12,7 +12,20 @@ namespace MTGame
 
 	SceneOptionsMenu::SceneOptionsMenu() : BaseScene(SceneGame::OptionsMenu)
 	{
+		rebuildOnLoad = true;
 		enableSerialization<SceneOptionsMenu>();
+	}
+
+	void SceneOptionsMenu::onInitialAttach()
+	{
+		BaseScene::onInitialAttach();
+
+		info = modules->screen->getAllSupportedDisplayModes();
+	}
+
+	void SceneOptionsMenu::onDestroyChildren()
+	{
+		resolutionButtons.clear();
 	}
 
 	void SceneOptionsMenu::onCreateChildren()
@@ -29,12 +42,28 @@ namespace MTGame
 		backButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
 		backButton->clickListener = weak_from_this();
 		add(backButton);
-	}
 
-	void SceneOptionsMenu::onChildrenHydrated()
-	{
-		backButton = findChildWithName<ButtonBasic>(backButtonId);
-		backButton->clickListener = baseSceneWeakThisRef();
+		std::shared_ptr<ButtonBasic> prevResolutionButton;
+		for (const auto resolution : info.resolutions)
+		{
+			auto resolutionButton = std::make_shared<ButtonBasic>();
+			resolutionButton->setText(resolution);
+			resolutionButton->clickListener = weak_from_this();
+
+			if (prevResolutionButton != nullptr)
+			{
+				resolutionButton->toBottomOf(prevResolutionButton, 2);
+			}
+			else
+			{
+				resolutionButton->setPosition(0 + resolutionButton->getHalfWidth() + 2, 0 + resolutionButton->getHalfHeight() + 2);
+			}
+
+			resolutionButtons.push_back(resolutionButton);
+			add(resolutionButton);
+
+			prevResolutionButton = resolutionButton;
+		}
 	}
 
 	void SceneOptionsMenu::onButtonClicked(int id)
@@ -43,6 +72,18 @@ namespace MTGame
 		{
 			transitionToScene(SceneGame::MainMenu);
 		}
+
+		for (const auto resolutionButton : resolutionButtons)
+		{
+			if (resolutionButton->getId() == id)
+			{
+				modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(resolutionButton->getText(), MT::Events::CHANGE_RESOLUTION));
+			}
+		}
 	}
 
+	void SceneOptionsMenu::onDisplayProvisioned()
+	{
+		rebuild();
+	}
 }

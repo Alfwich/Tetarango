@@ -21,6 +21,8 @@ namespace MTGame
 		void onPrimeSerialization();
 		void onReady();
 		void onCleanup();
+
 		bool onFailedToProvisionScreen();
+		void onProvisionedScreen();
 	};
 }

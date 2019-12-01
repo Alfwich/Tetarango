@@ -24,7 +24,10 @@ namespace MT
 
 		bool loadTexture(std::string path, std::string key);
 		bool hasTexture(std::string key);
+		void removeTexture(std::string key);
+
 		std::shared_ptr<Texture> getTexture(std::string key);
+		std::shared_ptr<Texture> getEmptyTextureForKey(std::string key);
 		std::shared_ptr<Texture> getEmptyTextureTextForKey(std::string key);
 		void rebindAllTextures();
 	};

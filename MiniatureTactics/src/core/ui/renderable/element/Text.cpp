@@ -16,6 +16,11 @@ namespace MT
 		enableSerialization<Text>();
 	}
 
+	Text::~Text()
+	{
+		modules->texture->removeTexture(textureBindingKey);
+	}
+
 	void Text::renderText()
 	{
 		if (texture == nullptr)

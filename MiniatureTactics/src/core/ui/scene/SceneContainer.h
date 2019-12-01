@@ -39,6 +39,7 @@ namespace MT
 		virtual void childHydrated(std::shared_ptr<ISerializable> child);
 
 		void onAttach();
+		void onDisplayProvisioned();
 	};
 
 }

@@ -13,6 +13,7 @@ namespace MT
 	class Texture
 	{
 	private:
+		std::shared_ptr<ImageBundle> bundle;
 		std::string path, name;
 		bool allowRebindWithRawPixelData = false;
 
@@ -20,7 +21,6 @@ namespace MT
 		std::shared_ptr<Screen> screen;
 		std::shared_ptr<Asset> asset;
 
-		SDL_Texture* texture = nullptr;
 		GLuint textureId = 0;
 		int width = 0, height = 0;
 
@@ -32,15 +32,15 @@ namespace MT
 		Texture(std::string path, std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset);
 		virtual ~Texture();
 
-		SDL_Texture* raw();
 		GLuint openGlTextureId();
 
 		int getWidth();
 		int getHeight();
 		virtual void rebind();
-		void rebindTexture();
 		bool isLoaded();
 
+		void releaseTexture();
+		void rebindTexture();
 		virtual void rebindWithImageBundle(std::shared_ptr<ImageBundle> bundle);
 	};
 }

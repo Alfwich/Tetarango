@@ -17,11 +17,14 @@ namespace MTGame
 		{
 			onFailedToProvisionScreen();
 		}
+		else
+		{
+			screenConfig.width = storageClient->readInt(displayWidthParamKey);
+			screenConfig.height = storageClient->readInt(displayHeightParamKey);
+			screenConfig.isFullscreen = storageClient->readBool(displayFullscreenParamKey);
+		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
-		screenConfig.width = storageClient->readInt(displayWidthParamKey);
-		screenConfig.height = storageClient->readInt(displayHeightParamKey);
-		screenConfig.isFullscreen = storageClient->readBool(displayFullscreenParamKey);
 		//screenConfig.openGlWireframeMode = true;
 	}
 
@@ -93,16 +96,15 @@ namespace MTGame
 
 	bool GameApplication::onFailedToProvisionScreen()
 	{
-		const auto storageClient = modules->storage->getClient();
 		auto currentDisplayMode = modules->screen->getCurrentDisplayMode();
 		int width, height;
 
-		for (const auto resolution : currentDisplayMode.resolutions)
+		for (const auto mode : currentDisplayMode.modes)
 		{
-			if (*currentDisplayMode.formats.begin() != SDL_PIXELTYPE_UNKNOWN)
+			if (mode.format != SDL_PIXELTYPE_UNKNOWN)
 			{
-				width = currentDisplayMode.widthForResolution(resolution);
-				height = currentDisplayMode.heightForResolution(resolution);
+				width = mode.w;
+				height = mode.h;
 			}
 		}
 
@@ -119,11 +121,19 @@ namespace MTGame
 			screenConfig.isFullscreen = false;
 		}
 
+		return true;
+	}
+
+	void GameApplication::onProvisionedScreen()
+	{
+		const auto storageClient = modules->storage->getClient();
 		storageClient->writeInt(displayWidthParamKey, screenConfig.width);
 		storageClient->writeInt(displayHeightParamKey, screenConfig.height);
 		storageClient->writeBool(displayFullscreenParamKey, screenConfig.isFullscreen);
 
-		return true;
+		if (masterSceneContainer != nullptr)
+		{
+			masterSceneContainer->onDisplayProvisioned();
+		}
 	}
-
 }

@@ -4,7 +4,8 @@ namespace MT
 {
 
 	enum class Events {
-		QUIT_REQUESTED
+		QUIT_REQUESTED,
+		CHANGE_RESOLUTION
 	};
 
 }

@@ -59,7 +59,8 @@ namespace MT
 
 		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags | (config.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
 
-		renderer = std::make_unique<Renderer>(window, config);
+		renderer = std::make_shared<Renderer>(window, config, renderer);
+
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 
 		return true;

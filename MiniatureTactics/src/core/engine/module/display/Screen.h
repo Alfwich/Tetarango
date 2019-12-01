@@ -19,6 +19,7 @@ namespace MT
 	class DisplayModeInfo
 	{
 	public:
+		DisplayModeInfo() { }
 		DisplayModeInfo(std::vector<SDL_DisplayMode> modes) {
 			this->modes = modes;
 			for (const auto mode : modes)

@@ -58,6 +58,7 @@ namespace MT
 		virtual void render();
 
 		virtual bool onFailedToProvisionScreen() { return false; };
+		virtual void onProvisionedScreen() { /* NO-OP */ };
 		void provisionScreen();
 	};
 }

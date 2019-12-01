@@ -176,6 +176,11 @@ namespace MT
 			case MT::Events::QUIT_REQUESTED:
 				exit();
 				break;
+
+			case MT::Events::CHANGE_RESOLUTION:
+				screenConfig.width = MT::StringHelper::getDisplayComponentForDisplayString(&e->what, 0);
+				screenConfig.height = MT::StringHelper::getDisplayComponentForDisplayString(&e->what, 1);
+				provisionScreen();
 			default:
 				break;
 			}
@@ -194,12 +199,15 @@ namespace MT
 
 	void Application::provisionScreen()
 	{
+		Logger::instance()->log("Application::Provisioning screen width=" + std::to_string(screenConfig.width) + ", height= " + std::to_string(screenConfig.height) + ", fullscreen=" + std::to_string(screenConfig.isFullscreen));
 		if (modules->screen->init(screenConfig, gameConfig->getConfigString(Config::Param::gameName)))
 		{
 			modules->texture->rebindAllTextures();
+			onProvisionedScreen();
 		}
 		else if (onFailedToProvisionScreen())
 		{
+			Logger::instance()->logCritical("Application::Provisioning screen failed. Falling back to current display resolution or safe fallback");
 			provisionScreen();
 		}
 	}

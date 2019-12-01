@@ -9,16 +9,20 @@ namespace MTGame
 
 	class SceneOptionsMenu : public BaseScene
 	{
+		MT::DisplayModeInfo info;
 		std::shared_ptr<MT::Text> optionsMenuTitle;
 		std::shared_ptr<ButtonBasic> backButton;
+		std::vector<std::shared_ptr<ButtonBasic>> resolutionButtons;
 
 	public:
 		SceneOptionsMenu();
 
+		void onInitialAttach();
+		void onDestroyChildren();
 		void onCreateChildren();
-		void onChildrenHydrated();
-
 		void onButtonClicked(int id);
+
+		void onDisplayProvisioned();
 	};
 
 }

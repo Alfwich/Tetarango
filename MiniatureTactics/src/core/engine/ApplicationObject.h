@@ -88,17 +88,21 @@ namespace MT
 		virtual void enterFrame(double frameTime);
 		void attach();
 		void detach();
+		void rebuild();
 
 		virtual void onWillTransitioned() { /* NO-OP */ };
 		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { /* NO-OP */ };
-
 		virtual void onCreateChildren() { /* NO-OP */ };
 		virtual void onDestroyChildren() { /* NO-OP */ };
 		virtual void onInitialAttach() { /* NO-OP */ };
 		virtual void onChildrenHydrated() { /* NO-OP */ };
 		virtual void onAttach() { /* NO-OP */ };
 		virtual void onDetach() { /* NO-OP */ };
+		virtual void onDisplayProvisioned() { /* NO-OP */ };
 		virtual void onTimeScopeChanged() { /* NO-OP */ };
+		virtual void onWorkError(WORKER_ID workerId, WorkerTaskCode code) { /* NO-OP */ };
+		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AsyncResultBundle> result) { /* NO-OP */ };
+
 		virtual void add(std::shared_ptr<ApplicationObject> obj);
 		virtual void remove(std::shared_ptr<ApplicationObject> obj);
 		void removeFromParent();
@@ -115,8 +119,6 @@ namespace MT
 		virtual void childHydrated(std::shared_ptr<ISerializable> child);
 		virtual bool shouldSerializeChildren();
 
-		virtual void onWorkError(WORKER_ID workerId, WorkerTaskCode code) { /* NO-OP */ };
-		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AsyncResultBundle> result) { /* NO-OP */ };
 
 		virtual bool collisionEnabled();
 		virtual void addCollisionScope(CollisionScope scope);

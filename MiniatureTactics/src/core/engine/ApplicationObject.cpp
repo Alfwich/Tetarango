@@ -301,6 +301,14 @@ namespace MT
 		onDetach();
 	}
 
+	void ApplicationObject::rebuild()
+	{
+		destroyChildren();
+		onInitialAttach();
+		onAttach();
+		onCreateChildren();
+	}
+
 	std::shared_ptr<Schematic> ApplicationObject::getSchematic()
 	{
 		return schematic;

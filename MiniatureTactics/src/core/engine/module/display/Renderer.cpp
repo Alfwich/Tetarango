@@ -66,11 +66,21 @@ namespace
 
 namespace MT
 {
-	Renderer::Renderer(SDL_Window* window, const ScreenConfig& screenConfig)
+	Renderer::Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer)
 	{
 		renderPositionMode.push(RenderPositionMode::Positioned);
-		setClearColor(0xff, 0xff, 0xff, 0xff);
-		setGlobalColorMod(0xff, 0xff, 0xff);
+
+		if (oldRenderer != nullptr)
+		{
+			harvestFromPreviousRenderer(oldRenderer);
+			oldRenderer->releaseOpenGLObjects();
+		}
+		else
+		{
+			setClearColor(0xff, 0xff, 0xff, 0xff);
+			setGlobalColorMod(0xff, 0xff, 0xff);
+		}
+
 		initOpenGL(window, screenConfig);
 	}
 
@@ -100,54 +110,72 @@ namespace MT
 		GLint compileResult = GL_FALSE;
 		int infoLength;
 
-		glGenVertexArrays(1, &vao);
+		if (vao == 0)
+		{
+			glGenVertexArrays(1, &vao);
+		}
 		glBindVertexArray(vao);
 
-		glGenBuffers(1, &vertexBuffer);
+		if (vertexBuffer == 0)
+		{
+			glGenBuffers(1, &vertexBuffer);
+		}
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(inlineVerticies), inlineVerticies, GL_STATIC_DRAW);
 
-		glGenBuffers(1, &textureUVBuffer);
+		if (textureUVBuffer == 0)
+		{
+			glGenBuffers(1, &textureUVBuffer);
+		}
 		glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(inlineUVCoords), inlineUVCoords, GL_STATIC_DRAW);
 
-		vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, &inlineDefaultVertexShader, NULL);
-		glCompileShader(vertexShader);
-
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compileResult);
-		glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &infoLength);
-		if (compileResult == GL_FALSE && infoLength > 0) {
-			std::vector<char> infoText(infoLength + 1);
-			glGetShaderInfoLog(vertexShader, infoLength, NULL, &infoText[0]);
-			Logger::instance()->logFatal("Renderer::OpenGL::Failed to compile vertex shader: " + std::string(infoText.begin(), infoText.end()));
-		}
-
-		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, &inlineDefaultFragmentShader, NULL);
-		glCompileShader(fragmentShader);
-
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compileResult);
-		glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &infoLength);
-		if (compileResult == GL_FALSE && infoLength > 0) {
-			std::vector<char> infoText(infoLength + 1);
-			glGetShaderInfoLog(fragmentShader, infoLength, NULL, &infoText[0]);
-			Logger::instance()->logFatal("Renderer::OpenGL::Failed to compile fragment shader: " + std::string(infoText.begin(), infoText.end()));
-		}
-
-		program = glCreateProgram();
-		glAttachShader(program, vertexShader);
-		glAttachShader(program, fragmentShader);
-		glLinkProgram(program);
-
-		GLint programLinkSuccess = GL_TRUE;
-		glGetProgramiv(program, GL_LINK_STATUS, &programLinkSuccess);
-
-		if (programLinkSuccess != GL_TRUE)
+		if (vertexShader == 0)
 		{
-			std::vector<char> infoText(infoLength + 1);
-			glGetProgramInfoLog(program, infoLength, NULL, &infoText[0]);
-			Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program: " + std::string(infoText.begin(), infoText.end()));
+			vertexShader = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vertexShader, 1, &inlineDefaultVertexShader, NULL);
+			glCompileShader(vertexShader);
+
+			glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compileResult);
+			glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &infoLength);
+			if (compileResult == GL_FALSE && infoLength > 0) {
+				std::vector<char> infoText(infoLength + 1);
+				glGetShaderInfoLog(vertexShader, infoLength, NULL, &infoText[0]);
+				Logger::instance()->logFatal("Renderer::OpenGL::Failed to compile vertex shader: " + std::string(infoText.begin(), infoText.end()));
+			}
+		}
+
+		if (fragmentShader == 0)
+		{
+			fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fragmentShader, 1, &inlineDefaultFragmentShader, NULL);
+			glCompileShader(fragmentShader);
+
+			glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compileResult);
+			glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &infoLength);
+			if (compileResult == GL_FALSE && infoLength > 0) {
+				std::vector<char> infoText(infoLength + 1);
+				glGetShaderInfoLog(fragmentShader, infoLength, NULL, &infoText[0]);
+				Logger::instance()->logFatal("Renderer::OpenGL::Failed to compile fragment shader: " + std::string(infoText.begin(), infoText.end()));
+			}
+		}
+
+		if (program == 0)
+		{
+			program = glCreateProgram();
+			glAttachShader(program, vertexShader);
+			glAttachShader(program, fragmentShader);
+			glLinkProgram(program);
+
+			GLint programLinkSuccess = GL_TRUE;
+			glGetProgramiv(program, GL_LINK_STATUS, &programLinkSuccess);
+
+			if (programLinkSuccess != GL_TRUE)
+			{
+				std::vector<char> infoText(infoLength + 1);
+				glGetProgramInfoLog(program, infoLength, NULL, &infoText[0]);
+				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program: " + std::string(infoText.begin(), infoText.end()));
+			}
 		}
 
 		if (screenConfig.openGlWireframeMode)
@@ -162,30 +190,59 @@ namespace MT
 		layerFactor = (1 << 16) / maxLayers;
 	}
 
+	void Renderer::harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous)
+	{
+		clearColor = previous->clearColor;
+		globalColorMod = previous->globalColorMod;
+	}
+
 	Renderer::~Renderer()
+	{
+		releaseOpenGLObjects();
+	}
+
+	void Renderer::releaseOpenGLObjects()
 	{
 		if (glContext != NULL)
 		{
-			glDeleteVertexArrays(1, &vao);
-			vao = 0;
-
-			glDeleteBuffers(1, &vertexBuffer);
-			vertexBuffer = 0;
-
-			glDeleteBuffers(1, &textureUVBuffer);
-			textureUVBuffer = 0;
-
-			glDeleteShader(vertexShader);
-			vertexShader = 0;
-
-			glDeleteShader(fragmentShader);
-			fragmentShader = 0;
-
-			glDeleteProgram(program);
-			program = 0;
-
 			SDL_GL_DeleteContext(glContext);
 			glContext = NULL;
+		}
+
+		if (vao != 0)
+		{
+			glDeleteVertexArrays(1, &vao);
+			vao = 0;
+		}
+
+		if (vertexBuffer != 0)
+		{
+			glDeleteBuffers(1, &vertexBuffer);
+			vertexBuffer = 0;
+		}
+
+		if (textureUVBuffer != 0)
+		{
+			glDeleteBuffers(1, &textureUVBuffer);
+			textureUVBuffer = 0;
+		}
+
+		if (vertexShader != 0)
+		{
+			glDeleteShader(vertexShader);
+			vertexShader = 0;
+		}
+
+		if (fragmentShader != 0)
+		{
+			glDeleteShader(fragmentShader);
+			fragmentShader = 0;
+		}
+
+		if (program != 0)
+		{
+			glDeleteProgram(program);
+			program = 0;
 		}
 	}
 
@@ -224,11 +281,11 @@ namespace MT
 		}
 
 		renderOpenGL(root, rootRect, screen, &renderPackage);
+		reportOpenGLErrors();
 	}
 
 	void Renderer::renderOpenGL(std::shared_ptr<ApplicationObject> root, Rect rootRect, Screen* screen, RenderPackage* renderPackage)
 	{
-
 		glClearColor(clearColor.r / 255.0, clearColor.g / 255.0, clearColor.b / 255.0, clearColor.a / 255.0);
 
 		if (clearColor.a != 0)
@@ -292,6 +349,15 @@ namespace MT
 	SDL_GLContext Renderer::getOpenGLContext()
 	{
 		return glContext;
+	}
+
+	void Renderer::reportOpenGLErrors()
+	{
+		GLenum err;
+		while ((err = glGetError()) != GL_NO_ERROR)
+		{
+			Logger::instance()->logCritical("OpenGL::Error reported: " + std::to_string(err));
+		}
 	}
 
 	bool Renderer::isOpenGLEnabled()

@@ -8,6 +8,7 @@ namespace MT
 
 	class CachedImage : public Element
 	{
+		std::string textureBindingKey;
 		std::shared_ptr<MT::ImageBundle> imageData;
 
 		std::shared_ptr<MT::ImageBundle> compressImage();
@@ -18,6 +19,7 @@ namespace MT
 
 	public:
 		CachedImage();
+		~CachedImage();
 
 		int cachedImageWidth();
 		int cachedImageHeight();

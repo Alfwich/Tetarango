@@ -26,6 +26,11 @@ namespace MTGame
 		}
 	}
 
+	std::string ButtonBasic::getText()
+	{
+		return text;
+	}
+
 	void ButtonBasic::onCreateChildren()
 	{
 		label = std::make_shared<MT::Text>();

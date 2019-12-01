@@ -23,22 +23,7 @@ namespace MT
 
 	Texture::~Texture()
 	{
-		if (texture != nullptr)
-		{
-			SDL_DestroyTexture(texture);
-			texture = nullptr;
-		}
-
-		if (textureId != 0)
-		{
-			glDeleteTextures(1, &textureId);
-			textureId = 0;
-		}
-	}
-
-	SDL_Texture* Texture::raw()
-	{
-		return texture;
+		releaseTexture();
 	}
 
 	GLuint Texture::openGlTextureId()
@@ -48,7 +33,23 @@ namespace MT
 
 	void Texture::rebind()
 	{
-		rebindTexture();
+		if (allowRebindWithRawPixelData)
+		{
+			rebindWithImageBundle(bundle);
+		}
+		else
+		{
+			rebindTexture();
+		}
+	}
+
+	void Texture::releaseTexture()
+	{
+		if (textureId != 0)
+		{
+			glDeleteTextures(1, &textureId);
+			textureId = 0;
+		}
 	}
 
 	void Texture::rebindTexture()
@@ -92,7 +93,7 @@ namespace MT
 			return;
 		}
 
-		if (bundle->width == 0 || bundle->height == 0 || bundle->type == ImageBundleType::Unspecificed)
+		if (bundle == nullptr || bundle->width == 0 || bundle->height == 0 || bundle->type == ImageBundleType::Unspecificed)
 		{
 			return;
 		}
@@ -169,6 +170,6 @@ namespace MT
 
 	bool Texture::isLoaded()
 	{
-		return texture != nullptr || textureId != 0;
+		return textureId != 0;
 	}
 }
