@@ -5,7 +5,8 @@ namespace MT
 
 	enum class Events {
 		QUIT_REQUESTED,
-		CHANGE_RESOLUTION
+		CHANGE_RESOLUTION,
+		TOGGLE_FULLSCREEN
 	};
 
 }

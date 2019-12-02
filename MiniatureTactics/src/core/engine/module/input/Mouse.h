@@ -10,7 +10,8 @@ namespace MT
 
 	class Mouse
 	{
-		std::vector<std::pair<MouseButton, std::shared_ptr<IInputListener>>> removes;
+		std::vector<std::pair<MouseButton, std::shared_ptr<IInputListener>>> buttonRemoves;
+		std::vector<std::shared_ptr<IInputListener>> wheelRemoves;
 		std::list<std::weak_ptr<IInputListener>> mouseMoveListeners;
 		std::list<std::weak_ptr<IInputListener>> mouseWheelListeners;
 		std::unordered_map<MouseButton, std::list<std::weak_ptr<IInputListener>>> mouseButtonListeners;
@@ -31,6 +32,7 @@ namespace MT
 		void purgeWeakRefs();
 
 		void unregisterMouseButton(MouseButton button, std::shared_ptr<IInputListener> obj);
+		void unregisterMouseWheel(std::shared_ptr<IInputListener> obj);
 
 		int X();
 		int Y();

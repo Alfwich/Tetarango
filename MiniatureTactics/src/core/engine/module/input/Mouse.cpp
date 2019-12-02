@@ -43,15 +43,18 @@ namespace MT
 		}
 		isProcessing = false;
 
-		for (const auto remove : removes)
+		for (const auto remove : buttonRemoves)
 		{
 			unregisterMouseButton(remove.first, remove.second);
 		}
-		removes.clear();
+		buttonRemoves.clear();
+
+
 	}
 
 	void Mouse::handleWheel(int wheelX, int wheelY)
 	{
+		isProcessing = true;
 		for (auto listener : mouseWheelListeners)
 		{
 			auto ptr = (listener).lock();
@@ -60,6 +63,13 @@ namespace MT
 				ptr->mouseWheel(wheelX, wheelY);
 			}
 		}
+		isProcessing = false;
+
+		for (const auto remove : wheelRemoves)
+		{
+			unregisterMouseWheel(remove);
+		}
+		wheelRemoves.clear();
 	}
 
 	void Mouse::fireMouseButtonEvent(MouseButton button, bool pressed)
@@ -159,7 +169,7 @@ namespace MT
 	{
 		if (isProcessing)
 		{
-			removes.push_back(std::make_pair(button, obj));
+			buttonRemoves.push_back(std::make_pair(button, obj));
 		}
 		else
 		{
@@ -175,7 +185,29 @@ namespace MT
 					++it;
 				}
 			}
+		}
+	}
 
+	void Mouse::unregisterMouseWheel(std::shared_ptr<IInputListener> obj)
+	{
+		if (isProcessing)
+		{
+			wheelRemoves.push_back(obj);
+		}
+		else
+		{
+			for (auto it = mouseWheelListeners.begin(); it != mouseWheelListeners.end();)
+			{
+				const auto objPtr = (*it).lock();
+				if (objPtr == nullptr || objPtr->inputListenerObjectId() == obj->inputListenerObjectId())
+				{
+					it = mouseWheelListeners.erase(it);
+				}
+				else
+				{
+					++it;
+				}
+			}
 		}
 	}
 

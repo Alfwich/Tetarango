@@ -74,6 +74,7 @@ namespace MT
 
 		DisplayModeInfo getCurrentDisplayMode();
 		DisplayModeInfo getAllSupportedDisplayModes();
+		bool isFullscreenEnabled();
 
 		bool isOpenGLEnabled();
 		SDL_GLContext getOpenGLContext();

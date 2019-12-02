@@ -44,6 +44,8 @@ namespace MTGame
 		add(backButton);
 
 		scrollContainer = std::make_shared<MT::ScrollContainer>();
+		scrollContainer->setMouseWheenEnabled(true);
+		scrollContainer->setScrollAmountInPixels(43);
 		add(scrollContainer);
 
 		resolutionButtons.clear();
@@ -90,55 +92,6 @@ namespace MTGame
 			if (resolutionButton->getId() == id)
 			{
 				modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(resolutionButton->getText(), MT::Events::CHANGE_RESOLUTION));
-			}
-		}
-	}
-
-	void SceneOptionsMenu::onMouseWheel(int x, int y)
-	{
-		const auto mouseX = modules->input->mouse->X();
-		const auto rect = scrollContainer->getScreenRect();
-		if (mouseX < rect->x || mouseX > rect->x + rect->w)
-		{
-			return;
-		}
-
-		if (y > 0)
-		{
-			bool allowScroll = false;
-			for (const auto resolutionButton : resolutionButtons)
-			{
-				allowScroll = resolutionButton->getScreenRect()->y < 0;
-
-				if (allowScroll)
-				{
-					break;
-				}
-			}
-
-			if (allowScroll)
-			{
-				scrollContainer->scrollPixels(-43);
-			}
-
-		}
-		else if (y < 0)
-		{
-			bool allowScroll = false;
-			for (const auto resolutionButton : resolutionButtons)
-			{
-				const auto screenRect = resolutionButton->getScreenRect();
-				allowScroll = screenRect->y + screenRect->h > getScreenHeight();
-
-				if (allowScroll)
-				{
-					break;
-				}
-			}
-
-			if (allowScroll)
-			{
-				scrollContainer->scrollPixels(43);
 			}
 		}
 	}

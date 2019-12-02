@@ -183,7 +183,11 @@ namespace MT
 				screenConfig.width = MT::StringHelper::getDisplayComponentForDisplayString(&e->what, 0);
 				screenConfig.height = MT::StringHelper::getDisplayComponentForDisplayString(&e->what, 1);
 				provisionScreen();
-			default:
+				break;
+
+			case MT::Events::TOGGLE_FULLSCREEN:
+				screenConfig.isFullscreen = e->what == "enable"; 
+				provisionScreen();
 				break;
 			}
 		}

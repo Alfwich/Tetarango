@@ -10,7 +10,6 @@ namespace MTGame
 
 	class SceneOptionsMenu : public BaseScene
 	{
-		bool scrollDownPressed = false, scrollUpPressed = false;
 		MT::DisplayModeInfo info;
 		std::shared_ptr<MT::Text> optionsMenuTitle;
 		std::shared_ptr<ButtonBasic> backButton;
@@ -25,7 +24,6 @@ namespace MTGame
 		void onCreateChildren();
 
 		void onButtonClicked(int id);
-		void onMouseWheel(int x, int y);
 	};
 
 }

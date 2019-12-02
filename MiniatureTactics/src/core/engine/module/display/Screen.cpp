@@ -159,6 +159,11 @@ namespace MT
 		return renderer->getOpenGLContext();
 	}
 
+	bool Screen::isFullscreenEnabled()
+	{
+		return window != nullptr && SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
+	}
+
 	std::shared_ptr<Camera> Screen::getCamera()
 	{
 		return camera;

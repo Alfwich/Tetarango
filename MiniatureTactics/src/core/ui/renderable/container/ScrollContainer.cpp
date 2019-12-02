@@ -2,10 +2,15 @@
 
 namespace
 {
-	const auto scrollAmountParamName = "scroll-amount";
-	const auto scrollAmountMinParamName = "scroll-amount-min";
-	const auto scrollAmountMaxParamName = "scroll-amount-max";
 	const auto scrollContainerName = "scroll-container";
+	const auto scrollAmountParamName = "scroll-container-amount";
+	const auto scrollAmountMinParamName = "scroll-container-amount-min";
+	const auto scrollAmountMaxParamName = "scroll-container-amount-max";
+	const auto scrollAmountContainerMinParamName = "scroll-container-amount-min";
+	const auto scrollAmountContainerMaxParamName = "scroll-container-amount-max";
+	const auto scrollAmountInPixelsParamName = "scroll-container-amount-in-pixels";
+	const auto scrollContainerMouseWheelEnabledParamName = "scroll-container-mouse-wheel-enabled";
+	const auto scrollSpeedInMsParamName = "scroll-container-speed-ms";
 }
 
 namespace MT
@@ -20,6 +25,11 @@ namespace MT
 		Container::onInitialAttach();
 
 		scrollTransition = modules->animation->createTransition();
+
+		if (serializationClient->getBool(scrollContainerMouseWheelEnabledParamName))
+		{
+			modules->input->mouse->registerMouseWheel(weak_from_this());
+		}
 	}
 
 	void ScrollContainer::onCreateChildren()
@@ -38,9 +48,61 @@ namespace MT
 	void ScrollContainer::onLayoutChildren()
 	{
 		const auto scrollAmount = serializationClient->getDouble(scrollAmountParamName);
+		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 50);
 		Rect target = scrollContainer->getRect();
 		target.y = -scrollContainer->getHeight() * scrollAmount;
-		scrollTransition->startTransition(scrollContainer, 50.0, target);
+		scrollTransition->startTransition(scrollContainer, scrollSpeedMs, target);
+	}
+
+	void ScrollContainer::onMouseWheel(int x, int y)
+	{
+		const auto mouseX = modules->input->mouse->X();
+		const auto rect = getScreenRect();
+		if (mouseX < rect->x || mouseX > rect->x + rect->w)
+		{
+			return;
+		}
+
+		const auto containerMin = serializationClient->getDouble(scrollAmountContainerMinParamName, 0.0);
+		const auto containerMax = serializationClient->getDouble(scrollAmountContainerMaxParamName, modules->screen->getHeight());
+		const auto scrollAmount = serializationClient->getInt(scrollAmountInPixelsParamName, 50);
+		if (y < 0)
+		{
+			bool allowScroll = false;
+			for (const auto resolutionButton : children)
+			{
+				const auto screenRect = resolutionButton->getScreenRect();
+				allowScroll = screenRect->y + screenRect->h > containerMax;
+
+				if (allowScroll)
+				{
+					break;
+				}
+			}
+
+			if (allowScroll)
+			{
+				scrollPixels(scrollAmount);
+			}
+		}
+		else if (y > 0)
+		{
+			bool allowScroll = false;
+			for (const auto resolutionButton : children)
+			{
+				allowScroll = resolutionButton->getScreenRect()->y < containerMin;
+
+				if (allowScroll)
+				{
+					break;
+				}
+			}
+
+			if (allowScroll)
+			{
+				scrollPixels(-scrollAmount);
+			}
+		}
 	}
 
 	void ScrollContainer::add(std::shared_ptr<ApplicationObject> ao)
@@ -113,5 +175,45 @@ namespace MT
 
 		serializationClient->setDouble(scrollAmountMinParamName, min);
 		serializationClient->setDouble(scrollAmountMinParamName, max);
+	}
+
+	void ScrollContainer::setContainerLimits(double min, double max)
+	{
+		if (min < max)
+		{
+			return;
+		}
+
+		serializationClient->setDouble(scrollAmountContainerMinParamName, min);
+		serializationClient->setDouble(scrollAmountContainerMaxParamName, max);
+	}
+
+	void ScrollContainer::setScrollAmountInPixels(int amount)
+	{
+		serializationClient->setInt(scrollAmountInPixelsParamName, amount);
+	}
+
+	void ScrollContainer::setMouseWheenEnabled(bool flag)
+	{
+		const auto current = serializationClient->getBool(scrollContainerMouseWheelEnabledParamName);
+
+		if (current != flag)
+		{
+			serializationClient->setBool(scrollContainerMouseWheelEnabledParamName, flag);
+		}
+
+		if (flag)
+		{
+			modules->input->mouse->registerMouseWheel(weak_from_this());
+		}
+		else
+		{
+			modules->input->mouse->unregisterMouseWheel(shared_from_this());
+		}
+	}
+
+	void ScrollContainer::setScrollSpeed(int speedMS)
+	{
+		serializationClient->setInt(scrollSpeedInMsParamName, speedMS);
 	}
 }
