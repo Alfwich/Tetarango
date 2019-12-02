@@ -7,7 +7,6 @@ namespace MT
 	{
 		if (x != this->x || y != this->y)
 		{
-			std::list<std::weak_ptr<IInputListener>> removes;
 			for (auto listener : mouseMoveListeners)
 			{
 				auto ptr = (listener).lock();
@@ -51,6 +50,18 @@ namespace MT
 		removes.clear();
 	}
 
+	void Mouse::handleWheel(int wheelX, int wheelY)
+	{
+		for (auto listener : mouseWheelListeners)
+		{
+			auto ptr = (listener).lock();
+			if (ptr != nullptr)
+			{
+				ptr->mouseWheel(wheelX, wheelY);
+			}
+		}
+	}
+
 	void Mouse::fireMouseButtonEvent(MouseButton button, bool pressed)
 	{
 		for (auto& listenerVtr : mouseButtonListeners)
@@ -77,6 +88,11 @@ namespace MT
 		mouseMoveListeners.push_back(listener);
 	}
 
+	void Mouse::registerMouseWheel(std::weak_ptr<IInputListener> listener)
+	{
+		mouseWheelListeners.push_back(listener);
+	}
+
 	void Mouse::updateMouseState(SDL_Event* event)
 	{
 		int x, y;
@@ -87,6 +103,11 @@ namespace MT
 
 		handleMouseMove(x, y);
 		handleMouseButtons(leftDown, rightDown, middleDown);
+
+		if (event->type == SDL_MOUSEWHEEL)
+		{
+			handleWheel(event->wheel.x, event->wheel.y);
+		}
 	}
 
 	void Mouse::purgeWeakRefs()
@@ -97,6 +118,19 @@ namespace MT
 			if (ptr == nullptr)
 			{
 				it = mouseMoveListeners.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
+		for (auto it = mouseWheelListeners.begin(); it != mouseWheelListeners.end();)
+		{
+			const auto ptr = (*it).lock();
+			if (ptr == nullptr)
+			{
+				it = mouseWheelListeners.erase(it);
 			}
 			else
 			{

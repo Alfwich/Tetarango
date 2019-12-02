@@ -161,6 +161,7 @@
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\ui\renderable\container\ScrollContainer.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\CachedImage.cpp" />
     <ClCompile Include="src\game\actor\board\Board.cpp" />
@@ -192,7 +193,7 @@
     <ClCompile Include="src\game\scene\BaseScene.cpp" />
     <ClCompile Include="src\core\engine\module\serialization\SerializationClient.cpp" />
     <ClCompile Include="src\core\engine\module\storage\HuffmanEncoder.cpp" />
-    <ClCompile Include="src\core\ui\renderable\Container.cpp" />
+    <ClCompile Include="src\core\ui\renderable\container\Container.cpp" />
     <ClCompile Include="src\game\scene\menu\SceneSplash.cpp" />
     <ClCompile Include="src\game\scene\game\SceneMainGame.cpp" />
     <ClCompile Include="src\game\scene\menu\SceneMainMenu.cpp" />
@@ -261,6 +262,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
+    <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />
     <ClInclude Include="src\core\ui\renderable\element\CachedImage.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
@@ -307,7 +309,7 @@
     <ClInclude Include="src\core\engine\module\serialization\SerializationClient.h" />
     <ClInclude Include="src\core\engine\module\storage\HuffmanEncoder.h" />
     <ClInclude Include="src\core\engine\module\display\RenderPackage.h" />
-    <ClInclude Include="src\core\ui\renderable\Container.h" />
+    <ClInclude Include="src\core\ui\renderable\container\Container.h" />
     <ClInclude Include="src\game\scene\menu\SceneSplash.h" />
     <ClInclude Include="src\game\scene\game\SceneMainGame.h" />
     <ClInclude Include="src\game\scene\menu\SceneMainMenu.h" />

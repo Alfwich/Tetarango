@@ -21,6 +21,7 @@ namespace MT
 		virtual void onKeyReleased(SDL_Scancode code) { /* NO-OP */ };
 
 		virtual void onMouseMove(int x, int y) { /* NO-OP */ };
+		virtual void onMouseWheel(int x, int y) { /* NO-OP */ };
 		virtual void onMouseButton(MouseButton, bool pressed) { /* NO-OP */ };
 		virtual void onMouseButtonLeftDown() { /* NO-OP */ };
 		virtual void onMouseButtonLeftUp() { /* NO-OP */ };
@@ -66,6 +67,10 @@ namespace MT
 
 		virtual void mouseMove(int x, int y) {
 			if (this->inputEnabled) this->onMouseMove(x, y);
+		};
+
+		virtual void mouseWheel(int x, int y) {
+			if (this->inputEnabled) this->onMouseWheel(x, y);
 		};
 
 		void gamepadAxis(int gamepadIndex, GamepadAxisMapping axis, double value)

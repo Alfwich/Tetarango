@@ -9,7 +9,8 @@
 #include "ui/renderable/element/Backdrop.h"
 #include "ui/renderable/element/tilemap/TileMap.h"
 #include "ui/renderable/element/Text.h"
-#include "ui/renderable/Container.h"
+#include "ui/renderable/container/Container.h"
+#include "ui/renderable/container/ScrollContainer.h"
 #include "ui/renderable/Zone.h"
 #include "ui/renderable/primitive/trace/Trace.h"
 #include "ui/renderable/element/NineSlice.h"
@@ -125,6 +126,7 @@ namespace MT
 		std::make_unique<ParticleSystem>();
 		std::make_unique<TileMap>();
 		std::make_unique<Container>();
+		std::make_unique<ScrollContainer>();
 		std::make_unique<Backdrop>();
 		std::make_unique<Zone>();
 		std::make_unique<Animated>();

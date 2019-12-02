@@ -12,7 +12,7 @@ namespace MTGame
 
 	class SceneTetris : public BaseScene
 	{
-		int score = 0;
+		int score = 0, deferPostRenderCount = 0;
 		bool isLeftDown = false, isRightDown = false, saveScreenOnNextEnterFrame = false;
 		std::shared_ptr<MT::Timer> keyRepeatTimer;
 		std::shared_ptr<MT::Text> scoreText;

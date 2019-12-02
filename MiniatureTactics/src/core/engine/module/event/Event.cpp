@@ -49,6 +49,7 @@ namespace MT
 			case SDL_MOUSEMOTION:
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
+			case SDL_MOUSEWHEEL:
 				input->mouse->updateMouseState(&sldE);
 				break;
 

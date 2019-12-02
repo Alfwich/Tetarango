@@ -2,9 +2,8 @@
 
 namespace
 {
-	const char* backButtonId = "back_button";
+	const auto backButtonId = "back_button";
 }
-
 
 namespace MTGame
 {
@@ -21,6 +20,7 @@ namespace MTGame
 		BaseScene::onInitialAttach();
 
 		info = modules->screen->getAllSupportedDisplayModes();
+		modules->input->mouse->registerMouseWheel(weak_from_this());
 	}
 
 	void SceneOptionsMenu::onDestroyChildren()
@@ -43,30 +43,39 @@ namespace MTGame
 		backButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
 		add(backButton);
 
+		scrollContainer = std::make_shared<MT::ScrollContainer>();
+		add(scrollContainer);
+
 		resolutionButtons.clear();
+		std::shared_ptr<ButtonBasic> prevResolutionButton;
 		for (const auto resolution : info.resolutions)
 		{
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
-			resolutionButton->clickListener = weak_from_this();
+			if (resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+			{
+				resolutionButton->setColor(0x333333ff);
+			}
+			else
+			{
+				resolutionButton->clickListener = weak_from_this();
+			}
 			resolutionButtons.push_back(resolutionButton);
-			add(resolutionButton);
-		}
 
-		std::shared_ptr<ButtonBasic> prevResolutionButton;
-		for (const auto resolutionButton : resolutionButtons)
-		{
 			if (prevResolutionButton != nullptr)
 			{
 				resolutionButton->toBottomOf(prevResolutionButton, 0, 5);
 			}
 			else
 			{
-				resolutionButton->centerAlignSelf(5, 5);
+				resolutionButton->centerAlignSelf();
 			}
 
 			prevResolutionButton = resolutionButton;
+			scrollContainer->add(resolutionButton);
 		}
+
+		scrollContainer->centerAlignSelf(5.0, 0.0);
 	}
 
 	void SceneOptionsMenu::onButtonClicked(int id)
@@ -81,6 +90,55 @@ namespace MTGame
 			if (resolutionButton->getId() == id)
 			{
 				modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(resolutionButton->getText(), MT::Events::CHANGE_RESOLUTION));
+			}
+		}
+	}
+
+	void SceneOptionsMenu::onMouseWheel(int x, int y)
+	{
+		const auto mouseX = modules->input->mouse->X();
+		const auto rect = scrollContainer->getScreenRect();
+		if (mouseX < rect->x || mouseX > rect->x + rect->w)
+		{
+			return;
+		}
+
+		if (y > 0)
+		{
+			bool allowScroll = false;
+			for (const auto resolutionButton : resolutionButtons)
+			{
+				allowScroll = resolutionButton->getScreenRect()->y < 0;
+
+				if (allowScroll)
+				{
+					break;
+				}
+			}
+
+			if (allowScroll)
+			{
+				scrollContainer->scrollPixels(-43);
+			}
+
+		}
+		else if (y < 0)
+		{
+			bool allowScroll = false;
+			for (const auto resolutionButton : resolutionButtons)
+			{
+				const auto screenRect = resolutionButton->getScreenRect();
+				allowScroll = screenRect->y + screenRect->h > getScreenHeight();
+
+				if (allowScroll)
+				{
+					break;
+				}
+			}
+
+			if (allowScroll)
+			{
+				scrollContainer->scrollPixels(43);
 			}
 		}
 	}

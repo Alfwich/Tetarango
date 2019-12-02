@@ -78,7 +78,6 @@
     <ClCompile Include="src\game\scene\menu\SceneOptionsMenu.cpp" />
     <ClCompile Include="src\game\scene\menu\SceneSavedGamesMenu.cpp" />
     <ClCompile Include="src\game\scene\menu\SceneSplash.cpp" />
-    <ClCompile Include="src\core\ui\renderable\Container.cpp" />
     <ClCompile Include="src\game\gui\button\ButtonBasic.cpp" />
     <ClCompile Include="src\core\engine\module\storage\HuffmanEncoder.cpp" />
     <ClCompile Include="src\core\engine\module\storage\StorageClient.cpp" />
@@ -120,6 +119,8 @@
     <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
     <ClCompile Include="src\game\prop\particles\block\BlockParticleFactory.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\CachedImage.cpp" />
+    <ClCompile Include="src\core\ui\renderable\container\Container.cpp" />
+    <ClCompile Include="src\core\ui\renderable\container\ScrollContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\UI\Camera.h" />
@@ -192,7 +193,6 @@
     <ClInclude Include="src\game\scene\menu\SceneOptionsMenu.h" />
     <ClInclude Include="src\game\scene\menu\SceneSavedGamesMenu.h" />
     <ClInclude Include="src\game\scene\menu\SceneSplash.h" />
-    <ClInclude Include="src\core\ui\renderable\Container.h" />
     <ClInclude Include="src\core\engine\module\display\RenderPackage.h" />
     <ClInclude Include="src\game\gui\button\ButtonBasic.h" />
     <ClInclude Include="src\game\gui\button\ButtonBasicAnimation.h" />
@@ -254,6 +254,8 @@
     <ClInclude Include="src\game\prop\particles\block\BlockParticleFactory.h" />
     <ClInclude Include="src\core\ui\renderable\element\CachedImage.h" />
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
+    <ClInclude Include="src\core\ui\renderable\container\Container.h" />
+    <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

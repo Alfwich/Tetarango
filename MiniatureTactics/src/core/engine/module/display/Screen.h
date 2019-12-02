@@ -24,14 +24,26 @@ namespace MT
 			this->modes = modes;
 			for (const auto mode : modes)
 			{
-				resolutions.insert(std::to_string(mode.w) + "x" + std::to_string(mode.h));
+				if (mode.w < 1000)
+				{
+					continue;
+				}
+
+				const auto k = std::to_string(mode.w) + "x" + std::to_string(mode.h);
+				if (std::find(resolutions.begin(), resolutions.end(), k) == resolutions.end())
+				{
+					resolutions.push_back(k);
+				}
 				refreshs.insert(mode.refresh_rate);
 				formats.insert(mode.format);
 			}
+
+			std::sort(resolutions.begin(), resolutions.end());
+			std::reverse(resolutions.begin(), resolutions.end());
 		};
 
 		std::vector<SDL_DisplayMode> modes;
-		std::unordered_set<std::string> resolutions;
+		std::vector<std::string> resolutions;
 		std::unordered_set<int> refreshs;
 		std::unordered_set<int> formats;
 

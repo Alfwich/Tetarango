@@ -145,6 +145,13 @@ namespace MTGame
 
 	void SceneTetris::onPostRender()
 	{
+		if (deferPostRenderCount > 0)
+		{
+			deferPostRenderCount--;
+			modules->event->registerPostRenderCallback(shared_from_this());
+			return;
+		}
+
 		auto imageCatcher = std::make_shared<MT::CachedImage>();
 		imageCatcher->setShouldSerializeImage(true);
 		imageCatcher->captureWholeScreen();
@@ -238,6 +245,7 @@ namespace MTGame
 
 	void SceneTetris::onAboutToSave()
 	{
+		deferPostRenderCount = 1;
 		modules->event->registerPostRenderCallback(shared_from_this());
 	}
 }

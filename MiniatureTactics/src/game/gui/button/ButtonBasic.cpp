@@ -38,6 +38,7 @@ namespace MTGame
 		label->setFont("medium", 30);
 		label->setText(text);
 		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
+		label->setColor(getColor());
 		add(label);
 	}
 
