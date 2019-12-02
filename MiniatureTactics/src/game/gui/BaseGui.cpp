@@ -6,8 +6,6 @@
 
 namespace
 {
-	const std::string buttonBasicId = "button-basic";
-	const std::string mediumFontId = "medium";
 	const MTGame::Guis config;
 }
 
@@ -23,6 +21,7 @@ namespace MTGame
 	void BaseGui::primeGuis()
 	{
 		std::make_unique<ButtonBasic>();
+		std::make_unique<CheckBoxBasic>();
 		std::make_unique<GameCamera>();
 		std::make_unique<GameMainMenu>();
 		std::make_unique<TransitionFade>();
@@ -35,9 +34,8 @@ namespace MTGame
 			return;
 		}
 
-		modules->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
-		modules->texture->loadTexture("res/game/img/ui/button/proto_button.png", buttonBasicId);
-		modules->animation->addAnimationSet(std::make_shared<ButtonBasicAnimation>(), buttonBasicId);
+		ButtonBasic::loadResources(modules);
+		CheckBoxBasic::loadResources(modules);
 
 		isLoaded = true;
 	}

@@ -45,6 +45,6 @@
 
 // GUI
 #include "gui/button/ButtonBasic.h"
-#include "gui/button/ButtonBasicAnimation.h"
+#include "gui/button/CheckBoxBasic.h"
 #include "gui/menu/GameMainMenu.h"
 #include "gui/transition/TransitionFade.h"

@@ -165,6 +165,7 @@
     <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\CachedImage.cpp" />
     <ClCompile Include="src\game\actor\board\Board.cpp" />
+    <ClCompile Include="src\game\gui\button\CheckBoxBasic.cpp" />
     <ClCompile Include="src\game\prop\block\Block.cpp" />
     <ClCompile Include="src\game\prop\particles\block\BlockParticleFactory.cpp" />
     <ClCompile Include="src\game\prop\particles\space\ParticleSpaceBackgroundFactory.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />
     <ClInclude Include="src\core\ui\renderable\element\CachedImage.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
+    <ClInclude Include="src\game\gui\button\CheckBoxBasic.h" />
     <ClInclude Include="src\game\prop\block\Block.h" />
     <ClInclude Include="src\game\prop\block\BlockAnimations.h" />
     <ClInclude Include="src\game\prop\block\Blocks.h" />
@@ -315,7 +317,6 @@
     <ClInclude Include="src\game\scene\menu\SceneMainMenu.h" />
     <ClInclude Include="src\game\scene\menu\SceneOptionsMenu.h" />
     <ClInclude Include="src\game\scene\menu\SceneSavedGamesMenu.h" />
-    <ClInclude Include="src\game\gui\button\ButtonBasicAnimation.h" />
     <ClInclude Include="src\game\gui\button\ButtonBasic.h" />
     <ClInclude Include="src\core\engine\module\SystemModuleBundle.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\particle\IParticleFactory.h" />

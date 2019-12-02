@@ -9,17 +9,15 @@
 namespace MTGame
 {
 
-	class ButtonBasic : public BaseGui, public MT::Animated
+	class CheckBoxBasic: public BaseGui, public MT::Animated
 	{
 		std::string text;
 		std::shared_ptr<MT::Text> label;
 		bool isHovering = false, isPressed = false;
 	public:
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
-		ButtonBasic();
 
-		void setText(std::string text);
-		std::string getText();
+		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
+		CheckBoxBasic();
 
 		void onCreateChildren();
 		void onChildrenHydrated();
@@ -30,6 +28,13 @@ namespace MTGame
 		void onEnterFrame(double frameTime);
 
 		std::weak_ptr<ApplicationObject> clickListener;
+
+		void setText(std::string text);
+		std::string getText();
+
+		bool getChecked();
+		void setChecked(bool isChecked);
 	};
 
 }
+

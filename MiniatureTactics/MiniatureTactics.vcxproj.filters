@@ -121,6 +121,7 @@
     <ClCompile Include="src\core\ui\renderable\element\CachedImage.cpp" />
     <ClCompile Include="src\core\ui\renderable\container\Container.cpp" />
     <ClCompile Include="src\core\ui\renderable\container\ScrollContainer.cpp" />
+    <ClCompile Include="src\game\gui\button\CheckBoxBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\UI\Camera.h" />
@@ -195,7 +196,6 @@
     <ClInclude Include="src\game\scene\menu\SceneSplash.h" />
     <ClInclude Include="src\core\engine\module\display\RenderPackage.h" />
     <ClInclude Include="src\game\gui\button\ButtonBasic.h" />
-    <ClInclude Include="src\game\gui\button\ButtonBasicAnimation.h" />
     <ClInclude Include="src\game\gui\button\IButtonListener.h" />
     <ClInclude Include="src\core\engine\module\storage\HuffmanEncoder.h" />
     <ClInclude Include="src\core\engine\module\storage\StorageClient.h" />
@@ -256,6 +256,7 @@
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\ui\renderable\container\Container.h" />
     <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
+    <ClInclude Include="src\game\gui\button\CheckBoxBasic.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

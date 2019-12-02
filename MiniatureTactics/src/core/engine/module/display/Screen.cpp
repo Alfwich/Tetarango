@@ -57,7 +57,8 @@ namespace MT
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaaSamples);
 		}
 
-		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags | (config.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags | (config.isFullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+		//window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags | (config.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
 
 		renderer = std::make_shared<Renderer>(window, config, renderer);
 

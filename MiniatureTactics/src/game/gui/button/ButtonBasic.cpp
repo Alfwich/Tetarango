@@ -1,9 +1,51 @@
 #include "ButtonBasic.h"
-
 #include "gui/Guis.h"
+
+namespace
+{
+	const std::string buttonBasicId = "button-basic";
+	const std::string mediumFontId = "medium";
+}
 
 namespace MTGame
 {
+	void ButtonBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
+	{
+		bundle->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
+		bundle->texture->loadTexture("res/game/img/ui/button/proto_button.png", buttonBasicId);
+
+		auto animationSet = std::make_shared<MT::AnimationSet>();
+		{
+			int fps = 15;
+			MT::RectI frameSize = {
+				0,
+				0,
+				350,
+				150
+			};
+
+			{
+
+				auto anim = animationSet->startNewAnimation("default");
+				anim->setFps(fps);
+				anim->addGeneralFrames(0, 0, frameSize.w, frameSize.h, 1);
+			}
+
+			{
+				auto anim = animationSet->startNewAnimation("pressed");
+				anim->setFps(fps);
+				anim->addGeneralFrames(frameSize.w * 1, 0, frameSize.w, frameSize.h, 1);
+			}
+
+			{
+				auto anim = animationSet->startNewAnimation("hover");
+				anim->setFps(fps);
+				anim->addGeneralFrames(0, frameSize.h, frameSize.w, frameSize.h, 1);
+			}
+		}
+		bundle->animation->addAnimationSet(animationSet, buttonBasicId);
+	}
+
 	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{
 		setTexture("button-basic");

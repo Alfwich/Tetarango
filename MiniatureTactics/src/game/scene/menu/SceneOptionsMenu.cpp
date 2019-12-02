@@ -8,7 +8,6 @@ namespace
 namespace MTGame
 {
 
-
 	SceneOptionsMenu::SceneOptionsMenu() : BaseScene(SceneGame::OptionsMenu)
 	{
 		rebuildOnLoad = true;
@@ -42,6 +41,13 @@ namespace MTGame
 		backButton->clickListener = weak_from_this();
 		backButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
 		add(backButton);
+
+		fullscreenCheckbox = std::make_shared<CheckBoxBasic>();
+		fullscreenCheckbox->setText("Fullscreen");
+		fullscreenCheckbox->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
+		fullscreenCheckbox->setChecked(modules->screen->isFullscreenEnabled());
+		fullscreenCheckbox->clickListener = weak_from_this();
+		add(fullscreenCheckbox);
 
 		scrollContainer = std::make_shared<MT::ScrollContainer>();
 		scrollContainer->setMouseWheenEnabled(true);
@@ -85,6 +91,13 @@ namespace MTGame
 		if (id == backButton->getId())
 		{
 			transitionToScene(SceneGame::MainMenu);
+			return;
+		}
+
+		if (id == fullscreenCheckbox->getId())
+		{
+			modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(fullscreenCheckbox->getChecked() ? "enable" : "disable", MT::Events::TOGGLE_FULLSCREEN));
+			return;
 		}
 
 		for (const auto resolutionButton : resolutionButtons)
