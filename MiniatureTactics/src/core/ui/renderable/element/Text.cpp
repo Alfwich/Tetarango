@@ -1,5 +1,10 @@
 #include "Text.h"
 
+namespace
+{
+	const auto textPositioningElementName = "text-pos-ele";
+}
+
 namespace MT
 {
 	Text::Text() : Text(std::string(), 0) {}
@@ -13,6 +18,7 @@ namespace MT
 		dynamicResizing = true;
 		setTextColor(0xff, 0xff, 0xff);
 		setBackgroundColor(0x00, 0x00, 0x00);
+		renderType = RenderType::Container;
 		enableSerialization<Text>();
 	}
 
@@ -23,18 +29,22 @@ namespace MT
 
 	void Text::renderText()
 	{
-		if (texture == nullptr)
+		if (cachedTextureText == nullptr)
 		{
 			if (config.font == nullptr && fontName.size() && fontSize > 0)
 			{
 				config.font = modules->font->createFont(fontName, fontSize);
 			}
 
-			texture = modules->texture->getEmptyTextureTextForKey(textureBindingKey);
-			setTexture(texture);
+			cachedTextureText = modules->texture->getEmptyTextureTextForKey(textureBindingKey);
+
+			if (textPositioningElement != nullptr)
+			{
+				textPositioningElement->setTexture(cachedTextureText);
+			}
 		}
 
-		auto textureText = std::static_pointer_cast<TextureText>(texture);
+		auto textureText = std::static_pointer_cast<TextureText>(cachedTextureText);
 		if (!textureText)
 		{
 			Logger::instance()->logCritical("Text::Failed to render text. Internal Texture is not a TextureText.");
@@ -44,9 +54,15 @@ namespace MT
 		textureText->updateConfiguration(config);
 		textureText->rebind();
 
-		if (dynamicResizing && texture->isLoaded())
+		if (dynamicResizing && cachedTextureText->isLoaded())
 		{
-			setSize(texture->getWidth(), texture->getHeight());
+			setSize(textureText->getOriginalWidth(), textureText->getOriginalHeight());
+
+			if (textPositioningElement != nullptr)
+			{
+				textPositioningElement->setSize(textureText->getWidth(), textureText->getHeight());
+				layout();
+			}
 		}
 	}
 
@@ -128,6 +144,41 @@ namespace MT
 	void Text::onInitialAttach()
 	{
 		renderText();
+	}
+
+	void Text::onCreateChildren()
+	{
+		textPositioningElement = std::make_shared<Element>();
+		textPositioningElement->name = textPositioningElementName;
+		textPositioningElement->zIndex = 2;
+		if (cachedTextureText != nullptr)
+		{
+			textPositioningElement->setTexture(cachedTextureText);
+			if (dynamicResizing)
+			{
+				textPositioningElement->setSize(cachedTextureText->getWidth(), cachedTextureText->getHeight());
+			}
+		}
+		add(textPositioningElement);
+	}
+
+	void Text::onChildrenHydrated()
+	{
+		textPositioningElement = findChildWithName<Element>(textPositioningElementName);
+
+		if (cachedTextureText != nullptr)
+		{
+			textPositioningElement->setTexture(cachedTextureText);
+			if (dynamicResizing)
+			{
+				textPositioningElement->setSize(cachedTextureText->getWidth(), cachedTextureText->getHeight());
+			}
+		}
+	}
+
+	void Text::onLayoutChildren()
+	{
+		textPositioningElement->setPosition(getHalfWidth(), getHalfHeight());
 	}
 
 	std::shared_ptr<SerializationClient> Text::doSerialize(SerializationHint hint)

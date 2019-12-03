@@ -22,6 +22,7 @@ namespace MTGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 		void onInitialAttach();
+		void onLayoutChildren();
 		void onDetach();
 		void checkIsHovering(int x, int y);
 		void onMouseButton(MT::MouseButton button, bool pressed);
@@ -34,6 +35,7 @@ namespace MTGame
 
 		bool getChecked();
 		void setChecked(bool isChecked);
+		void setEnabled(bool flag);
 	};
 
 }

@@ -175,19 +175,17 @@ namespace MT
 		{
 			switch (e->code)
 			{
-			case MT::Events::QUIT_REQUESTED:
+			case MT::Events::QuitRequested:
 				exit();
 				break;
 
-			case MT::Events::CHANGE_RESOLUTION:
-				screenConfig.width = MT::StringHelper::getDisplayComponentForDisplayString(&e->what, 0);
-				screenConfig.height = MT::StringHelper::getDisplayComponentForDisplayString(&e->what, 1);
-				provisionScreen();
-				break;
-
-			case MT::Events::TOGGLE_FULLSCREEN:
-				screenConfig.isFullscreen = e->what == "enable"; 
-				provisionScreen();
+			case MT::Events::ReprovisionScreen:
+				const auto reprovisionScreenEvent = std::static_pointer_cast<MT::ReprovisionScreenApplicationEvent>(e);
+				if (e != nullptr)
+				{
+					screenConfig = reprovisionScreenEvent->config;
+					provisionScreen();
+				}
 				break;
 			}
 		}
@@ -205,7 +203,8 @@ namespace MT
 
 	void Application::provisionScreen()
 	{
-		Logger::instance()->log("Application::Provisioning screen width=" + std::to_string(screenConfig.width) + ", height= " + std::to_string(screenConfig.height) + ", fullscreen=" + std::to_string(screenConfig.isFullscreen));
+		const auto isFullscreen = screenConfig.mode == ScreenModes::Fullscreen || screenConfig.mode == ScreenModes::FullscreenDesktop;
+		Logger::instance()->log("Application::Provisioning screen width=" + std::to_string(screenConfig.width) + ", height= " + std::to_string(screenConfig.height) + ", fullscreen=" + std::to_string(isFullscreen));
 		if (modules->screen->init(screenConfig, gameConfig->getConfigString(Config::Param::gameName)))
 		{
 			modules->texture->rebindAllTextures();

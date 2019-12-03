@@ -81,7 +81,7 @@ namespace MTGame
 
 		if (id == exitButton->getId())
 		{
-			modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(MT::Events::QUIT_REQUESTED));
+			modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(MT::Events::QuitRequested));
 		}
 	}
 }

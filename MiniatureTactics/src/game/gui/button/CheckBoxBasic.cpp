@@ -5,6 +5,7 @@ namespace
 {
 	const auto checkBoxBasicId = "check-box-basic";
 	const auto isCheckedParamName = "check-box-basic-is-checked";
+	const auto isLockedParamName = "check-box-is-locked";
 }
 
 namespace MTGame
@@ -93,13 +94,17 @@ namespace MTGame
 		serializationClient->setBool(isCheckedParamName, isChecked);
 	}
 
+	void CheckBoxBasic::setEnabled(bool flag)
+	{
+		serializationClient->setBool(isLockedParamName, flag);
+	}
+
 	void CheckBoxBasic::onCreateChildren()
 	{
 		label = std::make_shared<MT::Text>();
 		label->name = "button_text";
 		label->setFont("medium", 30);
 		label->setText(text);
-		label->setPosition(getWidth() / 2.0, -label->getHalfHeight());
 		label->setColor(getColor());
 		add(label);
 	}
@@ -118,6 +123,11 @@ namespace MTGame
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
 	}
 
+	void CheckBoxBasic::onLayoutChildren()
+	{
+		label->centerAlignSelf(getWidth() + 20.0, 0.0);
+	}
+
 	void CheckBoxBasic::onDetach()
 	{
 		isPressed = false;
@@ -133,6 +143,12 @@ namespace MTGame
 
 	void CheckBoxBasic::onMouseButton(MT::MouseButton button, bool pressed)
 	{
+		const auto isLocked = serializationClient->getBool(isLockedParamName, false);
+		if (isLocked)
+		{
+			return;
+		}
+
 		switch (button)
 		{
 		case MT::MouseButton::Left:

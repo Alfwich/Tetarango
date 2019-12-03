@@ -5,7 +5,7 @@ namespace
 {
 	const auto displayWidthParamKey = "display-width";
 	const auto displayHeightParamKey = "display-height";
-	const auto displayFullscreenParamKey = "display-fullscreen";
+	const auto displayModeParamKey = "display-fullscreen";
 }
 
 namespace MTGame
@@ -21,7 +21,7 @@ namespace MTGame
 		{
 			screenConfig.width = storageClient->readInt(displayWidthParamKey);
 			screenConfig.height = storageClient->readInt(displayHeightParamKey);
-			screenConfig.isFullscreen = storageClient->readBool(displayFullscreenParamKey);
+			screenConfig.mode = (MT::ScreenModes)storageClient->readInt(displayModeParamKey);
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
@@ -112,13 +112,13 @@ namespace MTGame
 		{
 			screenConfig.width = 1024;
 			screenConfig.height = 768;
-			screenConfig.isFullscreen = false;
+			screenConfig.mode = MT::ScreenModes::Windowed;
 		}
 		else
 		{
 			screenConfig.width = width;
 			screenConfig.height = height;
-			screenConfig.isFullscreen = false;
+			screenConfig.mode = MT::ScreenModes::Windowed;
 		}
 
 		return true;
@@ -129,7 +129,7 @@ namespace MTGame
 		const auto storageClient = modules->storage->getClient();
 		storageClient->writeInt(displayWidthParamKey, screenConfig.width);
 		storageClient->writeInt(displayHeightParamKey, screenConfig.height);
-		storageClient->writeBool(displayFullscreenParamKey, screenConfig.isFullscreen);
+		storageClient->writeInt(displayModeParamKey, (int)screenConfig.mode);
 
 		if (masterSceneContainer != nullptr)
 		{

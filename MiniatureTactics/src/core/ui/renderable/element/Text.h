@@ -14,6 +14,8 @@ namespace MT
 	{
 		int fontSize = 0;
 		std::string fontName;
+		std::shared_ptr<Element> textPositioningElement;
+		std::shared_ptr<Texture> cachedTextureText;
 
 		std::string textureBindingKey;
 		TextureTextRenderConfiguration config;
@@ -42,6 +44,9 @@ namespace MT
 		std::string getText();
 
 		void onInitialAttach();
+		void onCreateChildren();
+		void onChildrenHydrated();
+		void onLayoutChildren();
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 	};

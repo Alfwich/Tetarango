@@ -1,15 +1,8 @@
 #include "Event.h"
 #include "GL/glew.h"
 
-
 namespace MT
 {
-
-
-	Event::Event() {}
-
-
-	Event::~Event() {}
 
 	void Event::bindInput(std::shared_ptr<Input> input)
 	{
@@ -38,7 +31,7 @@ namespace MT
 			switch (sldE.type)
 			{
 			case SDL_QUIT:
-				events.push_back(std::make_shared<ApplicationEvent>(Events::QUIT_REQUESTED));
+				events.push_back(std::make_shared<ApplicationEvent>(Events::QuitRequested));
 				break;
 
 			case SDL_KEYDOWN:

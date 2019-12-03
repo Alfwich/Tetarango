@@ -1,21 +1,31 @@
 #pragma once
 
 #include <string>
-#include "Events.h"
+#include "engine/module/display/ScreenConfig.h"
 
 namespace MT
 {
 
+	enum class Events {
+		Unspecified,
+		QuitRequested,
+		ReprovisionScreen
+	};
+
 	class ApplicationEvent
 	{
 	public:
-		ApplicationEvent();
-		ApplicationEvent(std::string what);
-		ApplicationEvent(Events event);
-		ApplicationEvent(std::string what, Events event);
+		ApplicationEvent(Events code) : code(code) {};
 
-		Events code;
-		std::string what;
+		const Events code;
+	};
+
+	class ReprovisionScreenApplicationEvent : public ApplicationEvent
+	{
+	public:
+		ReprovisionScreenApplicationEvent(ScreenConfig config) : ApplicationEvent(Events::ReprovisionScreen), config(config) {}
+
+		const ScreenConfig config;
 	};
 
 }

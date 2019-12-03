@@ -42,9 +42,6 @@ namespace MT
 		void reportSdlErrors();
 
 	public:
-		Event();
-		virtual ~Event();
-
 		void bindInput(std::shared_ptr<Input> input);
 		void bindThread(std::shared_ptr<Thread> thread);
 

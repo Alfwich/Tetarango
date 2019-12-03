@@ -53,7 +53,6 @@
     <ClCompile Include="src\core\util\Rect.cpp" />
     <ClCompile Include="src\core\engine\module\animation\Transition.cpp" />
     <ClCompile Include="src\core\engine\module\event\Event.cpp" />
-    <ClCompile Include="src\core\engine\module\event\ApplicationEvent.cpp" />
     <ClCompile Include="src\core\engine\module\sound\Sound.cpp" />
     <ClCompile Include="src\core\engine\module\sound\SoundClip.cpp" />
     <ClCompile Include="src\core\engine\module\sound\SoundContainer.cpp" />
@@ -165,7 +164,6 @@
     <ClInclude Include="src\core\engine\module\animation\Transition.h" />
     <ClInclude Include="src\core\engine\module\event\Event.h" />
     <ClInclude Include="src\core\engine\module\event\ApplicationEvent.h" />
-    <ClInclude Include="src\core\engine\module\event\Events.h" />
     <ClInclude Include="src\core\engine\module\sound\Sound.h" />
     <ClInclude Include="src\core\engine\module\sound\SoundContainer.h" />
     <ClInclude Include="src\core\engine\module\sound\SoundClip.h" />

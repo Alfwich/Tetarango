@@ -207,7 +207,6 @@
     <ClCompile Include="src\core\engine\module\sound\SoundClip.cpp" />
     <ClCompile Include="src\core\engine\module\sound\SoundContainer.cpp" />
     <ClCompile Include="src\core\engine\module\sound\Sound.cpp" />
-    <ClCompile Include="src\core\engine\module\event\ApplicationEvent.cpp" />
     <ClCompile Include="src\core\engine\module\event\Event.cpp" />
     <ClCompile Include="src\core\engine\module\thread\Worker.cpp" />
     <ClCompile Include="src\core\util\Rect.cpp" />
@@ -328,7 +327,6 @@
     <ClInclude Include="src\core\engine\module\sound\SoundContainer.h" />
     <ClInclude Include="src\core\engine\module\sound\Sound.h" />
     <ClInclude Include="src\core\engine\module\event\ApplicationEvent.h" />
-    <ClInclude Include="src\core\engine\module\event\Events.h" />
     <ClInclude Include="src\core\engine\module\event\Event.h" />
     <ClInclude Include="src\core\engine\module\thread\AsyncBundles.h" />
     <ClInclude Include="src\core\engine\module\thread\WorkerStatus.h" />

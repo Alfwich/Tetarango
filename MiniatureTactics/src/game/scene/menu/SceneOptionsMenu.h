@@ -12,9 +12,12 @@ namespace MTGame
 	class SceneOptionsMenu : public BaseScene
 	{
 		MT::DisplayModeInfo info;
+		MT::ScreenConfig config;
 		std::shared_ptr<MT::Text> optionsMenuTitle;
 		std::shared_ptr<ButtonBasic> backButton;
+		std::shared_ptr<CheckBoxBasic> windowedCheckbox;
 		std::shared_ptr<CheckBoxBasic> fullscreenCheckbox;
+		std::shared_ptr<CheckBoxBasic> fullscreenDesktopCheckbox;
 		std::shared_ptr<MT::ScrollContainer> scrollContainer;
 		std::vector<std::shared_ptr<ButtonBasic>> resolutionButtons;
 

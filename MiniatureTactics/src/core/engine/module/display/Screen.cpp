@@ -15,6 +15,8 @@ namespace MT
 
 	bool Screen::init(const ScreenConfig& config, std::string name)
 	{
+		currentConfig = config;
+
 		if (window != nullptr)
 		{
 			SDL_DestroyWindow(window);
@@ -57,8 +59,22 @@ namespace MT
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaaSamples);
 		}
 
-		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags | (config.isFullscreen ? SDL_WINDOW_FULLSCREEN : 0));
-		//window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags | (config.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+		switch (config.mode)
+		{
+		case ScreenModes::Fullscreen:
+			windowFlags = (windowFlags | SDL_WINDOW_FULLSCREEN);
+			break;
+
+		case ScreenModes::FullscreenDesktop:
+			windowFlags = (windowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
+			break;
+
+		case ScreenModes::Windowed:
+		default:
+			break;
+		}
+
+		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags);
 
 		renderer = std::make_shared<Renderer>(window, config, renderer);
 
@@ -149,6 +165,10 @@ namespace MT
 		return DisplayModeInfo(result);
 	}
 
+	ScreenConfig Screen::getCurrentScreenConfig()
+	{
+		return currentConfig;
+	}
 
 	bool Screen::isOpenGLEnabled()
 	{
@@ -158,11 +178,6 @@ namespace MT
 	SDL_GLContext Screen::getOpenGLContext()
 	{
 		return renderer->getOpenGLContext();
-	}
-
-	bool Screen::isFullscreenEnabled()
-	{
-		return window != nullptr && SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
 	}
 
 	std::shared_ptr<Camera> Screen::getCamera()

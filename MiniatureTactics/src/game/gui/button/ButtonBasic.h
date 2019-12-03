@@ -18,9 +18,6 @@ namespace MTGame
 		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
 		ButtonBasic();
 
-		void setText(std::string text);
-		std::string getText();
-
 		void onCreateChildren();
 		void onChildrenHydrated();
 		void onInitialAttach();
@@ -30,6 +27,10 @@ namespace MTGame
 		void onEnterFrame(double frameTime);
 
 		std::weak_ptr<ApplicationObject> clickListener;
+
+		void setText(std::string text);
+		std::string getText();
+		void setEnabled(bool flag);
 	};
 
 }

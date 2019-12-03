@@ -19,6 +19,7 @@ namespace MTGame
 		BaseScene::onInitialAttach();
 
 		info = modules->screen->getAllSupportedDisplayModes();
+		config = modules->screen->getCurrentScreenConfig();
 		modules->input->mouse->registerMouseWheel(weak_from_this());
 	}
 
@@ -44,10 +45,27 @@ namespace MTGame
 
 		fullscreenCheckbox = std::make_shared<CheckBoxBasic>();
 		fullscreenCheckbox->setText("Fullscreen");
-		fullscreenCheckbox->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
-		fullscreenCheckbox->setChecked(modules->screen->isFullscreenEnabled());
+		fullscreenCheckbox->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0 - 100.0);
+		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
+		fullscreenCheckbox->setEnabled(config.mode == MT::ScreenModes::Fullscreen);
 		fullscreenCheckbox->clickListener = weak_from_this();
 		add(fullscreenCheckbox);
+
+		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>();
+		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
+		fullscreenDesktopCheckbox->toBottomOf(fullscreenCheckbox, 0.0, 50.0);
+		fullscreenDesktopCheckbox->setChecked(config.mode == MT::ScreenModes::FullscreenDesktop);
+		fullscreenDesktopCheckbox->setEnabled(config.mode == MT::ScreenModes::FullscreenDesktop);
+		fullscreenDesktopCheckbox->clickListener = weak_from_this();
+		add(fullscreenDesktopCheckbox);
+
+		windowedCheckbox = std::make_shared<CheckBoxBasic>();
+		windowedCheckbox->setText("Window");
+		windowedCheckbox->toBottomOf(fullscreenDesktopCheckbox, 0.0, 50.0);
+		windowedCheckbox->setChecked(config.mode == MT::ScreenModes::Windowed);
+		windowedCheckbox->setEnabled(config.mode == MT::ScreenModes::Windowed);
+		windowedCheckbox->clickListener = weak_from_this();
+		add(windowedCheckbox);
 
 		scrollContainer = std::make_shared<MT::ScrollContainer>();
 		scrollContainer->setMouseWheenEnabled(true);
@@ -63,6 +81,7 @@ namespace MTGame
 			if (resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
 				resolutionButton->setColor(0x333333ff);
+				resolutionButton->setEnabled(false);
 			}
 			else
 			{
@@ -96,7 +115,22 @@ namespace MTGame
 
 		if (id == fullscreenCheckbox->getId())
 		{
-			modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(fullscreenCheckbox->getChecked() ? "enable" : "disable", MT::Events::TOGGLE_FULLSCREEN));
+			config.mode = MT::ScreenModes::Fullscreen;
+			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
+			return;
+		}
+
+		if (id == windowedCheckbox->getId())
+		{
+			config.mode = MT::ScreenModes::Windowed;
+			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
+			return;
+		}
+
+		if (id == fullscreenDesktopCheckbox->getId())
+		{
+			config.mode = MT::ScreenModes::FullscreenDesktop;
+			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
 			return;
 		}
 
@@ -104,7 +138,10 @@ namespace MTGame
 		{
 			if (resolutionButton->getId() == id)
 			{
-				modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(resolutionButton->getText(), MT::Events::CHANGE_RESOLUTION));
+				auto newResolution = resolutionButton->getText();
+				config.width = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
+				config.height = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 1);
+				modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
 			}
 		}
 	}

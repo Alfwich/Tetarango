@@ -1,10 +1,19 @@
 #pragma once
 namespace MT
 {
-	struct ScreenConfig
+	enum class ScreenModes
 	{
+		Fullscreen,
+		FullscreenDesktop,
+		Windowed
+	};
+
+	class ScreenConfig
+	{
+	public:
 		int width = 640, height = 480, windowFlags = 0;
-		bool isFullscreen = false, openGlWireframeMode = false, useForwardCompatible = true, useMSAA = true;
+		ScreenModes mode = ScreenModes::Windowed;
+		bool openGlWireframeMode = false, useForwardCompatible = true, useMSAA = true;
 		int openGLMajorVersion = 3, openGLMinorVersion = 1, msaaSamples = 8;
 	};
 }

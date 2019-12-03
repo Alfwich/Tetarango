@@ -57,6 +57,7 @@ namespace MT
 		std::shared_ptr<Collision> collision;
 		std::shared_ptr<Renderer> renderer;
 		std::shared_ptr<Camera> camera;
+		ScreenConfig currentConfig;
 		int windowWidth, windowHeight;
 
 	public:
@@ -74,7 +75,7 @@ namespace MT
 
 		DisplayModeInfo getCurrentDisplayMode();
 		DisplayModeInfo getAllSupportedDisplayModes();
-		bool isFullscreenEnabled();
+		ScreenConfig getCurrentScreenConfig();
 
 		bool isOpenGLEnabled();
 		SDL_GLContext getOpenGLContext();

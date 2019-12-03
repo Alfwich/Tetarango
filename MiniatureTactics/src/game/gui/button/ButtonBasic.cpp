@@ -3,8 +3,9 @@
 
 namespace
 {
-	const std::string buttonBasicId = "button-basic";
-	const std::string mediumFontId = "medium";
+	const auto buttonBasicId = "button-basic";
+	const auto mediumFontId = "medium";
+	const auto enabledParamName = "button-basic-is-enabled";
 }
 
 namespace MTGame
@@ -73,6 +74,11 @@ namespace MTGame
 		return text;
 	}
 
+	void ButtonBasic::setEnabled(bool flag)
+	{
+		serializationClient->setBool(enabledParamName, flag);
+	}
+
 	void ButtonBasic::onCreateChildren()
 	{
 		label = std::make_shared<MT::Text>();
@@ -113,6 +119,12 @@ namespace MTGame
 
 	void ButtonBasic::onMouseButton(MT::MouseButton button, bool pressed)
 	{
+		const auto isEnabled = serializationClient->getBool(enabledParamName, true);
+		if (!isEnabled)
+		{
+			return;
+		}
+
 		switch (button)
 		{
 		case MT::MouseButton::Left:
