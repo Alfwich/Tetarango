@@ -13,8 +13,8 @@ namespace MT
 	public:
 		int width = 640, height = 480, windowFlags = 0;
 		ScreenModes mode = ScreenModes::Windowed;
-		bool openGlWireframeMode = false, useForwardCompatible = true, useMSAA = true;
-		int openGLMajorVersion = 3, openGLMinorVersion = 1, msaaSamples = 8;
+		bool openGlWireframeMode = false, openGLCompatibilityMode = false;
+		int openGLMajorVersion = 3, openGLMinorVersion = 1, msaaSamples = 4;
 	};
 }
 

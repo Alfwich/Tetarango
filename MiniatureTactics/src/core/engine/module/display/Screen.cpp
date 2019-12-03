@@ -40,7 +40,7 @@ namespace MT
 		}
 
 		int windowFlags = windowFlags = SDL_WINDOW_OPENGL;
-		if (config.useForwardCompatible)
+		if (!config.openGLCompatibilityMode)
 		{
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 		}
@@ -53,10 +53,14 @@ namespace MT
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, config.openGLMajorVersion);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, config.openGLMinorVersion);
 
-		if (config.useMSAA)
+		if (config.msaaSamples > 0)
 		{
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaaSamples);
+		}
+		else
+		{
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
 		}
 
 		switch (config.mode)
@@ -80,7 +84,7 @@ namespace MT
 
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 
-		return true;
+		return window != nullptr && renderer->getOpenGLContext() != nullptr;
 	}
 
 	int Screen::getWidth()

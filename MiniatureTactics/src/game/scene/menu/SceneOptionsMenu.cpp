@@ -43,32 +43,8 @@ namespace MTGame
 		backButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
 		add(backButton);
 
-		fullscreenCheckbox = std::make_shared<CheckBoxBasic>();
-		fullscreenCheckbox->setText("Fullscreen");
-		fullscreenCheckbox->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0 - 100.0);
-		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
-		fullscreenCheckbox->setEnabled(config.mode == MT::ScreenModes::Fullscreen);
-		fullscreenCheckbox->clickListener = weak_from_this();
-		add(fullscreenCheckbox);
-
-		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>();
-		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
-		fullscreenDesktopCheckbox->toBottomOf(fullscreenCheckbox, 0.0, 50.0);
-		fullscreenDesktopCheckbox->setChecked(config.mode == MT::ScreenModes::FullscreenDesktop);
-		fullscreenDesktopCheckbox->setEnabled(config.mode == MT::ScreenModes::FullscreenDesktop);
-		fullscreenDesktopCheckbox->clickListener = weak_from_this();
-		add(fullscreenDesktopCheckbox);
-
-		windowedCheckbox = std::make_shared<CheckBoxBasic>();
-		windowedCheckbox->setText("Window");
-		windowedCheckbox->toBottomOf(fullscreenDesktopCheckbox, 0.0, 50.0);
-		windowedCheckbox->setChecked(config.mode == MT::ScreenModes::Windowed);
-		windowedCheckbox->setEnabled(config.mode == MT::ScreenModes::Windowed);
-		windowedCheckbox->clickListener = weak_from_this();
-		add(windowedCheckbox);
-
 		scrollContainer = std::make_shared<MT::ScrollContainer>();
-		scrollContainer->setMouseWheenEnabled(true);
+		scrollContainer->setMouseWheenEnabled(config.mode != MT::ScreenModes::FullscreenDesktop);
 		scrollContainer->setScrollAmountInPixels(43);
 		add(scrollContainer);
 
@@ -78,7 +54,7 @@ namespace MTGame
 		{
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
-			if (resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+			if (config.mode == MT::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
 				resolutionButton->setColor(0x333333ff);
 				resolutionButton->setEnabled(false);
@@ -103,6 +79,78 @@ namespace MTGame
 		}
 
 		scrollContainer->centerAlignSelf(5.0, 0.0);
+
+		const auto checkboxYOffset = 10.0;
+		fullscreenCheckbox = std::make_shared<CheckBoxBasic>();
+		fullscreenCheckbox->setText("Fullscreen");
+		fullscreenCheckbox->toRightOf(scrollContainer, 5.0, -scrollContainer->getHalfHeight() + fullscreenCheckbox->getHalfHeight() + 5.0);
+		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
+		fullscreenCheckbox->setEnabled(config.mode == MT::ScreenModes::Fullscreen);
+		fullscreenCheckbox->clickListener = weak_from_this();
+		add(fullscreenCheckbox);
+
+		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>();
+		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
+		fullscreenDesktopCheckbox->toBottomOf(fullscreenCheckbox, 0.0, checkboxYOffset);
+		fullscreenDesktopCheckbox->setChecked(config.mode == MT::ScreenModes::FullscreenDesktop);
+		fullscreenDesktopCheckbox->setEnabled(config.mode == MT::ScreenModes::FullscreenDesktop);
+		fullscreenDesktopCheckbox->clickListener = weak_from_this();
+		add(fullscreenDesktopCheckbox);
+
+		windowedCheckbox = std::make_shared<CheckBoxBasic>();
+		windowedCheckbox->setText("Window");
+		windowedCheckbox->toBottomOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
+		windowedCheckbox->setChecked(config.mode == MT::ScreenModes::Windowed);
+		windowedCheckbox->setEnabled(config.mode == MT::ScreenModes::Windowed);
+		windowedCheckbox->clickListener = weak_from_this();
+		add(windowedCheckbox);
+
+		msaaOffCheckbox = std::make_shared<CheckBoxBasic>();
+		msaaOffCheckbox->setText("MSAA Off");
+		msaaOffCheckbox->toBottomOf(windowedCheckbox, 0.0, checkboxYOffset);
+		msaaOffCheckbox->setChecked(config.msaaSamples == 0);
+		msaaOffCheckbox->setEnabled(config.msaaSamples == 0);
+		msaaOffCheckbox->clickListener = weak_from_this();
+		add(msaaOffCheckbox);
+
+		msaa2xCheckbox = std::make_shared<CheckBoxBasic>();
+		msaa2xCheckbox->setText("MSAA 2x");
+		msaa2xCheckbox->toBottomOf(msaaOffCheckbox, 0.0, checkboxYOffset);
+		msaa2xCheckbox->setChecked(config.msaaSamples == 2);
+		msaa2xCheckbox->setEnabled(config.msaaSamples == 2);
+		msaa2xCheckbox->clickListener = weak_from_this();
+		add(msaa2xCheckbox);
+
+		msaa4xCheckbox = std::make_shared<CheckBoxBasic>();
+		msaa4xCheckbox->setText("MSAA 4x");
+		msaa4xCheckbox->toBottomOf(msaa2xCheckbox, 0.0, checkboxYOffset);
+		msaa4xCheckbox->setChecked(config.msaaSamples == 4);
+		msaa4xCheckbox->setEnabled(config.msaaSamples == 4);
+		msaa4xCheckbox->clickListener = weak_from_this();
+		add(msaa4xCheckbox);
+
+		msaa8xCheckbox = std::make_shared<CheckBoxBasic>();
+		msaa8xCheckbox->setText("MSAA 8x");
+		msaa8xCheckbox->toBottomOf(msaa4xCheckbox, 0.0, checkboxYOffset);
+		msaa8xCheckbox->setChecked(config.msaaSamples == 8);
+		msaa8xCheckbox->setEnabled(config.msaaSamples == 8);
+		msaa8xCheckbox->clickListener = weak_from_this();
+		add(msaa8xCheckbox);
+
+		openGlCompatibilityModeCheckbox = std::make_shared<CheckBoxBasic>();
+		openGlCompatibilityModeCheckbox->setText("OpenGL Compatibility Mode");
+		openGlCompatibilityModeCheckbox->toBottomOf(msaa8xCheckbox, 0.0, checkboxYOffset);
+		openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
+		openGlCompatibilityModeCheckbox->clickListener = weak_from_this();
+		add(openGlCompatibilityModeCheckbox);
+
+		wireframeModeCheckbox = std::make_shared<CheckBoxBasic>();
+		wireframeModeCheckbox->setText("Wireframe Mode");
+		wireframeModeCheckbox->toBottomOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
+		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
+		wireframeModeCheckbox->clickListener = weak_from_this();
+		add(wireframeModeCheckbox);
+
 	}
 
 	void SceneOptionsMenu::onButtonClicked(int id)
@@ -113,36 +161,80 @@ namespace MTGame
 			return;
 		}
 
+		auto shouldNotifyApplication = false;
 		if (id == fullscreenCheckbox->getId())
 		{
 			config.mode = MT::ScreenModes::Fullscreen;
-			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
-			return;
+			shouldNotifyApplication = true;
 		}
 
 		if (id == windowedCheckbox->getId())
 		{
 			config.mode = MT::ScreenModes::Windowed;
-			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
-			return;
+			shouldNotifyApplication = true;
 		}
 
 		if (id == fullscreenDesktopCheckbox->getId())
 		{
 			config.mode = MT::ScreenModes::FullscreenDesktop;
-			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
-			return;
+			shouldNotifyApplication = true;
+		}
+
+		if (id == msaaOffCheckbox->getId())
+		{
+			config.msaaSamples = 0;
+			shouldNotifyApplication = true;
+		}
+
+		if (id == msaa2xCheckbox->getId())
+		{
+			config.msaaSamples = 2;
+			shouldNotifyApplication = true;
+		}
+
+		if (id == msaa4xCheckbox->getId())
+		{
+			config.msaaSamples = 4;
+			shouldNotifyApplication = true;
+		}
+
+		if (id == msaa8xCheckbox->getId())
+		{
+			config.msaaSamples = 8;
+			shouldNotifyApplication = true;
+		}
+
+		if (id == openGlCompatibilityModeCheckbox->getId())
+		{
+			config.openGLCompatibilityMode = !config.openGLCompatibilityMode;
+			shouldNotifyApplication = true;
+		}
+
+		if (id == wireframeModeCheckbox->getId())
+		{
+			config.openGlWireframeMode = !config.openGlWireframeMode;
+			shouldNotifyApplication = true;
 		}
 
 		for (const auto resolutionButton : resolutionButtons)
 		{
+			if (shouldNotifyApplication)
+			{
+				break;
+			}
+
 			if (resolutionButton->getId() == id)
 			{
 				auto newResolution = resolutionButton->getText();
 				config.width = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
 				config.height = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 1);
-				modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
+				shouldNotifyApplication = true;
 			}
+		}
+
+		if (shouldNotifyApplication)
+		{
+			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
 		}
 	}
 }

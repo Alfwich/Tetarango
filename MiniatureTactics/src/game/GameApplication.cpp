@@ -6,6 +6,9 @@ namespace
 	const auto displayWidthParamKey = "display-width";
 	const auto displayHeightParamKey = "display-height";
 	const auto displayModeParamKey = "display-fullscreen";
+	const auto displayMSAAParamKey = "display-MSAA";
+	const auto displayOpenGLCompatibilityParamKey = "display-open-gl-compadibility";
+	const auto displayWireframeModeParamKey = "display-wireframe-mode";
 }
 
 namespace MTGame
@@ -22,10 +25,12 @@ namespace MTGame
 			screenConfig.width = storageClient->readInt(displayWidthParamKey);
 			screenConfig.height = storageClient->readInt(displayHeightParamKey);
 			screenConfig.mode = (MT::ScreenModes)storageClient->readInt(displayModeParamKey);
+			screenConfig.msaaSamples = storageClient->readInt(displayMSAAParamKey);
+			screenConfig.openGLCompatibilityMode = storageClient->readBool(displayOpenGLCompatibilityParamKey);
+			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
-		//screenConfig.openGlWireframeMode = true;
 	}
 
 	void GameApplication::onLoadResources()
@@ -130,6 +135,9 @@ namespace MTGame
 		storageClient->writeInt(displayWidthParamKey, screenConfig.width);
 		storageClient->writeInt(displayHeightParamKey, screenConfig.height);
 		storageClient->writeInt(displayModeParamKey, (int)screenConfig.mode);
+		storageClient->writeInt(displayMSAAParamKey, screenConfig.msaaSamples);
+		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
+		storageClient->writeBool(displayWireframeModeParamKey, screenConfig.openGlWireframeMode);
 
 		if (masterSceneContainer != nullptr)
 		{
