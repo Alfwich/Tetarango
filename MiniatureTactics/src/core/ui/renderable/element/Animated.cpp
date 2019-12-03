@@ -93,7 +93,7 @@ namespace MT
 
 		if (sizeToAnimation && currentAnimation != nullptr)
 		{
-			const auto clipRect = getClipRect();
+			const auto clipRect = getTextureClipRect();
 			setSize(clipRect->w, clipRect->h);
 		}
 	}
@@ -103,7 +103,7 @@ namespace MT
 		return currentAnimationName;
 	}
 
-	std::shared_ptr<Rect> Animated::getClipRect()
+	std::shared_ptr<Rect> Animated::getTextureClipRect()
 	{
 		return currentAnimation != nullptr ? currentAnimation->getFrameRect(frame) : NULL;
 	}

@@ -2,7 +2,7 @@
 
 namespace MT
 {
-
+	const double NumberHelper::PI = 3.14159265359;
 	const double NumberHelper::degToRad = 0.01745329251;
 	const double NumberHelper::radToDeg = 57.2957795131;
 

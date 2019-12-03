@@ -13,6 +13,7 @@ namespace MT
 
 	public:
 
+		static const double PI;
 		static const double degToRad;
 		static const double radToDeg;
 		static void seedRng(const std::string& seed);

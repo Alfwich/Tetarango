@@ -32,6 +32,8 @@ namespace MT
 		return r;
 	}
 
+
+
 	double Renderable::getX()
 	{
 		return rect.x;

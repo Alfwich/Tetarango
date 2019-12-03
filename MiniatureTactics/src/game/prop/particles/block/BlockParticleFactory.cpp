@@ -37,7 +37,8 @@ namespace MTGame
 		particle->cModR = modColor.r;
 		particle->cModG = modColor.g;
 		particle->cModB = modColor.b;
-		auto r = (MT::NumberHelper::chance(50) ? M_PI : 0) + (MT::NumberHelper::random(-(M_PI / 4), M_PI / 4));
+		auto pi = MT::NumberHelper::PI;
+		auto r = (MT::NumberHelper::chance(50) ? pi: 0) + (MT::NumberHelper::random(-(pi/ 4), pi/ 4));
 		const auto rV = MT::NumberHelper::random(200, 4000);
 		particle->x = -(bundle.rect.w / 2.0) + MT::NumberHelper::random(bundle.rect.w);
 		particle->y = -(bundle.rect.h / 2.0) + MT::NumberHelper::random(bundle.rect.h);

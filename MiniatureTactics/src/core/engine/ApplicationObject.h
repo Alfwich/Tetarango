@@ -24,7 +24,7 @@ namespace MT
 	class ApplicationObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<ApplicationObject>
 	{
 
-		bool currentActive = false, active = true, didInitialAttach = false, hasCreatedChildren = false;
+		bool currentActive = false, active = true, didInitialAttach = false, hasCreatedChildren = false, hasClipRect = false;
 
 	protected:
 		int id = 0;
@@ -42,12 +42,16 @@ namespace MT
 		template <typename T>
 		std::shared_ptr<T> findChildWithName(std::string name);
 
-		Rect worldRect, screenRect;
+		Rect worldRect, screenRect, clipRect;
 
 	public:
 		ApplicationObject();
 
 		static int getNextId();
+
+		bool getHasClipRect();
+		virtual Rect getClipRect();
+		virtual void setClipRect(const Rect& rect);
 
 		virtual void setWorldRect(Rect* r);
 		virtual void updateScreenRect(const RenderPackage* renderPackage);

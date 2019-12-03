@@ -341,10 +341,34 @@ namespace MT
 		glUseProgram(0);
 	}
 
-	void Renderer::openGLDrawArrays()
+	void Renderer::openGLDrawArrays(RenderPackage* renderPackage)
 	{
+		if (renderPackage->stencilDepth > 0)
+		{
+			glStencilFunc(GL_EQUAL, 1, 0xFF);
+		}
+
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
+
+	void Renderer::openGLDrawArraysStencil(RenderPackage* renderPackage)
+	{
+		if (renderPackage->stencilDepth > 0)
+		{
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+			glStencilMask(0xFF);
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		}
+
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		glDepthMask(GL_FALSE);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		glDepthMask(GL_TRUE);
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	}
+
 
 	SDL_GLContext Renderer::getOpenGLContext()
 	{
@@ -381,6 +405,17 @@ namespace MT
 			renderPositionMode.push(ao->renderPositionMode);
 		}
 
+		if (ao->getHasClipRect())
+		{
+			if (renderPackage.stencilDepth == 0)
+			{
+				glClear(GL_STENCIL_BUFFER_BIT);
+				glEnable(GL_STENCIL_TEST);
+			}
+
+			renderPackage.stencilDepth++;
+		}
+
 		switch (ao->renderType)
 		{
 		case RenderType::Element:
@@ -402,6 +437,11 @@ namespace MT
 				ao->setWorldRect(&computed);
 				ao->updateScreenRect(&renderPackage);
 			}
+
+			if (ao->getHasClipRect())
+			{
+				updateClipRectOpenGL(ao, &computed, &renderPackage);
+			}
 			break;
 		}
 
@@ -419,6 +459,17 @@ namespace MT
 				renderRecursive(child, computed, renderPackage);
 			}
 		}
+
+		if (ao->getHasClipRect())
+		{
+			renderPackage.stencilDepth--;
+
+			if (renderPackage.stencilDepth == 0)
+			{
+				glDisable(GL_STENCIL_TEST);
+			}
+		}
+
 
 		switch (ao->renderPositionMode)
 		{
@@ -486,7 +537,12 @@ namespace MT
 			return;
 		}
 
-		switch (ao->renderType)
+		if (ele->getHasClipRect())
+		{
+			updateClipRectOpenGL(ao, computed, renderPackage);
+		}
+
+		switch (ele->renderType)
 		{
 		case RenderType::TileMap:
 			renderTileMapOpenGL(ele, computed, renderPackage);
@@ -529,6 +585,11 @@ namespace MT
 			return;
 		}
 
+		if (ao->getHasClipRect())
+		{
+			updateClipRectOpenGL(ao, computed, renderPackage);
+		}
+
 		switch (ao->renderType)
 		{
 		case RenderType::ParticleSystem:
@@ -544,62 +605,103 @@ namespace MT
 	void Renderer::renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage)
 	{
 		const auto glTextureId = ele->getTexture()->openGlTextureId();
-		if (glTextureId != 0)
+		if (glTextureId == 0)
 		{
-			const auto cW = computed->w / 2.0;
-			const auto cH = computed->h / 2.0;
-			const auto cX = computed->x + cW;
-			const auto cY = computed->y + cH;
-
-			mat4x4_identity(m);
-
-			mat4x4_rotate_Z(m, m, renderPackage->rotation * MT::NumberHelper::degToRad);
-			mat4x4_scale_aniso(m, m, cW, cH, 1.0);
-			mat4x4_translate(t, cX, cY, cY + (ele->zIndex + renderPackage->depth) * layerFactor);
-
-			mat4x4_mul(m, t, m);
-
-			if (renderPositionMode.top() == RenderPositionMode::Absolute)
-			{
-				mat4x4_dup(tP, pAbs);
-			}
-			else
-			{
-				mat4x4_dup(tP, p);
-			}
-
-			mat4x4_mul(mvp, tP, m);
-
-			glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
-
-			mat4x4_identity(UVp);
-
-			if (ele->renderType == RenderType::Backdrop)
-			{
-				mat4x4_scale_aniso(UVp, UVp, ele->getWidth() / ele->getTexture()->getWidth(), ele->getHeight() / ele->getTexture()->getHeight(), 1.0);
-			}
-
-			const auto clipRect = ele->getClipRect();
-			if (clipRect != nullptr)
-			{
-				double scaleX = clipRect->w / ele->getTexture()->getWidth();
-				double scaleY = clipRect->h / ele->getTexture()->getHeight();
-				double xOffset = clipRect->x / ele->getTexture()->getWidth();
-				double yOffset = clipRect->y / ele->getTexture()->getHeight();
-
-				mat4x4_translate_in_place(UVp, xOffset, yOffset, 0.0);
-				mat4x4_scale_aniso(UVp, UVp, scaleX, scaleY, 1.0);
-			}
-
-			glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
-
-			const auto modColor = ele->getColor();
-			glUniform4f(inColorModLocation, modColor.r / 255.0, modColor.g / 255.0, modColor.b / 255.0, (modColor.a / 255.0)* renderPackage->alpha);
-
-			glBindTexture(GL_TEXTURE_2D, glTextureId);
-
-			openGLDrawArrays();
+			return;
 		}
+
+		const auto cW = computed->w / 2.0;
+		const auto cH = computed->h / 2.0;
+		const auto cX = computed->x + cW;
+		const auto cY = computed->y + cH;
+
+		mat4x4_identity(m);
+
+		mat4x4_rotate_Z(m, m, renderPackage->rotation * MT::NumberHelper::degToRad);
+		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+		mat4x4_translate(t, cX, cY, cY + (ele->zIndex + renderPackage->depth) * layerFactor);
+
+		mat4x4_mul(m, t, m);
+
+		if (renderPositionMode.top() == RenderPositionMode::Absolute)
+		{
+			mat4x4_dup(tP, pAbs);
+		}
+		else
+		{
+			mat4x4_dup(tP, p);
+		}
+
+		mat4x4_mul(mvp, tP, m);
+
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+
+		mat4x4_identity(UVp);
+
+		if (ele->renderType == RenderType::Backdrop)
+		{
+			mat4x4_scale_aniso(UVp, UVp, ele->getWidth() / ele->getTexture()->getWidth(), ele->getHeight() / ele->getTexture()->getHeight(), 1.0);
+		}
+
+		const auto textureClipRect = ele->getTextureClipRect();
+		if (textureClipRect != nullptr)
+		{
+			double scaleX = textureClipRect->w / ele->getTexture()->getWidth();
+			double scaleY = textureClipRect->h / ele->getTexture()->getHeight();
+			double xOffset = textureClipRect->x / ele->getTexture()->getWidth();
+			double yOffset = textureClipRect->y / ele->getTexture()->getHeight();
+
+			mat4x4_translate_in_place(UVp, xOffset, yOffset, 0.0);
+			mat4x4_scale_aniso(UVp, UVp, scaleX, scaleY, 1.0);
+		}
+
+		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
+
+		const auto modColor = ele->getColor();
+		glUniform4f(inColorModLocation, modColor.r / 255.0, modColor.g / 255.0, modColor.b / 255.0, (modColor.a / 255.0)* renderPackage->alpha);
+
+		glBindTexture(GL_TEXTURE_2D, glTextureId);
+
+		openGLDrawArrays(renderPackage);
+	}
+
+	void Renderer::updateClipRectOpenGL(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage)
+	{
+		const auto clipRect = ao->getClipRect();
+
+		const auto cW = clipRect.w / 2.0;
+		const auto cH = clipRect.h / 2.0;
+		const auto cX = computed->x + clipRect.x + computed->w / 2.0;
+		const auto cY = computed->y + clipRect.y + computed->h / 2.0;
+
+		mat4x4_identity(m);
+
+		mat4x4_rotate_Z(m, m, renderPackage->rotation * MT::NumberHelper::degToRad);
+		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+		mat4x4_translate(t, cX, cY, cY + (20 + renderPackage->depth) * layerFactor);
+
+		mat4x4_mul(m, t, m);
+
+		if (renderPositionMode.top() == RenderPositionMode::Absolute)
+		{
+			mat4x4_dup(tP, pAbs);
+		}
+		else
+		{
+			mat4x4_dup(tP, p);
+		}
+
+		mat4x4_mul(mvp, tP, m);
+
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+
+		mat4x4_identity(UVp);
+		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		openGLDrawArraysStencil(renderPackage);
+
 	}
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
@@ -659,7 +761,8 @@ namespace MT
 				glUniform4f(inColorModLocation, particle->cModR / 255.0, particle->cModG / 255.0, particle->cModB / 255.0, (particle->alphaMod / 255.0) * renderPackage->alpha);
 
 				glBindTexture(GL_TEXTURE_2D, glTextureId);
-				openGLDrawArrays();
+
+				openGLDrawArrays(renderPackage);
 			}
 		}
 	}
@@ -735,7 +838,7 @@ namespace MT
 
 					glBindTexture(GL_TEXTURE_2D, glTextureId);
 
-					openGLDrawArrays();
+					openGLDrawArrays(renderPackage);
 				}
 			}
 		}

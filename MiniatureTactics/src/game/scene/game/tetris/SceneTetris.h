@@ -6,6 +6,7 @@
 #include "ui/renderable/element/Text.h"
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
 #include "ui/renderable/element/CachedImage.h"
+#include "ui/renderable/element/Rectangle.h"
 
 namespace MTGame
 {

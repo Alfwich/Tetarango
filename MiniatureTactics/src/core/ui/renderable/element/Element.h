@@ -26,7 +26,7 @@ namespace MT
 
 		virtual void setTexture(std::string key);
 		virtual void setTexture(std::shared_ptr<Texture> texture);
-		virtual std::shared_ptr<Rect> getClipRect();
+		virtual std::shared_ptr<Rect> getTextureClipRect();
 		bool hasTexture();
 		std::shared_ptr<Texture> getTexture();
 		virtual double getAlpha();

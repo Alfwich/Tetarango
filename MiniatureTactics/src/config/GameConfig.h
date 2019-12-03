@@ -58,13 +58,13 @@ namespace Config
 			if (MT_ENVIRONMENT == "DEV" || MT_ENVIRONMENT == "PROD_DEBUG")
 			{
 				base[Param::gameName] = base[Param::gameName] + " - DEV - " + base[Param::version];
-				base[Param::runTests] = TRUE;
 				base[Param::storageLocation] += " " + base[Param::version] + " - Debug";
-				base[Param::launchToLastScene] = TRUE;
+				base[Param::launchToLastScene] = FALSE;
 				base[Param::useAssetPack] = FALSE;
-				base[Param::hydrateOnLoad] = FALSE;
+				base[Param::saveWholeSceneOnClose] = TRUE;
+				//base[Param::hydrateOnLoad] = TRUE;
+				//base[Param::runTests] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;
-				//base[Param::saveWholeSceneOnClose] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
 				//base[Param::visualizeZones] = TRUE;
 			}

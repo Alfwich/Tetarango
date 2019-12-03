@@ -46,12 +46,15 @@ namespace MT
 		void renderElement(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage);
 		void renderPrimitive(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage);
 
+		void updateClipRectOpenGL(std::shared_ptr<ApplicationObject> ele, Rect* computed, RenderPackage* renderPackage);
+
 		void renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
 		void renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
 		void renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
 		void renderTileMapOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
 
-		void openGLDrawArrays();
+		void openGLDrawArrays(RenderPackage* renderPackage);
+		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 	public:
 		Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();

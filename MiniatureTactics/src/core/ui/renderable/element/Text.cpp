@@ -159,6 +159,15 @@ namespace MT
 				textPositioningElement->setSize(cachedTextureText->getWidth(), cachedTextureText->getHeight());
 			}
 		}
+
+		if (getHasClipRect())
+		{
+			auto clipRect = getClipRect();
+			clipRect.x += (textPositioningElement->getWidth() - getWidth()) / 2.0 + getHalfWidth();
+			clipRect.y += (textPositioningElement->getHeight() - getHeight()) / 2.0 + getHalfHeight();
+			textPositioningElement->setClipRect(clipRect);
+		}
+
 		add(textPositioningElement);
 	}
 
@@ -179,6 +188,16 @@ namespace MT
 	void Text::onLayoutChildren()
 	{
 		textPositioningElement->setPosition(getHalfWidth(), getHalfHeight());
+	}
+
+	void Text::setClipRect(MT::Rect rect)
+	{
+		if (textPositioningElement != nullptr)
+		{
+			textPositioningElement->setClipRect(rect);
+		}
+
+		Element::setClipRect(rect);
 	}
 
 	std::shared_ptr<SerializationClient> Text::doSerialize(SerializationHint hint)

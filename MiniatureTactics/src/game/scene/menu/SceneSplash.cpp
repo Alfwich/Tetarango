@@ -11,6 +11,7 @@ namespace MTGame
 
 	SceneSplash::SceneSplash() : BaseScene(SceneGame::Splash)
 	{
+		rebuildOnLoad = true;
 		enableSerialization<SceneSplash>();
 	}
 
@@ -21,12 +22,14 @@ namespace MTGame
 		splashText->setFont("medium", 150);
 		splashText->setText("SPLASH");
 		splashText->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
+		splashText->setClipRect(MT::Rect(0.0, 0.0, 0.0, splashText->getHeight()));
 		add(splashText);
 	}
 
 	void SceneSplash::onChildrenHydrated()
 	{
 		splashText = findChildWithName<MT::Text>(splashTextId);
+		splashText->setClipRect(MT::Rect(0.0, 0.0, 0.0, getScreenHeight()));
 	}
 
 	void SceneSplash::onInitialAttach()
@@ -50,10 +53,36 @@ namespace MTGame
 
 	void SceneSplash::onEnterFrame(double frameTime)
 	{
+		if (state == 0)
+		{
+			auto cRect = splashText->getClipRect();
+			if (cRect.w < getScreenWidth())
+			{
+				cRect.w += 400.0 * (frameTime / 1000.0);
+				splashText->setClipRect(cRect);
+			}
+		}
+
 		if (transitionTimer->getTicks() > 3000.0 && state == 0)
 		{
 			splashTransition->startTransition(splashText, 2000.0, splashText->getRect(), 0.0);
 			state = 1;
+		}
+
+		if (state == 1)
+		{
+			auto cRect = splashText->getClipRect();
+			if (cRect.h > 0.0)
+			{
+				cRect.h -= 400.0 * (frameTime / 1000.0);
+
+				if (cRect.h < 0.0)
+				{
+					cRect.h = 0.0;
+				}
+
+				splashText->setClipRect(cRect);
+			}
 		}
 
 		if (transitionTimer->getTicks() > 5000.0 && state == 1 || state == 2)

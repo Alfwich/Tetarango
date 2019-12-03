@@ -163,6 +163,23 @@ namespace MT
 		return children;
 	}
 
+	bool ApplicationObject::getHasClipRect()
+	{
+		return hasClipRect;
+	}
+
+	Rect ApplicationObject::getClipRect()
+	{
+		return Rect(clipRect);
+	}
+
+	void ApplicationObject::setClipRect(const Rect& rect)
+	{
+		clipRect = rect;
+
+		hasClipRect = (clipRect.x > 0.0 || clipRect.y > 0.0 || clipRect.w > 0.0 || clipRect.h > 0.0);
+	}
+
 	void ApplicationObject::setWorldRect(Rect* r)
 	{
 		worldRect.x = r->x;
@@ -345,6 +362,12 @@ namespace MT
 		enterFramePriority = client->serializeInt("efP", enterFramePriority);
 		renderPositionMode = (RenderPositionMode)client->serializeInt("RPM", (int)renderPositionMode);
 		hasCreatedChildren = client->serializeBool("hCC", hasCreatedChildren);
+
+		clipRect.x = client->serializeDouble("crX", clipRect.x);
+		clipRect.y = client->serializeDouble("crY", clipRect.y);
+		clipRect.w = client->serializeDouble("crW", clipRect.w);
+		clipRect.h = client->serializeDouble("crH", clipRect.h);
+		setClipRect(clipRect);
 
 		switch (hint)
 		{

@@ -40,7 +40,7 @@ namespace MT
 		void setFpsOffset(int fpsOffset);
 		void setDefaultAnimationName(std::string name);
 
-		std::shared_ptr<Rect> getClipRect();
+		std::shared_ptr<Rect> getTextureClipRect();
 		virtual void enterFrame(double frameTime);
 
 		virtual void onInitialAttach();

@@ -48,6 +48,8 @@ namespace MT
 		void onChildrenHydrated();
 		void onLayoutChildren();
 
+		void setClipRect(MT::Rect rect);
+
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 	};
 

@@ -10,7 +10,7 @@ namespace MT
 		enableSerialization<Element>();
 	}
 
-	std::shared_ptr<Rect> Element::getClipRect()
+	std::shared_ptr<Rect> Element::getTextureClipRect()
 	{
 		return nullptr;
 	}

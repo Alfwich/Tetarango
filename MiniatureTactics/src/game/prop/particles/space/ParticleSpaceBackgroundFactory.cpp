@@ -13,7 +13,7 @@ namespace MTGame
 	{
 		const auto particle = std::make_shared<ParticleSpaceBackground>(modules->texture);
 		particle->zIndex = -1;
-		const auto r = MT::NumberHelper::random(0, M_PI * 2.0);
+		const auto r = MT::NumberHelper::random(0, MT::NumberHelper::PI * 2.0);
 		const auto rV = MT::NumberHelper::random(10, 45);
 		particle->alphaMod = 0;
 		particle->xV = std::cos(r) * rV;
