@@ -18,6 +18,7 @@ namespace MTGame
 
 		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
 		CheckBoxBasic();
+		CheckBoxBasic(GuiButton configuration);
 
 		void onCreateChildren();
 		void onChildrenHydrated();

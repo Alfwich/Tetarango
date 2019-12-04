@@ -81,7 +81,8 @@ namespace MTGame
 		scrollContainer->centerAlignSelf(5.0, 0.0);
 
 		const auto checkboxYOffset = 10.0;
-		fullscreenCheckbox = std::make_shared<CheckBoxBasic>();
+		const auto checkboxYGroupOffset = 20.0;
+		fullscreenCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenCheckbox->setText("Fullscreen");
 		fullscreenCheckbox->toRightOf(scrollContainer, 5.0, -scrollContainer->getHalfHeight() + fullscreenCheckbox->getHalfHeight() + 5.0);
 		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
@@ -89,7 +90,7 @@ namespace MTGame
 		fullscreenCheckbox->clickListener = weak_from_this();
 		add(fullscreenCheckbox);
 
-		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>();
+		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
 		fullscreenDesktopCheckbox->toBottomOf(fullscreenCheckbox, 0.0, checkboxYOffset);
 		fullscreenDesktopCheckbox->setChecked(config.mode == MT::ScreenModes::FullscreenDesktop);
@@ -97,7 +98,7 @@ namespace MTGame
 		fullscreenDesktopCheckbox->clickListener = weak_from_this();
 		add(fullscreenDesktopCheckbox);
 
-		windowedCheckbox = std::make_shared<CheckBoxBasic>();
+		windowedCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		windowedCheckbox->setText("Window");
 		windowedCheckbox->toBottomOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
 		windowedCheckbox->setChecked(config.mode == MT::ScreenModes::Windowed);
@@ -105,15 +106,15 @@ namespace MTGame
 		windowedCheckbox->clickListener = weak_from_this();
 		add(windowedCheckbox);
 
-		msaaOffCheckbox = std::make_shared<CheckBoxBasic>();
+		msaaOffCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaaOffCheckbox->setText("MSAA Off");
-		msaaOffCheckbox->toBottomOf(windowedCheckbox, 0.0, checkboxYOffset);
+		msaaOffCheckbox->toBottomOf(windowedCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		msaaOffCheckbox->setChecked(config.msaaSamples == 0);
 		msaaOffCheckbox->setEnabled(config.msaaSamples == 0);
 		msaaOffCheckbox->clickListener = weak_from_this();
 		add(msaaOffCheckbox);
 
-		msaa2xCheckbox = std::make_shared<CheckBoxBasic>();
+		msaa2xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaa2xCheckbox->setText("MSAA 2x");
 		msaa2xCheckbox->toBottomOf(msaaOffCheckbox, 0.0, checkboxYOffset);
 		msaa2xCheckbox->setChecked(config.msaaSamples == 2);
@@ -121,7 +122,7 @@ namespace MTGame
 		msaa2xCheckbox->clickListener = weak_from_this();
 		add(msaa2xCheckbox);
 
-		msaa4xCheckbox = std::make_shared<CheckBoxBasic>();
+		msaa4xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaa4xCheckbox->setText("MSAA 4x");
 		msaa4xCheckbox->toBottomOf(msaa2xCheckbox, 0.0, checkboxYOffset);
 		msaa4xCheckbox->setChecked(config.msaaSamples == 4);
@@ -129,7 +130,7 @@ namespace MTGame
 		msaa4xCheckbox->clickListener = weak_from_this();
 		add(msaa4xCheckbox);
 
-		msaa8xCheckbox = std::make_shared<CheckBoxBasic>();
+		msaa8xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaa8xCheckbox->setText("MSAA 8x");
 		msaa8xCheckbox->toBottomOf(msaa4xCheckbox, 0.0, checkboxYOffset);
 		msaa8xCheckbox->setChecked(config.msaaSamples == 8);
@@ -139,7 +140,7 @@ namespace MTGame
 
 		openGlCompatibilityModeCheckbox = std::make_shared<CheckBoxBasic>();
 		openGlCompatibilityModeCheckbox->setText("OpenGL Compatibility Mode");
-		openGlCompatibilityModeCheckbox->toBottomOf(msaa8xCheckbox, 0.0, checkboxYOffset);
+		openGlCompatibilityModeCheckbox->toBottomOf(msaa8xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
 		openGlCompatibilityModeCheckbox->clickListener = weak_from_this();
 		add(openGlCompatibilityModeCheckbox);

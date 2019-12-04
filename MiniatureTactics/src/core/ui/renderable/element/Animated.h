@@ -18,6 +18,7 @@ namespace MT
 		bool playing = false, paused = false;
 		int frame, fpsOffset;
 		std::shared_ptr<Timer> frameTimer;
+		std::string animationPrefix;
 		void updateFrame(double frameTime);
 
 	protected:
@@ -39,6 +40,7 @@ namespace MT
 		std::string getCurrentAnimationName();
 		void setFpsOffset(int fpsOffset);
 		void setDefaultAnimationName(std::string name);
+		void setAnimationPrefix(std::string prefix);
 
 		std::shared_ptr<Rect> getTextureClipRect();
 		virtual void enterFrame(double frameTime);

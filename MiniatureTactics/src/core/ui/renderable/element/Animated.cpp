@@ -89,7 +89,7 @@ namespace MT
 		if (animationSet == nullptr) return;
 
 		currentAnimationName = animationName;
-		currentAnimation = animationSet->getAnimation(animationName);
+		currentAnimation = animationSet->getAnimation(animationPrefix + animationName);
 
 		if (sizeToAnimation && currentAnimation != nullptr)
 		{
@@ -162,6 +162,7 @@ namespace MT
 		frame = client->serializeInt("frame", frame);
 		fpsOffset = client->serializeInt("fpsOffset", fpsOffset);
 		sizeToAnimation = client->serializeBool("sizeToAnimation", sizeToAnimation);
+		animationPrefix = client->serializeString("animationPrefix", animationPrefix);
 
 		return Element::doSerialize(hint);
 	}
@@ -174,5 +175,10 @@ namespace MT
 	void Animated::setDefaultAnimationName(std::string name)
 	{
 		defaultAnimationName = name;
+	}
+
+	void Animated::setAnimationPrefix(std::string prefix)
+	{
+		animationPrefix = prefix;
 	}
 }

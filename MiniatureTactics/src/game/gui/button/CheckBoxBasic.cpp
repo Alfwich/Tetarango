@@ -6,16 +6,32 @@ namespace
 	const auto checkBoxBasicId = "check-box-basic";
 	const auto isCheckedParamName = "check-box-basic-is-checked";
 	const auto isLockedParamName = "check-box-is-locked";
+	const std::vector<std::string> states = {
+		"default",
+		"hover",
+		"pressed",
+		"default-checked",
+		"hover-checked",
+		"pressed-checked",
+	};
+	const std::vector<std::string> skins = {
+		"checkbox",
+		"radio"
+	};
+	const auto checkboxTexturePath = "res/game/img/ui/button/checkbox_basic.png";
 }
 
 namespace MTGame
 {
 	void CheckBoxBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
 	{
-		bundle->texture->loadTexture("res/game/img/ui/button/checkbox_basic.png", checkBoxBasicId);
+		bundle->texture->loadTexture(checkboxTexturePath, checkBoxBasicId);
 
 		auto animationSet = std::make_shared<MT::AnimationSet>();
 		{
+			auto row = 0;
+			auto col = 0;
+
 			MT::RectI frameSize = {
 				0,
 				0,
@@ -23,51 +39,49 @@ namespace MTGame
 				40
 			};
 
+			for (const auto skin : skins)
 			{
+				for (const auto state : states)
+				{
+					auto anim = animationSet->startNewAnimation(skin + state);
+					anim->addGeneralFrames((col++) * frameSize.w, row * frameSize.h, frameSize.w, frameSize.h, 1);
 
-				auto anim = animationSet->startNewAnimation("default");
-				anim->addGeneralFrames(0, 0, frameSize.w, frameSize.h, 1);
-			}
-
-			{
-				auto anim = animationSet->startNewAnimation("hover");
-				anim->addGeneralFrames(frameSize.w * 1, 0, frameSize.w, frameSize.h, 1);
-			}
-
-			{
-				auto anim = animationSet->startNewAnimation("pressed");
-				anim->addGeneralFrames(frameSize.w * 2, 0, frameSize.w, frameSize.h, 1);
-			}
-
-			{
-				auto anim = animationSet->startNewAnimation("default-checked");
-				anim->addGeneralFrames(0, frameSize.h, frameSize.w, frameSize.h, 1);
-			}
-
-			{
-				auto anim = animationSet->startNewAnimation("hover-checked");
-				anim->addGeneralFrames(frameSize.w * 1, frameSize.h, frameSize.w, frameSize.h, 1);
-			}
-
-			{
-				auto anim = animationSet->startNewAnimation("pressed-checked");
-				anim->addGeneralFrames(frameSize.w * 2, frameSize.h, frameSize.w, frameSize.h, 1);
+					if (col == 3)
+					{
+						row++;
+						col = 0;
+					}
+				}
 			}
 		}
-		bundle->animation->addAnimationSet(animationSet, checkBoxBasicId);
 
+		bundle->animation->addAnimationSet(animationSet, checkBoxBasicId);
 	}
 
-	CheckBoxBasic::CheckBoxBasic() : BaseGui(GuiButton::CheckBoxBasic)
+	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{
+		switch (configuration)
+		{
+		case GuiButton::RadioBoxBasic:
+			setAnimationPrefix(skins[1]);
+			break;
+
+		default:
+		case GuiButton::CheckBoxBasic:
+			setAnimationPrefix(skins[0]);
+			break;
+		}
+
 		setTexture(checkBoxBasicId);
 		setAnimationSet(checkBoxBasicId);
 		setDefaultAnimationName("default");
 
-		setSize(33.0, 33.0);
+		setSize(40.0, 40.0);
 
 		enableSerialization<CheckBoxBasic>();
 	}
+
+	CheckBoxBasic::CheckBoxBasic() : CheckBoxBasic(GuiButton::CheckBoxBasic) {}
 
 	void CheckBoxBasic::setText(std::string text)
 	{

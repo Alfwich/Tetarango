@@ -9,7 +9,8 @@ namespace MTGame
 	enum class GuiButton
 	{
 		ButtonBasic,
-		CheckBoxBasic
+		CheckBoxBasic,
+		RadioBoxBasic
 	};
 
 	enum class GuiCamera
@@ -40,6 +41,7 @@ namespace MTGame
 		const std::map<GuiButton, std::string> buttons{
 			{ GuiButton::ButtonBasic, "button-basic" },
 			{ GuiButton::CheckBoxBasic, "check-box-basic" },
+			{ GuiButton::RadioBoxBasic, "radio-box-basic" },
 		};
 
 		const std::map<GuiCamera, std::string> cameras{
