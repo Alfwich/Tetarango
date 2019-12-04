@@ -13,6 +13,11 @@ namespace MT
 		return newAnimation;
 	}
 
+	const std::unordered_map<std::string, std::shared_ptr<Animation>>& AnimationSet::getAnimations()
+	{
+		return animations;
+	}
+
 	void AnimationSet::load()
 	{
 		if (!isLoaded)

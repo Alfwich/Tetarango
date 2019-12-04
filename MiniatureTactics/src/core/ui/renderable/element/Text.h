@@ -4,13 +4,14 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "Element.h"
+#include "ui/renderable/container/Container.h"
 #include "engine/module/font/Font.h"
 #include "util/Color.h"
 
 namespace MT
 {
 
-	class Text : public Element
+	class Text : public Container
 	{
 		int fontSize = 0;
 		std::string fontName;

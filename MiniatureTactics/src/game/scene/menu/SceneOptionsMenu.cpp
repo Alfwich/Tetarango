@@ -56,7 +56,7 @@ namespace MTGame
 			resolutionButton->setText(resolution);
 			if (config.mode == MT::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
-				resolutionButton->setColor(0x333333ff);
+				resolutionButton->setColor(64, 64, 64);
 				resolutionButton->setEnabled(false);
 			}
 			else

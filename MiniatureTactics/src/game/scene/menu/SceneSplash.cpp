@@ -65,7 +65,7 @@ namespace MTGame
 
 		if (transitionTimer->getTicks() > 3000.0 && state == 0)
 		{
-			splashTransition->startTransition(splashText, 2000.0, splashText->getRect(), 0.0);
+			splashTransition->startTransition(splashText, 1500.0, splashText->getRect(), 0.0);
 			state = 1;
 		}
 
@@ -74,7 +74,7 @@ namespace MTGame
 			auto cRect = splashText->getClipRect();
 			if (cRect.h > 0.0)
 			{
-				cRect.h -= 400.0 * (frameTime / 1000.0);
+				cRect.h -= 200.0 * (frameTime / 1000.0);
 
 				if (cRect.h < 0.0)
 				{
@@ -85,7 +85,7 @@ namespace MTGame
 			}
 		}
 
-		if (transitionTimer->getTicks() > 5000.0 && state == 1 || state == 2)
+		if (transitionTimer->getTicks() > 4500.0 && state == 1 || state == 2)
 		{
 			splashTransition->finish();
 			transitionToScene(SceneGame::MainMenu);

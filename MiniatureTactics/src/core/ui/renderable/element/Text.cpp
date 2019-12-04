@@ -197,7 +197,7 @@ namespace MT
 			textPositioningElement->setClipRect(rect);
 		}
 
-		Element::setClipRect(rect);
+		Container::setClipRect(rect);
 	}
 
 	std::shared_ptr<SerializationClient> Text::doSerialize(SerializationHint hint)
@@ -219,6 +219,6 @@ namespace MT
 		fontName = client->serializeString("font.name", fontName);
 		fontSize = client->serializeInt("font.size", fontSize);
 
-		return Element::doSerialize(hint);
+		return Container::doSerialize(hint);
 	}
 }

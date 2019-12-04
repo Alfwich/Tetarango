@@ -19,6 +19,8 @@ namespace MT
 
 		virtual void onLoadAnimations() { /* NO-OP */ };
 		std::shared_ptr<Animation> startNewAnimation(std::string name);
+
+		const std::unordered_map<std::string, std::shared_ptr<Animation>>& getAnimations();
 	};
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "ui/renderable/element/Animated.h"
+#include "ui/renderable/element/NineSlice.h"
 #include "ui/renderable/element/Text.h"
 #include "IButtonListener.h"
 #include "gui/BaseGui.h"
@@ -9,7 +9,7 @@
 namespace MTGame
 {
 
-	class ButtonBasic : public BaseGui, public MT::Animated
+	class ButtonBasic : public BaseGui, public MT::NineSlice
 	{
 		std::string text;
 		std::shared_ptr<MT::Text> label;

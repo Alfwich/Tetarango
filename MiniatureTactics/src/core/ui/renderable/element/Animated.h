@@ -13,9 +13,8 @@ namespace MT
 
 	class Animated : public Element
 	{
-		std::shared_ptr<AnimationSet> animationSet;
 		std::shared_ptr<Animation> currentAnimation;
-		bool playing = false, paused = false;
+		bool playing = false, paused = false, prefixHasChanged = false;
 		int frame, fpsOffset;
 		std::shared_ptr<Timer> frameTimer;
 		std::string animationPrefix;
@@ -23,18 +22,19 @@ namespace MT
 
 	protected:
 		std::string currentAnimationName, defaultAnimationName, currentAnimationSetName;
+		std::shared_ptr<AnimationSet> animationSet;
 
 	public:
 		bool sizeToAnimation = true;
 
 		Animated();
-		void play(std::string animationName = "");
+		virtual void play(std::string animationName = "");
 		void pause();
 		void stop();
 		bool isPlaying();
 		bool isPaused();
 
-		void setAnimationSet(std::shared_ptr<AnimationSet> animationSet);
+		virtual void setAnimationSet(std::shared_ptr<AnimationSet> animationSet);
 		void setAnimationSet(std::string animationSetName);
 		void setCurrentAnimation(std::string animationName);
 		std::string getCurrentAnimationName();

@@ -42,7 +42,7 @@ namespace MT
 
 	void Animated::play(std::string animationName)
 	{
-		if (animationName != "" && (animationName == currentAnimationName && frameTimer->isRunning()) && !paused)
+		if (!prefixHasChanged && animationName != "" && (animationName == currentAnimationName && frameTimer->isRunning()) && !paused)
 		{
 			return;
 		}
@@ -90,6 +90,7 @@ namespace MT
 
 		currentAnimationName = animationName;
 		currentAnimation = animationSet->getAnimation(animationPrefix + animationName);
+		prefixHasChanged = false;
 
 		if (sizeToAnimation && currentAnimation != nullptr)
 		{
@@ -179,6 +180,10 @@ namespace MT
 
 	void Animated::setAnimationPrefix(std::string prefix)
 	{
-		animationPrefix = prefix;
+		if (animationPrefix != prefix)
+		{
+			animationPrefix = prefix;
+			prefixHasChanged = true;
+		}
 	}
 }

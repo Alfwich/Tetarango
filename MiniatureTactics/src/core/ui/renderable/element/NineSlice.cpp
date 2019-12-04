@@ -18,47 +18,185 @@ namespace MT
 	void NineSlice::setCornerSize(unsigned int cornerSize)
 	{
 		serializationClient->setInt(cornerSizeParamName, cornerSize);
-		generateAnimationSet();
+		generateNineSliceAnimationSet();
 	}
 
-	void NineSlice::generateAnimationSet()
+	void NineSlice::generateNineSliceAnimationSet()
 	{
-		const auto texture = getTexture();
-		const auto textureWidth = texture->getWidth();
-		const auto textureHeight = texture->getHeight();
+		if (getTexture() == nullptr)
+		{
+			return;
+		}
+
+		if (nineSliceAnimationSet == nullptr)
+		{
+			nineSliceAnimationSet = std::make_shared<MT::AnimationSet>();
+		}
+
 		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
+		if (animationSet == nullptr)
+		{
+			const auto texture = getTexture();
+			const auto textureWidth = texture->getWidth();
+			const auto textureHeight = texture->getHeight();
 
-		nineSliceAnimationSet = std::make_shared<MT::AnimationSet>();
+			pushAnimation("", cornerSize, 0, 0, textureWidth, textureHeight);
+		}
+		else
+		{
+			for (const auto animation : animationSet->getAnimations())
+			{
+				const auto rect = animation.second->getFrameRect(0);
+				pushAnimation(animation.first, cornerSize, rect->x, rect->y, rect->w, rect->h);
+			}
+		}
 
-		const auto tl = nineSliceAnimationSet->startNewAnimation("top-left");
-		tl->addAnimationFrame(0, 0, cornerSize, cornerSize);
+		for (const auto animated : getChildrenOfType<MT::Animated>())
+		{
+			animated->setTexture(currentTextureName);
+			animated->setAnimationSet(nineSliceAnimationSet);
+		}
+	}
 
-		const auto t = nineSliceAnimationSet->startNewAnimation("top");
-		t->addAnimationFrame(cornerSize, 0, textureWidth - 2 * cornerSize, cornerSize);
+	void NineSlice::pushAnimation(std::string prefix, int cornerSize, int x, int y, int width, int height)
+	{
 
-		const auto tr = nineSliceAnimationSet->startNewAnimation("top-right");
-		tr->addAnimationFrame(textureWidth - cornerSize, 0, cornerSize, cornerSize);
+		if (nineSliceAnimationSet == nullptr)
+		{
+			Logger::instance()->log("NineSlice > pushAnimation: Attempted to create animation before animation set was created");
+			return;
+		}
 
-		const auto l = nineSliceAnimationSet->startNewAnimation("left");
-		l->addAnimationFrame(0, cornerSize, cornerSize, textureHeight - 2 * cornerSize);
+		const auto tl = nineSliceAnimationSet->startNewAnimation(prefix + "top-left");
+		tl->addAnimationFrame(x, y, cornerSize, cornerSize);
 
-		const auto c = nineSliceAnimationSet->startNewAnimation("center");
-		c->addAnimationFrame(cornerSize, cornerSize, textureWidth - 2 * cornerSize, textureHeight - 2 * cornerSize);
+		const auto t = nineSliceAnimationSet->startNewAnimation(prefix + "top");
+		t->addAnimationFrame(x + cornerSize, y, width - 2 * cornerSize, cornerSize);
 
-		const auto r = nineSliceAnimationSet->startNewAnimation("right");
-		r->addAnimationFrame(textureWidth - cornerSize, cornerSize, cornerSize, textureHeight - 2 * cornerSize);
+		const auto tr = nineSliceAnimationSet->startNewAnimation(prefix + "top-right");
+		tr->addAnimationFrame(x + width - cornerSize, y, cornerSize, cornerSize);
 
-		const auto bl = nineSliceAnimationSet->startNewAnimation("bottom-left");
-		bl->addAnimationFrame(0, textureHeight - cornerSize, cornerSize, cornerSize);
+		const auto l = nineSliceAnimationSet->startNewAnimation(prefix + "left");
+		l->addAnimationFrame(x, y + cornerSize, cornerSize, height - 2 * cornerSize);
 
-		const auto b = nineSliceAnimationSet->startNewAnimation("bottom");
-		b->addAnimationFrame(cornerSize, textureHeight - cornerSize, textureWidth - 2 * cornerSize, cornerSize);
+		const auto c = nineSliceAnimationSet->startNewAnimation(prefix + "center");
+		c->addAnimationFrame(x + cornerSize, y + cornerSize, width - 2 * cornerSize, height - 2 * cornerSize);
 
-		const auto br = nineSliceAnimationSet->startNewAnimation("bottom-right");
-		br->addAnimationFrame(textureWidth - cornerSize, textureHeight - cornerSize, cornerSize, cornerSize);
+		const auto r = nineSliceAnimationSet->startNewAnimation(prefix + "right");
+		r->addAnimationFrame(x + width - cornerSize, y + cornerSize, cornerSize, height - 2 * cornerSize);
+
+		const auto bl = nineSliceAnimationSet->startNewAnimation(prefix + "bottom-left");
+		bl->addAnimationFrame(x, y + height - cornerSize, cornerSize, cornerSize);
+
+		const auto b = nineSliceAnimationSet->startNewAnimation(prefix + "bottom");
+		b->addAnimationFrame(x + cornerSize, y + height - cornerSize, width - 2 * cornerSize, cornerSize);
+
+		const auto br = nineSliceAnimationSet->startNewAnimation(prefix + "bottom-right");
+		br->addAnimationFrame(x + width - cornerSize, y + height - cornerSize, cornerSize, cornerSize);
 	}
 
 	void NineSlice::onCreateChildren()
+	{
+		topLeft = std::make_shared<MT::Animated>();
+		topLeft->name = "tl";
+		topLeft->sizeToAnimation = false;
+		topLeft->setAnimationSet(nineSliceAnimationSet);
+		topLeft->play("top-left");
+		topLeft->setTexture(currentTextureName);
+		topLeft->setColor(getColor());
+		add(topLeft);
+
+		top = std::make_shared<MT::Animated>();
+		top->name = "t";
+		top->sizeToAnimation = false;
+		top->setAnimationSet(nineSliceAnimationSet);
+		top->play("top");
+		top->setTexture(currentTextureName);
+		top->setColor(getColor());
+		add(top);
+
+		topRight = std::make_shared<MT::Animated>();
+		topRight->name = "tr";
+		topRight->sizeToAnimation = false;
+		topRight->setAnimationSet(nineSliceAnimationSet);
+		topRight->play("top-right");
+		topRight->setTexture(currentTextureName);
+		topRight->setColor(getColor());
+		add(topRight);
+
+		left = std::make_shared<MT::Animated>();
+		left->name = "l";
+		left->sizeToAnimation = false;
+		left->setAnimationSet(nineSliceAnimationSet);
+		left->play("left");
+		left->setTexture(currentTextureName);
+		left->setColor(getColor());
+		add(left);
+
+		center = std::make_shared<MT::Animated>();
+		center->name = "c";
+		center->sizeToAnimation = false;
+		center->setAnimationSet(nineSliceAnimationSet);
+		center->play("center");
+		center->setTexture(currentTextureName);
+		center->setColor(getColor());
+		add(center);
+
+		right = std::make_shared<MT::Animated>();
+		right->name = "r";
+		right->sizeToAnimation = false;
+		right->setAnimationSet(nineSliceAnimationSet);
+		right->play("right");
+		right->setTexture(currentTextureName);
+		right->setColor(getColor());
+		add(right);
+
+		bottomLeft = std::make_shared<MT::Animated>();
+		bottomLeft->name = "bl";
+		bottomLeft->sizeToAnimation = false;
+		bottomLeft->setAnimationSet(nineSliceAnimationSet);
+		bottomLeft->play("bottom-left");
+		bottomLeft->setTexture(currentTextureName);
+		bottomLeft->setColor(getColor());
+		add(bottomLeft);
+
+		bottom = std::make_shared<MT::Animated>();
+		bottom->name = "b";
+		bottom->sizeToAnimation = false;
+		bottom->setAnimationSet(nineSliceAnimationSet);
+		bottom->play("bottom");
+		bottom->setTexture(currentTextureName);
+		bottom->setColor(getColor());
+		add(bottom);
+
+		bottomRight = std::make_shared<MT::Animated>();
+		bottomRight->name = "br";
+		bottomRight->sizeToAnimation = false;
+		bottomRight->setAnimationSet(nineSliceAnimationSet);
+		bottomRight->play("bottom-right");
+		bottomRight->setTexture(currentTextureName);
+		bottomRight->setColor(getColor());
+		add(bottomRight);
+	}
+
+	void NineSlice::onChildrenHydrated()
+	{
+		topRight = findChildWithName<MT::Animated>("tr");
+		top = findChildWithName<MT::Animated>("t");
+		topLeft = findChildWithName<MT::Animated>("tl");
+
+		right = findChildWithName<MT::Animated>("r");
+		center = findChildWithName<MT::Animated>("c");
+		left = findChildWithName<MT::Animated>("l");
+
+		bottomRight = findChildWithName<MT::Animated>("br");
+		bottom = findChildWithName<MT::Animated>("b");
+		bottomLeft = findChildWithName<MT::Animated>("bl");
+
+		generateNineSliceAnimationSet();
+	}
+
+	void NineSlice::onLayoutChildren()
 	{
 		const auto texture = getTexture();
 		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
@@ -69,106 +207,72 @@ namespace MT
 		const auto centerBoxWidth = getWidth() - 2 * cornerBoxWidth;
 		const auto centerBoxHeight = getHeight() - 2 * cornerBoxHeight;
 
-		const auto topLeft = std::make_shared<MT::Animated>();
-		topLeft->sizeToAnimation = false;
-		topLeft->setAnimationSet(nineSliceAnimationSet);
-		topLeft->play("top-left");
-		topLeft->setTexture(currentTextureName);
 		topLeft->setSizeAndPosition(cornerBoxWidth / 2.0, cornerBoxHeight / 2.0, cornerBoxWidth, cornerBoxHeight);
-		add(topLeft);
 
-		const auto top = std::make_shared<MT::Animated>();
-		top->sizeToAnimation = false;
-		top->setAnimationSet(nineSliceAnimationSet);
-		top->play("top");
-		top->setTexture(currentTextureName);
 		top->setSize(centerBoxWidth, cornerBoxHeight);
 		top->toRightOf(topLeft);
-		add(top);
 
-		const auto topRight = std::make_shared<MT::Animated>();
-		topRight->sizeToAnimation = false;
-		topRight->setAnimationSet(nineSliceAnimationSet);
-		topRight->play("top-right");
-		topRight->setTexture(currentTextureName);
 		topRight->setSize(cornerBoxWidth, cornerBoxHeight);
 		topRight->toRightOf(top);
-		add(topRight);
 
-		const auto left = std::make_shared<MT::Animated>();
-		left->sizeToAnimation = false;
-		left->setAnimationSet(nineSliceAnimationSet);
-		left->play("left");
-		left->setTexture(currentTextureName);
 		left->setSize(cornerBoxWidth, centerBoxHeight);
 		left->toBottomOf(topLeft);
-		add(left);
 
-		const auto center = std::make_shared<MT::Animated>();
-		center->sizeToAnimation = false;
-		center->setAnimationSet(nineSliceAnimationSet);
-		center->play("center");
-		center->setTexture(currentTextureName);
 		center->setSize(centerBoxWidth, centerBoxHeight);
 		center->toRightOf(left);
-		add(center);
 
-		const auto right = std::make_shared<MT::Animated>();
-		right->sizeToAnimation = false;
-		right->setAnimationSet(nineSliceAnimationSet);
-		right->play("right");
-		right->setTexture(currentTextureName);
 		right->setSize(cornerBoxWidth, centerBoxHeight);
 		right->toRightOf(center);
-		add(right);
 
-		const auto bottomLeft = std::make_shared<MT::Animated>();
-		bottomLeft->sizeToAnimation = false;
-		bottomLeft->setAnimationSet(nineSliceAnimationSet);
-		bottomLeft->play("bottom-left");
-		bottomLeft->setTexture(currentTextureName);
 		bottomLeft->setSize(cornerBoxWidth, cornerBoxHeight);
 		bottomLeft->toBottomOf(left);
-		add(bottomLeft);
 
-		const auto bottom = std::make_shared<MT::Animated>();
-		bottom->sizeToAnimation = false;
-		bottom->setAnimationSet(nineSliceAnimationSet);
-		bottom->play("bottom");
-		bottom->setTexture(currentTextureName);
 		bottom->setSize(centerBoxWidth, cornerBoxHeight);
 		bottom->toRightOf(bottomLeft);
-		add(bottom);
 
-		const auto bottomRight = std::make_shared<MT::Animated>();
-		bottomRight->sizeToAnimation = false;
-		bottomRight->setAnimationSet(nineSliceAnimationSet);
-		bottomRight->play("bottom-right");
-		bottomRight->setTexture(currentTextureName);
 		bottomRight->setSize(cornerBoxWidth, cornerBoxHeight);
 		bottomRight->toRightOf(bottom);
-		add(bottomRight);
 	}
 
-	void NineSlice::onChildrenHydrated()
+	void NineSlice::play(std::string animationName)
 	{
-		generateAnimationSet();
-		for (const auto animated : getChildrenOfType<MT::Animated>())
+		if (currentAnimationName != animationName && animationSet != nullptr)
 		{
-			animated->setAnimationSet(nineSliceAnimationSet);
+			currentAnimationName = animationName;
+			for (const auto animated : getChildrenOfType<MT::Animated>())
+			{
+				animated->setAnimationPrefix(animationName);
+				animated->play(animated->getCurrentAnimationName());
+			}
 		}
+	}
+
+	void NineSlice::setAnimationSet(std::string animationSetName)
+	{
+		MT::Animated::setAnimationSet(animationSetName);
+		generateNineSliceAnimationSet();
 	}
 
 	void NineSlice::setTexture(std::shared_ptr<Texture> texture)
 	{
 		this->texture = texture;
-		generateAnimationSet();
+		generateNineSliceAnimationSet();
 	}
 
 	void NineSlice::setTexture(std::string textureName)
 	{
 		currentTextureName = textureName;
 		setTexture(modules->texture->getTexture(textureName));
-		generateAnimationSet();
+	}
+
+	void NineSlice::setColor(int r, int g, int b, int a)
+	{
+		Animated::setColor(r, g, b, a);
+
+		for (const auto animated : getChildrenOfType<MT::Animated>())
+		{
+			animated->setColor(r, g, b, a);
+		}
+
 	}
 }

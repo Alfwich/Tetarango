@@ -21,8 +21,8 @@ namespace MTGame
 			MT::RectI frameSize = {
 				0,
 				0,
-				350,
-				150
+				64,
+				64
 			};
 
 			{
@@ -53,8 +53,8 @@ namespace MTGame
 		setAnimationSet("button-basic");
 		setDefaultAnimationName("default");
 
-		setSize(350.0, 150.0);
-		setScale(0.5);
+		setSize(180.0, 80.0);
+		setCornerSize(16);
 
 		enableSerialization<ButtonBasic>();
 	}
@@ -81,23 +81,29 @@ namespace MTGame
 
 	void ButtonBasic::onCreateChildren()
 	{
+		MT::NineSlice::onCreateChildren();
+
 		label = std::make_shared<MT::Text>();
 		label->name = "button_text";
 		label->setFont("medium", 30);
 		label->setText(text);
 		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
-		label->setColor(getColor());
+		const auto color = getColor();
+		label->setTextColor(color.r, color.g, color.b, color.a);
 		add(label);
 	}
 
 	void ButtonBasic::onChildrenHydrated()
 	{
+		MT::NineSlice::onChildrenHydrated();
+
 		label = findChildWithName<MT::Text>("button_text");
 	}
 
 	void ButtonBasic::onInitialAttach()
 	{
 		MT::Animated::onInitialAttach();
+		MT::NineSlice::onInitialAttach();
 
 		enableEnterFrame();
 

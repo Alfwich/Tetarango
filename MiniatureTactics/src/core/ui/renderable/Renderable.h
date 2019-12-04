@@ -41,8 +41,8 @@ namespace MT
 	public:
 		bool rotateInParentSpace = true, disableCulling = false;
 
-		void setColor(int r, int g, int b, int a = 0xff);
-		void setColor(const Color& color);
+		virtual void setColor(int r, int g, int b, int a = 0xff);
+		virtual void setColor(const Color& color);
 		const Color& getColor();
 
 		virtual Rect getRect();
