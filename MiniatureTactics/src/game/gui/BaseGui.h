@@ -6,7 +6,6 @@
 
 namespace MTGame
 {
-
 	class BaseGui
 	{
 		static bool isLoaded;
@@ -17,7 +16,8 @@ namespace MTGame
 			Camera,
 			Menu,
 			Transition,
-			Hud
+			Hud,
+			ScrollBar
 		};
 
 	protected:
@@ -35,6 +35,9 @@ namespace MTGame
 		BaseGui(GuiMenu menu);
 		BaseGui(GuiTransition transition);
 		BaseGui(GuiHud hud);
+		BaseGui(GuiScrollBar scrollBar);
+
+		std::weak_ptr<MT::ApplicationObject> clickListener;
 	};
 
 }

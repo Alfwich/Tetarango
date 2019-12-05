@@ -34,6 +34,11 @@ namespace MTGame
 		HudInventory
 	};
 
+	enum class GuiScrollBar
+	{
+		ScrollBarBasic
+	};
+
 	class Guis
 	{
 	public:
@@ -60,6 +65,10 @@ namespace MTGame
 			{ GuiHud::HudCombat, "hud-combat" },
 			{ GuiHud::HudInventory, "hud-inventory" },
 		};
-	};
 
+		const std::map<GuiScrollBar, std::string> scrollbars{
+			{ GuiScrollBar::ScrollBarBasic, "scrollbar-basic" }
+		};
+
+	};
 }

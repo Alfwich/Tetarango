@@ -7,7 +7,7 @@
 namespace MTGame
 {
 
-	class GameMainMenu : public BaseGui, public MT::Container, public IButtonListener
+	class GameMainMenu : public BaseGui, public MT::Container, public IGuiListener
 	{
 		std::shared_ptr<ButtonBasic> backButton;
 		std::shared_ptr<ButtonBasic> optionsButton;

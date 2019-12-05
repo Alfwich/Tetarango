@@ -1,18 +1,16 @@
-#include "ButtonBasic.h"
+#include "ScrollBarBasic.h"
 #include "gui/Guis.h"
 
 namespace
 {
-	const auto scrollbarBasicId = "button-basic";
-	const auto mediumFontId = "medium";
-	const auto enabledParamName = "button-basic-is-enabled";
+	const auto scrollbarBasicId = "scrollbar-basic";
+	const auto enabledParamName = "scrollbar-basic-is-enabled";
 }
 
 namespace MTGame
 {
-	void ButtonBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
+	void ScrollBarBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
 	{
-		bundle->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
 		bundle->texture->loadTexture("res/game/img/ui/button/proto_button.png", scrollbarBasicId);
 
 		auto animationSet = std::make_shared<MT::AnimationSet>();
@@ -26,7 +24,6 @@ namespace MTGame
 			};
 
 			{
-
 				auto anim = animationSet->startNewAnimation("default");
 				anim->setFps(fps);
 				anim->addGeneralFrames(0, 0, frameSize.w, frameSize.h, 1);
@@ -47,81 +44,53 @@ namespace MTGame
 		bundle->animation->addAnimationSet(animationSet, scrollbarBasicId);
 	}
 
-	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
+	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
 	{
-		setTexture("button-basic");
-		setAnimationSet("button-basic");
+		/*
+		setTexture(scrollbarBasicId);
+		setAnimationSet(scrollbarBasicId);
 		setDefaultAnimationName("default");
 
-		setSize(180.0, 80.0);
 		setCornerSize(16);
+		*/
 
-		enableSerialization<ButtonBasic>();
+		enableSerialization<ScrollBarBasic>();
 	}
 
-	void ButtonBasic::setText(std::string text)
-	{
-		this->text = text;
-
-		if (label != nullptr)
-		{
-			label->setText(text);
-		}
-	}
-
-	std::string ButtonBasic::getText()
-	{
-		return text;
-	}
-
-	void ButtonBasic::setEnabled(bool flag)
+	void ScrollBarBasic::setEnabled(bool flag)
 	{
 		serializationClient->setBool(enabledParamName, flag);
 	}
 
-	void ButtonBasic::onCreateChildren()
+	void ScrollBarBasic::onCreateChildren()
 	{
-		MT::NineSlice::onCreateChildren();
 
-		label = std::make_shared<MT::Text>();
-		label->name = "button_text";
-		label->setFont("medium", 30);
-		label->setText(text);
-		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
-		add(label);
 	}
 
-	void ButtonBasic::onChildrenHydrated()
+	void ScrollBarBasic::onChildrenHydrated()
 	{
-		MT::NineSlice::onChildrenHydrated();
-
-		label = findChildWithName<MT::Text>("button_text");
 	}
 
-	void ButtonBasic::onInitialAttach()
+	void ScrollBarBasic::onInitialAttach()
 	{
-		MT::Animated::onInitialAttach();
-		MT::NineSlice::onInitialAttach();
-
-		enableEnterFrame();
-
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
+		enableEnterFrame();
 	}
 
-	void ButtonBasic::onDetach()
+	void ScrollBarBasic::onDetach()
 	{
 		isPressed = false;
 		isHovering = false;
 	}
 
-	void ButtonBasic::checkIsHovering(int x, int y)
+	void ScrollBarBasic::checkIsHovering(int x, int y)
 	{
 		isHovering =
 			x < worldRect.x + worldRect.w && x > worldRect.x &&
 			y < worldRect.y + worldRect.h && y > worldRect.y;
 	}
 
-	void ButtonBasic::onMouseButton(MT::MouseButton button, bool pressed)
+	void ScrollBarBasic::onMouseButton(MT::MouseButton button, bool pressed)
 	{
 		const auto isEnabled = serializationClient->getBool(enabledParamName, true);
 		if (!isEnabled)
@@ -146,10 +115,11 @@ namespace MTGame
 		}
 	}
 
-	void ButtonBasic::onEnterFrame(double frameTime)
+	void ScrollBarBasic::onEnterFrame(double frameTime)
 	{
 		checkIsHovering(modules->input->mouse->X(), modules->input->mouse->Y());
 
+		/*
 		if (isHovering)
 		{
 			if (isPressed)
@@ -165,5 +135,6 @@ namespace MTGame
 		{
 			play("default");
 		}
+		*/
 	}
 }

@@ -3,7 +3,7 @@
 #include <string>
 #include "ui/renderable/element/Animated.h"
 #include "ui/renderable/element/Text.h"
-#include "IButtonListener.h"
+#include "gui/IGuiListener.h"
 #include "gui/BaseGui.h"
 
 namespace MTGame

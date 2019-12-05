@@ -172,7 +172,7 @@ namespace MTGame
 				{
 					setChecked(!getChecked());
 
-					const auto listenerPtr = std::dynamic_pointer_cast<IButtonListener>(clickListener.lock());
+					const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());
 					if (listenerPtr != nullptr && isPressed && isHovering)
 					{
 						listenerPtr->onButtonClicked(getId());

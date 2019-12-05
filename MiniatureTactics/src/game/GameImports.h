@@ -48,3 +48,4 @@
 #include "gui/button/CheckBoxBasic.h"
 #include "gui/menu/GameMainMenu.h"
 #include "gui/transition/TransitionFade.h"
+#include "gui/scrollbar/ScrollBarBasic.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "ui/renderable/element/NineSlice.h"
+#include "ui/renderable/container/Container.h"
 #include "ui/renderable/element/Text.h"
 #include "gui/IGuiListener.h"
 #include "gui/BaseGui.h"
@@ -9,14 +9,12 @@
 namespace MTGame
 {
 
-	class ButtonBasic : public BaseGui, public MT::NineSlice
+	class ScrollBarBasic : public BaseGui, public MT::Container
 	{
-		std::string text;
-		std::shared_ptr<MT::Text> label;
 		bool isHovering = false, isPressed = false;
 	public:
 		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
-		ButtonBasic();
+		ScrollBarBasic();
 
 		void onCreateChildren();
 		void onChildrenHydrated();
@@ -26,9 +24,8 @@ namespace MTGame
 		void onMouseButton(MT::MouseButton button, bool pressed);
 		void onEnterFrame(double frameTime);
 
-		void setText(std::string text);
-		std::string getText();
 		void setEnabled(bool flag);
 	};
 
 }
+

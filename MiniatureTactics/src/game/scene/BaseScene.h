@@ -2,13 +2,13 @@
 
 #include "ui/scene/Scene.h"
 #include "GameStoragePaths.h"
-#include "gui/button/IButtonListener.h"
+#include "gui/IGuiListener.h"
 #include "Scenes.h"
 
 namespace MTGame
 {
 
-	class BaseScene : public MT::Scene, public IButtonListener
+	class BaseScene : public MT::Scene, public IGuiListener
 	{
 		static bool isLoaded;
 

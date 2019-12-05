@@ -4,7 +4,7 @@
 #include "ui/scene/Scene.h"
 #include "engine/module/event/EnterFrameListener.h"
 #include "gui/button/ButtonBasic.h"
-#include "gui/button/IButtonListener.h"
+#include "gui/IGuiListener.h"
 #include "ui/scene/SceneTransitionBundle.h"
 #include "gui/camera/GameCamera.h"
 
