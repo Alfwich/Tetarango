@@ -6,7 +6,6 @@ namespace MT
 	Element::Element()
 	{
 		renderType = RenderType::Element;
-		setColor(0xff, 0xff, 0xff);
 		enableSerialization<Element>();
 	}
 
@@ -52,10 +51,6 @@ namespace MT
 	std::shared_ptr<SerializationClient> Element::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__element__", hint);
-		colorModulation.r = client->serializeInt("cm.r", colorModulation.r);
-		colorModulation.g = client->serializeInt("cm.g", colorModulation.g);
-		colorModulation.b = client->serializeInt("cm.b", colorModulation.b);
-		colorModulation.a = client->serializeInt("cm.a", colorModulation.a);
 		currentTextureName = client->serializeString("cTexName", currentTextureName);
 
 		Renderable::doManualSerialize(hint, client);

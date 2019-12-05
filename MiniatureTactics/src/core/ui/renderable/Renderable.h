@@ -36,14 +36,15 @@ namespace MT
 		Rect rect;
 
 	protected:
-		Color colorModulation;
+		std::shared_ptr<Color> colorModulation;
 
 	public:
 		bool rotateInParentSpace = true, disableCulling = false;
 
 		virtual void setColor(int r, int g, int b, int a = 0xff);
 		virtual void setColor(const Color& color);
-		const Color& getColor();
+		virtual void setColor(const Color* color);
+		Color* getColor();
 
 		virtual Rect getRect();
 

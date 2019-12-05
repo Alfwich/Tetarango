@@ -103,7 +103,6 @@ namespace MT
 		topLeft->setAnimationSet(nineSliceAnimationSet);
 		topLeft->play("top-left");
 		topLeft->setTexture(currentTextureName);
-		topLeft->setColor(getColor());
 		add(topLeft);
 
 		top = std::make_shared<MT::Animated>();
@@ -112,7 +111,6 @@ namespace MT
 		top->setAnimationSet(nineSliceAnimationSet);
 		top->play("top");
 		top->setTexture(currentTextureName);
-		top->setColor(getColor());
 		add(top);
 
 		topRight = std::make_shared<MT::Animated>();
@@ -121,7 +119,6 @@ namespace MT
 		topRight->setAnimationSet(nineSliceAnimationSet);
 		topRight->play("top-right");
 		topRight->setTexture(currentTextureName);
-		topRight->setColor(getColor());
 		add(topRight);
 
 		left = std::make_shared<MT::Animated>();
@@ -130,7 +127,6 @@ namespace MT
 		left->setAnimationSet(nineSliceAnimationSet);
 		left->play("left");
 		left->setTexture(currentTextureName);
-		left->setColor(getColor());
 		add(left);
 
 		center = std::make_shared<MT::Animated>();
@@ -139,7 +135,6 @@ namespace MT
 		center->setAnimationSet(nineSliceAnimationSet);
 		center->play("center");
 		center->setTexture(currentTextureName);
-		center->setColor(getColor());
 		add(center);
 
 		right = std::make_shared<MT::Animated>();
@@ -148,7 +143,6 @@ namespace MT
 		right->setAnimationSet(nineSliceAnimationSet);
 		right->play("right");
 		right->setTexture(currentTextureName);
-		right->setColor(getColor());
 		add(right);
 
 		bottomLeft = std::make_shared<MT::Animated>();
@@ -157,7 +151,6 @@ namespace MT
 		bottomLeft->setAnimationSet(nineSliceAnimationSet);
 		bottomLeft->play("bottom-left");
 		bottomLeft->setTexture(currentTextureName);
-		bottomLeft->setColor(getColor());
 		add(bottomLeft);
 
 		bottom = std::make_shared<MT::Animated>();
@@ -166,7 +159,6 @@ namespace MT
 		bottom->setAnimationSet(nineSliceAnimationSet);
 		bottom->play("bottom");
 		bottom->setTexture(currentTextureName);
-		bottom->setColor(getColor());
 		add(bottom);
 
 		bottomRight = std::make_shared<MT::Animated>();
@@ -175,7 +167,6 @@ namespace MT
 		bottomRight->setAnimationSet(nineSliceAnimationSet);
 		bottomRight->play("bottom-right");
 		bottomRight->setTexture(currentTextureName);
-		bottomRight->setColor(getColor());
 		add(bottomRight);
 	}
 

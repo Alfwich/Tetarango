@@ -360,7 +360,7 @@ namespace MT
 		zIndex = client->serializeInt("zIndex", zIndex);
 		enterFrameActivated = client->serializeBool("efA", enterFrameActivated);
 		enterFramePriority = client->serializeInt("efP", enterFramePriority);
-		renderPositionMode = (RenderPositionMode)client->serializeInt("RPM", (int)renderPositionMode);
+		renderPositionModeStack = (RenderPositionMode)client->serializeInt("RPM", (int)renderPositionModeStack);
 		hasCreatedChildren = client->serializeBool("hCC", hasCreatedChildren);
 
 		clipRect.x = client->serializeDouble("crX", clipRect.x);

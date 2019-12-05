@@ -68,7 +68,7 @@ namespace MT
 {
 	Renderer::Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer)
 	{
-		renderPositionMode.push(RenderPositionMode::Positioned);
+		renderPositionModeStack.push(RenderPositionMode::Positioned);
 
 		if (oldRenderer != nullptr)
 		{
@@ -398,11 +398,11 @@ namespace MT
 
 	void Renderer::renderRecursive(std::shared_ptr<ApplicationObject> ao, Rect computed, RenderPackage renderPackage)
 	{
-		switch (ao->renderPositionMode)
+		switch (ao->renderPositionModeStack)
 		{
 		case RenderPositionMode::Absolute:
 		case RenderPositionMode::Positioned:
-			renderPositionMode.push(ao->renderPositionMode);
+			renderPositionModeStack.push(ao->renderPositionModeStack);
 		}
 
 		if (ao->getHasClipRect())
@@ -416,23 +416,36 @@ namespace MT
 			renderPackage.stencilDepth++;
 		}
 
+		bool pushedColorStack = false;
 		switch (ao->renderType)
 		{
 		case RenderType::Element:
 		case RenderType::Backdrop:
 		case RenderType::TileMap:
-			renderElement(ao, &computed, &renderPackage);
-			break;
+		{
+			const auto ele = std::static_pointer_cast<Element>(ao);
+
+			pushedColorStack = updateColorStack(ele);
+			renderElement(ele, &computed, &renderPackage);
+		}
+		break;
 
 		case RenderType::Primitive:
 		case RenderType::ParticleSystem:
-			renderPrimitive(ao, &computed, &renderPackage);
-			break;
+		{
+			const auto prim = std::static_pointer_cast<Primitive>(ao);
+
+			pushedColorStack = updateColorStack(prim);
+			renderPrimitive(prim, &computed, &renderPackage);
+		}
+		break;
 
 		case RenderType::Container:
+		{
 			const auto renderable = std::dynamic_pointer_cast<Renderable>(ao);
 			if (renderable != nullptr)
 			{
+				pushedColorStack = updateColorStack(renderable);
 				renderUpdateRect(renderable, &computed, &renderPackage);
 				ao->setWorldRect(&computed);
 				ao->updateScreenRect(&renderPackage);
@@ -442,7 +455,8 @@ namespace MT
 			{
 				updateClipRectOpenGL(ao, &computed, &renderPackage);
 			}
-			break;
+		}
+		break;
 		}
 
 		if (ao->getTag(AOTags::IsZone))
@@ -460,6 +474,11 @@ namespace MT
 			}
 		}
 
+		if (pushedColorStack)
+		{
+			revertColorStack();
+		}
+
 		if (ao->getHasClipRect())
 		{
 			renderPackage.stencilDepth--;
@@ -470,12 +489,11 @@ namespace MT
 			}
 		}
 
-
-		switch (ao->renderPositionMode)
+		switch (ao->renderPositionModeStack)
 		{
 		case RenderPositionMode::Absolute:
 		case RenderPositionMode::Positioned:
-			renderPositionMode.pop();
+			renderPositionModeStack.pop();
 		}
 	}
 
@@ -515,6 +533,43 @@ namespace MT
 		renderPackage->alpha *= rend->getAlpha();
 	}
 
+	bool Renderer::updateColorStack(std::shared_ptr<Renderable> rend)
+	{
+		if (rend != nullptr && rend->getColor() != nullptr)
+		{
+			const auto currentColor = colorStack.empty() ? Color(255, 255, 255, 255) : Color(colorStack.top());
+			const auto rendColor = rend->getColor();
+			const auto newColor = Color(
+				(currentColor.r / 255.0) * rendColor->r,
+				(currentColor.g / 255.0) * rendColor->g,
+				(currentColor.b / 255.0) * rendColor->b,
+				(currentColor.a / 255.0) * rendColor->a
+			);
+			colorStack.push(newColor);
+			return true;
+		}
+
+		return false;
+	}
+
+	void Renderer::setColorModParam(RenderPackage* renderPackage)
+	{
+		if (!colorStack.empty())
+		{
+			const auto color = colorStack.top();
+			glUniform4f(inColorModLocation, color.r / 255.0, color.g / 255.0, color.b / 255.0, (color.a / 255.0) * renderPackage->alpha);
+		}
+		else
+		{
+			glUniform4f(inColorModLocation, 1.0, 1.0, 1.0, 1.0 * renderPackage->alpha);
+		}
+	}
+
+	void Renderer::revertColorStack()
+	{
+		colorStack.pop();
+	}
+
 	bool Renderer::renderShouldCull(Rect* rect, RenderPackage* renderPackage)
 	{
 		const auto modifiedCullingOffset = cullingOffset * renderPackage->zoom;
@@ -522,24 +577,27 @@ namespace MT
 			rect->y > screenHeight + modifiedCullingOffset || rect->h + rect->h < -modifiedCullingOffset;
 	}
 
-	void Renderer::renderElement(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderElement(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage)
 	{
-		auto ele = std::static_pointer_cast<Element>(ao);
+		if (ele == nullptr)
+		{
+			return;
+		}
 
 		renderUpdateRect(ele, computed, renderPackage);
 
 		ele->setWorldRect(computed);
 		ele->updateScreenRect(renderPackage);
 
-		const auto shouldCull = !ele->disableCulling && renderShouldCull(ele->getScreenRect(), renderPackage) && renderPositionMode.top() != RenderPositionMode::Absolute;
-		if (shouldCull || ele == nullptr || !ele->visible || !ele->hasTexture())
+		const auto shouldCull = !ele->disableCulling && renderShouldCull(ele->getScreenRect(), renderPackage) && renderPositionModeStack.top() != RenderPositionMode::Absolute;
+		if (shouldCull || !ele->visible || !ele->hasTexture())
 		{
 			return;
 		}
 
 		if (ele->getHasClipRect())
 		{
-			updateClipRectOpenGL(ao, computed, renderPackage);
+			updateClipRectOpenGL(ele, computed, renderPackage);
 		}
 
 		switch (ele->renderType)
@@ -554,23 +612,12 @@ namespace MT
 		}
 	}
 
-	void Renderer::setTextureColorMod(SDL_Texture* texture, Color* eleColorMod)
+	void Renderer::renderPrimitive(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
 	{
-		Uint8 finalR = std::min(eleColorMod->r, globalColorMod.r);
-		Uint8 finalG = std::min(eleColorMod->g, globalColorMod.g);
-		Uint8 finalB = std::min(eleColorMod->b, globalColorMod.b);
-
-		SDL_SetTextureColorMod(texture, finalR, finalG, finalB);
-	}
-
-	void Renderer::setTextureAlphaMod(SDL_Texture* texture, RenderPackage* renderPackage)
-	{
-		SDL_SetTextureAlphaMod(texture, (int)(renderPackage->alpha * 255));
-	}
-
-	void Renderer::renderPrimitive(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage)
-	{
-		auto prim = std::static_pointer_cast<Primitive>(ao);
+		if (prim == nullptr)
+		{
+			return;
+		}
 
 		renderUpdateRect(prim, computed, renderPackage);
 
@@ -585,12 +632,12 @@ namespace MT
 			return;
 		}
 
-		if (ao->getHasClipRect())
+		if (prim->getHasClipRect())
 		{
-			updateClipRectOpenGL(ao, computed, renderPackage);
+			updateClipRectOpenGL(prim, computed, renderPackage);
 		}
 
-		switch (ao->renderType)
+		switch (prim->renderType)
 		{
 		case RenderType::ParticleSystem:
 			renderParticleSystemOpenGL(prim, computed, renderPackage);
@@ -623,7 +670,7 @@ namespace MT
 
 		mat4x4_mul(m, t, m);
 
-		if (renderPositionMode.top() == RenderPositionMode::Absolute)
+		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
 			mat4x4_dup(tP, pAbs);
 		}
@@ -657,8 +704,7 @@ namespace MT
 
 		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
 
-		const auto modColor = ele->getColor();
-		glUniform4f(inColorModLocation, modColor.r / 255.0, modColor.g / 255.0, modColor.b / 255.0, (modColor.a / 255.0)* renderPackage->alpha);
+		setColorModParam(renderPackage);
 
 		glBindTexture(GL_TEXTURE_2D, glTextureId);
 
@@ -682,7 +728,7 @@ namespace MT
 
 		mat4x4_mul(m, t, m);
 
-		if (renderPositionMode.top() == RenderPositionMode::Absolute)
+		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
 			mat4x4_dup(tP, pAbs);
 		}
@@ -717,7 +763,7 @@ namespace MT
 			return;
 		}
 
-		if (renderPositionMode.top() == RenderPositionMode::Absolute)
+		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
 			mat4x4_dup(tP, pAbs);
 		}
@@ -821,7 +867,7 @@ namespace MT
 					mat4x4_translate(t, cX, cY, (cY + (renderPackage->depth + tileMap->zIndex) * layerFactor));
 					mat4x4_mul(m, t, m);
 
-					if (renderPositionMode.top() == RenderPositionMode::Absolute)
+					if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 					{
 						mat4x4_dup(tP, pAbs);
 					}
@@ -833,8 +879,8 @@ namespace MT
 					mat4x4_mul(mvp, tP, m);
 
 					glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
-					const auto colorMod = tileMap->getColor();
-					glUniform4f(inColorModLocation, colorMod.r / 255.0, colorMod.g / 255.0, colorMod.b / 255.0, (colorMod.a / 255.0) * renderPackage->alpha);
+
+					setColorModParam(renderPackage);
 
 					glBindTexture(GL_TEXTURE_2D, glTextureId);
 

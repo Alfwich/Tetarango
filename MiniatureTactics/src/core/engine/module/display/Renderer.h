@@ -27,14 +27,17 @@ namespace MT
 		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0;
 
 		std::shared_ptr<Camera> camera;
-		std::stack<RenderPositionMode> renderPositionMode;
+		std::stack<RenderPositionMode> renderPositionModeStack;
+		std::stack<Color> colorStack;
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 
 		void prepareRender(Screen* screen);
 		void renderRecursive(std::shared_ptr<ApplicationObject> ao, Rect computed, RenderPackage parentRotation);
-		void setTextureColorMod(SDL_Texture* texture, Color* eleColorMod);
-		void setTextureAlphaMod(SDL_Texture* texture, RenderPackage* renderPackage);
 		void renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+
+		bool updateColorStack(std::shared_ptr<Renderable> rend);
+		void setColorModParam(RenderPackage* renderPackage);
+		void revertColorStack();
 
 		bool renderShouldCull(Rect* r, RenderPackage* renderPackage);
 
@@ -43,8 +46,8 @@ namespace MT
 		void releaseOpenGLObjects();
 
 		void renderOpenGL(std::shared_ptr<ApplicationObject> obj, Rect rootRect, Screen* screen, RenderPackage* package);
-		void renderElement(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage);
-		void renderPrimitive(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage);
+		void renderElement(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
+		void renderPrimitive(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
 
 		void updateClipRectOpenGL(std::shared_ptr<ApplicationObject> ele, Rect* computed, RenderPackage* renderPackage);
 

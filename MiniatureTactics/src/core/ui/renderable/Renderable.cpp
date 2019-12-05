@@ -9,17 +9,31 @@ namespace MT
 		setColor(color.r, color.g, color.b, color.a);
 	}
 
-	void Renderable::setColor(int r, int g, int b, int a)
+	void Renderable::setColor(const Color * color)
 	{
-		colorModulation.r = r;
-		colorModulation.g = g;
-		colorModulation.b = b;
-		colorModulation.a = a;
+		if (color != nullptr)
+		{
+			setColor(color->r, color->g, color->g, color->a);
+		}
 	}
 
-	const Color& Renderable::getColor()
+	void Renderable::setColor(int r, int g, int b, int a)
 	{
-		return colorModulation;
+		if (colorModulation == nullptr) {
+			colorModulation = std::make_shared<Color>(r, g, b, a);
+		}
+		else
+		{
+			colorModulation->r = r;
+			colorModulation->g = g;
+			colorModulation->b = b;
+			colorModulation->a = a;
+		}
+	}
+
+	Color* Renderable::getColor()
+	{
+		return colorModulation != nullptr ? colorModulation.get() : nullptr;
 	}
 
 	Rect Renderable::getRect()
@@ -668,5 +682,19 @@ namespace MT
 		setAlpha(client->serializeDouble("al", Renderable::getAlpha()));
 		setScaleX(client->serializeDouble("sX", getScaleX()));
 		setScaleY(client->serializeDouble("sY", getScaleY()));
+
+		if (colorModulation == nullptr && client->getInt("cm.r", -1) != -1)
+		{
+			colorModulation = std::make_shared<Color>();
+		}
+
+		if (colorModulation != nullptr)
+		{
+			colorModulation->r = client->serializeInt("cm.r", colorModulation->r);
+			colorModulation->g = client->serializeInt("cm.g", colorModulation->g);
+			colorModulation->b = client->serializeInt("cm.b", colorModulation->b);
+			colorModulation->a = client->serializeInt("cm.a", colorModulation->a);
+		}
+
 	}
 }

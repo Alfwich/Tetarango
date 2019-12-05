@@ -72,7 +72,7 @@ namespace MT
 
 		int zIndex = 0;
 		RenderType renderType = RenderType::None;
-		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
+		RenderPositionMode renderPositionModeStack = RenderPositionMode::Unspecified;
 
 		bool isAttached();
 

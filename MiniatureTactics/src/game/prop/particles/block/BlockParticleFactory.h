@@ -11,7 +11,7 @@ namespace MTGame
 	public:
 		BlockParticleFactory();
 
-		void setModColor(const MT::Color& color);
+		void setModColor(const MT::Color* color);
 		std::shared_ptr<MT::Particle> makeParticle(MT::ParticleCreationBundle& bundle);
 	};
 

@@ -88,8 +88,6 @@ namespace MTGame
 		label->setFont("medium", 30);
 		label->setText(text);
 		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
-		const auto color = getColor();
-		label->setTextColor(color.r, color.g, color.b, color.a);
 		add(label);
 	}
 

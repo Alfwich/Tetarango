@@ -6,7 +6,6 @@ namespace MT
 	Primitive::Primitive()
 	{
 		renderType = RenderType::Primitive;
-		setColor(0xff, 0xff, 0xff, 0xff);
 	}
 
 	GLuint Primitive::getTextureId()

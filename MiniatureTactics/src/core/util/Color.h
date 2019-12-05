@@ -17,6 +17,13 @@ namespace MT
 			);
 		}
 
+		static Color white() { return Color(255, 255, 255); }
+		static Color black() { return Color(0, 0, 0); }
+		static Color red() { return Color(255, 0, 0); }
+		static Color green() { return Color(0, 255, 0); }
+		static Color blue() { return Color(0, 0, 255); }
+
+
 		Uint8 r = 0, g = 0, b = 0, a = 0xff;
 
 		Color() {};
@@ -36,6 +43,18 @@ namespace MT
 			b = (color & 0x0000FF00) >> 8;
 			this->a = alpha;
 		}
+
+		Color(const Color* other)
+		{
+			if (other != nullptr)
+			{
+				r = other->r;
+				g = other->g;
+				b = other->b;
+				a = other->a;
+			}
+		}
+
 
 		SDL_Color asSdlColor()
 		{

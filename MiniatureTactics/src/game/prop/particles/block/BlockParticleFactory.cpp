@@ -25,9 +25,15 @@ namespace MTGame
 		enableSerialization<BlockParticleFactory>();
 	}
 
-	void BlockParticleFactory::setModColor(const MT::Color& color)
+	void BlockParticleFactory::setModColor(const MT::Color* color)
 	{
-		modColor = color;
+		if (color != nullptr)
+		{
+			modColor.r = color->r;
+			modColor.g = color->g;
+			modColor.b = color->b;
+			modColor.a = color->a;
+		}
 	}
 
 	std::shared_ptr<MT::Particle> BlockParticleFactory::makeParticle(MT::ParticleCreationBundle& bundle)
@@ -38,7 +44,7 @@ namespace MTGame
 		particle->cModG = modColor.g;
 		particle->cModB = modColor.b;
 		auto pi = MT::NumberHelper::PI;
-		auto r = (MT::NumberHelper::chance(50) ? pi: 0) + (MT::NumberHelper::random(-(pi/ 4), pi/ 4));
+		auto r = (MT::NumberHelper::chance(50) ? pi : 0) + (MT::NumberHelper::random(-(pi / 4), pi / 4));
 		const auto rV = MT::NumberHelper::random(200, 4000);
 		particle->x = -(bundle.rect.w / 2.0) + MT::NumberHelper::random(bundle.rect.w);
 		particle->y = -(bundle.rect.h / 2.0) + MT::NumberHelper::random(bundle.rect.h);

@@ -21,7 +21,7 @@ namespace MT
 		int segmentPos = 0;
 		for (const auto rect : getChildrenOfType<MT::Rectangle>())
 		{
-			rect->setColor(baseColor.lerp(endColor, segmentPos++ / numSegments));
+			rect->setColor(baseColor->lerp(endColor, segmentPos++ / numSegments));
 		}
 	}
 
@@ -73,7 +73,7 @@ namespace MT
 
 	Color Trace::getSegmentColor(unsigned int pos)
 	{
-		Color c = getColor();
-		return c.lerp(endColor, pos / numSegments);
+		const auto c = getColor();
+		return c->lerp(endColor, pos / numSegments);
 	}
 }

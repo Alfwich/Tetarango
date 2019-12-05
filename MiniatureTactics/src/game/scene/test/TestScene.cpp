@@ -40,7 +40,7 @@ namespace MTGame
 		const auto mainGameMenu = std::make_shared<GameMainMenu>();
 		mainGameMenu->zIndex = 20;
 		mainGameMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		mainGameMenu->renderPositionMode = MT::RenderPositionMode::Absolute;
+		mainGameMenu->renderPositionModeStack = MT::RenderPositionMode::Absolute;
 		mainGameMenu->visible = false;
 		add(mainGameMenu);
 
@@ -51,7 +51,7 @@ namespace MTGame
 
 		screenRectContainer = std::make_shared<MT::Container>();
 		screenRectContainer->zIndex = 10;
-		screenRectContainer->renderPositionMode = MT::RenderPositionMode::Absolute;
+		screenRectContainer->renderPositionModeStack = MT::RenderPositionMode::Absolute;
 		add(screenRectContainer);
 
 		camera = std::make_shared<GameCamera>();
