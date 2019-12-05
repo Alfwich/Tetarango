@@ -3,9 +3,11 @@
 
 namespace
 {
-	const auto scrollbarBasicId = "button-basic";
+	const auto buttonBasicId = "button-basic";
 	const auto mediumFontId = "medium";
 	const auto enabledParamName = "button-basic-is-enabled";
+	const auto labelName = "button-basic-label";
+	const auto backgroundName = "button-basic-background";
 }
 
 namespace MTGame
@@ -13,7 +15,7 @@ namespace MTGame
 	void ButtonBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
 	{
 		bundle->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
-		bundle->texture->loadTexture("res/game/img/ui/button/proto_button.png", scrollbarBasicId);
+		bundle->texture->loadTexture("res/game/img/ui/button/proto_button.png", buttonBasicId);
 
 		auto animationSet = std::make_shared<MT::AnimationSet>();
 		{
@@ -44,17 +46,12 @@ namespace MTGame
 				anim->addGeneralFrames(0, frameSize.h, frameSize.w, frameSize.h, 1);
 			}
 		}
-		bundle->animation->addAnimationSet(animationSet, scrollbarBasicId);
+		bundle->animation->addAnimationSet(animationSet, buttonBasicId);
 	}
 
 	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{
-		setTexture("button-basic");
-		setAnimationSet("button-basic");
-		setDefaultAnimationName("default");
-
 		setSize(180.0, 80.0);
-		setCornerSize(16);
 
 		enableSerialization<ButtonBasic>();
 	}
@@ -81,10 +78,17 @@ namespace MTGame
 
 	void ButtonBasic::onCreateChildren()
 	{
-		MT::NineSlice::onCreateChildren();
+		background = std::make_shared<MT::NineSlice>();
+		background->setTexture(buttonBasicId);
+		background->setAnimationSet(buttonBasicId);
+		background->setDefaultAnimationName("default");
+		background->matchSizeAndCenter(this);
+		background->setCornerSize(16);
+		background->name = backgroundName;
+		add(background);
 
 		label = std::make_shared<MT::Text>();
-		label->name = "button_text";
+		label->name = labelName;
 		label->setFont("medium", 30);
 		label->setText(text);
 		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
@@ -93,16 +97,12 @@ namespace MTGame
 
 	void ButtonBasic::onChildrenHydrated()
 	{
-		MT::NineSlice::onChildrenHydrated();
-
-		label = findChildWithName<MT::Text>("button_text");
+		label = findChildWithName<MT::Text>(labelName);
+		background = findChildWithName<MT::NineSlice>(backgroundName);
 	}
 
 	void ButtonBasic::onInitialAttach()
 	{
-		MT::Animated::onInitialAttach();
-		MT::NineSlice::onInitialAttach();
-
 		enableEnterFrame();
 
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
@@ -154,16 +154,16 @@ namespace MTGame
 		{
 			if (isPressed)
 			{
-				play("pressed");
+				background->play("pressed");
 			}
 			else
 			{
-				play("hover");
+				background->play("hover");
 			}
 		}
 		else
 		{
-			play("default");
+			background->play("default");
 		}
 	}
 }

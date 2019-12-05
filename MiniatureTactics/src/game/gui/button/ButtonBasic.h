@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "ui/renderable/container/Container.h"
 #include "ui/renderable/element/NineSlice.h"
 #include "ui/renderable/element/Text.h"
 #include "gui/IGuiListener.h"
@@ -9,10 +10,11 @@
 namespace MTGame
 {
 
-	class ButtonBasic : public BaseGui, public MT::NineSlice
+	class ButtonBasic : public BaseGui, public MT::Container
 	{
 		std::string text;
 		std::shared_ptr<MT::Text> label;
+		std::shared_ptr<MT::NineSlice> background;
 		bool isHovering = false, isPressed = false;
 	public:
 		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
