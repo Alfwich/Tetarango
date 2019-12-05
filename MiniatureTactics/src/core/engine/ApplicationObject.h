@@ -24,7 +24,7 @@ namespace MT
 	class ApplicationObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<ApplicationObject>
 	{
 
-		bool currentActive = false, active = true, didInitialAttach = false, hasCreatedChildren = false, hasClipRect = false;
+		bool currentActive = false, active = true, didInitialAttach = false, hasCreatedChildren = false, hasHydratedChildren = false, hasClipRect = false;
 
 	protected:
 		int id = 0;

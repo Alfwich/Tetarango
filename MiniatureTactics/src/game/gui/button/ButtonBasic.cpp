@@ -81,7 +81,6 @@ namespace MTGame
 		background = std::make_shared<MT::NineSlice>();
 		background->setTexture(buttonBasicId);
 		background->setAnimationSet(buttonBasicId);
-		background->setDefaultAnimationName("default");
 		background->matchSizeAndCenter(this);
 		background->setCornerSize(16);
 		background->name = backgroundName;

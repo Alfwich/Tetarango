@@ -16,6 +16,9 @@ namespace MT
 		virtual void onDestroyChildren();
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void add(std::shared_ptr<ApplicationObject> obj);
+
+		void setWidth(double newWidth);
+		void setHeight(double newHeight);
 	};
 
 }

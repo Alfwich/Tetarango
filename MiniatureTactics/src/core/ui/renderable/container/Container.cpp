@@ -66,4 +66,16 @@ namespace MT
 			}
 		}
 	}
+
+	void Container::setWidth(double newWidth)
+	{
+		Renderable::setWidth(newWidth);
+		layout();
+	}
+
+	void Container::setHeight(double newHeight)
+	{
+		Renderable::setHeight(newHeight);
+		layout();
+	}
 }

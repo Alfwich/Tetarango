@@ -261,6 +261,7 @@ namespace MT
 			{
 				onCreateChildren();
 				hasCreatedChildren = true;
+				hasHydratedChildren = true;
 				layout();
 			}
 			else
@@ -275,6 +276,7 @@ namespace MT
 				}
 
 				onChildrenHydrated();
+				hasHydratedChildren = true;
 				layout();
 			}
 
@@ -306,7 +308,7 @@ namespace MT
 
 	void ApplicationObject::layout()
 	{
-		if (hasCreatedChildren) 
+		if (hasCreatedChildren && hasHydratedChildren) 
 		{
 			onLayoutChildren();
 		}

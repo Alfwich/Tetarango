@@ -1,13 +1,18 @@
 #pragma once
 
-#include "Animated.h"
+#include "ui/renderable/element/Animated.h"
+#include "ui/renderable/container/Container.h"
 
 namespace MT
 {
 
-	class NineSlice : public Animated
+	class NineSlice : public Container
 	{
+		std::shared_ptr<Texture> texture;
+		std::shared_ptr<AnimationSet> animationSet;
 		std::shared_ptr<AnimationSet> nineSliceAnimationSet;
+
+		std::string currentTextureName, currentAnimationSetName;
 
 		void generateNineSliceAnimationSet();
 
@@ -35,10 +40,13 @@ namespace MT
 		void onLayoutChildren();
 
 		void play(std::string animationName = "");
+
 		void setAnimationSet(std::string animationSetName);
+		void setAnimationSet(std::shared_ptr<AnimationSet> animationSet);
 
 		void setTexture(std::shared_ptr<Texture> texture);
 		void setTexture(std::string textureName);
-		void setColor(int r, int g, int b, int a = 0xff);
+
+		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 	};
 }

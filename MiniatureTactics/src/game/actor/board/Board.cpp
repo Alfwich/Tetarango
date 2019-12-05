@@ -315,7 +315,7 @@ namespace MTGame
 		background->zIndex = -2;
 		updateBoardIfNeeded();
 		background->setTexture("board-background");
-		background->setCornerSize(20);
+		background->setCornerSize(16);
 		add(background);
 	}
 

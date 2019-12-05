@@ -23,7 +23,7 @@ namespace MT
 
 	void NineSlice::generateNineSliceAnimationSet()
 	{
-		if (getTexture() == nullptr)
+		if (texture == nullptr)
 		{
 			return;
 		}
@@ -36,7 +36,6 @@ namespace MT
 		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
 		if (animationSet == nullptr)
 		{
-			const auto texture = getTexture();
 			const auto textureWidth = texture->getWidth();
 			const auto textureHeight = texture->getHeight();
 
@@ -53,7 +52,7 @@ namespace MT
 
 		for (const auto animated : getChildrenOfType<MT::Animated>())
 		{
-			animated->setTexture(currentTextureName);
+			animated->setTexture(texture);
 			animated->setAnimationSet(nineSliceAnimationSet);
 		}
 	}
@@ -102,7 +101,7 @@ namespace MT
 		topLeft->sizeToAnimation = false;
 		topLeft->setAnimationSet(nineSliceAnimationSet);
 		topLeft->play("top-left");
-		topLeft->setTexture(currentTextureName);
+		topLeft->setTexture(texture);
 		add(topLeft);
 
 		top = std::make_shared<MT::Animated>();
@@ -110,7 +109,7 @@ namespace MT
 		top->sizeToAnimation = false;
 		top->setAnimationSet(nineSliceAnimationSet);
 		top->play("top");
-		top->setTexture(currentTextureName);
+		top->setTexture(texture);
 		add(top);
 
 		topRight = std::make_shared<MT::Animated>();
@@ -118,7 +117,7 @@ namespace MT
 		topRight->sizeToAnimation = false;
 		topRight->setAnimationSet(nineSliceAnimationSet);
 		topRight->play("top-right");
-		topRight->setTexture(currentTextureName);
+		topRight->setTexture(texture);
 		add(topRight);
 
 		left = std::make_shared<MT::Animated>();
@@ -126,7 +125,7 @@ namespace MT
 		left->sizeToAnimation = false;
 		left->setAnimationSet(nineSliceAnimationSet);
 		left->play("left");
-		left->setTexture(currentTextureName);
+		left->setTexture(texture);
 		add(left);
 
 		center = std::make_shared<MT::Animated>();
@@ -134,7 +133,7 @@ namespace MT
 		center->sizeToAnimation = false;
 		center->setAnimationSet(nineSliceAnimationSet);
 		center->play("center");
-		center->setTexture(currentTextureName);
+		center->setTexture(texture);
 		add(center);
 
 		right = std::make_shared<MT::Animated>();
@@ -142,7 +141,7 @@ namespace MT
 		right->sizeToAnimation = false;
 		right->setAnimationSet(nineSliceAnimationSet);
 		right->play("right");
-		right->setTexture(currentTextureName);
+		right->setTexture(texture);
 		add(right);
 
 		bottomLeft = std::make_shared<MT::Animated>();
@@ -150,7 +149,7 @@ namespace MT
 		bottomLeft->sizeToAnimation = false;
 		bottomLeft->setAnimationSet(nineSliceAnimationSet);
 		bottomLeft->play("bottom-left");
-		bottomLeft->setTexture(currentTextureName);
+		bottomLeft->setTexture(texture);
 		add(bottomLeft);
 
 		bottom = std::make_shared<MT::Animated>();
@@ -158,7 +157,7 @@ namespace MT
 		bottom->sizeToAnimation = false;
 		bottom->setAnimationSet(nineSliceAnimationSet);
 		bottom->play("bottom");
-		bottom->setTexture(currentTextureName);
+		bottom->setTexture(texture);
 		add(bottom);
 
 		bottomRight = std::make_shared<MT::Animated>();
@@ -166,7 +165,7 @@ namespace MT
 		bottomRight->sizeToAnimation = false;
 		bottomRight->setAnimationSet(nineSliceAnimationSet);
 		bottomRight->play("bottom-right");
-		bottomRight->setTexture(currentTextureName);
+		bottomRight->setTexture(texture);
 		add(bottomRight);
 	}
 
@@ -189,10 +188,7 @@ namespace MT
 
 	void NineSlice::onLayoutChildren()
 	{
-		const auto texture = getTexture();
 		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
-		const auto textureWidth = texture->getWidth();
-		const auto textureHeight = texture->getHeight();
 		const auto cornerBoxWidth = cornerSize;
 		const auto cornerBoxHeight = cornerSize;
 		const auto centerBoxWidth = getWidth() - 2 * cornerBoxWidth;
@@ -227,21 +223,24 @@ namespace MT
 
 	void NineSlice::play(std::string animationName)
 	{
-		if (currentAnimationName != animationName && animationSet != nullptr)
+		for (const auto animated : getChildrenOfType<MT::Animated>())
 		{
-			currentAnimationName = animationName;
-			for (const auto animated : getChildrenOfType<MT::Animated>())
-			{
-				animated->setAnimationPrefix(animationName);
-				animated->play(animated->getCurrentAnimationName());
-			}
+			animated->setAnimationPrefix(animationName);
+			animated->play(animated->getCurrentAnimationName());
 		}
 	}
 
 	void NineSlice::setAnimationSet(std::string animationSetName)
 	{
-		MT::Animated::setAnimationSet(animationSetName);
-		generateNineSliceAnimationSet();
+		setAnimationSet(modules->animation->getAnimationSet(animationSetName));
+	}
+
+	void NineSlice::setAnimationSet(std::shared_ptr<AnimationSet> animationSet)
+	{
+		if (animationSet != nullptr)
+		{
+			this->animationSet = animationSet;
+		}
 	}
 
 	void NineSlice::setTexture(std::shared_ptr<Texture> texture)
@@ -256,14 +255,22 @@ namespace MT
 		setTexture(modules->texture->getTexture(textureName));
 	}
 
-	void NineSlice::setColor(int r, int g, int b, int a)
+	std::shared_ptr<SerializationClient> NineSlice::doSerialize(SerializationHint hint)
 	{
-		Animated::setColor(r, g, b, a);
+		const auto client = serializationClient->getClient("__nine_slice__", hint);
+		currentTextureName = client->serializeString("ctn", currentTextureName);
+		currentAnimationSetName = client->serializeString("casn", currentAnimationSetName);
 
-		for (const auto animated : getChildrenOfType<MT::Animated>())
+		if (!currentTextureName.empty() && texture == nullptr)
 		{
-			animated->setColor(r, g, b, a);
+			texture = modules->texture->getTexture(currentTextureName);
 		}
 
+		if (!currentAnimationSetName.empty() && animationSet == nullptr)
+		{
+			animationSet = modules->animation->getAnimationSet(currentAnimationSetName);
+		}
+
+		return Container::doSerialize(hint);
 	}
 }
