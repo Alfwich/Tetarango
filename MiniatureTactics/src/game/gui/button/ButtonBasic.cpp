@@ -114,9 +114,11 @@ namespace MTGame
 
 	void ButtonBasic::checkIsHovering(int x, int y)
 	{
+		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == MT::RenderPositionMode::Unspecified ? screenRect : worldRect;
+
 		isHovering =
-			x < worldRect.x + worldRect.w && x > worldRect.x &&
-			y < worldRect.y + worldRect.h && y > worldRect.y;
+			x < rect.x + rect.w && x > rect.x &&
+			y < rect.y + rect.h && y > rect.y;
 	}
 
 	void ButtonBasic::onMouseButton(MT::MouseButton button, bool pressed)

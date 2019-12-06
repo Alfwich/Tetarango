@@ -398,11 +398,11 @@ namespace MT
 
 	void Renderer::renderRecursive(std::shared_ptr<ApplicationObject> ao, Rect computed, RenderPackage renderPackage)
 	{
-		switch (ao->renderPositionModeStack)
+		switch (ao->renderPositionMode)
 		{
 		case RenderPositionMode::Absolute:
 		case RenderPositionMode::Positioned:
-			renderPositionModeStack.push(ao->renderPositionModeStack);
+			renderPositionModeStack.push(ao->renderPositionMode);
 		}
 
 		if (ao->getHasClipRect())
@@ -489,7 +489,7 @@ namespace MT
 			}
 		}
 
-		switch (ao->renderPositionModeStack)
+		switch (ao->renderPositionMode)
 		{
 		case RenderPositionMode::Absolute:
 		case RenderPositionMode::Positioned:

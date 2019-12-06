@@ -54,57 +54,6 @@ namespace MT
 		scrollTransition->startTransition(scrollContainer, scrollSpeedMs, target);
 	}
 
-	void ScrollContainer::onMouseWheel(int x, int y)
-	{
-		const auto mouseX = modules->input->mouse->X();
-		const auto rect = getScreenRect();
-		if (mouseX < rect->x || mouseX > rect->x + rect->w)
-		{
-			return;
-		}
-
-		const auto containerMin = serializationClient->getDouble(scrollAmountContainerMinParamName, 0.0);
-		const auto containerMax = serializationClient->getDouble(scrollAmountContainerMaxParamName, modules->screen->getHeight());
-		const auto scrollAmount = serializationClient->getInt(scrollAmountInPixelsParamName, 50);
-		if (y < 0)
-		{
-			bool allowScroll = false;
-			for (const auto resolutionButton : children)
-			{
-				const auto screenRect = resolutionButton->getScreenRect();
-				allowScroll = screenRect->y + screenRect->h > containerMax;
-
-				if (allowScroll)
-				{
-					break;
-				}
-			}
-
-			if (allowScroll)
-			{
-				scrollPixels(scrollAmount);
-			}
-		}
-		else if (y > 0)
-		{
-			bool allowScroll = false;
-			for (const auto resolutionButton : children)
-			{
-				allowScroll = resolutionButton->getScreenRect()->y < containerMin;
-
-				if (allowScroll)
-				{
-					break;
-				}
-			}
-
-			if (allowScroll)
-			{
-				scrollPixels(-scrollAmount);
-			}
-		}
-	}
-
 	void ScrollContainer::add(std::shared_ptr<ApplicationObject> ao)
 	{
 		if (ao->name == scrollContainerName)
@@ -152,10 +101,13 @@ namespace MT
 		setScrollPosition(currentScrollPosition + amount);
 	}
 
-	void ScrollContainer::scrollPixels(int amount)
+	double ScrollContainer::scrollPixels(int amount)
 	{
 		const auto currentScrollPosition = serializationClient->getDouble(scrollAmountParamName);
-		setScrollPosition(currentScrollPosition + amount / getHeight());
+		const auto resultingPosition = currentScrollPosition + amount / getHeight();
+		setScrollPosition(resultingPosition);
+
+		return resultingPosition;
 	}
 
 	void ScrollContainer::setScrollPosition(double amount)
@@ -164,6 +116,11 @@ namespace MT
 		const auto max = serializationClient->getDouble(scrollAmountMinParamName, 1.0);
 		serializationClient->setDouble(scrollAmountParamName, MT::NumberHelper::clamp<double>(amount, min, max));
 		layout();
+	}
+
+	double ScrollContainer::getScrollPosition()
+	{
+		return serializationClient->getDouble(scrollAmountParamName);
 	}
 
 	void ScrollContainer::setScrollLimits(double min, double max)
@@ -188,32 +145,14 @@ namespace MT
 		serializationClient->setDouble(scrollAmountContainerMaxParamName, max);
 	}
 
+	void ScrollContainer::setScrollSpeed(int speedMS)
+	{
+		serializationClient->setInt(scrollSpeedInMsParamName, speedMS);
+	}
+
 	void ScrollContainer::setScrollAmountInPixels(int amount)
 	{
 		serializationClient->setInt(scrollAmountInPixelsParamName, amount);
 	}
 
-	void ScrollContainer::setMouseWheenEnabled(bool flag)
-	{
-		const auto current = serializationClient->getBool(scrollContainerMouseWheelEnabledParamName);
-
-		if (current != flag)
-		{
-			serializationClient->setBool(scrollContainerMouseWheelEnabledParamName, flag);
-		}
-
-		if (flag)
-		{
-			modules->input->mouse->registerMouseWheel(weak_from_this());
-		}
-		else
-		{
-			modules->input->mouse->unregisterMouseWheel(shared_from_this());
-		}
-	}
-
-	void ScrollContainer::setScrollSpeed(int speedMS)
-	{
-		serializationClient->setInt(scrollSpeedInMsParamName, speedMS);
-	}
 }

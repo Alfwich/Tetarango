@@ -1,4 +1,5 @@
 #include "SceneOptionsMenu.h"
+#include "gui/camera/GameCamera.h"
 
 namespace
 {
@@ -20,8 +21,6 @@ namespace MTGame
 		info = modules->screen->getAllSupportedDisplayModes();
 		config = modules->screen->getCurrentScreenConfig();
 		modules->input->mouse->registerMouseWheel(weak_from_this());
-
-		enableEnterFrame();
 	}
 
 	void SceneOptionsMenu::onDestroyChildren()
@@ -43,10 +42,8 @@ namespace MTGame
 		backButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
 		add(backButton);
 
-		scrollContainer = std::make_shared<MT::ScrollContainer>();
-		scrollContainer->setMouseWheenEnabled(config.mode != MT::ScreenModes::FullscreenDesktop);
-		scrollContainer->setScrollAmountInPixels(43);
-		add(scrollContainer);
+		scrollArea = std::make_shared<ScrollArea>();
+		add(scrollArea);
 
 		resolutionButtons.clear();
 		std::shared_ptr<ButtonBasic> prevResolutionButton;
@@ -75,22 +72,16 @@ namespace MTGame
 			}
 
 			prevResolutionButton = resolutionButton;
-			scrollContainer->add(resolutionButton);
+			scrollArea->add(resolutionButton);
 		}
 
-		scrollContainer->centerAlignSelf(5.0, 0.0);
-
-		scrollContainerScrollBar = std::make_shared<ScrollBarBasic>();
-		scrollContainerScrollBar->setPosition(800.0, 800.0);
-		scrollContainerScrollBar->setHeight(600.0);
-		scrollContainerScrollBar->setWidth(30.0);
-		add(scrollContainerScrollBar);
+		scrollArea->centerAlignSelf(5.0, 0.0);
 
 		const auto checkboxYOffset = 10.0;
 		const auto checkboxYGroupOffset = 20.0;
 		fullscreenCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenCheckbox->setText("Fullscreen");
-		fullscreenCheckbox->toRightOf(scrollContainer, 5.0, -scrollContainer->getHalfHeight() + fullscreenCheckbox->getHalfHeight() + 5.0);
+		fullscreenCheckbox->toRightOf(scrollArea, 19.0, -scrollArea->getHalfHeight() + fullscreenCheckbox->getHalfHeight() + 5.0);
 		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
 		fullscreenCheckbox->setEnabled(config.mode == MT::ScreenModes::Fullscreen);
 		fullscreenCheckbox->clickListener = weak_from_this();
@@ -157,31 +148,6 @@ namespace MTGame
 		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
 		wireframeModeCheckbox->clickListener = weak_from_this();
 		add(wireframeModeCheckbox);
-	}
-
-	void SceneOptionsMenu::onEnterFrame(double frameTime)
-	{
-		const auto ptr = findChildWithName<ScrollBarBasic>("");
-		if (ptr)
-		{
-			if (testState)
-			{
-				ptr->setScrollPosition(ptr->getScrollPosition() + 0.025 * (frameTime / 1000.0));
-			}
-			else
-			{
-				ptr->setScrollPosition(ptr->getScrollPosition() - 0.025 * (frameTime / 1000.0));
-			}
-
-			if (ptr->getScrollPosition() == 1.0 && testState)
-			{
-				testState = false;
-			}
-			else if (ptr->getScrollPosition() == 0.0 && !testState)
-			{
-				testState = true;
-			}
-		}
 	}
 
 	void SceneOptionsMenu::onButtonClicked(int id)

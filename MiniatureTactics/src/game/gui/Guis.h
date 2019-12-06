@@ -39,6 +39,11 @@ namespace MTGame
 		ScrollBarBasic
 	};
 
+	enum class GuiScrollArea
+	{
+		ScrollArea
+	};
+
 	class Guis
 	{
 	public:
@@ -68,6 +73,10 @@ namespace MTGame
 
 		const std::map<GuiScrollBar, std::string> scrollbars{
 			{ GuiScrollBar::ScrollBarBasic, "scrollbar-basic" }
+		};
+
+		const std::map<GuiScrollArea, std::string> scrollareas {
+			{ GuiScrollArea::ScrollArea, "scroll-area-basic" }
 		};
 
 	};

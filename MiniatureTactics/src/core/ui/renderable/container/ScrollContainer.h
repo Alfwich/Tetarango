@@ -6,7 +6,6 @@ namespace MT
 {
 	class ScrollContainer : public Container
 	{
-		bool scrollResolutionsDownPressed = false, scrollResolutionsUpPressed = false;
 		std::shared_ptr<Transition> scrollTransition;
 		std::shared_ptr<Container> scrollContainer;
 
@@ -17,7 +16,6 @@ namespace MT
 		void onCreateChildren();
 		void onChildrenHydrated();
 		void onLayoutChildren();
-		void onMouseWheel(int x, int y);
 
 		void add(std::shared_ptr<ApplicationObject> ao);
 		void remove(std::shared_ptr<ApplicationObject> ao);
@@ -27,13 +25,13 @@ namespace MT
 		double getHeight();
 
 		void scroll(double amount);
-		void scrollPixels(int amount);
+		double scrollPixels(int amount);
 		void setScrollPosition(double amount);
+		double getScrollPosition();
 
 		void setScrollLimits(double min, double max);
 		void setContainerLimits(double min, double max);
-		void setScrollAmountInPixels(int amount);
-		void setMouseWheenEnabled(bool flag);
 		void setScrollSpeed(int speedMS = 50);
+		void setScrollAmountInPixels(int amount);
 	};
 }

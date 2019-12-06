@@ -122,6 +122,7 @@
     <ClCompile Include="src\core\ui\renderable\container\ScrollContainer.cpp" />
     <ClCompile Include="src\game\gui\button\CheckBoxBasic.cpp" />
     <ClCompile Include="src\game\gui\scrollbar\ScrollBarBasic.cpp" />
+    <ClCompile Include="src\game\gui\scrollarea\ScrollArea.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\UI\Camera.h" />
@@ -257,6 +258,7 @@
     <ClInclude Include="src\game\gui\button\CheckBoxBasic.h" />
     <ClInclude Include="src\game\gui\scrollbar\ScrollBarBasic.h" />
     <ClInclude Include="src\game\gui\IGuiListener.h" />
+    <ClInclude Include="src\game\gui\scrollarea\ScrollArea.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

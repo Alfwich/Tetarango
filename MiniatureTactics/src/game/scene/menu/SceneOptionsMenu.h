@@ -6,6 +6,7 @@
 #include "gui/scrollbar/ScrollBarBasic.h"
 #include "scene/BaseScene.h"
 #include "ui/renderable/container/ScrollContainer.h"
+#include "gui/scrollarea/ScrollArea.h"
 
 namespace MTGame
 {
@@ -26,11 +27,8 @@ namespace MTGame
 		std::shared_ptr<CheckBoxBasic> openGlCompatibilityModeCheckbox;
 		std::shared_ptr<CheckBoxBasic> wireframeModeCheckbox;
 		
-		std::shared_ptr<MT::ScrollContainer> scrollContainer;
-		std::shared_ptr<ScrollBarBasic> scrollContainerScrollBar;
+		std::shared_ptr<ScrollArea> scrollArea;
 		std::vector<std::shared_ptr<ButtonBasic>> resolutionButtons;
-
-		bool testState = false;
 
 	public:
 		SceneOptionsMenu();
@@ -38,8 +36,6 @@ namespace MTGame
 		void onInitialAttach();
 		void onDestroyChildren();
 		void onCreateChildren();
-
-		void onEnterFrame(double frameTime);
 
 		void onButtonClicked(int id);
 	};

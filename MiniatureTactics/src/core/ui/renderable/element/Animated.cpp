@@ -1,4 +1,5 @@
 #include "Animated.h"
+#include "ui/renderable/container/Container.h"
 
 namespace MT
 {
@@ -22,9 +23,10 @@ namespace MT
 		}
 	}
 
-	void Animated::setAnimationSet(std::shared_ptr<AnimationSet> animationSet)
+	void Animated::setAnimationSet(std::shared_ptr<AnimationSet> animationSet, std::string setName)
 	{
 		this->animationSet = animationSet;
+		this->currentAnimationSetName = setName;
 
 		if (currentAnimationName != "")
 		{
@@ -36,8 +38,7 @@ namespace MT
 	void Animated::setAnimationSet(std::string animationSetName)
 	{
 		std::shared_ptr<AnimationSet> animationSet = modules->animation->getAnimationSet(animationSetName);
-		this->currentAnimationSetName = animationSetName;
-		setAnimationSet(animationSet);
+		setAnimationSet(animationSet, animationSetName);
 	}
 
 	void Animated::play(std::string animationName)

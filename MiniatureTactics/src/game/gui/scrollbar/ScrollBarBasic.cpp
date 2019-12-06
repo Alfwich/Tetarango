@@ -30,7 +30,7 @@ namespace MTGame
 				};
 
 				{
-					auto anim = animationSet->startNewAnimation("default");
+					auto anim = animationSet->startNewAnimation("black");
 					anim->setFps(fps);
 					anim->addGeneralFrames(0, 0, frameSize.w, frameSize.h, 1);
 				}
@@ -56,7 +56,7 @@ namespace MTGame
 				};
 
 				{
-					auto anim = animationSet->startNewAnimation("default");
+					auto anim = animationSet->startNewAnimation("black");
 					anim->setFps(fps);
 					anim->addGeneralFrames(frameSize.x, frameSize.y, frameSize.w, frameSize.h, 1);
 				}
@@ -96,8 +96,16 @@ namespace MTGame
 	void ScrollBarBasic::setScrollPosition(double pos)
 	{
 		const auto value = MT::NumberHelper::clamp<double>(pos, 0.0, 1.0);
-		scroller->setY(-getHalfHeight() + (getScrollPosition() * getHeight()));
+		auto targetRect = scroller->getRect();
+		targetRect.y = -getHalfHeight() + (getScrollPosition() * getHeight());
+		scrollerTransition->startTransition(scroller, 50.0, targetRect);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
+
+		const auto notifyPtr = std::dynamic_pointer_cast<IGuiListener>(scrollListener.lock());
+		if (notifyPtr != nullptr)
+		{
+			notifyPtr->onScrollBarScroll(value);
+		}
 	}
 
 	double ScrollBarBasic::getScrollPosition()
@@ -113,16 +121,16 @@ namespace MTGame
 		background->setAnimationSet(scrollbarBasicBackgroundId);
 		background->setCornerSize(8);
 		add(background);
-		background->play("default");
+		background->play("black");
 
 		scroller = std::make_shared<MT::NineSlice>();
 		scroller->name = scrollbarBasicScrollerId;
 		scroller->setTexture(scrollbarBasicTextureId);
 		scroller->setAnimationSet(scrollbarBasicScrollerId);
-		scroller->setCornerSize(8);
+		scroller->setCornerSize(5);
 		scroller->zIndex = 1;
 		add(scroller);
-		scroller->play("default");
+		scroller->play("black");
 	}
 
 	void ScrollBarBasic::onChildrenHydrated()
@@ -133,6 +141,7 @@ namespace MTGame
 
 	void ScrollBarBasic::onInitialAttach()
 	{
+		scrollerTransition = modules->animation->createTransition();
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
 		enableEnterFrame();
 	}
@@ -154,9 +163,11 @@ namespace MTGame
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)
 	{
+		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == MT::RenderPositionMode::Unspecified ? background->getScreenRect() : background->getWorldRect();
+
 		isHovering =
-			x < worldRect.x + worldRect.w && x > worldRect.x &&
-			y < worldRect.y + worldRect.h && y > worldRect.y;
+			x < rect->x + rect->w && x > rect->x &&
+			y < rect->y + rect->h && y > rect->y;
 	}
 
 	void ScrollBarBasic::onMouseButton(MT::MouseButton button, bool pressed)
@@ -172,12 +183,13 @@ namespace MTGame
 		case MT::MouseButton::Left:
 			if (!pressed)
 			{
-
 				const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());
 				if (listenerPtr != nullptr && isPressed && isHovering)
 				{
 					listenerPtr->onButtonClicked(getId());
 				}
+
+				wasPressed = false;
 			}
 
 			isPressed = isHovering && pressed;
@@ -186,24 +198,25 @@ namespace MTGame
 
 	void ScrollBarBasic::onEnterFrame(double frameTime)
 	{
-		checkIsHovering(modules->input->mouse->X(), modules->input->mouse->Y());
+		const auto mouseY = modules->input->mouse->Y();
+		checkIsHovering(modules->input->mouse->X(), mouseY);
 
-		/*
-		if (isHovering)
+		if (isHovering || (isPressed && wasPressed))
 		{
 			if (isPressed)
 			{
-				play("pressed");
+				wasPressed = true;
+				setScrollPosition((mouseY - background->getScreenRect()->y - scroller->getHalfHeight()) / background->getScreenRect()->h);
 			}
-			else
-			{
-				play("hover");
-			}
+		}
+
+		if (isHovering || (isPressed && wasPressed))
+		{
+			scroller->setAlpha(1.0);
 		}
 		else
 		{
-			play("default");
+			scroller->setAlpha(0.75);
 		}
-		*/
 	}
 }

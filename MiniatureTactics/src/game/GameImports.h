@@ -49,3 +49,4 @@
 #include "gui/menu/GameMainMenu.h"
 #include "gui/transition/TransitionFade.h"
 #include "gui/scrollbar/ScrollBarBasic.h"
+#include "gui/scrollarea/ScrollArea.h"

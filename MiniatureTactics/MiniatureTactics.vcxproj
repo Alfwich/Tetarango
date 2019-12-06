@@ -166,6 +166,7 @@
     <ClCompile Include="src\core\ui\renderable\element\CachedImage.cpp" />
     <ClCompile Include="src\game\actor\board\Board.cpp" />
     <ClCompile Include="src\game\gui\button\CheckBoxBasic.cpp" />
+    <ClCompile Include="src\game\gui\scrollarea\ScrollArea.cpp" />
     <ClCompile Include="src\game\gui\scrollbar\ScrollBarBasic.cpp" />
     <ClCompile Include="src\game\prop\block\Block.cpp" />
     <ClCompile Include="src\game\prop\particles\block\BlockParticleFactory.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="src\core\ui\renderable\element\CachedImage.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
     <ClInclude Include="src\game\gui\button\CheckBoxBasic.h" />
+    <ClInclude Include="src\game\gui\scrollarea\ScrollArea.h" />
     <ClInclude Include="src\game\gui\scrollbar\ScrollBarBasic.h" />
     <ClInclude Include="src\game\prop\block\Block.h" />
     <ClInclude Include="src\game\prop\block\BlockAnimations.h" />

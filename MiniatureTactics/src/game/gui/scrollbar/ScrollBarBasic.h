@@ -12,9 +12,10 @@ namespace MTGame
 
 	class ScrollBarBasic : public BaseGui, public MT::Container
 	{
-		bool isHovering = false, isPressed = false;
+		bool isHovering = false, isPressed = false, wasPressed = false;
 		std::shared_ptr<MT::NineSlice> background;
 		std::shared_ptr<MT::NineSlice> scroller;
+		std::shared_ptr<MT::Transition> scrollerTransition;
 	public:
 		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
 		ScrollBarBasic();

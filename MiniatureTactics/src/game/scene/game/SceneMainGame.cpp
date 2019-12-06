@@ -86,7 +86,7 @@ namespace MTGame
 		gameMainMenu->name = mainMenuId;
 		gameMainMenu->zIndex = 18;
 		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		gameMainMenu->renderPositionModeStack = MT::RenderPositionMode::Absolute;
+		gameMainMenu->renderPositionMode = MT::RenderPositionMode::Absolute;
 		gameMainMenu->visible = false;
 		add(gameMainMenu);
 
@@ -97,7 +97,7 @@ namespace MTGame
 		globalTransition->zIndex = 20;
 		globalTransition->listener = std::dynamic_pointer_cast<INotifyOnFade>(shared_from_this());
 		globalTransition->setSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
-		globalTransition->renderPositionModeStack = MT::RenderPositionMode::Absolute;
+		globalTransition->renderPositionMode = MT::RenderPositionMode::Absolute;
 		add(globalTransition);
 
 		gameLabel = std::make_shared<MT::Text>();

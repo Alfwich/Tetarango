@@ -26,6 +26,7 @@ namespace MTGame
 		std::make_unique<GameMainMenu>();
 		std::make_unique<TransitionFade>();
 		std::make_unique<ScrollBarBasic>();
+		std::make_unique<ScrollArea>();
 	}
 
 	void BaseGui::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
@@ -65,4 +66,9 @@ namespace MTGame
 	BaseGui::BaseGui(GuiScrollBar scrollbar) :
 		guiBaseName(config.scrollbars.at(scrollbar)),
 		guiType(GuiType::ScrollBar) {}
+
+	BaseGui::BaseGui(GuiScrollArea scrollarea) :
+		guiBaseName(config.scrollareas.at(scrollarea)),
+		guiType(GuiType::ScrollArea) {}
+
 }

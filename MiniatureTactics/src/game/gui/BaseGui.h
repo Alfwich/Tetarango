@@ -17,7 +17,8 @@ namespace MTGame
 			Menu,
 			Transition,
 			Hud,
-			ScrollBar
+			ScrollBar,
+			ScrollArea
 		};
 
 	protected:
@@ -36,8 +37,11 @@ namespace MTGame
 		BaseGui(GuiTransition transition);
 		BaseGui(GuiHud hud);
 		BaseGui(GuiScrollBar scrollBar);
+		BaseGui(GuiScrollArea scrollArea);
 
 		std::weak_ptr<MT::ApplicationObject> clickListener;
+		std::weak_ptr<MT::ApplicationObject> scrollListener;
+		std::weak_ptr<MT::ApplicationObject> scrollConstituentListener;
 	};
 
 }

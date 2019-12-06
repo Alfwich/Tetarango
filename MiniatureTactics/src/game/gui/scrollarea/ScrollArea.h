@@ -1,0 +1,41 @@
+#pragma once
+
+#include <string>
+#include "gui/scrollbar/ScrollBarBasic.h"
+#include "ui/renderable/container/ScrollContainer.h"
+#include "ui/renderable/element/NineSlice.h"
+#include "ui/renderable/container/Container.h"
+#include "ui/renderable/element/Text.h"
+#include "gui/IGuiListener.h"
+#include "gui/BaseGui.h"
+
+namespace MTGame
+{
+
+	class ScrollArea: public BaseGui, public MT::Container, public IGuiListener
+	{
+		bool scrollResolutionsDownPressed = false, scrollResolutionsUpPressed = false;
+		std::shared_ptr<MT::ScrollContainer> container;
+		std::shared_ptr<ScrollBarBasic> scroller;
+	public:
+		ScrollArea();
+
+		void onCreateChildren();
+		void onChildrenHydrated();
+		void onInitialAttach();
+		void onLayoutChildren();
+		void onEnterFrame(double frameTime);
+
+		void add(std::shared_ptr<ApplicationObject> ao);
+		void remove(std::shared_ptr<ApplicationObject> ao);
+
+		void setEnabled(bool flag);
+
+		void setMouseWheenEnabled(bool flag);
+		void onMouseWheel(int x, int y);
+
+		void onScrollBarScroll(double position);
+	};
+}
+
+

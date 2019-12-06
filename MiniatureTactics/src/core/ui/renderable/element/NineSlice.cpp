@@ -232,6 +232,7 @@ namespace MT
 
 	void NineSlice::setAnimationSet(std::string animationSetName)
 	{
+		currentAnimationSetName = animationSetName;
 		setAnimationSet(modules->animation->getAnimationSet(animationSetName));
 	}
 
@@ -268,6 +269,8 @@ namespace MT
 		{
 			animationSet = modules->animation->getAnimationSet(currentAnimationSetName);
 		}
+
+		generateNineSliceAnimationSet();
 
 		return Container::doSerialize(hint);
 	}

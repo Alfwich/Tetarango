@@ -54,6 +54,20 @@ namespace MT
 		return active;
 	}
 
+	RenderPositionMode ApplicationObject::getFirstNonUnspecifiedRenderPositionMode()
+	{
+		if (renderPositionMode == RenderPositionMode::Unspecified)
+		{
+			const auto parentPtr = parent.lock();
+			if (parentPtr != nullptr)
+			{
+				return parentPtr->getFirstNonUnspecifiedRenderPositionMode();
+			}
+		}
+
+		return renderPositionMode;
+	}
+
 	bool ApplicationObject::isAttached()
 	{
 		const auto parentPtr = parent.lock();
@@ -367,7 +381,7 @@ namespace MT
 		zIndex = client->serializeInt("zIndex", zIndex);
 		enterFrameActivated = client->serializeBool("efA", enterFrameActivated);
 		enterFramePriority = client->serializeInt("efP", enterFramePriority);
-		renderPositionModeStack = (RenderPositionMode)client->serializeInt("RPM", (int)renderPositionModeStack);
+		renderPositionMode = (RenderPositionMode)client->serializeInt("RPM", (int)renderPositionMode);
 		hasCreatedChildren = client->serializeBool("hCC", hasCreatedChildren);
 
 		clipRect.x = client->serializeDouble("crX", clipRect.x);
