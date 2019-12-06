@@ -37,6 +37,7 @@ namespace MTGame
 
 		ButtonBasic::loadResources(modules);
 		CheckBoxBasic::loadResources(modules);
+		ScrollBarBasic::loadResources(modules);
 
 		isLoaded = true;
 	}

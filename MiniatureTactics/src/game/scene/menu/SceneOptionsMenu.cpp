@@ -2,7 +2,6 @@
 
 namespace
 {
-	const auto backButtonId = "back_button";
 }
 
 namespace MTGame
@@ -21,6 +20,8 @@ namespace MTGame
 		info = modules->screen->getAllSupportedDisplayModes();
 		config = modules->screen->getCurrentScreenConfig();
 		modules->input->mouse->registerMouseWheel(weak_from_this());
+
+		enableEnterFrame();
 	}
 
 	void SceneOptionsMenu::onDestroyChildren()
@@ -38,7 +39,6 @@ namespace MTGame
 
 		backButton = std::make_shared<ButtonBasic>();
 		backButton->setText("Back");
-		backButton->name = backButtonId;
 		backButton->clickListener = weak_from_this();
 		backButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
 		add(backButton);
@@ -79,6 +79,12 @@ namespace MTGame
 		}
 
 		scrollContainer->centerAlignSelf(5.0, 0.0);
+
+		scrollContainerScrollBar = std::make_shared<ScrollBarBasic>();
+		scrollContainerScrollBar->setPosition(800.0, 800.0);
+		scrollContainerScrollBar->setHeight(600.0);
+		scrollContainerScrollBar->setWidth(30.0);
+		add(scrollContainerScrollBar);
 
 		const auto checkboxYOffset = 10.0;
 		const auto checkboxYGroupOffset = 20.0;
@@ -151,7 +157,31 @@ namespace MTGame
 		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
 		wireframeModeCheckbox->clickListener = weak_from_this();
 		add(wireframeModeCheckbox);
+	}
 
+	void SceneOptionsMenu::onEnterFrame(double frameTime)
+	{
+		const auto ptr = findChildWithName<ScrollBarBasic>("");
+		if (ptr)
+		{
+			if (testState)
+			{
+				ptr->setScrollPosition(ptr->getScrollPosition() + 0.025 * (frameTime / 1000.0));
+			}
+			else
+			{
+				ptr->setScrollPosition(ptr->getScrollPosition() - 0.025 * (frameTime / 1000.0));
+			}
+
+			if (ptr->getScrollPosition() == 1.0 && testState)
+			{
+				testState = false;
+			}
+			else if (ptr->getScrollPosition() == 0.0 && !testState)
+			{
+				testState = true;
+			}
+		}
 	}
 
 	void SceneOptionsMenu::onButtonClicked(int id)

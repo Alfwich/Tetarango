@@ -237,10 +237,8 @@ namespace MT
 
 	void NineSlice::setAnimationSet(std::shared_ptr<AnimationSet> animationSet)
 	{
-		if (animationSet != nullptr)
-		{
-			this->animationSet = animationSet;
-		}
+		this->animationSet = animationSet;
+		generateNineSliceAnimationSet();
 	}
 
 	void NineSlice::setTexture(std::shared_ptr<Texture> texture)
