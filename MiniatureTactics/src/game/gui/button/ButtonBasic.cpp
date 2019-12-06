@@ -28,7 +28,6 @@ namespace MTGame
 			};
 
 			{
-
 				auto anim = animationSet->startNewAnimation("default");
 				anim->setFps(fps);
 				anim->addGeneralFrames(0, 0, frameSize.w, frameSize.h, 1);
@@ -51,7 +50,7 @@ namespace MTGame
 
 	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{
-		setSize(180.0, 80.0);
+		setSize(180, 80);
 
 		enableSerialization<ButtonBasic>();
 	}

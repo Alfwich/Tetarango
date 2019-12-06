@@ -715,10 +715,10 @@ namespace MT
 	{
 		const auto clipRect = ao->getClipRect();
 
-		const auto cW = clipRect.w / 2.0;
-		const auto cH = clipRect.h / 2.0;
-		const auto cX = computed->x + clipRect.x + computed->w / 2.0;
-		const auto cY = computed->y + clipRect.y + computed->h / 2.0;
+		const auto cW = clipRect->w / 2.0;
+		const auto cH = clipRect->h / 2.0;
+		const auto cX = computed->x + clipRect->x + computed->w / 2.0;
+		const auto cY = computed->y + clipRect->y + computed->h / 2.0;
 
 		mat4x4_identity(m);
 

@@ -168,16 +168,20 @@ namespace MT
 		return hasClipRect;
 	}
 
-	Rect ApplicationObject::getClipRect()
+	const Rect* ApplicationObject::getClipRect()
 	{
-		return Rect(clipRect);
+		return &clipRect;
+	}
+
+	void ApplicationObject::setClipRect(const Rect* rect)
+	{
+		clipRect = *rect;
+		hasClipRect = (clipRect.x > 0.0 || clipRect.y > 0.0 || clipRect.w > 0.0 || clipRect.h > 0.0);
 	}
 
 	void ApplicationObject::setClipRect(const Rect& rect)
 	{
-		clipRect = rect;
-
-		hasClipRect = (clipRect.x > 0.0 || clipRect.y > 0.0 || clipRect.w > 0.0 || clipRect.h > 0.0);
+		setClipRect(&rect);
 	}
 
 	void ApplicationObject::setWorldRect(Rect* r)
@@ -242,6 +246,15 @@ namespace MT
 
 	void ApplicationObject::attach()
 	{
+		const auto parentPtr = parent.lock();
+		if (parentPtr == nullptr)
+		{
+			return;
+		}
+
+		currentActive = active && parentPtr->currentActive;
+		inputEnabled = parentPtr->inputEnabled;
+
 		if (!loaded || rebuildOnLoad) {
 
 			if (!didInitialAttach)
@@ -294,21 +307,13 @@ namespace MT
 			modules->event->registerOnEnterFrame(shared_from_this(), enterFramePriority);
 		}
 
-		auto parentPointer = parent.lock();
-		if (parentPointer == nullptr)
-		{
-			return;
-		}
-
-		currentActive = active && parentPointer->currentActive;
-		inputEnabled = parentPointer->inputEnabled;
 		commandChildren([](std::shared_ptr<ApplicationObject> ao) { ao->attach(); });
 		onAttach();
 	}
 
 	void ApplicationObject::layout()
 	{
-		if (hasCreatedChildren && hasHydratedChildren) 
+		if (hasCreatedChildren && hasHydratedChildren)
 		{
 			onLayoutChildren();
 		}

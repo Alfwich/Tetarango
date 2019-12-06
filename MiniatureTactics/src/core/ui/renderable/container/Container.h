@@ -13,6 +13,7 @@ namespace MT
 
 		void setExpandToChildren(bool flag);
 		void setSizeToScreenSize();
+
 		virtual void onDestroyChildren();
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void add(std::shared_ptr<ApplicationObject> obj);

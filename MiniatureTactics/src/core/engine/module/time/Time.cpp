@@ -62,7 +62,7 @@ namespace MT
 
 	double Time::getComputedTimeFactor(TimeScope compositeScopeName)
 	{
-		return getTimeFactorForScope(compositeScopeName)* getGlobalTimeFactor();
+		return getTimeFactorForScope(compositeScopeName) * getGlobalTimeFactor();
 	}
 
 	bool Time::hasTimeScope(TimeScope scopeName)

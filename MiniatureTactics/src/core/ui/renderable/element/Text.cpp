@@ -162,7 +162,7 @@ namespace MT
 
 		if (getHasClipRect())
 		{
-			auto clipRect = getClipRect();
+			auto clipRect = Rect(*getClipRect());
 			clipRect.x += (textPositioningElement->getWidth() - getWidth()) / 2.0 + getHalfWidth();
 			clipRect.y += (textPositioningElement->getHeight() - getHeight()) / 2.0 + getHalfHeight();
 			textPositioningElement->setClipRect(clipRect);

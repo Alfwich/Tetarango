@@ -20,14 +20,10 @@ namespace MT
 
 	void Container::onDestroyChildren()
 	{
-		ApplicationObject::onDestroyChildren();
-
-		if (!serializationClient->getBool("eXtc"))
+		if (serializationClient->getBool("eXtc"))
 		{
-			return;
+			setSize(0, 0);
 		}
-
-		setSize(0, 0);
 	}
 
 	std::shared_ptr<SerializationClient> Container::doSerialize(SerializationHint hint)

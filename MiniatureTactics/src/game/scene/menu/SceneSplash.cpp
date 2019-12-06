@@ -55,7 +55,7 @@ namespace MTGame
 	{
 		if (state == 0)
 		{
-			auto cRect = splashText->getClipRect();
+			auto cRect = MT::Rect(splashText->getClipRect());
 			if (cRect.w < getScreenWidth())
 			{
 				cRect.w += 400.0 * (frameTime / 1000.0);
@@ -71,7 +71,7 @@ namespace MTGame
 
 		if (state == 1)
 		{
-			auto cRect = splashText->getClipRect();
+			auto cRect = MT::Rect(splashText->getClipRect());
 			if (cRect.h > 0.0)
 			{
 				cRect.h -= 200.0 * (frameTime / 1000.0);

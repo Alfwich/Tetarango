@@ -50,8 +50,9 @@ namespace MT
 		static int getNextId();
 
 		bool getHasClipRect();
-		virtual Rect getClipRect();
+		virtual const Rect* getClipRect();
 		virtual void setClipRect(const Rect& rect);
+		virtual void setClipRect(const Rect* rect);
 
 		virtual void setWorldRect(Rect* r);
 		virtual void updateScreenRect(const RenderPackage* renderPackage);

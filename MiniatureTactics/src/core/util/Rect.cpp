@@ -3,18 +3,6 @@
 namespace MT
 {
 
-	Rect::Rect()
-	{
-	}
-
-	Rect::Rect(double x, double y, double w, double h)
-	{
-		this->x = x;
-		this->y = y;
-		this->w = w;
-		this->h = h;
-	}
-
 	SDL_Rect Rect::asSdlRect()
 	{
 		return SDL_Rect{
