@@ -23,6 +23,7 @@ namespace MTGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 		void onInitialAttach();
+		void onAttach();
 		void onLayoutChildren();
 		void onEnterFrame(double frameTime);
 
@@ -30,6 +31,24 @@ namespace MTGame
 		void remove(std::shared_ptr<ApplicationObject> ao);
 
 		void setEnabled(bool flag);
+
+		void setScrollerEnabled(bool enabled);
+		bool getScrollerEnabled();
+
+		void setScrollerVisible(bool visible);
+		bool getScrollerVisible();
+
+		void setScrollerXOffset(double offset);
+		double getScrollerXOffset();
+
+		void setScrollerYOffset(double offset);
+		double getScrollerYOffset();
+
+		void setScrollerHeight(double height);
+		double getScrollerHeight();
+
+		void setScrollerWidth(double width);
+		double getScollerWidth();
 
 		void setMouseWheenEnabled(bool flag);
 		void onMouseWheel(int x, int y);

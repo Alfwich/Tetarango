@@ -183,25 +183,25 @@ namespace MTGame
 
 	void SceneSavedGamesMenu::disableButtons()
 	{
-		saveSlot1->inputEnabled = false;
-		saveSlot2->inputEnabled = false;
-		saveSlot3->inputEnabled = false;
+		saveSlot1->disableInput();
+		saveSlot2->disableInput();
+		saveSlot3->disableInput();
 		if (testSceneButton != nullptr)
 		{
-			testSceneButton->inputEnabled = false;
-			testSpaceSceneButton->inputEnabled = false;
+			testSceneButton->disableInput();
+			testSpaceSceneButton->disableInput();
 		}
 	}
 
 	void SceneSavedGamesMenu::enableButtons()
 	{
-		saveSlot1->inputEnabled = true;
-		saveSlot2->inputEnabled = true;
-		saveSlot3->inputEnabled = true;
+		saveSlot1->enableInput();
+		saveSlot2->enableInput();
+		saveSlot3->enableInput();
 		if (testSceneButton != nullptr)
 		{
-			testSceneButton->inputEnabled = true;
-			testSpaceSceneButton->inputEnabled = true;
+			testSceneButton->enableInput();
+			testSpaceSceneButton->enableInput();
 		}
 	}
 

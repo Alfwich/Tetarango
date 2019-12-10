@@ -5,7 +5,7 @@ namespace MT
 	DisplayRoot::DisplayRoot()
 	{
 		activate();
-		inputEnabled = true;
+		enableInput();
 		setTag(AOTags::IsRootElement, true);
 		timeScope = TimeScope::Global;
 	}

@@ -210,7 +210,7 @@ namespace MTGame
 			}
 		}
 
-		if (isHovering || (isPressed && wasPressed))
+		if (isHovering || (isPressed && wasPressed) || !getInputEnabled())
 		{
 			scroller->setAlpha(1.0);
 		}

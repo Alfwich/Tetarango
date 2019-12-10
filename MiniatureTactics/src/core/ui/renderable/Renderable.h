@@ -72,6 +72,10 @@ namespace MT
 		virtual double getAlpha();
 		virtual void setAlpha(double newAlpha);
 
+		virtual void onTransitionStart() { /* NO-OP */ };
+		virtual void onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId);
+		virtual void onTransitionEnd() { /* NO-OP */ };
+
 		void setPosition(double x, double y);
 		void movePosition(double xDelta, double yDelta);
 		void setSize(double width, double height);

@@ -267,7 +267,7 @@ namespace MT
 		}
 
 		currentActive = active && parentPtr->currentActive;
-		inputEnabled = parentPtr->inputEnabled;
+		setInputEnabled(parentPtr->getInputEnabled());
 
 		if (!loaded || rebuildOnLoad) {
 
@@ -336,7 +336,7 @@ namespace MT
 	void ApplicationObject::detach()
 	{
 		currentActive = false;
-		inputEnabled = false;
+		disableInput();
 
 		modules->collision->unregisterObject(shared_from_this());
 		modules->event->unregisterOnEnterFrame(shared_from_this());

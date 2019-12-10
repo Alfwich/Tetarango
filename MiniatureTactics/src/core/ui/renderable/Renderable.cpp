@@ -123,6 +123,12 @@ namespace MT
 		alpha = newAlpha;
 	}
 
+	void Renderable::onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId)
+	{
+		setSizeAndPosition(targetRect);
+		setAlpha(targetAlpha);
+	}
+
 	void Renderable::setPosition(double x, double y)
 	{
 		setX(x);

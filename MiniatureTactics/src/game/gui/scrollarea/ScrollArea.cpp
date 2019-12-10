@@ -6,17 +6,15 @@ namespace
 	const auto containerId = "scroll-area-container";
 	const auto scrollerId = "scroll-area-scroller";
 
-	const auto enabledParamName = "scrollbar-basic-is-enabled";
+	const auto enabledParamName = "sb-i-e";
+	const auto scrollContainerMouseWheelEnabledParamName = "sc-mw-e";
 
-	const auto scrollContainerName = "scroll-container";
-	const auto scrollAmountParamName = "scroll-container-amount";
-	const auto scrollAmountMinParamName = "scroll-container-amount-min";
-	const auto scrollAmountMaxParamName = "scroll-container-amount-max";
-	const auto scrollAmountContainerMinParamName = "scroll-container-amount-min";
-	const auto scrollAmountContainerMaxParamName = "scroll-container-amount-max";
-	const auto scrollAmountInPixelsParamName = "scroll-container-amount-in-pixels";
-	const auto scrollContainerMouseWheelEnabledParamName = "scroll-container-mouse-wheel-enabled";
-	const auto scrollSpeedInMsParamName = "scroll-container-speed-ms";
+	const auto scrollerEnabledParam = "sa-s-i-e";
+	const auto scrollerVisibleParam = "sa-s-i-v";
+	const auto scrollerWidthParam = "sa-sw";
+	const auto scrollerHeightParam = "sa-sh";
+	const auto scrollerXOffsetParam = "sa-x-o";
+	const auto scrollerYOffsetParam = "sa-y-o";
 }
 
 namespace MTGame
@@ -40,8 +38,9 @@ namespace MTGame
 		scroller = std::make_shared<ScrollBarBasic>();
 		scroller->name = scrollerId;
 		scroller->scrollListener = weak_from_this();
-		scroller->setSize(15.0, 400.0);
+		scroller->setSize(getScollerWidth(), getScrollerHeight());
 		scroller->zIndex = 1;
+		scroller->visible = getScrollerVisible();
 		add(scroller);
 	}
 
@@ -57,15 +56,24 @@ namespace MTGame
 		enableEnterFrame(-1);
 	}
 
+	void ScrollArea::onAttach()
+	{
+		Container::onAttach();
+		scroller->setInputEnabled(getScrollerEnabled());
+	}
+
 	void ScrollArea::onLayoutChildren()
 	{
 		container->centerAlignSelf();
-		scroller->toRightOf(container, scroller->getHalfWidth() + 2, -container->getHalfHeight() + scroller->getHeight() + (scroller->getScrollerHeight() / 2.0));
+		scroller->toRightOf(container, scroller->getHalfWidth() + getScrollerXOffset(), -container->getHalfHeight() + scroller->getHeight() + (scroller->getScrollerHeight() / 2.0) + getScrollerYOffset());
 	}
 
 	void ScrollArea::onEnterFrame(double frameTime)
 	{
-		scroller->setScrollPosition(container->getScrollPosition());
+		if (scroller->visible)
+		{
+			scroller->setScrollPosition(container->getScrollPosition());
+		}
 	}
 
 	void ScrollArea::add(std::shared_ptr<ApplicationObject> ao)
@@ -102,9 +110,9 @@ namespace MTGame
 			return;
 		}
 
-		const auto containerMin = serializationClient->getDouble(scrollAmountContainerMinParamName, 0.0);
-		const auto containerMax = serializationClient->getDouble(scrollAmountContainerMaxParamName, modules->screen->getHeight());
-		const auto scrollAmount = serializationClient->getInt(scrollAmountInPixelsParamName, 50);
+		const auto containerMin = 0.0;
+		const auto containerMax = modules->screen->getHeight();
+		const auto scrollAmount = 50;
 		if (y < 0)
 		{
 			bool allowScroll = false;
@@ -147,6 +155,93 @@ namespace MTGame
 	void ScrollArea::onScrollBarScroll(double position)
 	{
 		container->setScrollPosition(position);
+	}
+
+	void ScrollArea::setScrollerEnabled(bool enabled)
+	{
+		serializationClient->setBool(scrollerEnabledParam, enabled);
+		if (scroller != nullptr)
+		{
+			scroller->setInputEnabled(enabled);
+		}
+	}
+
+	bool ScrollArea::getScrollerEnabled()
+	{
+		return serializationClient->getBool(scrollerEnabledParam, true);
+	}
+
+	void ScrollArea::setScrollerVisible(bool visible)
+	{
+		serializationClient->setBool(scrollerVisibleParam, visible);
+		if (scroller != nullptr)
+		{
+			scroller->visible = visible;
+		}
+	}
+
+	bool ScrollArea::getScrollerVisible()
+	{
+		return serializationClient->getBool(scrollerVisibleParam, true);
+	}
+
+	void ScrollArea::setScrollerXOffset(double offset)
+	{
+		serializationClient->setDouble(scrollerXOffsetParam, offset);
+		if (scroller != nullptr)
+		{
+			layout();
+		}
+	}
+
+	double ScrollArea::getScrollerXOffset()
+	{
+		return serializationClient->getDouble(scrollerXOffsetParam, 2.0);
+	}
+
+	void ScrollArea::setScrollerYOffset(double offset)
+	{
+		serializationClient->setDouble(scrollerYOffsetParam, offset);
+		if (scroller != nullptr)
+		{
+			layout();
+		}
+	}
+
+	double ScrollArea::getScrollerYOffset()
+	{
+		return serializationClient->getDouble(scrollerYOffsetParam, 0.0);
+	}
+
+	void ScrollArea::setScrollerHeight(double height)
+	{
+		serializationClient->setDouble(scrollerHeightParam, height);
+
+		if (scroller != nullptr)
+		{
+			scroller->setSize(getScollerWidth(), getScrollerHeight());
+			layout();
+		}
+	}
+
+	double ScrollArea::getScrollerHeight()
+	{
+		return serializationClient->getDouble(scrollerHeightParam, 400.0);
+	}
+
+	void ScrollArea::setScrollerWidth(double width)
+	{
+		serializationClient->setDouble(scrollerWidthParam, width);
+		if (scroller != nullptr)
+		{
+			scroller->setSize(getScollerWidth(), getScrollerHeight());
+			layout();
+		}
+	}
+
+	double ScrollArea::getScollerWidth()
+	{
+		return serializationClient->getDouble(scrollerHeightParam, 15);
 	}
 
 	void ScrollArea::setMouseWheenEnabled(bool flag)

@@ -43,6 +43,7 @@ namespace MTGame
 		add(backButton);
 
 		scrollArea = std::make_shared<ScrollArea>();
+		scrollArea->setScrollerEnabled(false);
 		add(scrollArea);
 
 		resolutionButtons.clear();

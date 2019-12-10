@@ -13,8 +13,13 @@ namespace MT
 	};
 
 	class IInputListener {
-	public:
 		bool inputEnabled = false;
+	public:
+		virtual void enableInput() { inputEnabled = true; }
+		virtual void disableInput() { inputEnabled = false; }
+		virtual void setInputEnabled(bool enabled) { enabled ? enableInput() : disableInput(); }
+		bool getInputEnabled() { return inputEnabled; }
+
 		virtual int inputListenerObjectId() { return 0; };
 		virtual void onKey(SDL_Scancode code, bool pressed) { /* NO-OP */ };
 		virtual void onKeyPressed(SDL_Scancode code) { /* NO-OP */ };

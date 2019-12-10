@@ -53,6 +53,7 @@ namespace MT
 		paused = false;
 		playing = true;
 		enterFrameActivated = true;
+		target->onTransitionStart();
 	}
 
 	void Transition::resume()
@@ -113,8 +114,7 @@ namespace MT
 
 			if (position >= duration)
 			{
-				target->setSizeAndPosition(endRect);
-				target->setAlpha(endAlpha);
+				target->onTransitionFrame(1.0, endRect, endAlpha, id);
 
 				if (looping)
 				{
@@ -128,6 +128,7 @@ namespace MT
 				}
 				else
 				{
+					target->onTransitionEnd();
 					stop();
 				}
 
@@ -141,17 +142,9 @@ namespace MT
 			{
 				auto pos = position / duration;
 
-				if (!(startRect == endRect))
-				{
-					auto intermediaryRect = Rect(startRect * (1.0 - pos) + (endRect * pos));
-					target->setSizeAndPosition(intermediaryRect);
-				}
-
-				if (startAlpha != endAlpha)
-				{
-					auto intermediaryAlpha = startAlpha * (1.0 - pos) + endAlpha * pos;
-					target->setAlpha(intermediaryAlpha);
-				}
+				auto intermediaryRect = Rect(startRect * (1.0 - pos) + (endRect * pos));
+				auto intermediaryAlpha = startAlpha * (1.0 - pos) + endAlpha * pos;
+				target->onTransitionFrame(pos, intermediaryRect, intermediaryAlpha, id);
 			}
 		}
 	}
