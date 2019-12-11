@@ -122,31 +122,32 @@ namespace MT
 		onTimeScopeChanged();
 	}
 
-	void ApplicationObject::add(std::shared_ptr<ApplicationObject> element)
+	void ApplicationObject::add(std::shared_ptr<ApplicationObject> ao)
 	{
-		if (element == nullptr)
+		if (ao == nullptr)
 		{
 			return;
 		}
 
-		element->parent = shared_from_this();
-		children.push_back(element);
-		element->attach();
+		ao->parent = shared_from_this();
+		children.push_back(ao);
+
+		ao->attach();
 	}
 
-	void ApplicationObject::remove(std::shared_ptr<ApplicationObject> element)
+	void ApplicationObject::remove(std::shared_ptr<ApplicationObject> ao)
 	{
-		if (element == nullptr)
+		if (ao == nullptr)
 		{
 			return;
 		}
 
-		auto eleItr = std::find(children.begin(), children.end(), element);
+		auto eleItr = std::find(children.begin(), children.end(), ao);
 		if (eleItr != children.end())
 		{
 			children.erase(eleItr);
-			element->detach();
-			element->parent = std::weak_ptr<ApplicationObject>();
+			ao->detach();
+			ao->parent = std::weak_ptr<ApplicationObject>();
 		}
 	}
 
@@ -266,8 +267,8 @@ namespace MT
 			return;
 		}
 
-		currentActive = active && parentPtr->currentActive;
-		setInputEnabled(parentPtr->getInputEnabled());
+		currentActive = parentPtr->active && currentActive;
+		matchParentInputState(parentPtr->getInputEnabled());
 
 		if (!loaded || rebuildOnLoad) {
 
@@ -336,7 +337,7 @@ namespace MT
 	void ApplicationObject::detach()
 	{
 		currentActive = false;
-		disableInput();
+		resetToDefaultInputState();
 
 		modules->collision->unregisterObject(shared_from_this());
 		modules->event->unregisterOnEnterFrame(shared_from_this());
@@ -381,8 +382,9 @@ namespace MT
 		zIndex = client->serializeInt("zIndex", zIndex);
 		enterFrameActivated = client->serializeBool("efA", enterFrameActivated);
 		enterFramePriority = client->serializeInt("efP", enterFramePriority);
-		renderPositionMode = (RenderPositionMode)client->serializeInt("RPM", (int)renderPositionMode);
+		renderPositionMode = (RenderPositionMode)client->serializeInt("r-pm", (int)renderPositionMode);
 		hasCreatedChildren = client->serializeBool("hCC", hasCreatedChildren);
+		setInputMode((InputMode)client->serializeInt("in-m", (int)getInputMode()));
 
 		clipRect.x = client->serializeDouble("crX", clipRect.x);
 		clipRect.y = client->serializeDouble("crY", clipRect.y);

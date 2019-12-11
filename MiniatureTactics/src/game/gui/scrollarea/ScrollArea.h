@@ -23,7 +23,6 @@ namespace MTGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 		void onInitialAttach();
-		void onAttach();
 		void onLayoutChildren();
 		void onEnterFrame(double frameTime);
 

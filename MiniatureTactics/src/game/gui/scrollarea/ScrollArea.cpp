@@ -41,6 +41,7 @@ namespace MTGame
 		scroller->setSize(getScollerWidth(), getScrollerHeight());
 		scroller->zIndex = 1;
 		scroller->visible = getScrollerVisible();
+		scroller->setInputEnabled(getScrollerEnabled());
 		add(scroller);
 	}
 
@@ -54,12 +55,6 @@ namespace MTGame
 	{
 		modules->input->mouse->registerMouseWheel(weak_from_this());
 		enableEnterFrame(-1);
-	}
-
-	void ScrollArea::onAttach()
-	{
-		Container::onAttach();
-		scroller->setInputEnabled(getScrollerEnabled());
 	}
 
 	void ScrollArea::onLayoutChildren()

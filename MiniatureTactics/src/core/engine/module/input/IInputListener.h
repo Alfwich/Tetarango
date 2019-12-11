@@ -5,6 +5,12 @@
 
 namespace MT
 {
+	enum class InputMode {
+		Unspecified,
+		Enabled,
+		ParentEnabled,
+		Disabled
+	};
 
 	enum class MouseButton {
 		Left,
@@ -13,12 +19,21 @@ namespace MT
 	};
 
 	class IInputListener {
-		bool inputEnabled = false;
+		InputMode inputMode = InputMode::Unspecified;
+
 	public:
-		virtual void enableInput() { inputEnabled = true; }
-		virtual void disableInput() { inputEnabled = false; }
+		virtual void enableInput() { inputMode = InputMode::Enabled; }
+		virtual void disableInput() { inputMode = InputMode::Disabled; }
 		virtual void setInputEnabled(bool enabled) { enabled ? enableInput() : disableInput(); }
-		bool getInputEnabled() { return inputEnabled; }
+		virtual InputMode getInputMode() { return inputMode; }
+		virtual void setInputMode(InputMode mode) { inputMode = mode; }
+		virtual void matchParentInputState(bool parentInputEnabled) 
+		{  
+			if (parentInputEnabled && inputMode != InputMode::Disabled) inputMode = InputMode::ParentEnabled;
+		}
+		virtual void resetToDefaultInputState() { if (inputMode != InputMode::Disabled) inputMode = InputMode::Unspecified; }
+
+		bool getInputEnabled() { return inputMode == InputMode::Enabled || inputMode == InputMode::ParentEnabled; }
 
 		virtual int inputListenerObjectId() { return 0; };
 		virtual void onKey(SDL_Scancode code, bool pressed) { /* NO-OP */ };
@@ -43,7 +58,7 @@ namespace MT
 
 		void key(SDL_Scancode code, bool pressed)
 		{
-			if (!this->inputEnabled) return;
+			if (!getInputEnabled()) return;
 
 			this->onKey(code, pressed);
 			if (pressed) this->onKeyPressed(code); else this->onKeyReleased(code);
@@ -51,7 +66,7 @@ namespace MT
 
 		void mouseButton(MouseButton button, bool pressed)
 		{
-			if (!this->inputEnabled) return;
+			if (!getInputEnabled()) return;
 
 			this->onMouseButton(button, pressed);
 			switch (button)
@@ -71,23 +86,27 @@ namespace MT
 		}
 
 		virtual void mouseMove(int x, int y) {
-			if (this->inputEnabled) this->onMouseMove(x, y);
+			if (!getInputEnabled()) return;
+
+			this->onMouseMove(x, y);
 		};
 
 		virtual void mouseWheel(int x, int y) {
-			if (this->inputEnabled) this->onMouseWheel(x, y);
+			if (!getInputEnabled()) return;
+			
+			this->onMouseWheel(x, y);
 		};
 
 		void gamepadAxis(int gamepadIndex, GamepadAxisMapping axis, double value)
 		{
-			if (!this->inputEnabled) return;
+			if (!getInputEnabled()) return;
 
 			this->onGamepadAxisChanged(gamepadIndex, axis, value);
 		}
 
 		void gamepadButton(int gamepadIndex, GamepadButtonMapping button, bool pressed)
 		{
-			if (!this->inputEnabled) return;
+			if (!getInputEnabled()) return;
 
 			this->onGamepadButton(gamepadIndex, button, pressed);
 			if (pressed) this->onGamepadButtonDown(gamepadIndex, button); else this->onGamepadButtonUp(gamepadIndex, button);
