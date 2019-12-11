@@ -49,6 +49,7 @@ namespace MTGame
 	{
 		container = findChildWithName<MT::ScrollContainer>(containerId);
 		scroller = findChildWithName<ScrollBarBasic>(scrollerId);
+		scroller->scrollListener = weak_from_this();
 	}
 
 	void ScrollArea::onInitialAttach()

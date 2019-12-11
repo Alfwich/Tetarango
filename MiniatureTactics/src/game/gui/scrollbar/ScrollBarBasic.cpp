@@ -75,6 +75,7 @@ namespace MTGame
 
 	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
 	{
+		rebuildOnLoad = true;
 		enableSerialization<ScrollBarBasic>();
 	}
 

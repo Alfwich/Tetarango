@@ -1,5 +1,10 @@
 #include "Container.h"
 
+namespace
+{
+	const auto expandToChildrenParamName = "eXtc";
+}
+
 namespace MT
 {
 	Container::Container()
@@ -10,7 +15,7 @@ namespace MT
 
 	void Container::setExpandToChildren(bool flag)
 	{
-		serializationClient->setBool("eXtc", flag);
+		serializationClient->setBool(expandToChildrenParamName, flag);
 	}
 
 	void Container::setSizeToScreenSize()
@@ -20,7 +25,7 @@ namespace MT
 
 	void Container::onDestroyChildren()
 	{
-		if (serializationClient->getBool("eXtc"))
+		if (serializationClient->getBool(expandToChildrenParamName))
 		{
 			setSize(0, 0);
 		}
@@ -38,7 +43,7 @@ namespace MT
 	{
 		ApplicationObject::add(obj);
 
-		if (!serializationClient->getBool("eXtc"))
+		if (!serializationClient->getBool(expandToChildrenParamName))
 		{
 			return;
 		}
