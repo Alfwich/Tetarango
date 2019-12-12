@@ -75,7 +75,6 @@ namespace MTGame
 
 	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
 	{
-		rebuildOnLoad = true;
 		enableSerialization<ScrollBarBasic>();
 	}
 
@@ -155,7 +154,6 @@ namespace MTGame
 
 	void ScrollBarBasic::onLayoutChildren()
 	{
-		background->centerAlignSelf();
 		background->matchSize(this, 0.0, getScrollerHeight());
 		scroller->setY(-getHalfHeight() + (getScrollPosition() * getHeight()));
 		scroller->setHeight(getScrollerHeight());

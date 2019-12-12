@@ -17,6 +17,8 @@ namespace MTGame
 		MT::ScreenConfig config;
 		std::shared_ptr<MT::Text> optionsMenuTitle;
 		std::shared_ptr<ButtonBasic> backButton;
+		std::shared_ptr<ButtonBasic> applyButton;
+		std::shared_ptr<ButtonBasic> resetButton;
 		std::shared_ptr<CheckBoxBasic> windowedCheckbox;
 		std::shared_ptr<CheckBoxBasic> fullscreenCheckbox;
 		std::shared_ptr<CheckBoxBasic> fullscreenDesktopCheckbox;
@@ -30,10 +32,14 @@ namespace MTGame
 		std::shared_ptr<ScrollArea> scrollArea;
 		std::vector<std::shared_ptr<ButtonBasic>> resolutionButtons;
 
+		bool setMsaaMode(int samples);
+		bool setScreenMode(MT::ScreenModes mode);
+
 	public:
 		SceneOptionsMenu();
 
 		void onInitialAttach();
+		void onAttach();
 		void onDestroyChildren();
 		void onCreateChildren();
 

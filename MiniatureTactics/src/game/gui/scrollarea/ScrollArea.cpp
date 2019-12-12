@@ -237,7 +237,7 @@ namespace MTGame
 
 	double ScrollArea::getScollerWidth()
 	{
-		return serializationClient->getDouble(scrollerHeightParam, 15);
+		return serializationClient->getDouble(scrollerHeightParam, 15.0);
 	}
 
 	void ScrollArea::setMouseWheenEnabled(bool flag)

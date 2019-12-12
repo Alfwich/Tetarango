@@ -7,7 +7,6 @@ namespace
 
 namespace MTGame
 {
-
 	SceneOptionsMenu::SceneOptionsMenu() : BaseScene(SceneGame::OptionsMenu)
 	{
 		rebuildOnLoad = true;
@@ -19,8 +18,13 @@ namespace MTGame
 		BaseScene::onInitialAttach();
 
 		info = modules->screen->getAllSupportedDisplayModes();
-		config = modules->screen->getCurrentScreenConfig();
 		modules->input->mouse->registerMouseWheel(weak_from_this());
+	}
+
+	void SceneOptionsMenu::onAttach()
+	{
+		BaseScene::onAttach();
+		config = modules->screen->getCurrentScreenConfig();
 	}
 
 	void SceneOptionsMenu::onDestroyChildren()
@@ -36,10 +40,23 @@ namespace MTGame
 		optionsMenuTitle->setPosition(getScreenWidth() / 2.0, 50.0);
 		add(optionsMenuTitle);
 
+		applyButton = std::make_shared<ButtonBasic>();
+		applyButton->setText("Apply");
+		applyButton->clickListener = weak_from_this();
+		applyButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
+		applyButton->setEnabled(false);
+		add(applyButton);
+
+		resetButton = std::make_shared<ButtonBasic>();
+		resetButton->setText("Reset");
+		resetButton->clickListener = weak_from_this();
+		resetButton->toRightOf(applyButton, 5.0, 0.0);
+		add(resetButton);
+
 		backButton = std::make_shared<ButtonBasic>();
 		backButton->setText("Back");
 		backButton->clickListener = weak_from_this();
-		backButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
+		backButton->toLeftOf(applyButton, 5.0, 0.0);
 		add(backButton);
 
 		scrollArea = std::make_shared<ScrollArea>();
@@ -54,13 +71,10 @@ namespace MTGame
 			resolutionButton->setText(resolution);
 			if (config.mode == MT::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
-				resolutionButton->setColor(64, 64, 64);
 				resolutionButton->setEnabled(false);
 			}
-			else
-			{
-				resolutionButton->clickListener = weak_from_this();
-			}
+
+			resolutionButton->clickListener = weak_from_this();
 			resolutionButtons.push_back(resolutionButton);
 
 			if (prevResolutionButton != nullptr)
@@ -84,7 +98,6 @@ namespace MTGame
 		fullscreenCheckbox->setText("Fullscreen");
 		fullscreenCheckbox->toRightOf(scrollArea, 19.0, -scrollArea->getHalfHeight() + fullscreenCheckbox->getHalfHeight() + 5.0);
 		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
-		fullscreenCheckbox->setEnabled(config.mode == MT::ScreenModes::Fullscreen);
 		fullscreenCheckbox->clickListener = weak_from_this();
 		add(fullscreenCheckbox);
 
@@ -92,7 +105,6 @@ namespace MTGame
 		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
 		fullscreenDesktopCheckbox->toBottomOf(fullscreenCheckbox, 0.0, checkboxYOffset);
 		fullscreenDesktopCheckbox->setChecked(config.mode == MT::ScreenModes::FullscreenDesktop);
-		fullscreenDesktopCheckbox->setEnabled(config.mode == MT::ScreenModes::FullscreenDesktop);
 		fullscreenDesktopCheckbox->clickListener = weak_from_this();
 		add(fullscreenDesktopCheckbox);
 
@@ -100,7 +112,6 @@ namespace MTGame
 		windowedCheckbox->setText("Window");
 		windowedCheckbox->toBottomOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
 		windowedCheckbox->setChecked(config.mode == MT::ScreenModes::Windowed);
-		windowedCheckbox->setEnabled(config.mode == MT::ScreenModes::Windowed);
 		windowedCheckbox->clickListener = weak_from_this();
 		add(windowedCheckbox);
 
@@ -108,7 +119,6 @@ namespace MTGame
 		msaaOffCheckbox->setText("MSAA Off");
 		msaaOffCheckbox->toBottomOf(windowedCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		msaaOffCheckbox->setChecked(config.msaaSamples == 0);
-		msaaOffCheckbox->setEnabled(config.msaaSamples == 0);
 		msaaOffCheckbox->clickListener = weak_from_this();
 		add(msaaOffCheckbox);
 
@@ -116,7 +126,6 @@ namespace MTGame
 		msaa2xCheckbox->setText("MSAA 2x");
 		msaa2xCheckbox->toBottomOf(msaaOffCheckbox, 0.0, checkboxYOffset);
 		msaa2xCheckbox->setChecked(config.msaaSamples == 2);
-		msaa2xCheckbox->setEnabled(config.msaaSamples == 2);
 		msaa2xCheckbox->clickListener = weak_from_this();
 		add(msaa2xCheckbox);
 
@@ -124,7 +133,6 @@ namespace MTGame
 		msaa4xCheckbox->setText("MSAA 4x");
 		msaa4xCheckbox->toBottomOf(msaa2xCheckbox, 0.0, checkboxYOffset);
 		msaa4xCheckbox->setChecked(config.msaaSamples == 4);
-		msaa4xCheckbox->setEnabled(config.msaaSamples == 4);
 		msaa4xCheckbox->clickListener = weak_from_this();
 		add(msaa4xCheckbox);
 
@@ -132,7 +140,6 @@ namespace MTGame
 		msaa8xCheckbox->setText("MSAA 8x");
 		msaa8xCheckbox->toBottomOf(msaa4xCheckbox, 0.0, checkboxYOffset);
 		msaa8xCheckbox->setChecked(config.msaaSamples == 8);
-		msaa8xCheckbox->setEnabled(config.msaaSamples == 8);
 		msaa8xCheckbox->clickListener = weak_from_this();
 		add(msaa8xCheckbox);
 
@@ -159,80 +166,171 @@ namespace MTGame
 			return;
 		}
 
+		auto shouldEnableApply = false;
 		auto shouldNotifyApplication = false;
+		if (id == resetButton->getId())
+		{
+			config = MT::ScreenConfig();
+			shouldNotifyApplication = true;
+		}
+
+		if (id == applyButton->getId())
+		{
+			shouldNotifyApplication = true;
+		}
+
 		if (id == fullscreenCheckbox->getId())
 		{
-			config.mode = MT::ScreenModes::Fullscreen;
-			shouldNotifyApplication = true;
+			shouldEnableApply = setScreenMode(MT::ScreenModes::Fullscreen);
 		}
 
 		if (id == windowedCheckbox->getId())
 		{
-			config.mode = MT::ScreenModes::Windowed;
-			shouldNotifyApplication = true;
+			shouldEnableApply = setScreenMode(MT::ScreenModes::Windowed);
 		}
 
 		if (id == fullscreenDesktopCheckbox->getId())
 		{
-			config.mode = MT::ScreenModes::FullscreenDesktop;
-			shouldNotifyApplication = true;
+			shouldEnableApply = setScreenMode(MT::ScreenModes::FullscreenDesktop);
 		}
 
 		if (id == msaaOffCheckbox->getId())
 		{
-			config.msaaSamples = 0;
-			shouldNotifyApplication = true;
+			shouldEnableApply = setMsaaMode(0);
 		}
 
 		if (id == msaa2xCheckbox->getId())
 		{
-			config.msaaSamples = 2;
-			shouldNotifyApplication = true;
+			shouldEnableApply = setMsaaMode(2);
 		}
 
 		if (id == msaa4xCheckbox->getId())
 		{
-			config.msaaSamples = 4;
-			shouldNotifyApplication = true;
+			shouldEnableApply = setMsaaMode(4);
 		}
 
 		if (id == msaa8xCheckbox->getId())
 		{
-			config.msaaSamples = 8;
-			shouldNotifyApplication = true;
+			shouldEnableApply = setMsaaMode(8);
 		}
 
 		if (id == openGlCompatibilityModeCheckbox->getId())
 		{
 			config.openGLCompatibilityMode = !config.openGLCompatibilityMode;
-			shouldNotifyApplication = true;
+			openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
+			shouldEnableApply = true;
 		}
 
 		if (id == wireframeModeCheckbox->getId())
 		{
 			config.openGlWireframeMode = !config.openGlWireframeMode;
-			shouldNotifyApplication = true;
+			wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
+			shouldEnableApply = true;
 		}
 
 		for (const auto resolutionButton : resolutionButtons)
 		{
-			if (shouldNotifyApplication)
-			{
-				break;
-			}
-
 			if (resolutionButton->getId() == id)
 			{
 				auto newResolution = resolutionButton->getText();
 				config.width = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
 				config.height = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 1);
-				shouldNotifyApplication = true;
+				shouldEnableApply = true;
 			}
+		}
+
+		for (const auto resolutionButton : resolutionButtons)
+		{
+			if (config.mode == MT::ScreenModes::FullscreenDesktop || (resolutionButton->getText() == std::to_string(config.width) + "x" + std::to_string(config.height)))
+			{
+				resolutionButton->setEnabled(false);
+			}
+			else
+			{
+				resolutionButton->setEnabled(true);
+			}
+		}
+
+		if (shouldEnableApply)
+		{
+			applyButton->setEnabled(true);
 		}
 
 		if (shouldNotifyApplication)
 		{
 			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
+			applyButton->setEnabled(false);
 		}
 	}
+
+	bool SceneOptionsMenu::setMsaaMode(int samples)
+	{
+		if (config.msaaSamples == samples)
+		{
+			return false;
+		}
+
+		msaaOffCheckbox->setChecked(false);
+		msaa2xCheckbox->setChecked(false);
+		msaa4xCheckbox->setChecked(false);
+		msaa8xCheckbox->setChecked(false);
+
+		switch (samples)
+		{
+		case 2:
+			msaa2xCheckbox->setChecked(true);
+			break;
+
+		case 4:
+			msaa4xCheckbox->setChecked(true);
+			break;
+
+		case 8:
+			msaa8xCheckbox->setChecked(true);
+			break;
+
+		default:
+		case 0:
+			msaaOffCheckbox->setChecked(true);
+			samples = 0;
+			break;
+		}
+
+		config.msaaSamples = samples;
+
+		return true;
+	}
+
+	bool SceneOptionsMenu::setScreenMode(MT::ScreenModes mode)
+	{
+		if (config.mode == mode)
+		{
+			return false;
+		}
+
+		fullscreenCheckbox->setChecked(false);
+		windowedCheckbox->setChecked(false);
+		fullscreenDesktopCheckbox->setChecked(false);
+
+		switch (mode)
+		{
+		case MT::ScreenModes::Fullscreen:
+			fullscreenCheckbox->setChecked(true);
+			break;
+
+		case MT::ScreenModes::Windowed:
+			windowedCheckbox->setChecked(true);
+			break;
+
+		case MT::ScreenModes::FullscreenDesktop:
+			fullscreenDesktopCheckbox->setChecked(true);
+			break;
+		}
+
+		config.mode = mode;
+
+		return true;
+	}
+
+
 }

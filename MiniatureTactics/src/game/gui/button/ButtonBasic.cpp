@@ -51,7 +51,6 @@ namespace MTGame
 	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{
 		setSize(180, 80);
-
 		enableSerialization<ButtonBasic>();
 	}
 
@@ -73,6 +72,15 @@ namespace MTGame
 	void ButtonBasic::setEnabled(bool flag)
 	{
 		serializationClient->setBool(enabledParamName, flag);
+
+		if (flag)
+		{
+			setColor(255, 255, 255);
+		}
+		else
+		{
+			setColor(64, 64, 64);
+		}
 	}
 
 	void ButtonBasic::onCreateChildren()
@@ -134,7 +142,6 @@ namespace MTGame
 		case MT::MouseButton::Left:
 			if (!pressed)
 			{
-
 				const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());
 				if (listenerPtr != nullptr && isPressed && isHovering)
 				{

@@ -11,7 +11,7 @@ namespace MT
 	class ScreenConfig
 	{
 	public:
-		int width = 640, height = 480, windowFlags = 0;
+		int width = 1024, height = 768, windowFlags = 0;
 		ScreenModes mode = ScreenModes::Windowed;
 		bool openGlWireframeMode = false, openGLCompatibilityMode = false;
 		int openGLMajorVersion = 3, openGLMinorVersion = 1, msaaSamples = 4;

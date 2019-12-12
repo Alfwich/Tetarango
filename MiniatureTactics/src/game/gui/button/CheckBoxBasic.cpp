@@ -170,14 +170,16 @@ namespace MTGame
 		case MT::MouseButton::Left:
 			if (!pressed)
 			{
-				if (isHovering)
+				if (isHovering && isPressed)
 				{
-					setChecked(!getChecked());
-
 					const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());
-					if (listenerPtr != nullptr && isPressed && isHovering)
+					if (listenerPtr != nullptr)
 					{
 						listenerPtr->onButtonClicked(getId());
+					}
+					else
+					{
+						setChecked(!getChecked());
 					}
 				}
 			}
