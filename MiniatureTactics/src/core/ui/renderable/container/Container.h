@@ -8,6 +8,9 @@ namespace MT
 
 	class Container  : public ApplicationObject, public Renderable 
 	{ 
+		bool isAutoLayingOut = false;
+		void performAutoLayout();
+
 	public:
 		Container();
 

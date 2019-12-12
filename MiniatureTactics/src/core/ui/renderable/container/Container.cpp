@@ -71,12 +71,22 @@ namespace MT
 	void Container::setWidth(double newWidth)
 	{
 		Renderable::setWidth(newWidth);
-		layout();
+		performAutoLayout();
 	}
 
 	void Container::setHeight(double newHeight)
 	{
 		Renderable::setHeight(newHeight);
-		layout();
+		performAutoLayout();
+	}
+
+	void Container::performAutoLayout()
+	{
+		if (!isAutoLayingOut)
+		{
+			isAutoLayingOut = true;
+			layout();
+			isAutoLayingOut = false;
+		}
 	}
 }

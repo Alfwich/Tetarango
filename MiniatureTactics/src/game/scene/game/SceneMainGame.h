@@ -36,6 +36,7 @@ namespace MTGame
 
 		void onInitialAttach();
 		void onCreateChildren();
+		void onDisplayProvisioned();
 		void onChildrenHydrated();
 		void onKeyPressed(SDL_Scancode key);
 		void onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code);
@@ -52,6 +53,8 @@ namespace MTGame
 		void saveGameData();
 		void enableMenu();
 		void disableMenu();
+		void showOptions();
+		void hideOptions();
 
 		std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
 	};

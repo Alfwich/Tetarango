@@ -22,21 +22,20 @@ namespace MTGame
 	void GameMainMenu::onInitialAttach()
 	{
 		setTimeScope(MT::TimeScope::Menu);
-		setSize(modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
 	void GameMainMenu::onCreateChildren()
 	{
 		const auto backgroundFade = std::make_shared<MT::Rectangle>();
-		backgroundFade->matchSizeAndCenter(this);
+		backgroundFade->name = "background";
 		backgroundFade->setColor(0, 0, 0);
 		backgroundFade->setAlpha(0.5);
 		add(backgroundFade);
 
 		const auto centeringContainer = std::make_shared<MT::Container>();
+		centeringContainer->name = "center-c";
 		centeringContainer->zIndex = 2;
 		centeringContainer->setExpandToChildren(true);
-		centeringContainer->centerWithin(this);
 
 		backButton = std::make_shared<ButtonBasic>();
 		backButton->clickListener = weak_from_this();
@@ -63,6 +62,17 @@ namespace MTGame
 		centeringContainer->add(mainMenuButton);
 
 		add(centeringContainer);
+	}
+
+	void GameMainMenu::onLayoutChildren()
+	{
+		setSize(modules->screen->getWidth(), modules->screen->getHeight());
+
+		const auto backgroundFade = findChildWithName<MT::Rectangle>("background");
+		backgroundFade->matchSizeAndCenter(this);
+
+		const auto centeringContainer = findChildWithName<MT::Container>("center-c");
+		centeringContainer->centerWithin(this);
 	}
 
 	void GameMainMenu::onButtonClicked(int id)
@@ -99,6 +109,14 @@ namespace MTGame
 				mainGameScene->saveGameData();
 			}
 		}
+		else if (id == optionsButton->getId())
+		{
+			const auto mainGameScene = findFirstInParentChain<SceneMainGame>();
+			if (mainGameScene != nullptr)
+			{
+				mainGameScene->showOptions();
+			}
+		}
 	}
 
 	void GameMainMenu::show()
@@ -109,11 +127,8 @@ namespace MTGame
 			return;
 		}
 
-		if (!visible)
-		{
-			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
-			visible = true;
-		}
+		modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+		visible = true;
 	}
 
 	void GameMainMenu::hide()
@@ -124,11 +139,8 @@ namespace MTGame
 			return;
 		}
 
-		if (visible)
-		{
-			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
-			visible = false;
-		}
+		modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
+		visible = false;
 	}
 
 }

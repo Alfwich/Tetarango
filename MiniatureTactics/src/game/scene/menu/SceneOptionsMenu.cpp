@@ -1,9 +1,6 @@
 #include "SceneOptionsMenu.h"
 #include "gui/camera/GameCamera.h"
-
-namespace
-{
-}
+#include "scene/game/SceneMainGame.h"
 
 namespace MTGame
 {
@@ -19,6 +16,8 @@ namespace MTGame
 
 		info = modules->screen->getAllSupportedDisplayModes();
 		modules->input->mouse->registerMouseWheel(weak_from_this());
+
+		config = modules->screen->getCurrentScreenConfig();
 	}
 
 	void SceneOptionsMenu::onAttach()
@@ -162,7 +161,15 @@ namespace MTGame
 	{
 		if (id == backButton->getId())
 		{
-			transitionToScene(SceneGame::MainMenu);
+			const auto mainGameScene = findFirstInParentChain<SceneMainGame>();
+			if (mainGameScene != nullptr)
+			{
+				mainGameScene->hideOptions();
+			}
+			else
+			{
+				transitionToScene(SceneGame::MainMenu);
+			}
 			return;
 		}
 

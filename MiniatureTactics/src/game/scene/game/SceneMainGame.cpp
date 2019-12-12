@@ -115,6 +115,7 @@ namespace MTGame
 		add(masterSceneContainer);
 
 		masterSceneContainer->add(std::make_shared<SceneTetris>());
+		masterSceneContainer->add(std::make_shared<SceneOptionsMenu>());
 
 		globalParticleSystem = std::make_shared<MT::ParticleSystem>();
 		globalParticleSystem->name = starSystemId;
@@ -123,6 +124,18 @@ namespace MTGame
 
 		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Tetris));
 		globalTransition->fadeOut();
+	}
+
+	void SceneMainGame::onDisplayProvisioned()
+	{
+		const auto currentScene = masterSceneContainer->getCurrentScene();
+		if (currentScene != nullptr)
+		{
+			currentScene->destroyChildren();
+			currentScene->onCreateChildren();
+		}
+
+		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 	}
 
 	void SceneMainGame::onChildrenHydrated()
@@ -271,6 +284,20 @@ namespace MTGame
 	void SceneMainGame::disableMenu()
 	{
 		menuEnabled = false;
+	}
+
+	void SceneMainGame::showOptions()
+	{
+		disableMenu();
+		gameMainMenu->hide();
+		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::OptionsMenu));
+	}
+
+	void SceneMainGame::hideOptions()
+	{
+		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Tetris));
+		enableMenu();
+		gameMainMenu->show();
 	}
 
 	std::shared_ptr<MT::SerializationClient> SceneMainGame::doSerialize(MT::SerializationHint hint)

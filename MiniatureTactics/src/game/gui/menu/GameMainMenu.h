@@ -19,6 +19,7 @@ namespace MTGame
 
 		void onInitialAttach();
 		void onCreateChildren();
+		void onLayoutChildren();
 
 		void onButtonClicked(int id);
 

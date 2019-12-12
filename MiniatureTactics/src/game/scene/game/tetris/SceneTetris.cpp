@@ -39,8 +39,12 @@ namespace MTGame
 		keyRepeatTimer = modules->time->createTimer(MT::TimeScope::Game);
 		keyRepeatTimer->start();
 
-
 		enableEnterFrame();
+	}
+
+	void SceneTetris::onAttach()
+	{
+		particleSystem->start();
 	}
 
 	void SceneTetris::onCreateChildren()
@@ -76,7 +80,6 @@ namespace MTGame
 		particleSystem->setParticleFactory(std::make_shared<ParticleSpaceBackgroundParticleFactory>());
 		particleSystem->setParticlesPerSecond(2);
 		particleSystem->emitImmediately(40);
-		particleSystem->start();
 		add(particleSystem);
 
 		blockParticleSystem = std::make_shared<MT::ParticleSystem>();
