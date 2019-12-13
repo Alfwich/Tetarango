@@ -100,6 +100,7 @@ namespace MTGame
 		splashText->setAlpha(0.0);
 		splashImage->setAlpha(0.0);
 		loadingProgressBar->setColor(150, 150, 150);
+		loadingProgressBar->setHeight(loadingBarHeight);
 		splashTransition->startTargetlessTransition(splashTransitionTimeInSeconds * 1000.0);
 	}
 
@@ -108,20 +109,15 @@ namespace MTGame
 		const auto currentTransitionSeconds = position * splashTransitionTimeInSeconds;
 		const auto scaledMainPositionIn = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorIn), 0.0, 1.0);
 		const auto scaledMainPositionOut = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorOut), 0.0, 1.0);
-		const auto scaledSecondaryPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorIn), 0.0, 2.0);
 
 		loadingProgressBar->setWidth(getScreenWidth() * position);
-		if (currentTransitionSeconds <= splashTransitionTimeInSeconds - 1.0)
-		{
-			loadingProgressBar->setHeight(loadingBarHeight * MT::NumberHelper::clamp<double>(currentTransitionSeconds, 0.0, 1.0));
-		}
-		else
-		{
-			const auto p = currentTransitionSeconds - (splashTransitionTimeInSeconds - 1);
-			loadingProgressBar->setHeight(loadingBarHeight * MT::NumberHelper::clamp<double>(1 - p, 0.0, 1.0));
-		}
-
 		loadingProgressBar->centerAlignSelf(0.0, getScreenHeight() - loadingProgressBar->getHeight());
+
+		if (currentTransitionSeconds >= splashTransitionTimeInSeconds - 1.0)
+		{
+			const auto p = currentTransitionSeconds - (splashTransitionTimeInSeconds - 1.0);
+			loadingProgressBar->setAlpha(MT::NumberHelper::clamp<double>(1.0 - p, 0.0, 1.0));
+		}
 
 		if (state == 0)
 		{
