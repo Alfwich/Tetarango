@@ -58,10 +58,12 @@ namespace MT
 		{
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaaSamples);
+
 		}
 		else
 		{
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
 		}
 
 		switch (config.mode)

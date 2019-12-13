@@ -112,12 +112,6 @@ namespace MTGame
 		msaaOffCheckbox->clickListener = weak_from_this();
 		add(msaaOffCheckbox);
 
-		msaa2xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaa2xCheckbox->setText("MSAA 2x");
-		msaa2xCheckbox->setChecked(config.msaaSamples == 2);
-		msaa2xCheckbox->clickListener = weak_from_this();
-		add(msaa2xCheckbox);
-
 		msaa4xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaa4xCheckbox->setText("MSAA 4x");
 		msaa4xCheckbox->setChecked(config.msaaSamples == 4);
@@ -129,6 +123,12 @@ namespace MTGame
 		msaa8xCheckbox->setChecked(config.msaaSamples == 8);
 		msaa8xCheckbox->clickListener = weak_from_this();
 		add(msaa8xCheckbox);
+
+		msaa16xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
+		msaa16xCheckbox->setText("MSAA 16x");
+		msaa16xCheckbox->setChecked(config.msaaSamples == 16);
+		msaa16xCheckbox->clickListener = weak_from_this();
+		add(msaa16xCheckbox);
 
 		openGlCompatibilityModeCheckbox = std::make_shared<CheckBoxBasic>();
 		openGlCompatibilityModeCheckbox->setText("OpenGL Compatibility Mode");
@@ -169,11 +169,11 @@ namespace MTGame
 		windowedCheckbox->toBottomLeftOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
 
 		msaaOffCheckbox->toBottomLeftOf(windowedCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
-		msaa2xCheckbox->toBottomLeftOf(msaaOffCheckbox, 0.0, checkboxYOffset);
-		msaa4xCheckbox->toBottomLeftOf(msaa2xCheckbox, 0.0, checkboxYOffset);
+		msaa4xCheckbox->toBottomLeftOf(msaaOffCheckbox, 0.0, checkboxYOffset);
 		msaa8xCheckbox->toBottomLeftOf(msaa4xCheckbox, 0.0, checkboxYOffset);
+		msaa16xCheckbox->toBottomLeftOf(msaa8xCheckbox, 0.0, checkboxYOffset);
 
-		openGlCompatibilityModeCheckbox->toBottomLeftOf(msaa8xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
+		openGlCompatibilityModeCheckbox->toBottomLeftOf(msaa16xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
 	}
 
@@ -226,11 +226,6 @@ namespace MTGame
 			shouldEnableApply = setMsaaMode(0);
 		}
 
-		if (id == msaa2xCheckbox->getId())
-		{
-			shouldEnableApply = setMsaaMode(2);
-		}
-
 		if (id == msaa4xCheckbox->getId())
 		{
 			shouldEnableApply = setMsaaMode(4);
@@ -239,6 +234,11 @@ namespace MTGame
 		if (id == msaa8xCheckbox->getId())
 		{
 			shouldEnableApply = setMsaaMode(8);
+		}
+
+		if (id == msaa16xCheckbox->getId())
+		{
+			shouldEnableApply = setMsaaMode(16);
 		}
 
 		if (id == openGlCompatibilityModeCheckbox->getId())
@@ -316,22 +316,22 @@ namespace MTGame
 		}
 
 		msaaOffCheckbox->setChecked(false);
-		msaa2xCheckbox->setChecked(false);
 		msaa4xCheckbox->setChecked(false);
 		msaa8xCheckbox->setChecked(false);
+		msaa16xCheckbox->setChecked(false);
 
 		switch (samples)
 		{
-		case 2:
-			msaa2xCheckbox->setChecked(true);
-			break;
-
 		case 4:
 			msaa4xCheckbox->setChecked(true);
 			break;
 
 		case 8:
 			msaa8xCheckbox->setChecked(true);
+			break;
+
+		case 16:
+			msaa16xCheckbox->setChecked(true);
 			break;
 
 		default:

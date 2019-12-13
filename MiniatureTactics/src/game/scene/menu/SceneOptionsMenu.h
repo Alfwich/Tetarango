@@ -23,9 +23,9 @@ namespace MTGame
 		std::shared_ptr<CheckBoxBasic> fullscreenCheckbox;
 		std::shared_ptr<CheckBoxBasic> fullscreenDesktopCheckbox;
 		std::shared_ptr<CheckBoxBasic> msaaOffCheckbox;
-		std::shared_ptr<CheckBoxBasic> msaa2xCheckbox;
 		std::shared_ptr<CheckBoxBasic> msaa4xCheckbox;
 		std::shared_ptr<CheckBoxBasic> msaa8xCheckbox;
+		std::shared_ptr<CheckBoxBasic> msaa16xCheckbox;
 		std::shared_ptr<CheckBoxBasic> openGlCompatibilityModeCheckbox;
 		std::shared_ptr<CheckBoxBasic> wireframeModeCheckbox;
 
