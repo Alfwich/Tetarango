@@ -5,9 +5,12 @@ namespace
 {
 	const auto sdlLogoTextureName = "splash-sdl-logo";
 	const auto openGLLogoTextureName = "splash-opengl-logo";
-	const auto splashTransitionTimeInSeconds = 14.0;
-	const auto fadeInHorMovement = 200.0;
+	const auto splashTransitionTimeInSeconds = 12.5;
+	const auto fadeInHorMovement = 300.0;
 	const auto animationScalingFactor = 3.0;
+	const auto animationTiming = 1.0;
+	const auto titleFontSizeBig = 150;
+	const auto titleFontSizeSmall = 75;
 }
 
 namespace MTGame
@@ -28,7 +31,7 @@ namespace MTGame
 	void SceneSplash::onCreateChildren()
 	{
 		splashText = std::make_shared<MT::Text>();
-		splashText->setFont("medium", 150);
+		splashText->setFont("medium", titleFontSizeBig);
 		splashText->setText("built with");
 		add(splashText);
 
@@ -58,6 +61,7 @@ namespace MTGame
 	{
 		const auto currentTransitionSeconds = position * splashTransitionTimeInSeconds;
 		const auto currentStateTime = currentTransitionSeconds - animationOffset * splashTransitionTimeInSeconds;
+		std::cout << currentStateTime << std::endl;
 		if (state == 0)
 		{
 			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
@@ -67,7 +71,7 @@ namespace MTGame
 			splashText->setAlpha(scaledPosition);
 			splashImage->setAlpha(scaledPosition);
 
-			if (currentTransitionSeconds > 2.0)
+			if (currentStateTime > 2.0)
 			{
 				animationOffset = position;
 				state = 1;
@@ -79,7 +83,7 @@ namespace MTGame
 			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledPosition * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight());
 			splashImage->setAlpha(1.0 - scaledPosition);
 
-			if (scaledPosition == 1.0)
+			if (currentStateTime > 1.0)
 			{
 				splashImage->setTexture(openGLLogoTextureName);
 				animationOffset = position;
@@ -92,7 +96,7 @@ namespace MTGame
 			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledPosition) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight());
 			splashImage->setAlpha(scaledPosition);
 
-			if (currentTransitionSeconds > 5.0)
+			if (currentStateTime > 2.0)
 			{
 				animationOffset = position;
 				state = 3;
@@ -106,9 +110,14 @@ namespace MTGame
 			splashText->toTopOf(splashImage);
 			splashText->setAlpha(1.0 - scaledPosition);
 
-			if (currentTransitionSeconds > 6.0)
+			if (currentStateTime > 1.0)
 			{
+				splashText->setFontSize(titleFontSizeBig);
 				splashText->setText("AW Games Presents");
+				if (splashText->getWidth() > getScreenWidth())
+				{
+					splashText->setFontSize(titleFontSizeSmall);
+				}
 				animationOffset = position;
 				state = 4;
 			}
@@ -119,7 +128,7 @@ namespace MTGame
 			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledPosition) * fadeInHorMovement), getScreenHeight() / 2.0);
 			splashText->setAlpha(scaledPosition);
 
-			if (currentTransitionSeconds > 8.0)
+			if (currentStateTime > 2.0)
 			{
 				animationOffset = position;
 				state = 5;
@@ -131,9 +140,14 @@ namespace MTGame
 			splashText->setPosition(getScreenWidth() / 2.0 + (scaledPosition * fadeInHorMovement), getScreenHeight() / 2.0);
 			splashText->setAlpha(1.0 - scaledPosition);
 
-			if (currentTransitionSeconds > 10.0)
+			if (currentStateTime > 1.0)
 			{
+				splashText->setFontSize(titleFontSizeBig);
 				splashText->setText(modules->gameConfig->getConfigString(Config::Param::gameName));
+				if (splashText->getWidth() > getScreenWidth())
+				{
+					splashText->setFontSize(titleFontSizeSmall);
+				}
 				animationOffset = position;
 				state = 6;
 			}
@@ -144,7 +158,7 @@ namespace MTGame
 			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledPosition) * fadeInHorMovement), getScreenHeight() / 2.0);
 			splashText->setAlpha(scaledPosition);
 
-			if (currentTransitionSeconds > 12.0)
+			if (currentStateTime > 2.0)
 			{
 				animationOffset = position;
 				state = 7;
@@ -156,7 +170,6 @@ namespace MTGame
 			splashText->setPosition(getScreenWidth() / 2.0 + (scaledPosition * fadeInHorMovement), getScreenHeight() / 2.0);
 			splashText->setAlpha(1.0 - scaledPosition);
 		}
-
 	}
 
 	void SceneSplash::onTransitionCompleted()
