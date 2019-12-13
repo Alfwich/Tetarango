@@ -17,6 +17,11 @@ namespace MT
 		return id;
 	}
 
+	int Transition::getId()
+	{
+		return id;
+	}
+
 	void Transition::startTransition(std::shared_ptr<Renderable> target, double durationMS, Rect endRect, double targetAlpha)
 	{
 		startRect = target->getRect();
@@ -116,6 +121,12 @@ namespace MT
 			{
 				target->onTransitionFrame(1.0, endRect, endAlpha, id);
 
+				const auto listenerPtr = listener.lock();
+				if (listenerPtr != nullptr)
+				{
+					listenerPtr->onTransitionAnimationFrame(1.0, id);
+				}
+
 				if (looping)
 				{
 					position -= duration;
@@ -132,10 +143,9 @@ namespace MT
 					stop();
 				}
 
-				const auto listenerPtr = listener.lock();
 				if (listenerPtr != nullptr)
 				{
-					listenerPtr->onTransitionCompleted();
+					listenerPtr->onTransitionCompleted(id);
 				}
 			}
 			else
@@ -145,6 +155,12 @@ namespace MT
 				auto intermediaryRect = Rect(startRect * (1.0 - pos) + (endRect * pos));
 				auto intermediaryAlpha = startAlpha * (1.0 - pos) + endAlpha * pos;
 				target->onTransitionFrame(pos, intermediaryRect, intermediaryAlpha, id);
+
+				const auto listenerPtr = listener.lock();
+				if (listenerPtr != nullptr)
+				{
+					listenerPtr->onTransitionAnimationFrame(pos, id);
+				}
 			}
 		}
 	}

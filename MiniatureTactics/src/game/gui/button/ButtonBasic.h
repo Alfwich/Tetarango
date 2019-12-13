@@ -30,7 +30,9 @@ namespace MTGame
 
 		void setText(std::string text);
 		std::string getText();
+
 		void setEnabled(bool flag);
+		bool getEnabled();
 	};
 
 }

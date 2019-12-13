@@ -215,6 +215,11 @@ namespace MT
 		setPosition(this->getHalfWidth() + xOffset, this->getHalfHeight() + yOffset);
 	}
 
+	void Renderable::floorAlignSelf(double xOffset, double yOffset)
+	{
+		setPosition(std::floor(getX() + xOffset), std::floor(getY() + yOffset));
+	}
+
 	void Renderable::centerWithin(ApplicationObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);

@@ -233,7 +233,6 @@
     <ClInclude Include="src\game\prop\particles\hit\soft\ParticleHitSoftFactory.h" />
     <ClInclude Include="src\game\gui\menu\GameMainMenu.h" />
     <ClInclude Include="src\game\gui\transition\INotifyOnFade.h" />
-    <ClInclude Include="src\core\engine\module\animation\INotifyOnTransitionCompleted.h" />
     <ClInclude Include="src\game\gui\transition\TransitionFade.h" />
     <ClInclude Include="src\game\gui\hud\BaseHud.h" />
     <ClInclude Include="src\core\util\RandomGenerator.h" />
@@ -259,6 +258,7 @@
     <ClInclude Include="src\game\gui\scrollbar\ScrollBarBasic.h" />
     <ClInclude Include="src\game\gui\IGuiListener.h" />
     <ClInclude Include="src\game\gui\scrollarea\ScrollArea.h" />
+    <ClInclude Include="src\core\engine\module\animation\INotifyOnTransition.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

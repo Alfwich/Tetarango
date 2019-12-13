@@ -16,6 +16,8 @@ namespace MTGame
 		std::shared_ptr<MT::NineSlice> background;
 		std::shared_ptr<MT::NineSlice> scroller;
 		std::shared_ptr<MT::Transition> scrollerTransition;
+		void updateScrollerYPosition();
+
 	public:
 		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
 		ScrollBarBasic();

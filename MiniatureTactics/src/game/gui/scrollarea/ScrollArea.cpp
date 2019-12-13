@@ -1,5 +1,6 @@
 #include "ScrollArea.h"
 #include "gui/Guis.h"
+#include "ui/renderable/element/Rectangle.h"
 
 namespace
 {
@@ -7,6 +8,7 @@ namespace
 	const auto scrollerId = "scroll-area-scroller";
 
 	const auto enabledParamName = "sb-i-e";
+	const auto scrollerExpandToChildrenParamName = "sb-x-t-c";
 	const auto scrollContainerMouseWheelEnabledParamName = "sc-mw-e";
 
 	const auto scrollerEnabledParam = "sa-s-i-e";
@@ -33,6 +35,7 @@ namespace MTGame
 	{
 		container = std::make_shared<MT::ScrollContainer>();
 		container->name = containerId;
+		container->setExpandToChildren(true);
 		add(container);
 
 		scroller = std::make_shared<ScrollBarBasic>();
@@ -61,7 +64,32 @@ namespace MTGame
 	void ScrollArea::onLayoutChildren()
 	{
 		container->centerAlignSelf();
-		scroller->toRightOf(container, scroller->getHalfWidth() + getScrollerXOffset(), -container->getHalfHeight() + scroller->getHeight() + (scroller->getScrollerHeight() / 2.0) + getScrollerYOffset());
+
+		const auto containerHeight = container->getHeight();
+		const auto myHeight = getHeight();
+		const auto shouldAllowScroll = containerHeight > myHeight;
+		if (shouldAllowScroll)
+		{
+			container->setScrollLimits(0.0, (containerHeight - myHeight) / containerHeight);
+		}
+		else
+		{
+			container->setScrollLimits(0.0, 0.0);
+		}
+
+		if (getScrollerVisible())
+		{
+			if (shouldAllowScroll)
+			{
+				scroller->toRightOf(container, scroller->getHalfWidth() + getScrollerXOffset(), -container->getHalfHeight() + scroller->getHeight() + (scroller->getScrollerHeight() / 2.0) + getScrollerYOffset());
+				scroller->setScrollerHeight(myHeight / containerHeight);
+				scroller->visible = getScrollerVisible();
+			}
+			else
+			{
+				scroller->visible = false;
+			}
+		}
 	}
 
 	void ScrollArea::onEnterFrame(double frameTime)
@@ -81,7 +109,13 @@ namespace MTGame
 		else
 		{
 			container->add(ao);
-			matchSize(container);
+
+			if (getExpandToChildren())
+			{
+				matchSize(container);
+			}
+
+			layout();
 		}
 	}
 
@@ -94,57 +128,34 @@ namespace MTGame
 		else
 		{
 			container->remove(ao);
+
+			if (getExpandToChildren())
+			{
+				matchSize(container);
+			}
+
+			layout();
 		}
 	}
 
 	void ScrollArea::onMouseWheel(int x, int y)
 	{
 		const auto mouseX = modules->input->mouse->X();
-		const auto rect = container->getScreenRect();
-		if (mouseX < rect->x || mouseX > rect->x + rect->w)
+		const auto mouseY = modules->input->mouse->Y();
+		const auto rect = getScreenRect();
+		if (mouseX < rect->x || mouseX > rect->x + rect->w || mouseY < rect->y || mouseY > rect->y + rect->h)
 		{
 			return;
 		}
 
-		const auto containerMin = 0.0;
-		const auto containerMax = modules->screen->getHeight();
 		const auto scrollAmount = 50;
 		if (y < 0)
 		{
-			bool allowScroll = false;
-			for (const auto resolutionButton : container->getChildren())
-			{
-				const auto screenRect = resolutionButton->getScreenRect();
-				allowScroll = screenRect->y + screenRect->h > containerMax;
-
-				if (allowScroll)
-				{
-					break;
-				}
-			}
-
-			if (allowScroll)
-			{
-				container->scrollPixels(scrollAmount);
-			}
+			container->scrollPixels(scrollAmount);
 		}
 		else if (y > 0)
 		{
-			bool allowScroll = false;
-			for (const auto resolutionButton : container->getChildren())
-			{
-				allowScroll = resolutionButton->getScreenRect()->y < containerMin;
-
-				if (allowScroll)
-				{
-					break;
-				}
-			}
-
-			if (allowScroll)
-			{
-				container->scrollPixels(-scrollAmount);
-			}
+			container->scrollPixels(-scrollAmount);
 		}
 	}
 
@@ -222,7 +233,7 @@ namespace MTGame
 
 	double ScrollArea::getScrollerHeight()
 	{
-		return serializationClient->getDouble(scrollerHeightParam, 400.0);
+		return std::min(getHeight(), serializationClient->getDouble(scrollerHeightParam, 400.0));
 	}
 
 	void ScrollArea::setScrollerWidth(double width)
@@ -237,7 +248,7 @@ namespace MTGame
 
 	double ScrollArea::getScollerWidth()
 	{
-		return serializationClient->getDouble(scrollerHeightParam, 15.0);
+		return serializationClient->getDouble(scrollerWidthParam, 15.0);
 	}
 
 	void ScrollArea::setMouseWheenEnabled(bool flag)

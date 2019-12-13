@@ -136,6 +136,7 @@ namespace MTGame
 		}
 
 		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		globalTransition->setSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
 	void SceneMainGame::onChildrenHydrated()

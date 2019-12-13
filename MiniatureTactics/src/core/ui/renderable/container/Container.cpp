@@ -18,6 +18,11 @@ namespace MT
 		serializationClient->setBool(expandToChildrenParamName, flag);
 	}
 
+	bool Container::getExpandToChildren()
+	{
+		return serializationClient->getBool(expandToChildrenParamName, true);
+	}
+
 	void Container::setSizeToScreenSize()
 	{
 		setSize(modules->screen->getWidth(), modules->screen->getHeight());
@@ -25,7 +30,7 @@ namespace MT
 
 	void Container::onDestroyChildren()
 	{
-		if (serializationClient->getBool(expandToChildrenParamName))
+		if (getExpandToChildren())
 		{
 			setSize(0, 0);
 		}
@@ -43,7 +48,7 @@ namespace MT
 	{
 		ApplicationObject::add(obj);
 
-		if (!serializationClient->getBool(expandToChildrenParamName))
+		if (!getExpandToChildren())
 		{
 			return;
 		}

@@ -93,6 +93,7 @@ namespace MT
 		double getHalfHeight();
 
 		void centerAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
+		void floorAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
 
 		void centerWithin(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
 		void centerWithin(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);

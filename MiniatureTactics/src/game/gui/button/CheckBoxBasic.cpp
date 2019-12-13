@@ -1,5 +1,6 @@
 #include "CheckBoxBasic.h"
 #include "gui/Guis.h"
+#include "ui/renderable/element/Rectangle.h"
 
 namespace
 {
@@ -60,24 +61,8 @@ namespace MTGame
 
 	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{
-		switch (configuration)
-		{
-		case GuiButton::RadioBoxBasic:
-			setAnimationPrefix(skins[1]);
-			break;
-
-		default:
-		case GuiButton::CheckBoxBasic:
-			setAnimationPrefix(skins[0]);
-			break;
-		}
-
-		setTexture(checkBoxBasicId);
-		setAnimationSet(checkBoxBasicId);
-		setDefaultAnimationName("default");
-
+		setExpandToChildren(false);
 		setSize(40.0, 40.0);
-
 		enableSerialization<CheckBoxBasic>();
 	}
 
@@ -115,31 +100,48 @@ namespace MTGame
 
 	void CheckBoxBasic::onCreateChildren()
 	{
+		checkbox = std::make_shared<MT::Animated>();
+		if (guiBaseName == getGuis().buttons.at(GuiButton::RadioBoxBasic))
+		{
+			checkbox->setAnimationPrefix(skins[1]);
+		}
+		else
+		{
+			checkbox->setAnimationPrefix(skins[0]);
+		}
+		checkbox->setTexture(checkBoxBasicId);
+		checkbox->name = "checkbox";
+		checkbox->setAnimationSet(checkBoxBasicId);
+		checkbox->setDefaultAnimationName("default");
+		checkbox->setSize(40.0, 40.0);
+		checkbox->centerAlignSelf();
+		add(checkbox);
+
 		label = std::make_shared<MT::Text>();
 		label->name = "button_text";
 		label->setFont("medium", 30);
 		label->setText(text);
 		label->setColor(getColor());
+		label->centerAlignSelf();
 		add(label);
 	}
 
 	void CheckBoxBasic::onChildrenHydrated()
 	{
+		checkbox = findChildWithName<MT::Animated>("checkbox");
 		label = findChildWithName<MT::Text>("button_text");
 	}
 
 	void CheckBoxBasic::onInitialAttach()
 	{
-		MT::Animated::onInitialAttach();
-
 		enableEnterFrame();
-
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
 	}
 
 	void CheckBoxBasic::onLayoutChildren()
 	{
-		label->centerAlignSelf(getWidth() + 20.0, 0.0);
+		checkbox->centerAlignSelf();
+		label->toRightOf(checkbox, 5.0);
 	}
 
 	void CheckBoxBasic::onDetach()
@@ -196,30 +198,30 @@ namespace MTGame
 		{
 			if (isHovering && isPressed)
 			{
-				play("pressed");
+				checkbox->play("pressed");
 			}
 			else if (isHovering)
 			{
-				play("hover");
+				checkbox->play("hover");
 			}
 			else
 			{
-				play("default");
+				checkbox->play("default");
 			}
 		}
 		else
 		{
 			if (isHovering && isPressed)
 			{
-				play("pressed-checked");
+				checkbox->play("pressed-checked");
 			}
 			else if (isHovering)
 			{
-				play("hover-checked");
+				checkbox->play("hover-checked");
 			}
 			else
 			{
-				play("default-checked");
+				checkbox->play("default-checked");
 			}
 		}
 	}

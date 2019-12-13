@@ -78,6 +78,14 @@ namespace MTGame
 		enableSerialization<ScrollBarBasic>();
 	}
 
+	void ScrollBarBasic::updateScrollerYPosition()
+	{
+		const auto scrollerHeight = getScrollerHeight() * getHeight();
+		auto targetRect = scroller->getRect();
+		targetRect.y = -getHalfHeight() + (getScrollPosition() * getHeight()) + scrollerHeight / 2.0;
+		scrollerTransition->startTransition(scroller, 50.0, targetRect);
+	}
+
 	void ScrollBarBasic::setEnabled(bool flag)
 	{
 		serializationClient->setBool(enabledParamName, flag);
@@ -85,21 +93,21 @@ namespace MTGame
 
 	void ScrollBarBasic::setScrollerHeight(double height)
 	{
-		serializationClient->setDouble(scrollbarHeightParamName, height);
+		serializationClient->setDouble(scrollbarHeightParamName, MT::NumberHelper::clamp<double>(height, 0.0, 1.0));
+		layout();
 	}
 
 	double ScrollBarBasic::getScrollerHeight()
 	{
-		return serializationClient->getDouble(scrollbarHeightParamName, 30.0);
+		return serializationClient->getDouble(scrollbarHeightParamName, 0.1);
 	}
 
 	void ScrollBarBasic::setScrollPosition(double pos)
 	{
 		const auto value = MT::NumberHelper::clamp<double>(pos, 0.0, 1.0);
-		auto targetRect = scroller->getRect();
-		targetRect.y = -getHalfHeight() + (getScrollPosition() * getHeight());
-		scrollerTransition->startTransition(scroller, 50.0, targetRect);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
+
+		updateScrollerYPosition();
 
 		const auto notifyPtr = std::dynamic_pointer_cast<IGuiListener>(scrollListener.lock());
 		if (notifyPtr != nullptr)
@@ -154,10 +162,11 @@ namespace MTGame
 
 	void ScrollBarBasic::onLayoutChildren()
 	{
-		background->matchSize(this, 0.0, getScrollerHeight());
-		scroller->setY(-getHalfHeight() + (getScrollPosition() * getHeight()));
-		scroller->setHeight(getScrollerHeight());
+		const auto scrollerHeight = getScrollerHeight() * getHeight();
+		background->matchSize(this);
+		scroller->setHeight(scrollerHeight);
 		scroller->setWidth(getWidth());
+		updateScrollerYPosition();
 	}
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)
@@ -215,7 +224,7 @@ namespace MTGame
 		}
 		else
 		{
-			scroller->setAlpha(0.75);
+			scroller->setAlpha(0.80);
 		}
 	}
 }

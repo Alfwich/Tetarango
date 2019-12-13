@@ -113,14 +113,14 @@ namespace MT
 	void ScrollContainer::setScrollPosition(double amount)
 	{
 		const auto min = serializationClient->getDouble(scrollAmountMinParamName, -1.0);
-		const auto max = serializationClient->getDouble(scrollAmountMinParamName, 1.0);
+		const auto max = serializationClient->getDouble(scrollAmountMaxParamName, 1.0);
 		serializationClient->setDouble(scrollAmountParamName, MT::NumberHelper::clamp<double>(amount, min, max));
 		layout();
 	}
 
 	double ScrollContainer::getScrollPosition()
 	{
-		return serializationClient->getDouble(scrollAmountParamName);
+		return serializationClient->getDouble(scrollAmountParamName, 0.0);
 	}
 
 	void ScrollContainer::setScrollLimits(double min, double max)
@@ -131,7 +131,7 @@ namespace MT
 		}
 
 		serializationClient->setDouble(scrollAmountMinParamName, min);
-		serializationClient->setDouble(scrollAmountMinParamName, max);
+		serializationClient->setDouble(scrollAmountMaxParamName, max);
 	}
 
 	void ScrollContainer::setContainerLimits(double min, double max)

@@ -4,13 +4,13 @@
 #include "gui/BaseGui.h"
 #include "ui/renderable/element/Rectangle.h"
 #include "engine/module/animation/Animation.h"
-#include "engine/module/animation/INotifyOnTransitionCompleted.h"
+#include "engine/module/animation/INotifyOnTransition.h"
 #include "INotifyOnFade.h"
 
 namespace MTGame
 {
 
-	class TransitionFade : public BaseGui, public MT::Rectangle, public MT::INotifyOnTransitionCompleted
+	class TransitionFade : public BaseGui, public MT::Rectangle, public MT::INotifyOnTransition
 	{
 		std::shared_ptr<MT::Transition> fadeTransition;
 
@@ -30,7 +30,7 @@ namespace MTGame
 		void fadeIn();
 		void fadeInImmediately();
 
-		void onTransitionCompleted();
+		void onTransitionCompleted(int transitionId);
 	};
 
 }

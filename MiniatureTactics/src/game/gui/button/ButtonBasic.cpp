@@ -83,6 +83,11 @@ namespace MTGame
 		}
 	}
 
+	bool ButtonBasic::getEnabled()
+	{
+		return serializationClient->getBool(enabledParamName, true);
+	}
+
 	void ButtonBasic::onCreateChildren()
 	{
 		background = std::make_shared<MT::NineSlice>();
@@ -131,7 +136,7 @@ namespace MTGame
 
 	void ButtonBasic::onMouseButton(MT::MouseButton button, bool pressed)
 	{
-		const auto isEnabled = serializationClient->getBool(enabledParamName, true);
+		const auto isEnabled = getEnabled();
 		if (!isEnabled)
 		{
 			return;

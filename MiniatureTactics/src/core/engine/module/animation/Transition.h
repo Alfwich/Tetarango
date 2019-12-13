@@ -5,7 +5,7 @@
 #include "engine/module/time/Time.h"
 #include "engine/module/event/EnterFrameListener.h"
 #include "util/Rect.h"
-#include "INotifyOnTransitionCompleted.h"
+#include "INotifyOnTransition.h"
 
 namespace MT
 {
@@ -33,8 +33,9 @@ namespace MT
 		Transition(std::shared_ptr<Time> time, TimeScope scopeName);
 
 		int getObjectIdEnterFrame();
+		int getId();
 
-		std::weak_ptr<INotifyOnTransitionCompleted> listener;
+		std::weak_ptr<INotifyOnTransition> listener;
 
 		void startTransition(std::shared_ptr<Renderable> target, double durationMS, Rect targetRect, double targetAlpha = -1.0);
 		void resume();

@@ -9,9 +9,10 @@
 namespace MTGame
 {
 
-	class CheckBoxBasic: public BaseGui, public MT::Animated
+	class CheckBoxBasic: public BaseGui, public MT::Container
 	{
 		std::string text;
+		std::shared_ptr<MT::Animated> checkbox;
 		std::shared_ptr<MT::Text> label;
 		bool isHovering = false, isPressed = false;
 	public:

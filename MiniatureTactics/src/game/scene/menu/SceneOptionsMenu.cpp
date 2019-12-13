@@ -12,10 +12,10 @@ namespace MTGame
 
 	void SceneOptionsMenu::onInitialAttach()
 	{
-		BaseScene::onInitialAttach();
-
 		info = modules->screen->getAllSupportedDisplayModes();
+
 		modules->input->mouse->registerMouseWheel(weak_from_this());
+		modules->input->keyboard->registerKey(SDL_SCANCODE_RETURN, weak_from_this());
 
 		config = modules->screen->getCurrentScreenConfig();
 	}
@@ -36,31 +36,29 @@ namespace MTGame
 		optionsMenuTitle = std::make_shared<MT::Text>();
 		optionsMenuTitle->setFont("medium", 28);
 		optionsMenuTitle->setText("Options");
-		optionsMenuTitle->setPosition(getScreenWidth() / 2.0, 50.0);
 		add(optionsMenuTitle);
 
 		applyButton = std::make_shared<ButtonBasic>();
 		applyButton->setText("Apply");
 		applyButton->clickListener = weak_from_this();
-		applyButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - 100.0);
 		applyButton->setEnabled(false);
 		add(applyButton);
 
 		resetButton = std::make_shared<ButtonBasic>();
 		resetButton->setText("Reset");
 		resetButton->clickListener = weak_from_this();
-		resetButton->toRightOf(applyButton, 5.0, 0.0);
 		add(resetButton);
 
 		backButton = std::make_shared<ButtonBasic>();
 		backButton->setText("Back");
 		backButton->clickListener = weak_from_this();
-		backButton->toLeftOf(applyButton, 5.0, 0.0);
 		add(backButton);
 
-		scrollArea = std::make_shared<ScrollArea>();
-		scrollArea->setScrollerEnabled(false);
-		add(scrollArea);
+		resolutionScrollArea = std::make_shared<ScrollArea>();
+		resolutionScrollArea->setExpandToChildren(false);
+		resolutionScrollArea->setSize(180.0, 503.0);
+		resolutionScrollArea->setScrollerHeight(503.0);
+		add(resolutionScrollArea);
 
 		resolutionButtons.clear();
 		std::shared_ptr<ButtonBasic> prevResolutionButton;
@@ -86,75 +84,93 @@ namespace MTGame
 			}
 
 			prevResolutionButton = resolutionButton;
-			scrollArea->add(resolutionButton);
+			resolutionScrollArea->add(resolutionButton);
 		}
 
-		scrollArea->centerAlignSelf(5.0, 0.0);
-
-		const auto checkboxYOffset = 10.0;
-		const auto checkboxYGroupOffset = 20.0;
 		fullscreenCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenCheckbox->setText("Fullscreen");
-		fullscreenCheckbox->toRightOf(scrollArea, 19.0, -scrollArea->getHalfHeight() + fullscreenCheckbox->getHalfHeight() + 5.0);
 		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
 		fullscreenCheckbox->clickListener = weak_from_this();
 		add(fullscreenCheckbox);
 
 		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
-		fullscreenDesktopCheckbox->toBottomOf(fullscreenCheckbox, 0.0, checkboxYOffset);
 		fullscreenDesktopCheckbox->setChecked(config.mode == MT::ScreenModes::FullscreenDesktop);
 		fullscreenDesktopCheckbox->clickListener = weak_from_this();
 		add(fullscreenDesktopCheckbox);
 
 		windowedCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		windowedCheckbox->setText("Window");
-		windowedCheckbox->toBottomOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
 		windowedCheckbox->setChecked(config.mode == MT::ScreenModes::Windowed);
 		windowedCheckbox->clickListener = weak_from_this();
 		add(windowedCheckbox);
 
 		msaaOffCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaaOffCheckbox->setText("MSAA Off");
-		msaaOffCheckbox->toBottomOf(windowedCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		msaaOffCheckbox->setChecked(config.msaaSamples == 0);
 		msaaOffCheckbox->clickListener = weak_from_this();
 		add(msaaOffCheckbox);
 
 		msaa2xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaa2xCheckbox->setText("MSAA 2x");
-		msaa2xCheckbox->toBottomOf(msaaOffCheckbox, 0.0, checkboxYOffset);
 		msaa2xCheckbox->setChecked(config.msaaSamples == 2);
 		msaa2xCheckbox->clickListener = weak_from_this();
 		add(msaa2xCheckbox);
 
 		msaa4xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaa4xCheckbox->setText("MSAA 4x");
-		msaa4xCheckbox->toBottomOf(msaa2xCheckbox, 0.0, checkboxYOffset);
 		msaa4xCheckbox->setChecked(config.msaaSamples == 4);
 		msaa4xCheckbox->clickListener = weak_from_this();
 		add(msaa4xCheckbox);
 
 		msaa8xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		msaa8xCheckbox->setText("MSAA 8x");
-		msaa8xCheckbox->toBottomOf(msaa4xCheckbox, 0.0, checkboxYOffset);
 		msaa8xCheckbox->setChecked(config.msaaSamples == 8);
 		msaa8xCheckbox->clickListener = weak_from_this();
 		add(msaa8xCheckbox);
 
 		openGlCompatibilityModeCheckbox = std::make_shared<CheckBoxBasic>();
 		openGlCompatibilityModeCheckbox->setText("OpenGL Compatibility Mode");
-		openGlCompatibilityModeCheckbox->toBottomOf(msaa8xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
 		openGlCompatibilityModeCheckbox->clickListener = weak_from_this();
 		add(openGlCompatibilityModeCheckbox);
 
 		wireframeModeCheckbox = std::make_shared<CheckBoxBasic>();
 		wireframeModeCheckbox->setText("Wireframe Mode");
-		wireframeModeCheckbox->toBottomOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
 		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
 		wireframeModeCheckbox->clickListener = weak_from_this();
 		add(wireframeModeCheckbox);
+
+		const auto generalElementOffset = 5.0;
+		const auto verticalScreenBorderOffset = 100.0;
+		const auto optionsXOffset = 50.0;
+		const auto checkboxYOffset = 10.0;
+		const auto checkboxYGroupOffset = 20.0;
+
+		optionsMenuTitle->setPosition(getScreenWidth() / 2.0, verticalScreenBorderOffset / 2.0);
+
+		applyButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - verticalScreenBorderOffset);
+		resetButton->toRightOf(applyButton, generalElementOffset, 0.0);
+		backButton->toLeftOf(applyButton, generalElementOffset, 0.0);
+
+		resolutionScrollArea->centerAlignSelf(generalElementOffset + (getScreenWidth() - 651.0) / 2.0, (getScreenHeight() - 600.0) / 2.0);
+		resolutionScrollArea->floorAlignSelf();
+		{
+			auto r = resolutionScrollArea->getRect();
+			resolutionScrollArea->setClipRect(MT::Rect(0.0, 0.0, r.w + 30.0, r.h));
+		}
+
+		fullscreenCheckbox->toRightTopOf(resolutionScrollArea, optionsXOffset);
+		fullscreenDesktopCheckbox->toBottomLeftOf(fullscreenCheckbox, 0.0, checkboxYOffset);
+		windowedCheckbox->toBottomLeftOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
+
+		msaaOffCheckbox->toBottomLeftOf(windowedCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
+		msaa2xCheckbox->toBottomLeftOf(msaaOffCheckbox, 0.0, checkboxYOffset);
+		msaa4xCheckbox->toBottomLeftOf(msaa2xCheckbox, 0.0, checkboxYOffset);
+		msaa8xCheckbox->toBottomLeftOf(msaa4xCheckbox, 0.0, checkboxYOffset);
+
+		openGlCompatibilityModeCheckbox->toBottomLeftOf(msaa8xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
+		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
 	}
 
 	void SceneOptionsMenu::onButtonClicked(int id)
@@ -235,9 +251,13 @@ namespace MTGame
 			shouldEnableApply = true;
 		}
 
+		const auto containerUpperBound = resolutionScrollArea->getScreenRect()->y;
+		const auto containerLowerBound = resolutionScrollArea->getScreenRect()->y + resolutionScrollArea->getScreenRect()->h;
 		for (const auto resolutionButton : resolutionButtons)
 		{
-			if (resolutionButton->getId() == id)
+			const auto buttonUpperBound = resolutionButton->getScreenRect()->y;
+			const auto buttonLowerBound = resolutionButton->getScreenRect()->y + resolutionButton->getScreenRect()->h;
+			if (resolutionButton->getId() == id && buttonUpperBound <= containerLowerBound && buttonLowerBound >= containerUpperBound)
 			{
 				auto newResolution = resolutionButton->getText();
 				config.width = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
@@ -267,6 +287,20 @@ namespace MTGame
 		{
 			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
 			applyButton->setEnabled(false);
+		}
+	}
+
+	void SceneOptionsMenu::onKeyPressed(SDL_Scancode key)
+	{
+		switch (key)
+		{
+		case SDL_SCANCODE_RETURN:
+			if (applyButton->getEnabled() == true)
+			{
+				modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
+				applyButton->setEnabled(false);
+			}
+			break;
 		}
 	}
 

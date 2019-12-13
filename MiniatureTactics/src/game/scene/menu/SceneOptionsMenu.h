@@ -28,8 +28,8 @@ namespace MTGame
 		std::shared_ptr<CheckBoxBasic> msaa8xCheckbox;
 		std::shared_ptr<CheckBoxBasic> openGlCompatibilityModeCheckbox;
 		std::shared_ptr<CheckBoxBasic> wireframeModeCheckbox;
-		
-		std::shared_ptr<ScrollArea> scrollArea;
+
+		std::shared_ptr<ScrollArea> resolutionScrollArea;
 		std::vector<std::shared_ptr<ButtonBasic>> resolutionButtons;
 
 		bool setMsaaMode(int samples);
@@ -44,6 +44,7 @@ namespace MTGame
 		void onCreateChildren();
 
 		void onButtonClicked(int id);
+		void onKeyPressed(SDL_Scancode key);
 	};
 
 }

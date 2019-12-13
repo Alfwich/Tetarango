@@ -15,6 +15,7 @@ namespace MT
 		Container();
 
 		void setExpandToChildren(bool flag);
+		bool getExpandToChildren();
 		void setSizeToScreenSize();
 
 		virtual void onDestroyChildren();

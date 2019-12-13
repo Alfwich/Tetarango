@@ -282,7 +282,7 @@
     <ClInclude Include="src\game\generator\block\GeneratorBlock.h" />
     <ClInclude Include="src\core\util\RandomGenerator.h" />
     <ClInclude Include="src\game\gui\hud\BaseHud.h" />
-    <ClInclude Include="src\core\engine\module\animation\INotifyOnTransitionCompleted.h" />
+    <ClInclude Include="src\core\engine\module\animation\INotifyOnTransition.h" />
     <ClInclude Include="src\game\gui\transition\TransitionFade.h" />
     <ClInclude Include="src\game\gui\menu\GameMainMenu.h" />
     <ClInclude Include="src\game\gui\transition\INotifyOnFade.h" />
