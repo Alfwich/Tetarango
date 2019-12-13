@@ -5,6 +5,7 @@
 namespace
 {
 	int nextId = 100;
+	const auto renderOrderLambda = [](const std::shared_ptr<MT::ApplicationObject>& a, const std::shared_ptr<MT::ApplicationObject>& b) {return a->zIndex < b->zIndex;};
 }
 
 namespace MT
@@ -174,7 +175,7 @@ namespace MT
 
 	const std::list<std::shared_ptr<ApplicationObject>>& ApplicationObject::getChildrenRenderOrder()
 	{
-		children.sort([](const std::shared_ptr<ApplicationObject>& a, const std::shared_ptr<ApplicationObject>& b) {return a->zIndex < b->zIndex;});
+		children.sort(renderOrderLambda);
 		return children;
 	}
 
@@ -285,7 +286,9 @@ namespace MT
 		}
 
 		currentActive = parentPtr->active && currentActive;
-		matchParentInputState(parentPtr->getInputEnabled());
+		if (parentPtr->getInputEnabled() && getInputMode() != InputMode::Disabled) {
+			setInputMode(InputMode::ParentEnabled);
+		}
 
 		if (!loaded || rebuildOnLoad) {
 
@@ -352,7 +355,10 @@ namespace MT
 	void ApplicationObject::detach()
 	{
 		currentActive = false;
-		resetToDefaultInputState();
+		if (getInputMode() != InputMode::Disabled)
+		{
+			setInputMode(InputMode::Unspecified);
+		}
 
 		modules->collision->unregisterObject(shared_from_this());
 		modules->event->unregisterOnEnterFrame(shared_from_this());

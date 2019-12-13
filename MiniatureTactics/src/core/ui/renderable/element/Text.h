@@ -44,6 +44,8 @@ namespace MT
 		void setText(std::string text);
 		std::string getText();
 
+		std::shared_ptr<Texture> getTextureText();
+
 		void onInitialAttach();
 		void onCreateChildren();
 		void onChildrenHydrated();

@@ -8,12 +8,10 @@ namespace
 
 namespace MT
 {
-
 	Backdrop::Backdrop()
 	{
 		renderType = RenderType::Backdrop;
 		disableCulling = true;
-		zIndex = -20;
 
 		enableSerialization<Backdrop>();
 	}
@@ -22,6 +20,4 @@ namespace MT
 	{
 		this->setSize(effectiveInfinity, effectiveInfinity);
 	}
-
-
 }

@@ -27,13 +27,7 @@ namespace MT
 		virtual void setInputEnabled(bool enabled) { enabled ? enableInput() : disableInput(); }
 		virtual InputMode getInputMode() { return inputMode; }
 		virtual void setInputMode(InputMode mode) { inputMode = mode; }
-		virtual void matchParentInputState(bool parentInputEnabled) 
-		{  
-			if (parentInputEnabled && inputMode != InputMode::Disabled) inputMode = InputMode::ParentEnabled;
-		}
-		virtual void resetToDefaultInputState() { if (inputMode != InputMode::Disabled) inputMode = InputMode::Unspecified; }
-
-		bool getInputEnabled() { return inputMode == InputMode::Enabled || inputMode == InputMode::ParentEnabled; }
+		virtual bool getInputEnabled() { return inputMode == InputMode::Enabled || inputMode == InputMode::ParentEnabled; }
 
 		virtual int inputListenerObjectId() { return 0; };
 		virtual void onKey(SDL_Scancode code, bool pressed) { /* NO-OP */ };

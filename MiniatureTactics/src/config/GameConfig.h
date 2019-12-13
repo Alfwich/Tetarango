@@ -36,7 +36,7 @@ namespace Config
 			std::map<Param, std::string> base
 			{
 					{ Param::version, "v0.06" },
-					{ Param::gameName, "Tetris" },
+					{ Param::gameName, "Tetrango" },
 					{ Param::organizationName, "AW Games" },
 					{ Param::logToConsole, TRUE },
 					{ Param::logToFile, TRUE },

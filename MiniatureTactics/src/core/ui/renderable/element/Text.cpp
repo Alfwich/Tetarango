@@ -141,6 +141,11 @@ namespace MT
 		return config.text;
 	}
 
+	std::shared_ptr<Texture> Text::getTextureText()
+	{
+		return textPositioningElement != nullptr ? textPositioningElement->getTexture() : nullptr;
+	}
+
 	void Text::onInitialAttach()
 	{
 		renderText();
