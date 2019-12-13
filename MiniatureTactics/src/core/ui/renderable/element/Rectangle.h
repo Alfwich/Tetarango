@@ -9,6 +9,9 @@ namespace MT
 	{
 	public:
 		Rectangle();
+
+		void onLoadResources();
+		void onInitialAttach();
 	};
 
 }

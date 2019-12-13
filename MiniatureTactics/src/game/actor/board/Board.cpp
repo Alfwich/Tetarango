@@ -37,23 +37,6 @@ namespace MTGame
 		}
 	}
 
-	void Board::primeBoards()
-	{
-		std::make_unique<Board>();
-	}
-
-	void Board::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
-	{
-		if (isLoaded) {
-			return;
-		}
-
-		modules->texture->loadTexture("res/game/img/actor/board/board-background.png", "board-background");
-		//modules->animation->addAnimationSet(std::make_shared<BlockAnimations>(config), blockAnimationName);
-
-		isLoaded = true;
-	}
-
 	Board::Board()
 	{
 		enableSerialization<Board>();
@@ -64,6 +47,11 @@ namespace MTGame
 		this->boardWidth = boardWidth;
 		this->boardHeight = boardHeight;
 		updateBoardIfNeeded();
+	}
+
+	void Board::onLoadResources()
+	{
+		modules->texture->loadTexture("res/game/img/actor/board/board-background.png", "board-background");
 	}
 
 	void Board::setCellSize(unsigned int width, unsigned int height)

@@ -6,7 +6,7 @@
 namespace MT
 {
 
-	class Container  : public ApplicationObject, public Renderable 
+	class Container : public ApplicationObject, public Renderable 
 	{ 
 		bool isAutoLayingOut = false;
 		void performAutoLayout();

@@ -1,5 +1,10 @@
 #include "Element.h"
 
+namespace
+{
+	const auto elementAutoSizeToTextureParam = "element-a-s-t-t";
+}
+
 namespace MT
 {
 
@@ -17,6 +22,11 @@ namespace MT
 	void Element::setTexture(std::shared_ptr<Texture> texture)
 	{
 		this->texture = texture;
+
+		if (getMatchSizeToTexture())
+		{
+			setSize(texture->getWidth(), texture->getHeight());
+		}
 	}
 
 	void Element::setTexture(std::string key)
@@ -46,6 +56,21 @@ namespace MT
 		}
 
 		return Renderable::getAlpha();
+	}
+
+	void Element::setMatchSizeToTexture(bool flag)
+	{
+		serializationClient->setBool(elementAutoSizeToTextureParam, flag);
+
+		if (flag && texture != nullptr)
+		{
+			setSize(texture->getWidth(), texture->getHeight());
+		}
+	}
+
+	bool Element::getMatchSizeToTexture()
+	{
+		return serializationClient->getBool(elementAutoSizeToTextureParam, false);
 	}
 
 	std::shared_ptr<SerializationClient> Element::doSerialize(SerializationHint hint)

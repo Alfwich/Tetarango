@@ -15,9 +15,7 @@ namespace MTGame
 		int blockX = 0, blockY = 0;
 		bool hasSettled = false;
 
-		static void primeBlocks();
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
-
+		void onLoadResources();
 		void onInitialAttach();
 		void onCreateChildren();
 		std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);

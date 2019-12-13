@@ -28,11 +28,10 @@ namespace MTGame
 		void positionBlock(const std::shared_ptr<Block> blockPtr);
 
 	public:
-		static void primeBoards();
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> modules);
-
 		Board();
 		Board(unsigned int width, unsigned int height);
+
+		void onLoadResources();
 
 		void setCellSize(unsigned int width, unsigned int height);
 		void addTetromino(const std::vector<std::shared_ptr<Block>>& blocks);

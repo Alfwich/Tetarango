@@ -15,10 +15,12 @@ namespace MTGame
 		int state = 0;
 
 		std::shared_ptr<MT::Text> splashText;
+		std::shared_ptr<MT::Element> splashImage;
 
 	public:
 		SceneSplash();
 
+		void onLoadResources();
 		void onCreateChildren();
 		void onChildrenHydrated();
 		void onInitialAttach();

@@ -100,6 +100,7 @@ namespace MT
 
 		virtual void enterFrame(double frameTime);
 
+		virtual void onLoadResources() { /* NO-OP */ };
 		virtual void onWillTransitioned() { /* NO-OP */ };
 		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { /* NO-OP */ };
 		virtual void onInitialAttach() { /* NO-OP */ };
@@ -227,6 +228,8 @@ namespace MT
 
 		this->schematic = std::make_shared<Schematic>(this->typeName, []() -> std::shared_ptr<ISerializable> { return std::make_shared<T>(); });
 		this->modules->serialization->registerSchematic(schematic);
+
+		onLoadResources();
 	}
 }
 

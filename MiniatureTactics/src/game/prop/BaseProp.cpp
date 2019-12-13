@@ -22,8 +22,7 @@ namespace MTGame
 		std::make_unique<ParticleHitSoftFactory>();
 		std::make_unique<ParticleSpaceBackgroundParticleFactory>();
 		std::make_unique<BlockParticleFactory>();
-
-		Block::primeBlocks();
+		std::make_unique<Block>();
 	}
 
 	void BaseProp::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
@@ -38,8 +37,6 @@ namespace MTGame
 		modules->texture->loadTexture("res/game/img/prop/particle/particle-hit-flesh.png", "particle-hit-flesh");
 		modules->texture->loadTexture("res/game/img/prop/particle/particle-firing.png", "particle-firing");
 		modules->texture->loadTexture("res/game/img/prop/particle/test-particle.png", "test-particle");
-
-		Block::loadResources(modules);
 
 		isLoaded = true;
 	}

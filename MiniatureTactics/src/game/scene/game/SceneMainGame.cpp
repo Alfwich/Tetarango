@@ -131,8 +131,7 @@ namespace MTGame
 		const auto currentScene = masterSceneContainer->getCurrentScene();
 		if (currentScene != nullptr)
 		{
-			currentScene->destroyChildren();
-			currentScene->onCreateChildren();
+			currentScene->rebuild();
 		}
 
 		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);

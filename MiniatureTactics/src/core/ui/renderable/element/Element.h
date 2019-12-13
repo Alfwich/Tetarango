@@ -31,6 +31,9 @@ namespace MT
 		std::shared_ptr<Texture> getTexture();
 		virtual double getAlpha();
 
+		void setMatchSizeToTexture(bool flag);
+		bool getMatchSizeToTexture();
+
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 	};
 }

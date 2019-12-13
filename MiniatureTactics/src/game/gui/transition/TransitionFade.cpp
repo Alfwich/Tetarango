@@ -1,5 +1,11 @@
 #include "TransitionFade.h"
 
+namespace
+{
+	const auto fadeRectName = "fade-rect";
+	const auto fadeDurationParam = "t-fade-duration";
+}
+
 namespace MTGame
 {
 
@@ -12,6 +18,24 @@ namespace MTGame
 	{
 		fadeTransition = modules->animation->createTransition();
 		fadeTransition->listener = std::dynamic_pointer_cast<MT::INotifyOnTransition>(shared_from_this());
+	}
+
+	void TransitionFade::onCreateChildren()
+	{
+		fadeRectangle = std::make_shared<MT::Rectangle>();
+		fadeRectangle->name = fadeRectName;
+		fadeRectangle->setColor(MT::Color::black());
+		add(fadeRectangle);
+	}
+
+	void TransitionFade::onChildrenHydrated()
+	{
+		fadeRectangle = findChildWithName<MT::Rectangle>(fadeRectName);
+	}
+
+	void TransitionFade::onLayoutChildren()
+	{
+		fadeRectangle->matchSizeAndCenter(this);
 	}
 
 	void TransitionFade::onTransitionCompleted(int transitionId)
@@ -37,13 +61,18 @@ namespace MTGame
 
 	void TransitionFade::setDuration(double duration)
 	{
-		serializationClient->setDouble("fade_duration", duration);
+		serializationClient->setDouble(fadeDurationParam, duration);
+	}
+
+	double TransitionFade::getDuration()
+	{
+		return serializationClient->getDouble(fadeDurationParam, 1000.0);
 	}
 
 	void TransitionFade::fadeIn()
 	{
 		visible = true;
-		fadeTransition->startTransition(std::dynamic_pointer_cast<MT::Renderable>(shared_from_this()), serializationClient->getDouble("fade_duration"), getRect(), 1.0);
+		fadeTransition->startTransition(std::dynamic_pointer_cast<MT::Renderable>(shared_from_this()), getDuration(), getRect(), 1.0);
 	}
 
 	void TransitionFade::fadeInImmediately()
@@ -54,7 +83,7 @@ namespace MTGame
 
 	void TransitionFade::fadeOut()
 	{
-		fadeTransition->startTransition(std::dynamic_pointer_cast<MT::Renderable>(shared_from_this()), serializationClient->getDouble("fade_duration"), getRect(), 0.0);
+		fadeTransition->startTransition(std::dynamic_pointer_cast<MT::Renderable>(shared_from_this()), getDuration(), getRect(), 0.0);
 	}
 
 	void TransitionFade::fadeOutImmediately()

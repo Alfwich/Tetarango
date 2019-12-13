@@ -15,6 +15,11 @@ namespace MTGame
 		enableSerialization<SceneSplash>();
 	}
 
+	void SceneSplash::onLoadResources()
+	{
+		modules->texture->loadTexture("res/game/img/splash/sdl-logo.png", "splash-sdl-logo");
+	}
+
 	void SceneSplash::onCreateChildren()
 	{
 		splashText = std::make_shared<MT::Text>();
@@ -24,6 +29,11 @@ namespace MTGame
 		splashText->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
 		splashText->setClipRect(MT::Rect(0.0, 0.0, 0.0, splashText->getHeight()));
 		add(splashText);
+
+		splashImage = std::make_shared<MT::Element>();
+		splashImage->setTexture("splash-sdl-logo");
+		splashImage->setMatchSizeToTexture(true);
+		add(splashImage);
 	}
 
 	void SceneSplash::onChildrenHydrated()

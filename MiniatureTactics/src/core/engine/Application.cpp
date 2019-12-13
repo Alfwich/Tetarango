@@ -113,7 +113,6 @@ namespace MT
 
 	void Application::loadResources()
 	{
-		modules->texture->loadTexture("res/core/img/solid.png", "__solid__");
 	}
 
 	void Application::primeSerialization()

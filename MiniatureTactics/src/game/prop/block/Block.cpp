@@ -18,22 +18,10 @@ namespace MTGame
 		enableSerialization<Block>();
 	}
 
-	void Block::primeBlocks()
+	void Block::onLoadResources()
 	{
-		std::make_unique<Block>();
-	}
-
-	void Block::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
-	{
-		if (isLoaded)
-		{
-			return;
-		}
-
 		modules->texture->loadTexture(config.blockTexturePath, blockTextureName);
 		modules->animation->addAnimationSet(std::make_shared<BlockAnimations>(config), blockAnimationName);
-
-		isLoaded = true;
 	}
 
 	void Block::onInitialAttach()
