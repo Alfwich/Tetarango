@@ -26,8 +26,11 @@ namespace MT
 		double startAlpha = 0.0;
 		double endAlpha = 0.0;
 
-		std::shared_ptr<Renderable> target;
-		std::shared_ptr<ApplicationObject> targetAO;
+		std::shared_ptr<Renderable> target = nullptr;
+		std::shared_ptr<ApplicationObject> targetAO = nullptr;
+
+		void performTargetedFrameUpdate(double frameTime);
+		void performTargetlessFrameUpdate(double frameTime);
 
 	public:
 		Transition(std::shared_ptr<Time> time, TimeScope scopeName);
@@ -38,6 +41,7 @@ namespace MT
 		std::weak_ptr<INotifyOnTransition> listener;
 
 		void startTransition(std::shared_ptr<Renderable> target, double durationMS, Rect targetRect, double targetAlpha = -1.0);
+		void startTargetlessTransition(double durationMS);
 		void resume();
 		void pause();
 		void stop();

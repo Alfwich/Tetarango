@@ -3,8 +3,6 @@
 
 namespace MT
 {
-
-
 	Transition::Transition(std::shared_ptr<Time> time, TimeScope scopeName)
 	{
 		id = ApplicationObject::getNextId();
@@ -58,7 +56,30 @@ namespace MT
 		paused = false;
 		playing = true;
 		enterFrameActivated = true;
+
 		target->onTransitionStart();
+		const auto listenerPtr = listener.lock();
+		if (listenerPtr != nullptr)
+		{
+			listenerPtr->onTransitionStarted(id);
+		}
+	}
+
+	void Transition::startTargetlessTransition(double durationMS)
+	{
+		position = 0.0;
+		this->duration = durationMS;
+
+		target = nullptr;
+		paused = false;
+		playing = true;
+		enterFrameActivated = true;
+
+		const auto listenerPtr = listener.lock();
+		if (listenerPtr != nullptr)
+		{
+			listenerPtr->onTransitionStarted(id);
+		}
 	}
 
 	void Transition::resume()
@@ -108,61 +129,114 @@ namespace MT
 
 	void Transition::onEnterFrame(double frameTime)
 	{
-		if (playing && target != nullptr)
+		if (playing)
 		{
-			if (targetAO != nullptr && !targetAO->isActive())
+			if (target != nullptr)
 			{
-				return;
-			}
-
-			position += frameTime * time->getTimeFactorForScope(scopeName);
-
-			if (position >= duration)
-			{
-				target->onTransitionFrame(1.0, endRect, endAlpha, id);
-
-				const auto listenerPtr = listener.lock();
-				if (listenerPtr != nullptr)
-				{
-					listenerPtr->onTransitionAnimationFrame(1.0, id);
-				}
-
-				if (looping)
-				{
-					position -= duration;
-					auto start = startRect;
-					startRect = endRect;
-					endRect = start;
-					auto startA = startAlpha;
-					startAlpha = endAlpha;
-					endAlpha = startA;
-				}
-				else
-				{
-					target->onTransitionEnd();
-					stop();
-				}
-
-				if (listenerPtr != nullptr)
-				{
-					listenerPtr->onTransitionCompleted(id);
-				}
+				performTargetedFrameUpdate(frameTime);
 			}
 			else
 			{
-				auto pos = position / duration;
-
-				auto intermediaryRect = Rect(startRect * (1.0 - pos) + (endRect * pos));
-				auto intermediaryAlpha = startAlpha * (1.0 - pos) + endAlpha * pos;
-				target->onTransitionFrame(pos, intermediaryRect, intermediaryAlpha, id);
-
-				const auto listenerPtr = listener.lock();
-				if (listenerPtr != nullptr)
-				{
-					listenerPtr->onTransitionAnimationFrame(pos, id);
-				}
+				performTargetlessFrameUpdate(frameTime);
 			}
 		}
 	}
 
+	void Transition::performTargetedFrameUpdate(double frameTime)
+	{
+		if (targetAO != nullptr && !targetAO->isActive())
+		{
+			return;
+		}
+
+		position += frameTime * time->getTimeFactorForScope(scopeName);
+
+		if (position >= duration)
+		{
+			target->onTransitionFrame(1.0, endRect, endAlpha, id);
+
+			const auto listenerPtr = listener.lock();
+			if (listenerPtr != nullptr)
+			{
+				listenerPtr->onTransitionAnimationFrame(1.0, id);
+			}
+
+			if (looping)
+			{
+				position -= duration;
+				auto start = startRect;
+				startRect = endRect;
+				endRect = start;
+				auto startA = startAlpha;
+				startAlpha = endAlpha;
+				endAlpha = startA;
+			}
+			else
+			{
+				target->onTransitionEnd();
+				stop();
+			}
+
+			if (listenerPtr != nullptr)
+			{
+				listenerPtr->onTransitionCompleted(id);
+			}
+		}
+		else
+		{
+			auto pos = position / duration;
+
+			auto intermediaryRect = Rect(startRect * (1.0 - pos) + (endRect * pos));
+			auto intermediaryAlpha = startAlpha * (1.0 - pos) + endAlpha * pos;
+			target->onTransitionFrame(pos, intermediaryRect, intermediaryAlpha, id);
+
+			const auto listenerPtr = listener.lock();
+			if (listenerPtr != nullptr)
+			{
+				listenerPtr->onTransitionAnimationFrame(pos, id);
+			}
+		}
+	}
+
+	void Transition::performTargetlessFrameUpdate(double frameTime)
+	{
+		position += frameTime * time->getTimeFactorForScope(scopeName);
+
+		if (position >= duration)
+		{
+			const auto listenerPtr = listener.lock();
+			if (listenerPtr != nullptr)
+			{
+				listenerPtr->onTransitionAnimationFrame(1.0, id);
+			}
+
+			if (looping)
+			{
+				position -= duration;
+				auto start = startRect;
+				startRect = endRect;
+				endRect = start;
+				auto startA = startAlpha;
+				startAlpha = endAlpha;
+				endAlpha = startA;
+			}
+			else
+			{
+				stop();
+			}
+
+			if (listenerPtr != nullptr)
+			{
+				listenerPtr->onTransitionCompleted(id);
+			}
+		}
+		else
+		{
+			const auto listenerPtr = listener.lock();
+			if (listenerPtr != nullptr)
+			{
+				listenerPtr->onTransitionAnimationFrame(position / duration, id);
+			}
+		}
+	}
 }

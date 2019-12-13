@@ -3,7 +3,11 @@
 
 namespace
 {
-	const char* splashTextId = "splash_text";
+	const auto sdlLogoTextureName = "splash-sdl-logo";
+	const auto openGLLogoTextureName = "splash-opengl-logo";
+	const auto splashTransitionTimeInSeconds = 14.0;
+	const auto fadeInHorMovement = 200.0;
+	const auto animationScalingFactor = 3.0;
 }
 
 namespace MTGame
@@ -17,37 +21,27 @@ namespace MTGame
 
 	void SceneSplash::onLoadResources()
 	{
-		modules->texture->loadTexture("res/game/img/splash/sdl-logo.png", "splash-sdl-logo");
+		modules->texture->loadTexture("res/game/img/splash/sdl-logo.png", sdlLogoTextureName);
+		modules->texture->loadTexture("res/game/img/splash/opengl-logo.png", openGLLogoTextureName);
 	}
 
 	void SceneSplash::onCreateChildren()
 	{
 		splashText = std::make_shared<MT::Text>();
-		splashText->name = splashTextId;
 		splashText->setFont("medium", 150);
-		splashText->setText("SPLASH");
-		splashText->setPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
-		splashText->setClipRect(MT::Rect(0.0, 0.0, 0.0, splashText->getHeight()));
+		splashText->setText("built with");
 		add(splashText);
 
 		splashImage = std::make_shared<MT::Element>();
-		splashImage->setTexture("splash-sdl-logo");
+		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
 	}
 
-	void SceneSplash::onChildrenHydrated()
-	{
-		splashText = findChildWithName<MT::Text>(splashTextId);
-		splashText->setClipRect(MT::Rect(0.0, 0.0, 0.0, getScreenHeight()));
-	}
-
 	void SceneSplash::onInitialAttach()
 	{
-		Scene::onInitialAttach();
-		enableEnterFrame();
 		splashTransition = modules->animation->createTransitionForTimeScope(MT::TimeScope::Menu);
-		transitionTimer = modules->time->createTimer(MT::TimeScope::Menu);
+		splashTransition->listener = std::dynamic_pointer_cast<MT::INotifyOnTransition>(shared_from_this());
 
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, baseSceneWeakThisRef());
 		modules->input->keyboard->registerKey(SDL_SCANCODE_SPACE, baseSceneWeakThisRef());
@@ -57,60 +51,127 @@ namespace MTGame
 	{
 		state = 0;
 		splashText->setAlpha(0.0);
-		splashTransition->startTransition(splashText, 2000.0, splashText->getRect(), 1.0);
-		transitionTimer->start();
+		splashTransition->startTargetlessTransition(splashTransitionTimeInSeconds * 1000.0);
 	}
 
-	void SceneSplash::onEnterFrame(double frameTime)
+	void SceneSplash::onTransitionAnimationFrame(double position)
 	{
+		const auto currentTransitionSeconds = position * splashTransitionTimeInSeconds;
+		const auto currentStateTime = currentTransitionSeconds - animationOffset * splashTransitionTimeInSeconds;
 		if (state == 0)
 		{
-			auto cRect = MT::Rect(splashText->getClipRect());
-			if (cRect.w < getScreenWidth())
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledPosition) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight());
+			splashText->toTopOf(splashImage);
+
+			splashText->setAlpha(scaledPosition);
+			splashImage->setAlpha(scaledPosition);
+
+			if (currentTransitionSeconds > 2.0)
 			{
-				cRect.w += 400.0 * (frameTime / 1000.0);
-				splashText->setClipRect(cRect);
+				animationOffset = position;
+				state = 1;
 			}
 		}
-
-		if (transitionTimer->getTicks() > 3000.0 && state == 0)
+		else if (state == 1)
 		{
-			splashTransition->startTransition(splashText, 1500.0, splashText->getRect(), 0.0);
-			state = 1;
-		}
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledPosition * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight());
+			splashImage->setAlpha(1.0 - scaledPosition);
 
-		if (state == 1)
-		{
-			auto cRect = MT::Rect(splashText->getClipRect());
-			if (cRect.h > 0.0)
+			if (scaledPosition == 1.0)
 			{
-				cRect.h -= 200.0 * (frameTime / 1000.0);
-
-				if (cRect.h < 0.0)
-				{
-					cRect.h = 0.0;
-				}
-
-				splashText->setClipRect(cRect);
+				splashImage->setTexture(openGLLogoTextureName);
+				animationOffset = position;
+				state = 2;
 			}
 		}
-
-		if (transitionTimer->getTicks() > 4500.0 && state == 1 || state == 2)
+		else if (state == 2)
 		{
-			splashTransition->finish();
-			transitionToScene(SceneGame::MainMenu);
-			state = 3;
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledPosition) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight());
+			splashImage->setAlpha(scaledPosition);
+
+			if (currentTransitionSeconds > 5.0)
+			{
+				animationOffset = position;
+				state = 3;
+			}
 		}
+		else if (state == 3)
+		{
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledPosition * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight());
+			splashImage->setAlpha(1.0 - scaledPosition);
+			splashText->toTopOf(splashImage);
+			splashText->setAlpha(1.0 - scaledPosition);
+
+			if (currentTransitionSeconds > 6.0)
+			{
+				splashText->setText("AW Games Presents");
+				animationOffset = position;
+				state = 4;
+			}
+		}
+		else if (state == 4)
+		{
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledPosition) * fadeInHorMovement), getScreenHeight() / 2.0);
+			splashText->setAlpha(scaledPosition);
+
+			if (currentTransitionSeconds > 8.0)
+			{
+				animationOffset = position;
+				state = 5;
+			}
+		}
+		else if (state == 5)
+		{
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashText->setPosition(getScreenWidth() / 2.0 + (scaledPosition * fadeInHorMovement), getScreenHeight() / 2.0);
+			splashText->setAlpha(1.0 - scaledPosition);
+
+			if (currentTransitionSeconds > 10.0)
+			{
+				splashText->setText(modules->gameConfig->getConfigString(Config::Param::gameName));
+				animationOffset = position;
+				state = 6;
+			}
+		}
+		else if (state == 6)
+		{
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledPosition) * fadeInHorMovement), getScreenHeight() / 2.0);
+			splashText->setAlpha(scaledPosition);
+
+			if (currentTransitionSeconds > 12.0)
+			{
+				animationOffset = position;
+				state = 7;
+			}
+		}
+		else if (state == 7)
+		{
+			const auto scaledPosition = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactor), 0.0, 1.0);
+			splashText->setPosition(getScreenWidth() / 2.0 + (scaledPosition * fadeInHorMovement), getScreenHeight() / 2.0);
+			splashText->setAlpha(1.0 - scaledPosition);
+		}
+
+	}
+
+	void SceneSplash::onTransitionCompleted()
+	{
+		transitionToScene(SceneGame::MainMenu);
 	}
 
 	void SceneSplash::onMouseButtonLeftDown()
 	{
-		state = 2;
+		splashTransition->finish();
 	}
 
 	void SceneSplash::onKeyPressed(SDL_Scancode key)
 	{
-		state = 2;
+		splashTransition->finish();
 	}
 
 }

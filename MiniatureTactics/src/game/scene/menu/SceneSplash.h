@@ -8,11 +8,11 @@
 namespace MTGame
 {
 
-	class SceneSplash : public BaseScene
+	class SceneSplash : public BaseScene, public MT::INotifyOnTransition
 	{
 		std::shared_ptr<MT::Transition> splashTransition;
-		std::shared_ptr<MT::Timer> transitionTimer;
 		int state = 0;
+		double animationOffset = 0.0;
 
 		std::shared_ptr<MT::Text> splashText;
 		std::shared_ptr<MT::Element> splashImage;
@@ -22,10 +22,11 @@ namespace MTGame
 
 		void onLoadResources();
 		void onCreateChildren();
-		void onChildrenHydrated();
 		void onInitialAttach();
 		void onAttach();
-		void onEnterFrame(double frameTime);
+
+		void onTransitionAnimationFrame(double position);
+		void onTransitionCompleted();
 
 		void onMouseButtonLeftDown();
 		void onKeyPressed(SDL_Scancode key);
