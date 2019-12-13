@@ -240,12 +240,29 @@ namespace MT
 		return &worldRect;
 	}
 
+	void ApplicationObject::createChildren()
+	{
+		if (rebuildOnLoad || !hasCreatedChildren)
+		{
+			onCreateChildren();
+			hasCreatedChildren = true;
+			hasHydratedChildren = true;
+		}
+	}
+
 	void ApplicationObject::destroyChildren()
 	{
 		onDestroyChildren();
 		this->children.clear();
 
 		hasCreatedChildren = false;
+	}
+
+	void ApplicationObject::rebuild()
+	{
+		destroyChildren();
+		createChildren();
+		layout();
 	}
 
 	void ApplicationObject::enterFrame(double frameTime)
@@ -287,9 +304,7 @@ namespace MT
 
 			if (rebuildOnLoad || (softAddedChildren.empty() && !hasCreatedChildren))
 			{
-				onCreateChildren();
-				hasCreatedChildren = true;
-				hasHydratedChildren = true;
+				createChildren();
 				layout();
 			}
 			else

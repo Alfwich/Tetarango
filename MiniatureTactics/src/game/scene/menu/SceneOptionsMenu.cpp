@@ -56,8 +56,9 @@ namespace MTGame
 
 		resolutionScrollArea = std::make_shared<ScrollArea>();
 		resolutionScrollArea->setExpandToChildren(false);
-		resolutionScrollArea->setSize(180.0, 503.0);
-		resolutionScrollArea->setScrollerHeight(503.0);
+		resolutionScrollArea->setSize(180.0, 505.0);
+		resolutionScrollArea->setScrollerHeight(505.0);
+		resolutionScrollArea->setScrollAmount(45.0);
 		add(resolutionScrollArea);
 
 		resolutionButtons.clear();
@@ -140,12 +141,15 @@ namespace MTGame
 		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
 		wireframeModeCheckbox->clickListener = weak_from_this();
 		add(wireframeModeCheckbox);
+	}
 
+	void SceneOptionsMenu::onLayoutChildren()
+	{
 		const auto generalElementOffset = 5.0;
 		const auto verticalScreenBorderOffset = 100.0;
 		const auto optionsXOffset = 50.0;
 		const auto checkboxYOffset = 10.0;
-		const auto checkboxYGroupOffset = 20.0;
+		const auto checkboxYGroupOffset = 32.0;
 
 		optionsMenuTitle->setPosition(getScreenWidth() / 2.0, verticalScreenBorderOffset / 2.0);
 

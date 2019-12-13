@@ -49,6 +49,9 @@ namespace MTGame
 		void setScrollerWidth(double width);
 		double getScollerWidth();
 
+		void setScrollAmount(double amount);
+		double getScollAmount();
+
 		void setMouseWheenEnabled(bool flag);
 		void onMouseWheel(int x, int y);
 

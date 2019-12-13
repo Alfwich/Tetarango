@@ -17,6 +17,7 @@ namespace
 	const auto scrollerHeightParam = "sa-sh";
 	const auto scrollerXOffsetParam = "sa-x-o";
 	const auto scrollerYOffsetParam = "sa-y-o";
+	const auto scrollerScrollAmountParam = "sa-s-a";
 }
 
 namespace MTGame
@@ -148,7 +149,7 @@ namespace MTGame
 			return;
 		}
 
-		const auto scrollAmount = 50;
+		const auto scrollAmount = getScollAmount();
 		if (y < 0)
 		{
 			container->scrollPixels(scrollAmount);
@@ -249,6 +250,16 @@ namespace MTGame
 	double ScrollArea::getScollerWidth()
 	{
 		return serializationClient->getDouble(scrollerWidthParam, 15.0);
+	}
+
+	void ScrollArea::setScrollAmount(double amount)
+	{
+		serializationClient->setDouble(scrollerScrollAmountParam, amount);
+	}
+
+	double ScrollArea::getScollAmount()
+	{
+		return serializationClient->getDouble(scrollerScrollAmountParam, 50.0);
 	}
 
 	void ScrollArea::setMouseWheenEnabled(bool flag)

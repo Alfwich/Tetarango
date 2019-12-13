@@ -209,11 +209,9 @@ namespace MT
 
 			if (currentScene->rebuildOnLoad)
 			{
-				currentScene->destroyChildren();
-				currentScene->onCreateChildren();
+				currentScene->rebuild();
 			}
-
-			if (currentScene->layoutOnLoad)
+			else if (currentScene->layoutOnLoad)
 			{
 				currentScene->layout();
 			}

@@ -42,6 +42,7 @@ namespace MTGame
 		void onAttach();
 		void onDestroyChildren();
 		void onCreateChildren();
+		void onLayoutChildren();
 
 		void onButtonClicked(int id);
 		void onKeyPressed(SDL_Scancode key);

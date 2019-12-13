@@ -90,11 +90,15 @@ namespace MT
 		TimeScope getTimeScope();
 		void clearTimeScope();
 
+		void createChildren();
 		void destroyChildren();
-		virtual void enterFrame(double frameTime);
+		void rebuild();
+
 		void attach();
 		void layout();
 		void detach();
+
+		virtual void enterFrame(double frameTime);
 
 		virtual void onWillTransitioned() { /* NO-OP */ };
 		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { /* NO-OP */ };
