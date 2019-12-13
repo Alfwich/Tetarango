@@ -325,6 +325,7 @@ namespace MT
 		glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
@@ -336,6 +337,7 @@ namespace MT
 
 		glDisable(GL_BLEND);
 		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_MULTISAMPLE);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		glUseProgram(0);

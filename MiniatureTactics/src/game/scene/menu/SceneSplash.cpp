@@ -306,6 +306,8 @@ namespace MTGame
 
 		disableEnterFrame();
 
+		destroyChildren();
+
 		transitionToScene(SceneGame::MainMenu);
 	}
 

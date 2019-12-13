@@ -16,7 +16,7 @@ namespace MTGame
 		std::shared_ptr<MT::NineSlice> background;
 		std::shared_ptr<MT::NineSlice> scroller;
 		std::shared_ptr<MT::Transition> scrollerTransition;
-		void updateScrollerYPosition();
+		void updateScrollerYPosition(bool instant = false);
 
 	public:
 		ScrollBarBasic();
@@ -26,6 +26,7 @@ namespace MTGame
 		void setScrollerHeight(double height);
 		double getScrollerHeight();
 
+		void setScrollPositionInstantly(double pos);
 		void setScrollPosition(double pos);
 		double getScrollPosition();
 

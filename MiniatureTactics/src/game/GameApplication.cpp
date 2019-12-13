@@ -9,6 +9,7 @@ namespace
 	const auto displayMSAAParamKey = "display-MSAA";
 	const auto displayOpenGLCompatibilityParamKey = "display-open-gl-compadibility";
 	const auto displayWireframeModeParamKey = "display-wireframe-mode";
+	const auto displayDoubleBufferParamKey = "display-double-buffer";
 }
 
 namespace MTGame
@@ -28,6 +29,7 @@ namespace MTGame
 			screenConfig.msaaSamples = storageClient->readInt(displayMSAAParamKey);
 			screenConfig.openGLCompatibilityMode = storageClient->readBool(displayOpenGLCompatibilityParamKey);
 			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
+			screenConfig.useDoubleBuffer = storageClient->readBool(displayDoubleBufferParamKey);
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;

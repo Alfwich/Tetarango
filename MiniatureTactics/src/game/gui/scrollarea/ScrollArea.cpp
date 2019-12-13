@@ -85,6 +85,7 @@ namespace MTGame
 				scroller->toRightOf(container, scroller->getHalfWidth() + getScrollerXOffset(), -container->getHalfHeight() + scroller->getHeight() + (scroller->getScrollerHeight() / 2.0) + getScrollerYOffset());
 				scroller->setScrollerHeight(myHeight / containerHeight);
 				scroller->visible = getScrollerVisible();
+				scroller->setScrollPositionInstantly(container->getScrollPosition());
 			}
 			else
 			{

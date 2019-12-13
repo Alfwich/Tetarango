@@ -79,12 +79,12 @@ namespace MTGame
 
 	}
 
-	void ScrollBarBasic::updateScrollerYPosition()
+	void ScrollBarBasic::updateScrollerYPosition(bool instant)
 	{
 		const auto scrollerHeight = getScrollerHeight() * getHeight();
 		auto targetRect = scroller->getRect();
 		targetRect.y = -getHalfHeight() + (getScrollPosition() * getHeight()) + scrollerHeight / 2.0;
-		scrollerTransition->startTransition(scroller, 50.0, targetRect);
+		scrollerTransition->startTransition(scroller, instant ? 0.0 : 50.0, targetRect);
 	}
 
 	void ScrollBarBasic::setEnabled(bool flag)
@@ -101,6 +101,20 @@ namespace MTGame
 	double ScrollBarBasic::getScrollerHeight()
 	{
 		return serializationClient->getDouble(scrollbarHeightParamName, 0.1);
+	}
+
+	void ScrollBarBasic::setScrollPositionInstantly(double pos)
+	{
+		const auto value = MT::NumberHelper::clamp<double>(pos, 0.0, 1.0);
+		serializationClient->setDouble(scrollbarPositionParamName, value);
+
+		updateScrollerYPosition(true);
+
+		const auto notifyPtr = std::dynamic_pointer_cast<IGuiListener>(scrollListener.lock());
+		if (notifyPtr != nullptr)
+		{
+			notifyPtr->onScrollBarScroll(value);
+		}
 	}
 
 	void ScrollBarBasic::setScrollPosition(double pos)
