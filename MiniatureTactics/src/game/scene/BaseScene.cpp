@@ -12,8 +12,6 @@ namespace
 
 namespace MTGame
 {
-	bool BaseScene::isLoaded = false;
-
 	const Scenes& BaseScene::getScenes()
 	{
 		return config;
@@ -31,21 +29,6 @@ namespace MTGame
 		std::make_unique<SceneMainGame>();
 
 		std::make_unique<SceneTetris>();
-	}
-
-	void BaseScene::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
-	{
-		if (isLoaded)
-		{
-			return;
-		}
-
-		modules->sound->loadSoundClip("res/game/snd/medium.wav", "test");
-		modules->texture->loadTexture("res/game/img/tile/grass.png", "tile-grass");
-		modules->texture->loadTexture("res/game/img/tile/wood-floor.png", "tile-wood-floor");
-		modules->texture->loadTexture("res/game/img/tile/test-scene-background.png", "test-scene-background");
-
-		isLoaded = true;
 	}
 
 	std::string BaseScene::sceneToStr(SceneGame scene)

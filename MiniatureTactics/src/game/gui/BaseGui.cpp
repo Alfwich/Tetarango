@@ -11,8 +11,6 @@ namespace
 
 namespace MTGame
 {
-	bool BaseGui::isLoaded = false;
-
 	const Guis& BaseGui::getGuis()
 	{
 		return config;
@@ -27,20 +25,6 @@ namespace MTGame
 		std::make_unique<TransitionFade>();
 		std::make_unique<ScrollBarBasic>();
 		std::make_unique<ScrollArea>();
-	}
-
-	void BaseGui::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
-	{
-		if (isLoaded)
-		{
-			return;
-		}
-
-		ButtonBasic::loadResources(modules);
-		CheckBoxBasic::loadResources(modules);
-		ScrollBarBasic::loadResources(modules);
-
-		isLoaded = true;
 	}
 
 	BaseGui::BaseGui(GuiButton button) :

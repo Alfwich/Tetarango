@@ -8,8 +8,6 @@ namespace MTGame
 {
 	class Block : public MT::Animated, public BaseProp
 	{
-		static bool isLoaded;
-
 	public:
 		Block();
 		int blockX = 0, blockY = 0;

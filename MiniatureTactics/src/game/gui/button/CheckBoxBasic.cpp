@@ -24,9 +24,16 @@ namespace
 
 namespace MTGame
 {
-	void CheckBoxBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
+	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{
-		bundle->texture->loadTexture(checkboxTexturePath, checkBoxBasicId);
+		setExpandToChildren(false);
+		setSize(40.0, 40.0);
+		enableSerialization<CheckBoxBasic>();
+	}
+
+	void CheckBoxBasic::onLoadResources()
+	{
+		modules->texture->loadTexture(checkboxTexturePath, checkBoxBasicId);
 
 		auto animationSet = std::make_shared<MT::AnimationSet>();
 		{
@@ -56,14 +63,7 @@ namespace MTGame
 			}
 		}
 
-		bundle->animation->addAnimationSet(animationSet, checkBoxBasicId);
-	}
-
-	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
-	{
-		setExpandToChildren(false);
-		setSize(40.0, 40.0);
-		enableSerialization<CheckBoxBasic>();
+		modules->animation->addAnimationSet(animationSet, checkBoxBasicId);
 	}
 
 	CheckBoxBasic::CheckBoxBasic() : CheckBoxBasic(GuiButton::CheckBoxBasic) {}

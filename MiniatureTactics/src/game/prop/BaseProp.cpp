@@ -10,8 +10,6 @@ namespace
 
 namespace MTGame
 {
-	bool BaseProp::isLoaded = false;
-
 	void BaseProp::primeProps()
 	{
 		std::make_unique<TestParticleFactory>();
@@ -23,22 +21,6 @@ namespace MTGame
 		std::make_unique<ParticleSpaceBackgroundParticleFactory>();
 		std::make_unique<BlockParticleFactory>();
 		std::make_unique<Block>();
-	}
-
-	void BaseProp::loadResources(std::shared_ptr<MT::SystemModuleBundle> modules)
-	{
-		if (isLoaded)
-		{
-			return;
-		}
-
-		modules->texture->loadTexture("res/game/img/prop/particle/particle-hit-soft.png", "particle-hit-soft");
-		modules->texture->loadTexture("res/game/img/prop/particle/particle-hit-hard.png", "particle-hit-hard");
-		modules->texture->loadTexture("res/game/img/prop/particle/particle-hit-flesh.png", "particle-hit-flesh");
-		modules->texture->loadTexture("res/game/img/prop/particle/particle-firing.png", "particle-firing");
-		modules->texture->loadTexture("res/game/img/prop/particle/test-particle.png", "test-particle");
-
-		isLoaded = true;
 	}
 
 	const Props& BaseProp::getProps()

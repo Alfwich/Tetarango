@@ -19,8 +19,9 @@ namespace MTGame
 		void updateScrollerYPosition();
 
 	public:
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
 		ScrollBarBasic();
+
+		void onLoadResources();
 
 		void setScrollerHeight(double height);
 		double getScrollerHeight();

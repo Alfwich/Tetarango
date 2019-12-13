@@ -12,10 +12,16 @@ namespace
 
 namespace MTGame
 {
-	void ButtonBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
+	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{
-		bundle->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
-		bundle->texture->loadTexture("res/game/img/ui/button/proto_button.png", buttonBasicId);
+		setSize(180, 80);
+		enableSerialization<ButtonBasic>();
+	}
+
+	void ButtonBasic::onLoadResources()
+	{
+		modules->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
+		modules->texture->loadTexture("res/game/img/ui/button/proto_button.png", buttonBasicId);
 
 		auto animationSet = std::make_shared<MT::AnimationSet>();
 		{
@@ -45,13 +51,7 @@ namespace MTGame
 				anim->addGeneralFrames(0, frameSize.h, frameSize.w, frameSize.h, 1);
 			}
 		}
-		bundle->animation->addAnimationSet(animationSet, buttonBasicId);
-	}
-
-	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
-	{
-		setSize(180, 80);
-		enableSerialization<ButtonBasic>();
+		modules->animation->addAnimationSet(animationSet, buttonBasicId);
 	}
 
 	void ButtonBasic::setText(std::string text)

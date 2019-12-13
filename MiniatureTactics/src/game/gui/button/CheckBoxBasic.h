@@ -15,11 +15,12 @@ namespace MTGame
 		std::shared_ptr<MT::Animated> checkbox;
 		std::shared_ptr<MT::Text> label;
 		bool isHovering = false, isPressed = false;
-	public:
 
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
+	public:
 		CheckBoxBasic();
 		CheckBoxBasic(GuiButton configuration);
+
+		void onLoadResources();
 
 		void onCreateChildren();
 		void onChildrenHydrated();

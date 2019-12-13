@@ -8,8 +8,6 @@ namespace MTGame
 {
 	class BaseGui
 	{
-		static bool isLoaded;
-
 		enum class GuiType
 		{
 			Button,
@@ -29,7 +27,6 @@ namespace MTGame
 
 	public:
 		static void primeGuis();
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> modules);
 
 		BaseGui(GuiButton button);
 		BaseGui(GuiCamera camera);

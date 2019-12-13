@@ -17,7 +17,6 @@ namespace MTGame
 
 	public:
 		void onInit();
-		void onLoadResources();
 		void onPrimeSerialization();
 		void onReady();
 		void onCleanup();

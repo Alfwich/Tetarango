@@ -2,9 +2,6 @@
 
 namespace MTGame
 {
-
-	bool Board::isLoaded = false;
-
 	std::shared_ptr<MT::Transition> Board::getTransition()
 	{
 		return modules->animation->createGameTransition();

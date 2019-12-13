@@ -33,13 +33,6 @@ namespace MTGame
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
 	}
 
-	void GameApplication::onLoadResources()
-	{
-		BaseGui::loadResources(modules);
-		BaseScene::loadResources(modules);
-		BaseProp::loadResources(modules);
-	}
-
 	void GameApplication::onPrimeSerialization()
 	{
 		BaseGui::primeGuis();

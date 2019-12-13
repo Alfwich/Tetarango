@@ -15,8 +15,6 @@ namespace MTGame
 
 	class BaseProp
 	{
-		static bool isLoaded;
-
 		enum class PropType
 		{
 			Unspecified,
@@ -32,7 +30,6 @@ namespace MTGame
 
 	public:
 		static void primeProps();
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> modules);
 
 		PropInfo info;
 

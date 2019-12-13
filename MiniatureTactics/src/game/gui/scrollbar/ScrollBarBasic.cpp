@@ -14,9 +14,14 @@ namespace
 
 namespace MTGame
 {
-	void ScrollBarBasic::loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle)
+	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
 	{
-		bundle->texture->loadTexture("res/game/img/ui/scrollbar/scrollbar_basic.png", scrollbarBasicTextureId);
+		enableSerialization<ScrollBarBasic>();
+	}
+
+	void ScrollBarBasic::onLoadResources()
+	{
+		modules->texture->loadTexture("res/game/img/ui/scrollbar/scrollbar_basic.png", scrollbarBasicTextureId);
 
 		{
 			auto animationSet = std::make_shared<MT::AnimationSet>();
@@ -41,7 +46,7 @@ namespace MTGame
 					anim->addGeneralFrames(frameSize.w * 1, 0, frameSize.w, frameSize.h, 1);
 				}
 			}
-			bundle->animation->addAnimationSet(animationSet, scrollbarBasicBackgroundId);
+			modules->animation->addAnimationSet(animationSet, scrollbarBasicBackgroundId);
 		}
 
 		{
@@ -69,13 +74,9 @@ namespace MTGame
 					anim->addGeneralFrames(frameSize.x, frameSize.y, frameSize.w, frameSize.h, 1);
 				}
 			}
-			bundle->animation->addAnimationSet(animationSet, scrollbarBasicScrollerId);
+			modules->animation->addAnimationSet(animationSet, scrollbarBasicScrollerId);
 		}
-	}
 
-	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
-	{
-		enableSerialization<ScrollBarBasic>();
 	}
 
 	void ScrollBarBasic::updateScrollerYPosition()

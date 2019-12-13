@@ -11,8 +11,6 @@ namespace
 
 namespace MTGame
 {
-	bool Block::isLoaded = false;
-
 	Block::Block()
 	{
 		enableSerialization<Block>();

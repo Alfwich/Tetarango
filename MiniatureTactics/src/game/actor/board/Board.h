@@ -10,8 +10,6 @@ namespace MTGame
 {
 	class Board : public MT::Element
 	{
-		static bool isLoaded;
-
 		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true;
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64;
 		std::vector<std::shared_ptr<MT::Transition>> transitions;

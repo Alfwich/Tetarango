@@ -17,8 +17,9 @@ namespace MTGame
 		std::shared_ptr<MT::NineSlice> background;
 		bool isHovering = false, isPressed = false;
 	public:
-		static void loadResources(std::shared_ptr<MT::SystemModuleBundle> bundle);
 		ButtonBasic();
+
+		void onLoadResources();
 
 		void onCreateChildren();
 		void onChildrenHydrated();
