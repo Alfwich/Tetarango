@@ -7,6 +7,9 @@
 namespace
 {
 	MTGame::GeneratorBlock blockColorGenerator;
+	const auto musicName = "tetris-music";
+	const auto clearRowSoundName = "tetris-clear-row";
+	const auto gameOverSoundName = "tetris-game-over";
 }
 
 namespace MTGame
@@ -18,7 +21,10 @@ namespace MTGame
 
 	void SceneTetris::onLoadResources()
 	{
-		modules->sound->loadMusic("res/game/snd/tetris.mp3", "tetris-music");
+		modules->sound->loadMusic("res/game/snd/tetris.mp3", musicName);
+
+		modules->sound->loadSoundClip("res/game/snd/clear-row.wav", clearRowSoundName);
+		modules->sound->loadSoundClip("res/game/snd/game-over.wav", gameOverSoundName);
 	}
 
 	void SceneTetris::updateScoreText()
@@ -50,13 +56,16 @@ namespace MTGame
 
 	void SceneTetris::onAttach()
 	{
-		modules->sound->playMusic("tetris-music");
+		if (!board->getHasFailedToPlacePiece())
+		{
+			modules->sound->playMusic(musicName);
+		}
 		particleSystem->start();
 	}
 
 	void SceneTetris::onDetach()
 	{
-		modules->sound->stopMusic("tetris-music");
+		modules->sound->stopMusic(musicName);
 	}
 
 	void SceneTetris::onCreateChildren()
@@ -140,9 +149,17 @@ namespace MTGame
 			previewBoard->addTetromino(blockColorGenerator.getTetromino());
 		}
 
+		if (board->getHasFailedToPlacePiece() && !hasPlayedGameOverSound)
+		{
+			modules->sound->stopMusic(musicName, 50);
+			modules->sound->playSoundClip(gameOverSoundName);
+			hasPlayedGameOverSound = true;
+		}
+
 		auto eliminatedPieces = board->getEliminatedPieces();
 		if (eliminatedPieces.size() > 0)
 		{
+			modules->sound->playSoundClip(clearRowSoundName);
 			const auto blockParticleFactory = std::make_shared<BlockParticleFactory>();
 			auto blockScore = 5;
 			while (eliminatedPieces.size() > 0)
@@ -236,6 +253,9 @@ namespace MTGame
 			score = 0;
 			updateScoreText();
 			board->resetBoard();
+			modules->sound->playSoundClip(clearRowSoundName);
+			hasPlayedGameOverSound = false;
+			modules->sound->playMusic(musicName);
 			break;
 		}
 	}

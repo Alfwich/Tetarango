@@ -1,5 +1,10 @@
 #include "Board.h"
 
+namespace
+{
+	const auto pieceLandSoundName = "tetris-piece-land";
+}
+
 namespace MTGame
 {
 	std::shared_ptr<MT::Transition> Board::getTransition()
@@ -49,6 +54,8 @@ namespace MTGame
 	void Board::onLoadResources()
 	{
 		modules->texture->loadTexture("res/game/img/actor/board/board-background.png", "board-background");
+
+		modules->sound->loadSoundClip("res/game/snd/piece-land.wav", pieceLandSoundName);
 	}
 
 	void Board::setCellSize(unsigned int width, unsigned int height)
@@ -477,6 +484,7 @@ namespace MTGame
 					}
 				}
 				currentBlocks.clear();
+				modules->sound->playSoundClip(pieceLandSoundName);
 			}
 
 			for (const auto blockToDrop : blocksToDrop)
