@@ -4,6 +4,7 @@
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
 #include "ui/renderable/element/tilemap/TileMap.h"
 #include "ui/renderable/primitive/trace/Trace.h"
+#include "ui/renderable/element/Rectangle.h"
 
 namespace
 {
@@ -80,6 +81,8 @@ namespace MT
 			setClearColor(0xff, 0xff, 0xff, 0xff);
 			setGlobalColorMod(0xff, 0xff, 0xff);
 		}
+
+		currentScreenConfig = screenConfig;
 
 		initOpenGL(window, screenConfig);
 	}
@@ -451,6 +454,11 @@ namespace MT
 				renderUpdateRect(renderable, &computed, &renderPackage);
 				ao->setWorldRect(&computed);
 				ao->updateScreenRect(&renderPackage);
+
+				if (currentScreenConfig.visualizeContainers)
+				{
+					renderable->doUpdateDebugChildren();
+				}
 			}
 
 			if (ao->getHasClipRect())
@@ -483,6 +491,18 @@ namespace MT
 
 		if (ao->getHasClipRect())
 		{
+			if (currentScreenConfig.visualizeClipRects)
+			{
+				const auto testRect = std::make_shared<Rectangle>();
+				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
+				testRect->zIndex = 20;
+				testRect->setAlpha(0.25);
+				testRect->onInitialAttach();
+				colorStack.push(MT::Color::red());
+				renderElement(testRect, &Rect(), &RenderPackage());
+				colorStack.pop();
+			}
+
 			renderPackage.stencilDepth--;
 
 			if (renderPackage.stencilDepth == 0)

@@ -21,7 +21,8 @@ namespace Config
 		hydrateOnLoad,
 		launchToLastScene,
 		storageLocation,
-		visualizeZones,
+		visualizeContainers,
+		visualizeClipRects,
 		useAssetPack,
 		assetPackName,
 		enableTestScenes
@@ -47,7 +48,8 @@ namespace Config
 					{ Param::saveWholeSceneOnClose, FALSE },
 					{ Param::hydrateOnLoad, TRUE },
 					{ Param::launchToLastScene, FALSE },
-					{ Param::visualizeZones, FALSE },
+					{ Param::visualizeContainers, FALSE },
+					{ Param::visualizeClipRects, FALSE },
 					{ Param::useAssetPack, TRUE },
 					{ Param::assetPackName, "asset.pack" },
 					{ Param::enableTestScenes, FALSE },
@@ -62,11 +64,12 @@ namespace Config
 				base[Param::launchToLastScene] = FALSE;
 				base[Param::useAssetPack] = FALSE;
 				base[Param::saveWholeSceneOnClose] = TRUE;
+				//base[Param::visualizeClipRects] = TRUE;
+				//base[Param::visualizeContainers] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::runTests] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
-				//base[Param::visualizeZones] = TRUE;
 			}
 			else if (MT_ENVIRONMENT == "PROD")
 			{

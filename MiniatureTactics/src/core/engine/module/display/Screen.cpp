@@ -25,13 +25,12 @@ namespace MT
 		bool isSupportedDisplayResolution = false;
 		for (const auto displayMode : getAllSupportedDisplayModes().modes)
 		{
-			isSupportedDisplayResolution = displayMode.w == config.width && displayMode.h == config.height;
+			isSupportedDisplayResolution = displayMode.w == currentConfig.width && displayMode.h == currentConfig.height;
 
 			if (isSupportedDisplayResolution)
 			{
 				break;
 			}
-
 		}
 
 		if (!isSupportedDisplayResolution)
@@ -40,7 +39,7 @@ namespace MT
 		}
 
 		int windowFlags = windowFlags = SDL_WINDOW_OPENGL;
-		if (!config.openGLCompatibilityMode)
+		if (!currentConfig.openGLCompatibilityMode)
 		{
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 		}
@@ -51,13 +50,13 @@ namespace MT
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 1);
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, config.openGLMajorVersion);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, config.openGLMinorVersion);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, currentConfig.openGLMajorVersion);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, currentConfig.openGLMinorVersion);
 
-		if (config.msaaSamples > 0)
+		if (currentConfig.msaaSamples > 0)
 		{
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaaSamples);
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, currentConfig.msaaSamples);
 
 		}
 		else
@@ -66,7 +65,7 @@ namespace MT
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
 		}
 
-		switch (config.mode)
+		switch (currentConfig.mode)
 		{
 		case ScreenModes::Fullscreen:
 			windowFlags = (windowFlags | SDL_WINDOW_FULLSCREEN);
@@ -81,9 +80,12 @@ namespace MT
 			break;
 		}
 
-		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, config.width, config.height, windowFlags);
+		currentConfig.visualizeContainers = gameConfig->getConfigBool(Config::Param::visualizeContainers);
+		currentConfig.visualizeClipRects = gameConfig->getConfigBool(Config::Param::visualizeClipRects);
 
-		renderer = std::make_shared<Renderer>(window, config, renderer);
+		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, currentConfig.width, currentConfig.height, windowFlags);
+
+		renderer = std::make_shared<Renderer>(window, currentConfig, renderer);
 
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 

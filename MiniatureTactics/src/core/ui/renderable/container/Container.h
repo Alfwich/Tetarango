@@ -23,6 +23,8 @@ namespace MT
 
 		void setWidth(double newWidth);
 		void setHeight(double newHeight);
+
+		void doUpdateDebugChildren();
 	};
 
 }

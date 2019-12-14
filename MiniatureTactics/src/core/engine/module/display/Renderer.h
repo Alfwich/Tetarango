@@ -19,6 +19,8 @@ namespace MT
 
 	class Renderer
 	{
+		ScreenConfig currentScreenConfig;
+
 		SDL_GLContext glContext;
 		Color clearColor, globalColorMod;
 

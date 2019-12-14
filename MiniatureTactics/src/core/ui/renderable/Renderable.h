@@ -169,6 +169,8 @@ namespace MT
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
+
+		virtual void doUpdateDebugChildren() { /* NO-OP */ }
 	};
 }
 

@@ -1,8 +1,11 @@
 #include "Container.h"
 
+#include "ui/renderable/element/Rectangle.h"
+
 namespace
 {
 	const auto expandToChildrenParamName = "eXtc";
+	const auto debugBgRectName = "__debug__bg__";
 }
 
 namespace MT
@@ -38,6 +41,7 @@ namespace MT
 
 	void Container::add(std::shared_ptr<ApplicationObject> obj)
 	{
+
 		ApplicationObject::add(obj);
 
 		if (!getExpandToChildren())
@@ -84,6 +88,27 @@ namespace MT
 			isAutoLayingOut = true;
 			layout();
 			isAutoLayingOut = false;
+		}
+	}
+
+	void Container::doUpdateDebugChildren()
+	{
+		Renderable::doUpdateDebugChildren();
+
+		const auto existingBg = findChildWithName<MT::Rectangle>(debugBgRectName, false);
+		if (existingBg == nullptr)
+		{
+			const auto newBg = std::make_shared<MT::Rectangle>();
+			newBg->name = debugBgRectName;
+			newBg->setAlpha(0.25);
+			newBg->setColor(MT::Color::random());
+			newBg->zIndex = 1;
+			newBg->matchSizeAndCenter(this);
+			add(newBg);
+		}
+		else
+		{
+			existingBg->matchSizeAndCenter(this);
 		}
 	}
 }

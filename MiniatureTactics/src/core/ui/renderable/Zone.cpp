@@ -33,7 +33,7 @@ namespace MT
 	{
 		Container::onInitialAttach();
 
-		if (modules->gameConfig->getConfigBool(Config::Param::visualizeZones) && !serializationClient->getBool("visualize"))
+		if (modules->gameConfig->getConfigBool(Config::Param::visualizeContainers) && !serializationClient->getBool("visualize"))
 		{
 			visualize();
 		}

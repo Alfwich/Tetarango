@@ -40,7 +40,7 @@ namespace MT
 		std::shared_ptr<T> findFirstInParentChain();
 
 		template <typename T>
-		std::shared_ptr<T> findChildWithName(std::string name);
+		std::shared_ptr<T> findChildWithName(std::string name, bool checkChildren = true);
 
 		Rect worldRect, screenRect, clipRect;
 
@@ -132,7 +132,6 @@ namespace MT
 		virtual void childHydrated(std::shared_ptr<ISerializable> child);
 		virtual bool shouldSerializeChildren();
 
-
 		virtual bool collisionEnabled();
 		virtual void addCollisionScope(CollisionScope scope);
 		virtual void removeCollisionScope(CollisionScope scope);
@@ -163,7 +162,7 @@ namespace MT
 	}
 
 	template<typename T>
-	inline std::shared_ptr<T> ApplicationObject::findChildWithName(std::string name)
+	inline std::shared_ptr<T> ApplicationObject::findChildWithName(std::string name, bool checkChildren)
 	{
 		// Check immediate children
 		for (const auto child : children)
@@ -176,16 +175,19 @@ namespace MT
 			}
 		}
 
-		// Check children recursive
-		for (const auto child : children)
+		if (checkChildren)
 		{
-			for (const auto childChild : child->getChildren())
+			// Check children recursive
+			for (const auto child : children)
 			{
-				const auto result = child->findChildWithName<T>(name);
-
-				if (result != nullptr)
+				for (const auto childChild : child->getChildren())
 				{
-					return result;
+					const auto result = child->findChildWithName<T>(name, checkChildren);
+
+					if (result != nullptr)
+					{
+						return result;
+					}
 				}
 			}
 		}
