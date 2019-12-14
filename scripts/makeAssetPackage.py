@@ -3,7 +3,7 @@ import os, sys, datetime, glob, shutil, io, subprocess
 from distutils.dir_util import copy_tree
 
 resource_folders = ["MiniatureTactics/res"]
-resource_include_files = [".png", ".wav", ".ttf"]
+resource_include_files = [".png", ".wav", ".ttf", ".mp3"]
 
 output_file = "asset.pack"
 

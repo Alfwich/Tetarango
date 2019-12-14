@@ -124,6 +124,7 @@
     <ClCompile Include="src\game\gui\scrollbar\ScrollBarBasic.cpp" />
     <ClCompile Include="src\game\gui\scrollarea\ScrollArea.cpp" />
     <ClCompile Include="src\game\prop\title\TitleGame.cpp" />
+    <ClCompile Include="src\core\engine\module\sound\Music.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\UI\Camera.h" />
@@ -261,6 +262,7 @@
     <ClInclude Include="src\game\gui\scrollarea\ScrollArea.h" />
     <ClInclude Include="src\core\engine\module\animation\INotifyOnTransition.h" />
     <ClInclude Include="src\game\prop\title\TitleGame.h" />
+    <ClInclude Include="src\core\engine\module\sound\Music.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

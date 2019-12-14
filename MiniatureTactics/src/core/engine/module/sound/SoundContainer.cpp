@@ -21,15 +21,44 @@ namespace MT
 		Logger::instance()->log("Sound::Loaded sound name= " + name + ", path=" + path);
 	}
 
-	void SoundContainer::playSoundClip(std::string name, double volume)
+	std::shared_ptr<SoundClip> SoundContainer::getSoundClip(std::string name)
 	{
 		if (soundClips.count(name) == 0)
 		{
-			Logger::instance()->logCritical("Sound::Failed to play sound name=" + name + ", at volume=" + std::to_string(volume));
+			Logger::instance()->logCritical("Sound::Failed to get sound name=" + name);
+			return nullptr;
+		}
+
+		return soundClips[name];
+	}
+
+	void SoundContainer::loadMusic(std::string path, std::string name)
+	{
+		if (musics.count(name) == 1)
+		{
+			Logger::instance()->logCritical("Sound::Failed to load sound path=" + path + ", with name=" + name);
 			return;
 		}
 
-		soundClips[name]->play(volume);
+		auto clip = std::make_shared<Music>(path, asset);
+		musics[name] = clip;
+		Logger::instance()->log("Sound::Loaded sound name= " + name + ", path=" + path);
 	}
 
+	std::shared_ptr<Music> SoundContainer::getMusic(std::string name)
+	{
+		if (musics.count(name) == 0)
+		{
+			Logger::instance()->logCritical("Sound::Failed to get music name=" + name);
+			return nullptr;
+		}
+
+		return musics[name];
+	}
+
+	void SoundContainer::cleanup()
+	{
+		soundClips.clear();
+		musics.clear();
+	}
 }

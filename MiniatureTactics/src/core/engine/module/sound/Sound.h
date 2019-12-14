@@ -1,7 +1,5 @@
 #pragma once
 
-#include "SDL.h"
-#include "SDL_mixer.h"
 #include "engine/module/IBaseModule.h"
 #include "engine/module/asset/Asset.h"
 #include "SoundContainer.h"
@@ -13,6 +11,7 @@ namespace MT
 	class Sound : public IBaseModule
 	{
 		SoundContainer soundContainer;
+		std::string currentMusic;
 
 	public:
 		void onInit();
@@ -20,7 +19,16 @@ namespace MT
 		void bindAsset(std::shared_ptr<Asset> asset);
 
 		void loadSoundClip(std::string path, std::string name);
-		void playSoundClip(std::string name, double volume);
+		void playSoundClip(std::string name, double volume = 1.0);
+		void stopAllSoundClips(int fadeOutMS = 1000);
+
+		void loadMusic(std::string path, std::string name);
+		void playMusic(std::string name, int fadeInMS = 1000);
+		void stopMusic(std::string name = "", int fadeOutMS = 1000);
+
+		void stopAllSounds(int fadeOutMS = 1000);
+
+		void onCleanup();
 	};
 
 }

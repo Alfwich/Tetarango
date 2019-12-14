@@ -158,14 +158,13 @@ namespace MT
 		modules->logger->log("Application::onCleanup");
 		onCleanup();
 
+		modules->logger->log("Application::Cleanup modules");
+		modules->onCleanup();
+
 		Mix_Quit();
 		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();
-
-		modules->logger->log("Application::Cleanup modules");
-		modules->onCleanup();
-
 	}
 
 	void Application::processApplicationEvents()

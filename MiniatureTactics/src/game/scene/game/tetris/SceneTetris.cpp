@@ -16,6 +16,11 @@ namespace MTGame
 		enableSerialization<SceneTetris>();
 	}
 
+	void SceneTetris::onLoadResources()
+	{
+		modules->sound->loadMusic("res/game/snd/tetris.mp3", "tetris-music");
+	}
+
 	void SceneTetris::updateScoreText()
 	{
 		if (scoreText == nullptr)
@@ -39,12 +44,19 @@ namespace MTGame
 		keyRepeatTimer = modules->time->createTimer(MT::TimeScope::Game);
 		keyRepeatTimer->start();
 
+
 		enableEnterFrame();
 	}
 
 	void SceneTetris::onAttach()
 	{
+		modules->sound->playMusic("tetris-music");
 		particleSystem->start();
+	}
+
+	void SceneTetris::onDetach()
+	{
+		modules->sound->stopMusic("tetris-music");
 	}
 
 	void SceneTetris::onCreateChildren()

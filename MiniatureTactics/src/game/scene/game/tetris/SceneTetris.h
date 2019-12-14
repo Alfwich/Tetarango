@@ -28,8 +28,11 @@ namespace MTGame
 	public:
 		SceneTetris();
 
+		void onLoadResources();
+
 		void onInitialAttach();
 		void onAttach();
+		void onDetach();
 		void onCreateChildren();
 		void onChildrenHydrated();
 

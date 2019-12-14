@@ -7,19 +7,18 @@
 
 namespace MT
 {
-
-	class SoundClip
+	class Music
 	{
-		Mix_Chunk* chunk = nullptr;
+		Mix_Music* music = nullptr;
 		std::shared_ptr<Asset> asset;
 
-		void loadSound(std::string path);
+		void loadMusic(std::string path);
 
 	public:
-		SoundClip(std::string soundPath, std::shared_ptr<Asset> asset);
-		virtual ~SoundClip();
+		Music(std::string soundPath, std::shared_ptr<Asset> asset);
+		virtual ~Music();
 
-		Mix_Chunk* getChunk();
+		Mix_Music* getMusic();
 	};
-
 }
+

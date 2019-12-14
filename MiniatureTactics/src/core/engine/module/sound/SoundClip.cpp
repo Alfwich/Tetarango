@@ -1,10 +1,9 @@
 #include "SoundClip.h"
 
+#include "SDL_mixer.h"
 
 namespace MT
 {
-
-
 	SoundClip::SoundClip(std::string path, std::shared_ptr<Asset> asset)
 	{
 		this->asset = asset;
@@ -36,22 +35,15 @@ namespace MT
 
 		if (chunk == nullptr)
 		{
-			Logger::instance()->logCritical("Sound::Failed to load sound on path=" + path);
+			Logger::instance()->logFatal("Sound::Failed to load sound on path=" + path);
 			return;
 		}
 
 		this->chunk = chunk;
 	}
 
-	void SoundClip::play(double volume)
+	Mix_Chunk* SoundClip::getChunk()
 	{
-		if (chunk != nullptr)
-		{
-			int vol = (int)(128 * volume);
-			//Mix_Volume(-1, vol);
-			Mix_VolumeChunk(chunk, vol);
-			Mix_PlayChannel(-1, chunk, 0);
-		}
+		return chunk;
 	}
-
 }
