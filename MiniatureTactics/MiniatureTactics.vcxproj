@@ -193,6 +193,7 @@
     <ClCompile Include="src\game\gui\BaseGui.cpp" />
     <ClCompile Include="src\core\engine\module\collision\Collision.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\Backdrop.cpp" />
+    <ClCompile Include="src\game\prop\title\TitleGame.cpp" />
     <ClCompile Include="src\game\scene\BaseScene.cpp" />
     <ClCompile Include="src\core\engine\module\serialization\SerializationClient.cpp" />
     <ClCompile Include="src\core\engine\module\storage\HuffmanEncoder.cpp" />
@@ -310,6 +311,7 @@
     <ClInclude Include="src\game\GameStoragePaths.h" />
     <ClInclude Include="src\core\util\NumberHelper.h" />
     <ClInclude Include="src\core\util\linmath.h" />
+    <ClInclude Include="src\game\prop\title\TitleGame.h" />
     <ClInclude Include="src\game\scene\BaseScene.h" />
     <ClInclude Include="src\core\engine\module\serialization\SerializationClient.h" />
     <ClInclude Include="src\core\engine\module\storage\HuffmanEncoder.h" />

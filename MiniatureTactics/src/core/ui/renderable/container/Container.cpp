@@ -28,14 +28,6 @@ namespace MT
 		setSize(modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
-	void Container::onDestroyChildren()
-	{
-		if (getExpandToChildren())
-		{
-			setSize(0, 0);
-		}
-	}
-
 	std::shared_ptr<SerializationClient> Container::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__container__", hint);

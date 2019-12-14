@@ -21,6 +21,7 @@ namespace MTGame
 		std::make_unique<ParticleSpaceBackgroundParticleFactory>();
 		std::make_unique<BlockParticleFactory>();
 		std::make_unique<Block>();
+		std::make_unique<TitleGame>();
 	}
 
 	const Props& BaseProp::getProps()

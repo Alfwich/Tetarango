@@ -26,6 +26,7 @@
 // Props
 #include "prop/BaseProp.h"
 #include "prop/block/Block.h"
+#include "prop/title/TitleGame.h"
 
 // Actor
 #include "actor/board/Board.h"

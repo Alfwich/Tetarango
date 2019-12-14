@@ -22,25 +22,6 @@ namespace
 	const auto blockHeightGenerationLimit = -6000.0;
 	const auto titleBackgroundMovement = 9.0;
 
-	const std::vector<MT::Color> colors
-	{
-		MT::Color(0xa001efff),
-		MT::Color(0x0001f2ff),
-		MT::Color(0xf00100ff),
-		MT::Color(0xf0f001ff),
-		MT::Color(0x00f000ff),
-		MT::Color(0xefa000ff),
-		MT::Color(0x01f0f1ff),
-		MT::Color(0xa001efff),
-		MT::Color(0x0001f2ff),
-		MT::Color(0xf00100ff),
-		MT::Color(0xf0f001ff),
-		MT::Color(0x00f000ff),
-		MT::Color(0xefa000ff),
-		MT::Color(0x01f0f1ff)
-
-	};
-
 	MTGame::GeneratorBlock blockColorGenerator;
 }
 
@@ -77,6 +58,9 @@ namespace MTGame
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
 
+		titleGame = std::make_shared<TitleGame>();
+		add(titleGame);
+
 		loadingProgressBar = std::make_shared<MT::Element>();
 		loadingProgressBar->setTexture(loadingPatternTextureName);
 		add(loadingProgressBar);
@@ -86,8 +70,6 @@ namespace MTGame
 	{
 		splashTransition = modules->animation->createTransitionForTimeScope(MT::TimeScope::Menu);
 		splashTransition->listener = std::dynamic_pointer_cast<MT::INotifyOnTransition>(shared_from_this());
-
-		splashTitleMoveTimer = modules->time->createTimer();
 
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, baseSceneWeakThisRef());
 		modules->input->keyboard->registerKey(SDL_SCANCODE_SPACE, baseSceneWeakThisRef());
@@ -99,6 +81,7 @@ namespace MTGame
 		blocks.clear();
 		splashText->setAlpha(0.0);
 		splashImage->setAlpha(0.0);
+		titleGame->setAlpha(0.0);
 		loadingProgressBar->setColor(150, 150, 150);
 		loadingProgressBar->setHeight(loadingBarHeight);
 		splashTransition->startTargetlessTransition(splashTransitionTimeInSeconds * 1000.0);
@@ -178,34 +161,6 @@ namespace MTGame
 
 			if (tryToGotoNextState(position, 1.0))
 			{
-				splashText->setFontSize(titleFontSizeBig);
-				splashText->setText(modules->gameConfig->getConfigString(Config::Param::gameName));
-				if (splashText->getWidth() > getScreenWidth())
-				{
-					splashText->setFontSize(titleFontSizeSmall);
-				}
-
-				const auto titleRotationOffsetBase = (MT::NumberHelper::PI * 2.0) / colors.size();
-				auto rotationOffset = 0.0;
-				auto zIndex = -1;
-				for (const auto c : colors)
-				{
-					const auto newTitle = std::make_shared<MT::Element>();
-					newTitle->setColor(c);
-					newTitle->setMatchSizeToTexture(true);
-					newTitle->setTexture(splashText->getTextureText());
-					newTitle->setPosition(getScreenWidth() / 2.0 - ((1.0 - 0.0) * fadeInHorMovement), getScreenHeight() / 2.0);
-					newTitle->zIndex = zIndex--;
-					newTitle->setAlpha(0.0);
-					titles.push_back(newTitle);
-					titleOffsets.push_back(std::make_pair(0.0, 0.0));
-					titleRotationOffsets.push_back(rotationOffset);
-					titleTransitions.push_back(modules->animation->createTransition());
-					add(newTitle);
-
-					rotationOffset += titleRotationOffsetBase;
-				}
-
 				for (auto i = 0; i < numBlocksToMake; ++i)
 				{
 					for (auto block : blockColorGenerator.getTetromino())
@@ -214,27 +169,27 @@ namespace MTGame
 						block->setRotation(MT::NumberHelper::random(0.0, 360.0));
 						block->setX(MT::NumberHelper::random() * getScreenWidth());
 						block->setY(MT::NumberHelper::random(-100.0, blockHeightGenerationLimit));
-						block->zIndex = zIndex;
+						block->zIndex = -2;
 						blocks.push_back(block);
 						blockContainer->add(block);
 					}
 				}
 
-				splashTitleMoveTimer->start();
-				enableEnterFrame(-1);
+				titleGame->visible = true;
+				enableEnterFrame();
 			}
 		}
 		else if (state == 6)
 		{
-			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0);
-			splashText->setAlpha(scaledMainPositionIn);
+			titleGame->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0);
+			titleGame->setAlpha(scaledMainPositionIn);
 
 			tryToGotoNextState(position, 6.0);
 		}
 		else if (state == 7)
 		{
-			splashText->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * 0.0), getScreenHeight() / 2.0);
-			splashText->setAlpha(1.0 - scaledMainPositionOut);
+			titleGame->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * 0.0), getScreenHeight() / 2.0);
+			titleGame->setAlpha(1.0 - scaledMainPositionOut);
 		}
 	}
 
@@ -250,23 +205,6 @@ namespace MTGame
 				block->setScale(MT::NumberHelper::clamp<double>(block->getScaleX() - frameTime / 1000.0, 0.0, 1.0));
 			}
 		}
-
-		for (auto i = 0; i < titles.size(); ++i)
-		{
-			const auto title = titles[i];
-			const auto titleOffset = titleOffsets[i];
-
-			title->setSizeAndPosition(MT::Rect(splashText->getX() + titleOffset.first, splashText->getY() + titleOffset.second, title->getWidth(), title->getHeight()));
-			title->setAlpha(splashText->getAlpha() - 0.45);
-		}
-
-		for (auto i = 0; i < titleOffsets.size(); ++i)
-		{
-			const auto titleRotationOffset = titleRotationOffsets[i];
-			titleOffsets[i] = std::make_pair(std::cos(titleRotationOffset + (accFrameTime / 1000.0)) * titleBackgroundMovement, std::sin(titleRotationOffset + (accFrameTime / 1000.0)) * titleBackgroundMovement);
-		}
-
-		accFrameTime += frameTime * MT::NumberHelper::PI * 2.0;
 	}
 
 	bool SceneSplash::tryToGotoNextState(double position, double timeThreshold)
@@ -291,14 +229,6 @@ namespace MTGame
 			block->removeFromParent();
 		}
 		blocks.clear();
-
-		for (const auto title : titles)
-		{
-			title->removeFromParent();
-		}
-		titles.clear();
-		titleOffsets.clear();
-		titleTransitions.clear();
 
 		disableEnterFrame();
 

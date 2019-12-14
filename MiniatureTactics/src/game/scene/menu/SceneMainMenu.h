@@ -4,6 +4,7 @@
 #include "ui/renderable/element/Text.h"
 #include "scene/BaseScene.h"
 #include "gui/button/ButtonBasic.h"
+#include "prop/title/TitleGame.h"
 
 namespace MTGame
 {
@@ -12,7 +13,7 @@ namespace MTGame
 	{
 		int state = 0;
 
-		std::shared_ptr<MT::Text> gameTitleText;
+		std::shared_ptr<TitleGame> gameTitle;
 		std::shared_ptr<MT::Transition> gameTitleTransition;
 
 		std::shared_ptr<MT::Container> rootContainer;

@@ -29,16 +29,14 @@ namespace MTGame
 		rootContainer->centerAlignSelf();
 		add(rootContainer);
 
-		gameTitleText = std::make_shared<MT::Text>();
-		gameTitleText->setFont("medium", 52);
-		gameTitleText->setText(modules->gameConfig->getConfigString(Config::Param::gameName));
-		gameTitleText->toTopOf(rootContainer, 0, -gameTitleText->getHalfHeight() - modules->screen->getHeight() * 0.35);
-		rootContainer->add(gameTitleText);
+		gameTitle = std::make_shared<TitleGame>();
+		rootContainer->add(gameTitle);
+		gameTitle->toTopOf(rootContainer, 0.0, -gameTitle->getHalfHeight() - modules->screen->getHeight() * 0.35);
 
 		const auto buttonOffset = modules->screen->getHeight() * buttonVerticalPaddingFactor;
 		const auto centerContainer = std::make_shared<MT::Container>();
 		centerContainer->setExpandToChildren(true);
-		centerContainer->centerWithin(rootContainer, 0, gameTitleText->getBottom() / 2.0);
+		centerContainer->centerWithin(rootContainer, 0, gameTitle->getBottom() / 2.0);
 		rootContainer->add(centerContainer);
 
 		playButton = std::make_shared<ButtonBasic>();

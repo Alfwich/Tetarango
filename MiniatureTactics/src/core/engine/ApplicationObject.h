@@ -69,6 +69,7 @@ namespace MT
 
 		void activate();
 		void deactivate();
+
 		bool isActive();
 
 		int zIndex = 0;
