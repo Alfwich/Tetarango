@@ -165,10 +165,11 @@ namespace MTGame
 				{
 					for (auto block : blockColorGenerator.getTetromino())
 					{
+						const auto randomX = MT::NumberHelper::random(blockHeightGenerationLimit, -100);
+						const auto randomY = MT::NumberHelper::random(blockHeightGenerationLimit, -100);
 						block->setScale(0.5);
-						block->setRotation(MT::NumberHelper::random(0.0, 360.0));
-						block->setX(MT::NumberHelper::random() * getScreenWidth());
-						block->setY(MT::NumberHelper::random(-100.0, blockHeightGenerationLimit));
+						block->setX(randomX);
+						block->setY(randomY);
 						block->zIndex = -2;
 						blocks.push_back(block);
 						blockContainer->add(block);
@@ -197,8 +198,8 @@ namespace MTGame
 	{
 		for (const auto block : blocks)
 		{
-			block->movePosition(0.0, 800.0 * (frameTime / 1000.0));
-			block->rotate(90.0 * (frameTime / 1000.0));
+			const auto deltaTime = frameTime / 1000.0;
+			block->movePosition(600.0 * deltaTime, 600.0 * deltaTime);
 
 			if (state == 7)
 			{

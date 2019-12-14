@@ -12,9 +12,6 @@ namespace MTGame
 	{
 		std::shared_ptr<MT::Text> primaryTitle;
 		std::vector<std::shared_ptr<MT::Element>> titles;
-		std::vector<double> rotationOffset;
-
-		double currentRuntime = 0.0;
 
 	public:
 		TitleGame();
@@ -22,9 +19,7 @@ namespace MTGame
 		void setFontSize(int fontSize);
 		int getFontSize();
 
-		void onInitialAttach();
 		void onCreateChildren();
 		void onLayoutChildren();
-		void onEnterFrame(double frameTime);
 	};
 }
