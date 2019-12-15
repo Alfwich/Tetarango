@@ -6,14 +6,14 @@
 
 namespace
 {
-	MTGame::GeneratorBlock blockColorGenerator;
+	AWGame::GeneratorBlock blockColorGenerator;
 	const auto musicName = "tetris-music";
 	const auto clearRowSoundName = "tetris-clear-row";
 	const auto gameOverSoundName = "tetris-game-over";
 	const auto tetarangoSoundName = "tetris-tetarango";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	SceneTetris::SceneTetris() : BaseScene(SceneGame::Tetris)
 	{

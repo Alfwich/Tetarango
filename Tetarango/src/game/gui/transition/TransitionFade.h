@@ -8,7 +8,7 @@
 #include "engine/module/animation/INotifyOnTransition.h"
 #include "INotifyOnFade.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class TransitionFade : public BaseGui, public MT::Container, public MT::INotifyOnTransition

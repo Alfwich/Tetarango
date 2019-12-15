@@ -6,10 +6,10 @@
 
 namespace
 {
-	const MTGame::Guis config;
+	const AWGame::Guis config;
 }
 
-namespace MTGame
+namespace AWGame
 {
 	const Guis& BaseGui::getGuis()
 	{

@@ -7,7 +7,7 @@
 #include "gui/IGuiListener.h"
 #include "gui/BaseGui.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class ScrollBarBasic : public BaseGui, public MT::Container

@@ -8,7 +8,7 @@
 #include "ui/renderable/element/Rectangle.h"
 #include "engine/module/display/DisplayRoot.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class GameApplication : public MT::Application

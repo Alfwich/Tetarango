@@ -10,7 +10,7 @@ namespace
 	const auto backgroundName = "button-basic-background";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{

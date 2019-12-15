@@ -12,7 +12,7 @@ namespace
 	const auto playerGameStateId = "playerGameState";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	std::string SceneMainGame::getSaveSlotFilePath()
 	{

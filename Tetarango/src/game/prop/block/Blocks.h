@@ -4,7 +4,7 @@
 #include <map>
 #include "util/Rect.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	enum class BlockTypes

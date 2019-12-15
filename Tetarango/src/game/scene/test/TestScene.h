@@ -8,7 +8,7 @@
 #include "ui/scene/SceneTransitionBundle.h"
 #include "gui/camera/GameCamera.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class TestScene : public MT::Scene

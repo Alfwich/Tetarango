@@ -3,7 +3,7 @@
 #include "ui/renderable/primitive/particle/IParticleFactory.h"
 #include "ParticleBulletTrail.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class ParticleBulletTrailParticleFactory : public MT::IParticleFactory
 	{

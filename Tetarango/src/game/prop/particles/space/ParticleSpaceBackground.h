@@ -2,7 +2,7 @@
 
 #include "ui/renderable/primitive/particle/Particle.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class ParticleSpaceBackground : public MT::Particle

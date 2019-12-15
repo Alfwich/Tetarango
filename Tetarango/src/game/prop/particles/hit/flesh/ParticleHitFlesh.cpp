@@ -1,6 +1,6 @@
 #include "ParticleHitFlesh.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	ParticleHitFlesh::ParticleHitFlesh(std::shared_ptr<MT::TextureContainer> textureContainer)

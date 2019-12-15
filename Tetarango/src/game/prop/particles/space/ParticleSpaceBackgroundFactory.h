@@ -3,7 +3,7 @@
 #include "ui/renderable/primitive/particle/IParticleFactory.h"
 #include "ParticleSpaceBackground.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class ParticleSpaceBackgroundParticleFactory : public MT::IParticleFactory
 	{

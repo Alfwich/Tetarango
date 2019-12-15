@@ -20,7 +20,7 @@ namespace
 	const auto scrollerScrollAmountParam = "sa-s-a";
 }
 
-namespace MTGame
+namespace AWGame
 {
 
 	ScrollArea::ScrollArea() : BaseGui(GuiScrollArea::ScrollArea)

@@ -3,7 +3,7 @@
 #include "gui/button/ButtonBasic.h"
 #include "scene/BaseScene.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class SceneSavedGamesMenu : public BaseScene

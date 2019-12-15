@@ -4,13 +4,13 @@
 
 namespace
 {
-	const MTGame::Scenes config;
+	const AWGame::Scenes config;
 
 	const std::string gameStoragePrefix = "game-store-";
 	const std::string gameFileStoragePrefix = "save-";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	const Scenes& BaseScene::getScenes()
 	{

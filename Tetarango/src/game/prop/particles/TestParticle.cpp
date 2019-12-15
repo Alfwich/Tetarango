@@ -1,7 +1,7 @@
 #include "TestParticle.h"
 
 
-namespace MTGame
+namespace AWGame
 {
 
 	TestParticle::TestParticle(std::shared_ptr<MT::TextureContainer> textureContainer)

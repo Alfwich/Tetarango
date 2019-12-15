@@ -5,10 +5,10 @@
 
 namespace
 {
-	const MTGame::Props config;
+	const AWGame::Props config;
 }
 
-namespace MTGame
+namespace AWGame
 {
 	void BaseProp::primeProps()
 	{

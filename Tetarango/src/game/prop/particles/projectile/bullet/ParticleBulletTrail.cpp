@@ -1,7 +1,7 @@
 #include "ParticleBulletTrail.h"
 
 
-namespace MTGame
+namespace AWGame
 {
 
 	ParticleBulletTrail::ParticleBulletTrail(std::shared_ptr<MT::TextureContainer> textureContainer)

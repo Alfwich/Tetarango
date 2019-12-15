@@ -1,6 +1,6 @@
 #include "ParticleHitSoft.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	ParticleHitSoft::ParticleHitSoft(std::shared_ptr<MT::TextureContainer> textureContainer)

@@ -1,6 +1,6 @@
 #include "BaseHud.h"
 
-namespace MTGame
+namespace AWGame
 {
 	BaseHud::BaseHud(GuiHud hud) : BaseGui(hud) {}
 

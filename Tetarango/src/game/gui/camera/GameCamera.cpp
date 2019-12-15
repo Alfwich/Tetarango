@@ -2,7 +2,7 @@
 
 #include "gui/Guis.h"
 
-namespace MTGame
+namespace AWGame
 {
 	GameCamera::GameCamera() : BaseGui(GuiCamera::CameraBasic)
 	{

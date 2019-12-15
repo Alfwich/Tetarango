@@ -9,7 +9,7 @@ namespace
 	const std::string player = "player";
 }
 
-namespace MTGame
+namespace AWGame
 {
 
 	TestScene::TestScene() : MT::Scene("test_scene")
@@ -122,7 +122,7 @@ namespace MTGame
 
 				for (auto i = 0; i < 5; ++i)
 				{
-					auto newBlock = std::make_shared<MTGame::Block>();
+					auto newBlock = std::make_shared<AWGame::Block>();
 					newBlock->setColor(MT::Color::random());
 					newBlock->setPosition(i * 64, 0);
 					newBlock->zIndex = 1;

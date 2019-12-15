@@ -6,7 +6,7 @@
 #include "engine/module/SystemModuleBundle.h"
 #include "prop/block/Block.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class Board : public MT::Element
 	{

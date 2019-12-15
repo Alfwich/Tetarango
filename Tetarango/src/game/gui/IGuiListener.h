@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace MTGame
+namespace AWGame
 {
 	class IGuiListener
 	{

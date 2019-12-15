@@ -4,7 +4,7 @@
 #include <random>
 #include "ParticleHitFlesh.h"
 
-namespace MTGame
+namespace AWGame
 {
 	ParticleHitFleshFactory::ParticleHitFleshFactory()
 	{

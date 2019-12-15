@@ -12,7 +12,7 @@ namespace
 	};
 }
 
-namespace MTGame
+namespace AWGame
 {
 	TitleGame::TitleGame()
 	{

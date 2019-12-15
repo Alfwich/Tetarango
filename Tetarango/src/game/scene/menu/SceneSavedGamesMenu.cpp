@@ -8,7 +8,7 @@ namespace
 	const double buttonVerticalPaddingFactor = 0.1;
 }
 
-namespace MTGame
+namespace AWGame
 {
 
 	SceneSavedGamesMenu::SceneSavedGamesMenu() : BaseScene(SceneGame::SavedGamesMenu)

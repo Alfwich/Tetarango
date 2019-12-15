@@ -2,7 +2,7 @@
 
 #include "util/NumberHelper.h"
 
-namespace MTGame
+namespace AWGame
 {
 	ParticleSpaceBackgroundParticleFactory::ParticleSpaceBackgroundParticleFactory()
 	{

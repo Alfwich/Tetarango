@@ -3,10 +3,10 @@
 
 namespace
 {
-	MT::RandomGenerator<MTGame::BlockColor> defaultColorGenerator;
+	MT::RandomGenerator<AWGame::BlockColor> defaultColorGenerator;
 }
 
-namespace MTGame
+namespace AWGame
 {
 	bool GeneratorBlock::hasInit = false;
 

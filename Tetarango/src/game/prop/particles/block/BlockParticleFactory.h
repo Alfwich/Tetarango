@@ -3,7 +3,7 @@
 #include "ui/renderable/primitive/particle/IParticleFactory.h"
 #include "ui/renderable/primitive/particle/Particle.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class BlockParticleFactory : public MT::IParticleFactory
 	{

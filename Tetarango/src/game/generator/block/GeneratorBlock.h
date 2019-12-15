@@ -3,7 +3,7 @@
 #include "util/Color.h"
 #include "prop/block/Block.h"
 
-namespace MTGame
+namespace AWGame
 {
 	enum class BlockColor
 	{

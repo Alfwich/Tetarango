@@ -10,7 +10,7 @@ namespace
 	const int mainMenuButtonOffset = 35;
 }
 
-namespace MTGame
+namespace AWGame
 {
 
 	GameMainMenu::GameMainMenu() : BaseGui(GuiMenu::MenuGame)

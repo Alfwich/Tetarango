@@ -4,7 +4,7 @@
 #include <random>
 #include "ParticleHitHard.h"
 
-namespace MTGame
+namespace AWGame
 {
 	ParticleHitHardFactory::ParticleHitHardFactory()
 	{

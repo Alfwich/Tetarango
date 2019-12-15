@@ -10,7 +10,7 @@ namespace
 	const auto player = "player";
 }
 
-namespace MTGame
+namespace AWGame
 {
 
 	TestSpaceScene::TestSpaceScene() : MT::Scene("test_space_scene")

@@ -6,7 +6,7 @@
 #include "engine/module/animation/Transition.h"
 #include "engine/module/animation/INotifyOnTransition.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class TitleGame : public MT::Container, public MT::INotifyOnTransition
 	{

@@ -2,7 +2,7 @@
 
 #include "ui/renderable/primitive/particle/IParticleFactory.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class ParticleHitHardFactory : public MT::IParticleFactory
 	{

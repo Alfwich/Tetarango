@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace MTGame
+namespace AWGame
 {
 	TestParticleFactory::TestParticleFactory() : TestParticleFactory(0xff, 0xff, 0xff)
 	{

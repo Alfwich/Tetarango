@@ -5,7 +5,7 @@ namespace
 	const auto pieceLandSoundName = "tetris-piece-land";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	std::shared_ptr<MT::Transition> Board::getTransition()
 	{

@@ -13,7 +13,7 @@ namespace
 	const auto orientationParamName = "scrollbar-orientation";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
 	{

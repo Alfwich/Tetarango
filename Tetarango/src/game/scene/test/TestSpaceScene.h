@@ -5,7 +5,7 @@
 #include "gui/camera/GameCamera.h"
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class TestSpaceScene : public MT::Scene

@@ -6,7 +6,7 @@
 #include "gui/button/ButtonBasic.h"
 #include "prop/title/TitleGame.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class SceneMainMenu : public BaseScene

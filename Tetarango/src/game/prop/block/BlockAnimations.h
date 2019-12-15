@@ -4,7 +4,7 @@
 #include "Blocks.h"
 #include "util/Rect.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class BlockAnimations : public MT::AnimationSet

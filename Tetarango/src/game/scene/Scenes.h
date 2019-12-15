@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 
-namespace MTGame
+namespace AWGame
 {
 	enum class SceneGame
 	{

@@ -11,7 +11,7 @@
 #include "gui/transition/TransitionFade.h"
 #include "gui/transition/INotifyOnFade.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class BaseHud;

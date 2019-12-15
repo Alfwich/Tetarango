@@ -7,7 +7,7 @@
 #include "prop/block/Block.h"
 #include "prop/title/TitleGame.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class SceneSplash : public BaseScene, public MT::INotifyOnTransition

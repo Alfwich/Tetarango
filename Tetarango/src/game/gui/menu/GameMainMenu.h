@@ -4,7 +4,7 @@
 #include "gui/button/ButtonBasic.h"
 #include "gui/BaseGui.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class GameMainMenu : public BaseGui, public MT::Container, public IGuiListener

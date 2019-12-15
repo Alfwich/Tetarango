@@ -5,7 +5,7 @@
 #include "gui/IGuiListener.h"
 #include "Scenes.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class BaseScene : public MT::Scene, public IGuiListener

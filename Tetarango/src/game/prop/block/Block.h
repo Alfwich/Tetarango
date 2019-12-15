@@ -4,7 +4,7 @@
 #include "engine/module/SystemModuleBundle.h"
 #include "prop/BaseProp.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class Block : public MT::Animated, public BaseProp
 	{

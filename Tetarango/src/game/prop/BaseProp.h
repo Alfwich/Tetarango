@@ -4,7 +4,7 @@
 #include "engine/module/SystemModuleBundle.h"
 #include "Props.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class PropInfo
 	{

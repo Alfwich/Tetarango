@@ -1,6 +1,6 @@
 #include "ParticleFiring.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	ParticleFiring::ParticleFiring(std::shared_ptr<MT::TextureContainer> textureContainer)

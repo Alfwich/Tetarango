@@ -1,6 +1,6 @@
 #include "ParticleBulletTrailFactory.h"
 
-namespace MTGame
+namespace AWGame
 {
 	ParticleBulletTrailParticleFactory::ParticleBulletTrailParticleFactory()
 	{

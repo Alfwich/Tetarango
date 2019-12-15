@@ -3,13 +3,13 @@
 
 namespace
 {
-	const MTGame::Blocks config;
+	const AWGame::Blocks config;
 
 	const std::string blockTextureName = "prop-blocks";
 	const std::string blockAnimationName = "block-animations";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	Block::Block()
 	{

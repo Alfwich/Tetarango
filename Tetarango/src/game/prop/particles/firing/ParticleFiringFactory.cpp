@@ -4,7 +4,7 @@
 #include <random>
 #include "ParticleFiring.h"
 
-namespace MTGame
+namespace AWGame
 {
 	ParticleFiringFactory::ParticleFiringFactory()
 	{

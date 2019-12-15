@@ -3,7 +3,7 @@
 #include "gui/BaseGui.h"
 #include "ui/renderable/container/Container.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class BaseHud : public BaseGui, public MT::Container

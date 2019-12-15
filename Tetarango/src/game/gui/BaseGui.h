@@ -4,7 +4,7 @@
 #include "engine/module/SystemModuleBundle.h"
 #include "Guis.h"
 
-namespace MTGame
+namespace AWGame
 {
 	class BaseGui
 	{

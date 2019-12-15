@@ -8,7 +8,7 @@
 #include "ui/renderable/element/CachedImage.h"
 #include "ui/renderable/element/Rectangle.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class SceneTetris : public BaseScene

@@ -8,7 +8,7 @@
 #include "ui/renderable/container/ScrollContainer.h"
 #include "gui/scrollarea/ScrollArea.h"
 
-namespace MTGame
+namespace AWGame
 {
 
 	class SceneOptionsMenu : public BaseScene

@@ -8,7 +8,7 @@ namespace
 	const auto testSoundName = "tetris-clear-row";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	SceneOptionsMenu::SceneOptionsMenu() : BaseScene(SceneGame::OptionsMenu)
 	{

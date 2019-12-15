@@ -22,10 +22,10 @@ namespace
 	const auto blockHeightGenerationLimit = -6000.0;
 	const auto titleBackgroundMovement = 9.0;
 
-	MTGame::GeneratorBlock blockColorGenerator;
+	AWGame::GeneratorBlock blockColorGenerator;
 }
 
-namespace MTGame
+namespace AWGame
 {
 
 	SceneSplash::SceneSplash() : BaseScene(SceneGame::Splash)

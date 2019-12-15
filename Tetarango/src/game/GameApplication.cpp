@@ -16,7 +16,7 @@ namespace
 	const auto musicVolParamKey = "vol-music";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	void GameApplication::onInit()
 	{

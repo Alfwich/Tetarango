@@ -22,7 +22,7 @@ namespace
 	const auto checkboxTexturePath = "res/game/img/ui/button/checkbox_basic.png";
 }
 
-namespace MTGame
+namespace AWGame
 {
 	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace MTGame
+namespace AWGame
 {
 	enum class StorePaths
 	{

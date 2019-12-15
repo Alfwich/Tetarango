@@ -6,7 +6,7 @@ namespace
 	const auto fadeDurationParam = "t-fade-duration";
 }
 
-namespace MTGame
+namespace AWGame
 {
 
 	TransitionFade::TransitionFade() : BaseGui(GuiTransition::TransitionFade)

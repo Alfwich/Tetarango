@@ -1,7 +1,7 @@
 #include "ParticleSpaceBackground.h"
 
 
-namespace MTGame
+namespace AWGame
 {
 
 	ParticleSpaceBackground::ParticleSpaceBackground(std::shared_ptr<MT::TextureContainer> textureContainer)

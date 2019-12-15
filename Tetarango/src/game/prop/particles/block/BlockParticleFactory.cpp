@@ -2,7 +2,7 @@
 
 #include "util/NumberHelper.h"
 
-namespace MTGame
+namespace AWGame
 {
 	BlockParticle::BlockParticle(std::shared_ptr<MT::TextureContainer> textureContainer)
 	{
