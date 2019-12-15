@@ -38,7 +38,6 @@ namespace MTGame
 
 		std::weak_ptr<MT::ApplicationObject> clickListener;
 		std::weak_ptr<MT::ApplicationObject> scrollListener;
-		std::weak_ptr<MT::ApplicationObject> scrollConstituentListener;
 	};
 
 }

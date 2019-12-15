@@ -1,6 +1,7 @@
 #include "Sound.h"
 
 #include "SDL_mixer.h"
+#include "util/NumberHelper.h"
 
 namespace MT
 {
@@ -8,6 +9,7 @@ namespace MT
 	void Sound::onInit()
 	{
 		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+		setMasterVolume(0.0);
 	}
 
 	void Sound::bindAsset(std::shared_ptr<Asset> asset)
@@ -26,7 +28,7 @@ namespace MT
 
 		if (soundClip != nullptr && soundClip->getChunk() != nullptr)
 		{
-			int vol = (int)(128 * volume);
+			int vol = MT::NumberHelper::clamp<int>((int)(masterVolume * effectVolume * volume * 128.0), 0, 128);
 			Mix_VolumeChunk(soundClip->getChunk(), vol);
 			Mix_PlayChannel(-1, soundClip->getChunk(), 0);
 		}
@@ -69,6 +71,38 @@ namespace MT
 	{
 		stopAllSoundClips(fadeOutMS);
 		stopMusic("", fadeOutMS);
+	}
+
+	void Sound::setMasterVolume(double volume)
+	{
+		masterVolume = MT::NumberHelper::clamp(volume, 0.0, 1.0);
+		setMusicVolume(musicVolume);
+	}
+
+	double Sound::getMasterVolume()
+	{
+		return masterVolume;
+	}
+
+	void Sound::setMusicVolume(double volume)
+	{
+		musicVolume = volume;
+		Mix_VolumeMusic(MT::NumberHelper::clamp<int>((int)(musicVolume * masterVolume * 128.0), 0, 128));
+	}
+
+	double Sound::getMusicVolume()
+	{
+		return musicVolume;
+	}
+
+	void Sound::setEffectVolume(double volume)
+	{
+		effectVolume = volume;
+	}
+
+	double Sound::getEffectVolume()
+	{
+		return effectVolume;
 	}
 
 	void Sound::onCleanup()

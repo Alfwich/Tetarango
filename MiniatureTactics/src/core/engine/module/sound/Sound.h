@@ -13,6 +13,8 @@ namespace MT
 		SoundContainer soundContainer;
 		std::string currentMusic;
 
+		double masterVolume = 0.0, musicVolume = 0.0, effectVolume = 0.0;
+
 	public:
 		void onInit();
 
@@ -27,6 +29,15 @@ namespace MT
 		void stopMusic(std::string name = "", int fadeOutMS = 1000);
 
 		void stopAllSounds(int fadeOutMS = 1000);
+
+		void setMasterVolume(double volume);
+		double getMasterVolume();
+
+		void setMusicVolume(double volume);
+		double getMusicVolume();
+
+		void setEffectVolume(double volume);
+		double getEffectVolume();
 
 		void onCleanup();
 	};

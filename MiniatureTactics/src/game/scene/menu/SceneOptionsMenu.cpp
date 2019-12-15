@@ -2,6 +2,12 @@
 #include "gui/camera/GameCamera.h"
 #include "scene/game/SceneMainGame.h"
 
+namespace
+{
+	const auto testMusicName = "tetris-music";
+	const auto testSoundName = "tetris-clear-row";
+}
+
 namespace MTGame
 {
 	SceneOptionsMenu::SceneOptionsMenu() : BaseScene(SceneGame::OptionsMenu)
@@ -24,6 +30,11 @@ namespace MTGame
 	{
 		BaseScene::onAttach();
 		config = modules->screen->getCurrentScreenConfig();
+	}
+
+	void SceneOptionsMenu::onDetach()
+	{
+		modules->sound->stopAllSounds();
 	}
 
 	void SceneOptionsMenu::onDestroyChildren()
@@ -141,6 +152,38 @@ namespace MTGame
 		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
 		wireframeModeCheckbox->clickListener = weak_from_this();
 		add(wireframeModeCheckbox);
+
+		masterVolScrollBar = std::make_shared<ScrollBarBasic>();
+		masterVolScrollBar->setSize(200.0, 20.0);
+		masterVolScrollBar->setHorizontal(true);
+		masterVolScrollBar->scrollListener = weak_from_this();
+		add(masterVolScrollBar);
+
+		generalVolScrollBar = std::make_shared<ScrollBarBasic>();
+		generalVolScrollBar->setSize(200.0, 20.0);
+		generalVolScrollBar->setHorizontal(true);
+		generalVolScrollBar->scrollListener = weak_from_this();
+		add(generalVolScrollBar);
+
+		musicVolScrollBar = std::make_shared<ScrollBarBasic>();
+		musicVolScrollBar->setSize(200.0, 20.0);
+		musicVolScrollBar->setHorizontal(true);
+		musicVolScrollBar->scrollListener = weak_from_this();
+		add(musicVolScrollBar);
+
+		masterVolLabel = std::make_shared<MT::Text>();
+		masterVolLabel->setFont("medium", 28);
+		add(masterVolLabel);
+
+		generalVolLabel = std::make_shared<MT::Text>();
+		generalVolLabel->setFont("medium", 28);
+		add(generalVolLabel);
+
+		musicVolLabel = std::make_shared<MT::Text>();
+		musicVolLabel->setFont("medium", 28);
+		add(musicVolLabel);
+
+		setVolLabels();
 	}
 
 	void SceneOptionsMenu::onLayoutChildren()
@@ -157,7 +200,7 @@ namespace MTGame
 		resetButton->toRightOf(applyButton, generalElementOffset, 0.0);
 		backButton->toLeftOf(applyButton, generalElementOffset, 0.0);
 
-		resolutionScrollArea->centerAlignSelf(generalElementOffset + (getScreenWidth() - 651.0) / 2.0, (getScreenHeight() - 600.0) / 2.0);
+		resolutionScrollArea->centerAlignSelf(generalElementOffset + (getScreenWidth() - 879.0) / 2.0, (getScreenHeight() - 600.0) / 2.0);
 		resolutionScrollArea->floorAlignSelf();
 		{
 			auto r = resolutionScrollArea->getRect();
@@ -175,6 +218,32 @@ namespace MTGame
 
 		openGlCompatibilityModeCheckbox->toBottomLeftOf(msaa16xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
+
+		masterVolLabel->toRightOf(windowedCheckbox, 415.0);
+		masterVolScrollBar->toBottomLeftOf(masterVolLabel, 0.0, checkboxYOffset);
+		masterVolScrollBar->setScrollPosition(modules->sound->getMasterVolume());
+
+		generalVolLabel->toBottomLeftOf(masterVolScrollBar, 0.0, checkboxYGroupOffset);
+		generalVolScrollBar->toBottomLeftOf(generalVolLabel, 0.0, checkboxYOffset);
+		generalVolScrollBar->setScrollPosition(modules->sound->getEffectVolume());
+
+		musicVolLabel->toBottomLeftOf(generalVolScrollBar, 0.0, checkboxYGroupOffset);
+		musicVolScrollBar->toBottomLeftOf(musicVolLabel, 0.0, checkboxYOffset);
+		musicVolScrollBar->setScrollPosition(modules->sound->getMusicVolume());
+	}
+
+	void SceneOptionsMenu::onTimeoutCalled(int id)
+	{
+		if (id == stopSoundTimeoutId)
+		{
+			modules->sound->stopMusic(testMusicName);
+			stopSoundTimeoutId = 0;
+		}
+		else if (id == playSoundTimeoutId)
+		{
+			modules->sound->playSoundClip(testSoundName);
+			playSoundTimeoutId = 0;
+		}
 	}
 
 	void SceneOptionsMenu::onButtonClicked(int id)
@@ -198,6 +267,9 @@ namespace MTGame
 		if (id == resetButton->getId())
 		{
 			config = MT::ScreenConfig();
+			modules->sound->setMasterVolume(1.0);
+			modules->sound->setEffectVolume(0.8);
+			modules->sound->setMusicVolume(0.6);
 			shouldNotifyApplication = true;
 		}
 
@@ -308,6 +380,52 @@ namespace MTGame
 		}
 	}
 
+	void SceneOptionsMenu::onScrollBarScroll(int id, double position)
+	{
+		auto playEffectSound = false;
+		if (id == masterVolScrollBar->getId() && modules->sound->getMasterVolume() != position)
+		{
+			modules->sound->setMasterVolume(position);
+			modules->sound->playMusic(testMusicName);
+			setVolLabels();
+
+			playEffectSound = true;
+		}
+		else if (id == generalVolScrollBar->getId() && modules->sound->getEffectVolume() != position)
+		{
+			modules->sound->setEffectVolume(position);
+			modules->sound->stopMusic(testMusicName);
+			setVolLabels();
+
+			playEffectSound = true;
+		}
+		else if (id == musicVolScrollBar->getId() && modules->sound->getMusicVolume() != position)
+		{
+			modules->sound->setMusicVolume(position);
+			modules->sound->playMusic(testMusicName);
+			setVolLabels();
+		}
+
+		if (stopSoundTimeoutId != 0)
+		{
+			modules->event->unregisterTimeoutCallback(stopSoundTimeoutId);
+			stopSoundTimeoutId = 0;
+		}
+
+		stopSoundTimeoutId = modules->event->registerTimeoutCallback(shared_from_this(), 2000.0);
+
+		if (playEffectSound)
+		{
+			if (playSoundTimeoutId != 0)
+			{
+				modules->event->unregisterTimeoutCallback(playSoundTimeoutId);
+				playSoundTimeoutId = 0;
+			}
+
+			playSoundTimeoutId = modules->event->registerTimeoutCallback(shared_from_this(), 500.0);
+		}
+	}
+
 	bool SceneOptionsMenu::setMsaaMode(int samples)
 	{
 		if (config.msaaSamples == samples)
@@ -377,5 +495,17 @@ namespace MTGame
 		return true;
 	}
 
+	void SceneOptionsMenu::setVolLabels()
+	{
+		masterVolLabel->setText("Master Volume " + volumeToString(modules->sound->getMasterVolume()));
+		generalVolLabel->setText("Effect Volume " + volumeToString(modules->sound->getEffectVolume()));
+		musicVolLabel->setText("Music Volume " + volumeToString(modules->sound->getMusicVolume()));
 
+		layout();
+	}
+
+	std::string SceneOptionsMenu::volumeToString(double volume)
+	{
+		return std::to_string((int)(volume * 100.0));
+	}
 }

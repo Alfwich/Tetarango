@@ -10,6 +10,7 @@ namespace
 	const auto enabledParamName = "scrollbar-basic-is-enabled";
 	const auto scrollbarHeightParamName = "scrollbar-height";
 	const auto scrollbarPositionParamName = "scrollbar-pos";
+	const auto orientationParamName = "scrollbar-orientation";
 }
 
 namespace MTGame
@@ -79,11 +80,20 @@ namespace MTGame
 
 	}
 
-	void ScrollBarBasic::updateScrollerYPosition(bool instant)
+	void ScrollBarBasic::updateScrollerPosition(bool instant)
 	{
-		const auto scrollerHeight = getScrollerHeight() * getHeight();
+		const auto scrollerSize = getScrollerHeight() * getHeight();
 		auto targetRect = scroller->getRect();
-		targetRect.y = -getHalfHeight() + (getScrollPosition() * getHeight()) + scrollerHeight / 2.0;
+		if (getHorizontal())
+		{
+			targetRect.y = getHalfHeight();
+			targetRect.x = getScrollPosition() * (getWidth() - scroller->getWidth()) + scroller->getHalfWidth();
+		}
+		else
+		{
+			targetRect.x = getHalfWidth();
+			targetRect.y = getScrollPosition() * (getHeight() - scroller->getHeight()) + scroller->getHalfHeight();
+		}
 		scrollerTransition->startTransition(scroller, instant ? 0.0 : 50.0, targetRect);
 	}
 
@@ -103,17 +113,27 @@ namespace MTGame
 		return serializationClient->getDouble(scrollbarHeightParamName, 0.1);
 	}
 
+	void ScrollBarBasic::setHorizontal(bool flag)
+	{
+		serializationClient->setBool(orientationParamName, flag);
+	}
+
+	bool ScrollBarBasic::getHorizontal()
+	{
+		return serializationClient->getBool(orientationParamName, false);
+	}
+
 	void ScrollBarBasic::setScrollPositionInstantly(double pos)
 	{
 		const auto value = MT::NumberHelper::clamp<double>(pos, 0.0, 1.0);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
 
-		updateScrollerYPosition(true);
+		updateScrollerPosition(true);
 
 		const auto notifyPtr = std::dynamic_pointer_cast<IGuiListener>(scrollListener.lock());
-		if (notifyPtr != nullptr)
+		if (isPressed && notifyPtr != nullptr)
 		{
-			notifyPtr->onScrollBarScroll(value);
+			notifyPtr->onScrollBarScroll(id, value);
 		}
 	}
 
@@ -122,12 +142,12 @@ namespace MTGame
 		const auto value = MT::NumberHelper::clamp<double>(pos, 0.0, 1.0);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
 
-		updateScrollerYPosition();
+		updateScrollerPosition();
 
 		const auto notifyPtr = std::dynamic_pointer_cast<IGuiListener>(scrollListener.lock());
-		if (notifyPtr != nullptr)
+		if (isPressed && notifyPtr != nullptr)
 		{
-			notifyPtr->onScrollBarScroll(value);
+			notifyPtr->onScrollBarScroll(id, value);
 		}
 	}
 
@@ -177,11 +197,22 @@ namespace MTGame
 
 	void ScrollBarBasic::onLayoutChildren()
 	{
-		const auto scrollerHeight = getScrollerHeight() * getHeight();
 		background->matchSize(this);
-		scroller->setHeight(scrollerHeight);
-		scroller->setWidth(getWidth());
-		updateScrollerYPosition();
+		background->centerAlignSelf();
+		if (getHorizontal())
+		{
+			const auto scrollerHeight = getScrollerHeight() * getWidth();
+			scroller->setHeight(getHeight());
+			scroller->setWidth(scrollerHeight);
+		}
+		else
+		{
+			const auto scrollerHeight = getScrollerHeight() * getHeight();
+			scroller->setHeight(scrollerHeight);
+			scroller->setWidth(getWidth());
+		}
+		scroller->centerAlignSelf();
+		updateScrollerPosition();
 	}
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)
@@ -222,14 +253,22 @@ namespace MTGame
 	void ScrollBarBasic::onEnterFrame(double frameTime)
 	{
 		const auto mouseY = modules->input->mouse->Y();
-		checkIsHovering(modules->input->mouse->X(), mouseY);
+		const auto mouseX = modules->input->mouse->X();
+		checkIsHovering(mouseX, mouseY);
 
 		if (isHovering || (isPressed && wasPressed))
 		{
 			if (isPressed)
 			{
 				wasPressed = true;
-				setScrollPosition((mouseY - background->getScreenRect()->y - scroller->getHalfHeight()) / background->getScreenRect()->h);
+				if (getHorizontal())
+				{
+					setScrollPosition((mouseX - background->getScreenRect()->x - scroller->getHalfWidth()) / background->getScreenRect()->w);
+				}
+				else
+				{
+					setScrollPosition((mouseY - background->getScreenRect()->y - scroller->getHalfHeight()) / background->getScreenRect()->h);
+				}
 			}
 		}
 

@@ -10,6 +10,10 @@ namespace
 	const auto displayOpenGLCompatibilityParamKey = "display-open-gl-compadibility";
 	const auto displayWireframeModeParamKey = "display-wireframe-mode";
 	const auto displayDoubleBufferParamKey = "display-double-buffer";
+
+	const auto masterVolParamKey = "vol-master";
+	const auto generalVolParamKey = "vol-general";
+	const auto musicVolParamKey = "vol-music";
 }
 
 namespace MTGame
@@ -51,11 +55,11 @@ namespace MTGame
 		modules->time->createTimeScope(MT::TimeScope::Menu, 1.0);
 		modules->time->createTimeScope(MT::TimeScope::Camera, 1.0);
 
-		const auto globalStorageClient = modules->storage->getClient();
+		const auto storageClient = modules->storage->getClient();
 
-		if (gameConfig->getConfigBool(Config::Param::hydrateOnLoad) && globalStorageClient->hasKey("whole_scene_graph"))
+		if (gameConfig->getConfigBool(Config::Param::hydrateOnLoad) && storageClient->hasKey("whole_scene_graph"))
 		{
-			masterSceneContainer = std::static_pointer_cast<MT::SceneContainer>(modules->serialization->hydrate(globalStorageClient->readSring("whole_scene_graph")));
+			masterSceneContainer = std::static_pointer_cast<MT::SceneContainer>(modules->serialization->hydrate(storageClient->readSring("whole_scene_graph")));
 			root->add(masterSceneContainer);
 
 			if (!gameConfig->getConfigBool(Config::Param::launchToLastScene))
@@ -81,14 +85,32 @@ namespace MTGame
 
 			masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Splash));
 		}
+
+		if (storageClient->hasKey(masterVolParamKey))
+		{
+			modules->sound->setMasterVolume(storageClient->readDouble(masterVolParamKey));
+			modules->sound->setEffectVolume(storageClient->readDouble(generalVolParamKey));
+			modules->sound->setMusicVolume(storageClient->readDouble(musicVolParamKey));
+		}
+		else
+		{
+			modules->sound->setMasterVolume(1.0);
+			modules->sound->setEffectVolume(0.8);
+			modules->sound->setMusicVolume(0.6);
+		}
 	}
 
 	void GameApplication::onCleanup()
 	{
+		const auto storageClient = modules->storage->getClient();
+
+		storageClient->writeDouble(masterVolParamKey, modules->sound->getMasterVolume());
+		storageClient->writeDouble(generalVolParamKey, modules->sound->getEffectVolume());
+		storageClient->writeDouble(musicVolParamKey, modules->sound->getMusicVolume());
+
 		if (gameConfig->getConfigBool(Config::Param::saveWholeSceneOnClose))
 		{
-			const auto globalClient = modules->storage->getClient();
-			globalClient->writeString("whole_scene_graph", modules->serialization->serialize(masterSceneContainer));
+			storageClient->writeString("whole_scene_graph", modules->serialization->serialize(masterSceneContainer));
 			masterSceneContainer->disableCurrentScene();
 		}
 	}

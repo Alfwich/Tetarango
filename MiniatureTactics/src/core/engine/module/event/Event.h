@@ -21,15 +21,25 @@ namespace MT
 		class EnterFrameListenerBundle
 		{
 		public:
-			EnterFrameListenerBundle(std::shared_ptr<EnterFrameListener> ptr) { this->id = ptr->getObjectIdEnterFrame(); this->ptr = ptr; }
+			EnterFrameListenerBundle(std::shared_ptr<EnterFrameListener> ptr) : id(ptr->getObjectIdEnterFrame()), ptr(ptr) { }
 
 			int id;
+			std::weak_ptr<EnterFrameListener> ptr;
+		};
+
+		class TimeoutBundle
+		{
+		public:
+			TimeoutBundle(int id, std::shared_ptr<EnterFrameListener> ptr, double time) : ptr(ptr), time(time), id(id) {}
+			int id = 0;
+			double time = 0.0;
 			std::weak_ptr<EnterFrameListener> ptr;
 		};
 
 		std::shared_ptr<Input> input;
 		std::shared_ptr<Thread> thread;
 
+		int timeoutId = 100;
 		bool processingOnEnterFrames = false, processingOnPostRenders = false;
 
 		std::set<int> enterFrameObjects;
@@ -37,6 +47,9 @@ namespace MT
 		std::list<std::shared_ptr<EnterFrameListener>> cleanupObjects;
 		std::list<std::weak_ptr<EnterFrameListener>> postRenderCallbacks;
 		std::list<std::weak_ptr<EnterFrameListener>> postRenderProcessedCallbacks;
+		std::list<std::shared_ptr<TimeoutBundle>> timeoutCallbacks;
+		std::list<std::shared_ptr<TimeoutBundle>> timeoutProcessedCallbacks;
+		std::list<int> timeoutProcessedRemoveCallbacks;
 		std::list<std::shared_ptr<ApplicationEvent>> events;
 
 		void reportSdlErrors();
@@ -50,9 +63,13 @@ namespace MT
 
 		void processEnterFrames(double frameTime);
 		void processPostRenderCallbacks();
+
 		void registerOnEnterFrame(std::shared_ptr<EnterFrameListener> listener, int priority = 0);
 		void unregisterOnEnterFrame(std::shared_ptr<EnterFrameListener> listener);
 
 		void registerPostRenderCallback(std::shared_ptr<EnterFrameListener> listener);
+
+		int registerTimeoutCallback(std::shared_ptr<EnterFrameListener> listener, double timeoutMS);
+		void unregisterTimeoutCallback(int id);
 	};
 }

@@ -128,13 +128,45 @@ namespace MT
 				}
 			}
 		}
+
+		for (auto it = timeoutCallbacks.begin(); it != timeoutCallbacks.end();)
+		{
+			auto& bundle = (*it);
+			bundle->time -= frameTime;
+			if (bundle->time <= 0)
+			{
+				const auto ptr = bundle->ptr.lock();
+				if (ptr != nullptr)
+				{
+					ptr->onTimeoutCalled(bundle->id);
+				}
+
+				it = timeoutCallbacks.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
 		processingOnEnterFrames = false;
+
+		for (const auto timeoutCallback : timeoutProcessedCallbacks)
+		{
+			timeoutCallbacks.push_back(timeoutCallback);
+		}
+		timeoutProcessedCallbacks.clear();
+
+		for (const auto timeoutIdToRemove : timeoutProcessedRemoveCallbacks)
+		{
+			unregisterTimeoutCallback(timeoutIdToRemove);
+		}
+		timeoutProcessedRemoveCallbacks.clear();
 
 		for (const auto cleanup : cleanupObjects)
 		{
 			unregisterOnEnterFrame(cleanup);
 		}
-
 		cleanupObjects.clear();
 	}
 
@@ -181,7 +213,6 @@ namespace MT
 		}
 	}
 
-
 	void Event::processPostRenderCallbacks()
 	{
 		if (postRenderCallbacks.empty())
@@ -221,6 +252,45 @@ namespace MT
 		else
 		{
 			postRenderCallbacks.push_back(listener);
+		}
+	}
+
+	int Event::registerTimeoutCallback(std::shared_ptr<EnterFrameListener> listener, double timeoutMS)
+	{
+		const auto bundle = std::make_shared<TimeoutBundle>(timeoutId++, listener, timeoutMS);
+		if (processingOnEnterFrames)
+		{
+			timeoutProcessedCallbacks.push_back(bundle);
+		}
+		else
+		{
+			timeoutCallbacks.push_back(bundle);
+		}
+
+		return bundle->id;
+	}
+
+	void Event::unregisterTimeoutCallback(int id)
+	{
+		if (processingOnEnterFrames)
+		{
+			timeoutProcessedRemoveCallbacks.push_back(id);
+		}
+		else
+		{
+			for (auto it = timeoutCallbacks.begin(); it != timeoutCallbacks.end();)
+			{
+				if ((*it)->id == id)
+				{
+					it = timeoutCallbacks.erase(it);
+					break;
+				}
+				else
+				{
+					++it;
+				}
+			}
+
 		}
 	}
 }

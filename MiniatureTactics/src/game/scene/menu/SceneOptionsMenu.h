@@ -15,6 +15,8 @@ namespace MTGame
 	{
 		MT::DisplayModeInfo info;
 		MT::ScreenConfig config;
+		int stopSoundTimeoutId = 0, playSoundTimeoutId = 0;
+
 		std::shared_ptr<MT::Text> optionsMenuTitle;
 		std::shared_ptr<ButtonBasic> backButton;
 		std::shared_ptr<ButtonBasic> applyButton;
@@ -32,20 +34,33 @@ namespace MTGame
 		std::shared_ptr<ScrollArea> resolutionScrollArea;
 		std::vector<std::shared_ptr<ButtonBasic>> resolutionButtons;
 
+		std::shared_ptr<ScrollBarBasic> masterVolScrollBar;
+		std::shared_ptr<ScrollBarBasic> generalVolScrollBar;
+		std::shared_ptr<ScrollBarBasic> musicVolScrollBar;
+
+		std::shared_ptr<MT::Text> masterVolLabel;
+		std::shared_ptr<MT::Text> generalVolLabel;
+		std::shared_ptr<MT::Text> musicVolLabel;
+
 		bool setMsaaMode(int samples);
 		bool setScreenMode(MT::ScreenModes mode);
+		void setVolLabels();
+		std::string volumeToString(double volume);
 
 	public:
 		SceneOptionsMenu();
 
 		void onInitialAttach();
 		void onAttach();
+		void onDetach();
 		void onDestroyChildren();
 		void onCreateChildren();
 		void onLayoutChildren();
 
+		void onTimeoutCalled(int id);
 		void onButtonClicked(int id);
 		void onKeyPressed(SDL_Scancode key);
+		void onScrollBarScroll(int id, double position);
 	};
 
 }

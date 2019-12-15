@@ -17,6 +17,8 @@ namespace MTGame
 		bool scrollResolutionsDownPressed = false, scrollResolutionsUpPressed = false;
 		std::shared_ptr<MT::ScrollContainer> container;
 		std::shared_ptr<ScrollBarBasic> scroller;
+		double getScrollMaxLimit();
+
 	public:
 		ScrollArea();
 
@@ -55,7 +57,7 @@ namespace MTGame
 		void setMouseWheenEnabled(bool flag);
 		void onMouseWheel(int x, int y);
 
-		void onScrollBarScroll(double position);
+		void onScrollBarScroll(int id, double position);
 	};
 }
 

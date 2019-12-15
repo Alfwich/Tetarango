@@ -22,9 +22,18 @@ namespace
 
 namespace MTGame
 {
+
 	ScrollArea::ScrollArea() : BaseGui(GuiScrollArea::ScrollArea)
 	{
 		enableSerialization<ScrollArea>();
+	}
+
+	double ScrollArea::getScrollMaxLimit()
+	{
+		const auto containerHeight = container->getHeight();
+		const auto myHeight = getHeight();
+
+		return (containerHeight - myHeight) / containerHeight;
 	}
 
 	void ScrollArea::setEnabled(bool flag)
@@ -71,7 +80,7 @@ namespace MTGame
 		const auto shouldAllowScroll = containerHeight > myHeight;
 		if (shouldAllowScroll)
 		{
-			container->setScrollLimits(0.0, (containerHeight - myHeight) / containerHeight);
+			container->setScrollLimits(0.0, getScrollMaxLimit());
 		}
 		else
 		{
@@ -82,7 +91,7 @@ namespace MTGame
 		{
 			if (shouldAllowScroll)
 			{
-				scroller->toRightOf(container, scroller->getHalfWidth() + getScrollerXOffset(), -container->getHalfHeight() + scroller->getHeight() + (scroller->getScrollerHeight() / 2.0) + getScrollerYOffset());
+				scroller->toRightTopOf(container);
 				scroller->setScrollerHeight(myHeight / containerHeight);
 				scroller->visible = getScrollerVisible();
 				scroller->setScrollPositionInstantly(container->getScrollPosition());
@@ -98,7 +107,7 @@ namespace MTGame
 	{
 		if (scroller->visible)
 		{
-			scroller->setScrollPosition(container->getScrollPosition());
+			scroller->setScrollPosition(container->getScrollPosition() / getScrollMaxLimit());
 		}
 	}
 
@@ -161,9 +170,9 @@ namespace MTGame
 		}
 	}
 
-	void ScrollArea::onScrollBarScroll(double position)
+	void ScrollArea::onScrollBarScroll(int id, double position)
 	{
-		container->setScrollPosition(position);
+		container->setScrollPosition(position * getScrollMaxLimit());
 	}
 
 	void ScrollArea::setScrollerEnabled(bool enabled)
