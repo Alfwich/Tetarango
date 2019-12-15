@@ -60,6 +60,10 @@ namespace MTGame
 		{
 			modules->sound->playMusic(musicName);
 		}
+		else
+		{
+			modules->sound->stopMusic(musicName);
+		}
 		particleSystem->start();
 	}
 

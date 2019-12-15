@@ -142,12 +142,10 @@ namespace MTGame
 			{
 				hasFailedToPlacePiece = true;
 			}
-			else
-			{
-				blockMap[mapOffset] = blockPtr;
-				positionBlock(blockPtr);
-				Element::add(blockPtr);
-			}
+
+			blockMap[mapOffset] = blockPtr;
+			positionBlock(blockPtr);
+			Element::add(blockPtr);
 		}
 		else
 		{

@@ -248,9 +248,16 @@ namespace MTGame
 
 			isPressed = isHovering && pressed;
 
-			if (isPressed) 
+			if (isPressed)
 			{
-				startMousePositionOnClick = getHorizontal() ? modules->input->mouse->X() : modules->input->mouse->Y();
+				if (getHorizontal())
+				{
+					startMousePositionOnClick = modules->input->mouse->X() - (modules->input->mouse->X() - scroller->getScreenRect()->x) + scroller->getHalfWidth();
+				}
+				else
+				{
+					startMousePositionOnClick = modules->input->mouse->Y() - (modules->input->mouse->Y() - scroller->getScreenRect()->y) + scroller->getHalfHeight();
+				}
 				startMousePositionScrollPosition = getScrollPosition();
 			}
 		}
@@ -269,11 +276,11 @@ namespace MTGame
 				wasPressed = true;
 				if (getHorizontal())
 				{
-					setScrollPosition(startMousePositionScrollPosition + ((mouseX - startMousePositionOnClick) / getWidth()));
+					setScrollPosition(startMousePositionScrollPosition + ((mouseX - startMousePositionOnClick) / (getWidth() - scroller->getWidth())));
 				}
 				else
 				{
-					setScrollPosition(startMousePositionScrollPosition + ((mouseY - startMousePositionOnClick) / getHeight()));
+					setScrollPosition(startMousePositionScrollPosition + ((mouseY - startMousePositionOnClick) / (getHeight() - scroller->getHeight())));
 				}
 			}
 		}

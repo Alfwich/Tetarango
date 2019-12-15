@@ -34,7 +34,7 @@ namespace MTGame
 
 	void SceneOptionsMenu::onDetach()
 	{
-		modules->sound->stopAllSounds();
+		modules->sound->stopAllSounds(250);
 	}
 
 	void SceneOptionsMenu::onDestroyChildren()
@@ -183,6 +183,10 @@ namespace MTGame
 		musicVolLabel->setFont("medium", 28);
 		add(musicVolLabel);
 
+		masterVolScrollBar->setScrollPositionInstantly(modules->sound->getMasterVolume());
+		generalVolScrollBar->setScrollPositionInstantly(modules->sound->getEffectVolume());
+		musicVolScrollBar->setScrollPositionInstantly(modules->sound->getMusicVolume());
+
 		setVolLabels();
 	}
 
@@ -221,20 +225,17 @@ namespace MTGame
 
 		masterVolLabel->toRightOf(windowedCheckbox, 415.0);
 		masterVolScrollBar->toBottomLeftOf(masterVolLabel, 0.0, checkboxYOffset);
-		masterVolScrollBar->setScrollPosition(modules->sound->getMasterVolume());
 
 		generalVolLabel->toBottomLeftOf(masterVolScrollBar, 0.0, checkboxYGroupOffset);
 		generalVolScrollBar->toBottomLeftOf(generalVolLabel, 0.0, checkboxYOffset);
-		generalVolScrollBar->setScrollPosition(modules->sound->getEffectVolume());
 
 		musicVolLabel->toBottomLeftOf(generalVolScrollBar, 0.0, checkboxYGroupOffset);
 		musicVolScrollBar->toBottomLeftOf(musicVolLabel, 0.0, checkboxYOffset);
-		musicVolScrollBar->setScrollPosition(modules->sound->getMusicVolume());
 	}
 
 	void SceneOptionsMenu::onTimeoutCalled(int id)
 	{
-		if (id == stopSoundTimeoutId)
+		if (id == stopSoundTimeoutId && isAttached())
 		{
 			modules->sound->stopMusic(testMusicName);
 			stopSoundTimeoutId = 0;
