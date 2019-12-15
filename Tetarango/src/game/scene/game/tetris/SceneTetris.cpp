@@ -10,6 +10,7 @@ namespace
 	const auto musicName = "tetris-music";
 	const auto clearRowSoundName = "tetris-clear-row";
 	const auto gameOverSoundName = "tetris-game-over";
+	const auto tetarangoSoundName = "tetris-tetarango";
 }
 
 namespace MTGame
@@ -25,6 +26,7 @@ namespace MTGame
 
 		modules->sound->loadSoundClip("res/game/snd/clear-row.wav", clearRowSoundName);
 		modules->sound->loadSoundClip("res/game/snd/game-over.wav", gameOverSoundName);
+		modules->sound->loadSoundClip("res/game/snd/tetarango.wav", tetarangoSoundName);
 	}
 
 	void SceneTetris::updateScoreText()
@@ -163,9 +165,17 @@ namespace MTGame
 		auto eliminatedPieces = board->getEliminatedPieces();
 		if (eliminatedPieces.size() > 0)
 		{
-			modules->sound->playSoundClip(clearRowSoundName);
 			const auto blockParticleFactory = std::make_shared<BlockParticleFactory>();
 			auto blockScore = 5;
+			if (eliminatedPieces.size() > 35)
+			{
+				modules->sound->playSoundClip(tetarangoSoundName);
+			}
+			else
+			{
+				modules->sound->playSoundClip(clearRowSoundName);
+			}
+
 			while (eliminatedPieces.size() > 0)
 			{
 				const auto block = eliminatedPieces.back();
