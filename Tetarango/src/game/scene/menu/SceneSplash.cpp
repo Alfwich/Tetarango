@@ -46,6 +46,7 @@ namespace MTGame
 		blockContainer = std::make_shared<MT::Container>();
 		blockContainer->setColor(88, 88, 88);
 		blockContainer->setExpandToChildren(false);
+		blockContainer->zIndex = -10;
 		add(blockContainer);
 
 		splashText = std::make_shared<MT::Text>();
@@ -59,6 +60,7 @@ namespace MTGame
 		add(splashImage);
 
 		titleGame = std::make_shared<TitleGame>();
+		titleGame->setFontSize(150);
 		add(titleGame);
 
 		loadingProgressBar = std::make_shared<MT::Element>();
@@ -167,10 +169,9 @@ namespace MTGame
 					{
 						const auto randomX = MT::NumberHelper::random(blockHeightGenerationLimit, -100);
 						const auto randomY = MT::NumberHelper::random(blockHeightGenerationLimit, -100);
-						block->setScale(0.5);
+						block->setScale(MT::NumberHelper::random(0.25, 0.75));
 						block->setX(randomX);
 						block->setY(randomY);
-						block->zIndex = -2;
 						blocks.push_back(block);
 						blockContainer->add(block);
 					}
