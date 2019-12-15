@@ -12,6 +12,8 @@ namespace MTGame
 
 	class ScrollBarBasic : public BaseGui, public MT::Container
 	{
+		int startMousePositionOnClick = 0;
+		double startMousePositionScrollPosition = 0.0;
 		bool isHovering = false, isPressed = false, wasPressed = false;
 		std::shared_ptr<MT::NineSlice> background;
 		std::shared_ptr<MT::NineSlice> scroller;
