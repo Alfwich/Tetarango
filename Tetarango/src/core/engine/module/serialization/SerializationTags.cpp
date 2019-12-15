@@ -2,8 +2,7 @@
 
 namespace MT
 {
-
-	const char* SerializationTags::ARCHIVE_START_TAG = "##SCENE_ARCHIVE_START_V1.00##";
+	const char* SerializationTags::ARCHIVE_START_TAG = "##SCENE_ARCHIVE_START##";
 	const char* SerializationTags::ARCHIVE_END_TAG = "##SCENE_ARCHIVE_END##";
 
 	const char* SerializationTags::OBJECT_START_TAG = "##SCENE_OBJECT_START##";

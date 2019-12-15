@@ -8,6 +8,9 @@ namespace MT
 		int depth = 0;
 
 		ss << getTag(archiveStartTag, depth, isHumanReadable);
+		ss << getTag(archiveVersionStartTag, depth, isHumanReadable);
+		ss << gameConfig->getConfigString(Config::Param::saveVersion);
+		ss << getTag(archiveVersionEndTag, depth, isHumanReadable);
 		++depth;
 		for (const auto keyValue : client->getStore())
 		{
@@ -57,6 +60,17 @@ namespace MT
 		if (!checkAndMoveIfCorrect(&serializedData, archiveStartTag, 0))
 		{
 			return;
+		}
+
+		if (!checkAndMoveIfCorrect(&serializedData, archiveVersionStartTag, 0))
+		{
+			return;
+		}
+
+		const auto archiveVersion = getVersionFromRaw(&serializedData);
+		if (archiveVersion != gameConfig->getConfigString(Config::Param::saveVersion))
+		{
+			// TODO: Convert old save files to new format if needed
 		}
 
 		while (!StringHelper::startsWith_Offset(&serializedData, cursorPosition, archiveEndTag))
@@ -128,6 +142,17 @@ namespace MT
 
 		Logger::instance()->logCritical("Storage::Found corrupt data at position: " + std::to_string(cursorPosition) + ", looking for tag: " + tag);
 		return false;
+	}
+
+	std::string Storage::getVersionFromRaw(std::string* data)
+	{
+		unsigned int endOfKeyPos = StringHelper::distanceToLeft_offset(data, cursorPosition, archiveVersionEndTag);
+		std::string version = StringHelper::getSliceOfCharVector(data, cursorPosition, endOfKeyPos);
+
+		cursorPosition += (int)archiveVersionEndTag.size() + endOfKeyPos;
+
+		return version;
+
 	}
 
 	std::string Storage::getKeyFromRaw(std::string* data)

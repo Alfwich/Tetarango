@@ -13,10 +13,12 @@ namespace MT
 {
 	class Storage : public IBaseModule
 	{
-		const std::string archiveStartTag = "##STORE_ARCHIVE_START_V1.00##";
+		const std::string archiveStartTag = "##STORE_ARCHIVE_START##";
 		const std::string archiveEndTag = "##STORE_ARCHIVE_END##";
 		const std::string keyValueDelimiter = "##STORE_KEY_VALUE_DELIMITER##";
 		const std::string propertyDelimiter = "##STORE_PROPERTY_DELIMITER##";
+		const std::string archiveVersionStartTag = "##STORE_VERSION_START##";
+		const std::string archiveVersionEndTag = "##STORE_VERSION_END##";
 
 		const std::string key = "rRGT1JX2DlsWehGSmLh1WbC4J3KW6AVYed0MPg5umieBZ5Q3SMlk9CVCHWdw6RIu";
 
@@ -36,6 +38,7 @@ namespace MT
 		std::unordered_map<std::string, std::string> hydrateRaw(std::string& serializedData);
 
 		bool checkAndMoveIfCorrect(std::string* data, std::string tag, int additionalOffset);
+		std::string getVersionFromRaw(std::string* data);
 		std::string getKeyFromRaw(std::string* data);
 		std::string getValueFromRaw(std::string* data);
 

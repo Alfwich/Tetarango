@@ -9,6 +9,7 @@ namespace Config
 	enum class Param
 	{
 		version,
+		saveVersion,
 		gameName,
 		organizationName,
 		logToConsole,
@@ -37,6 +38,7 @@ namespace Config
 			std::map<Param, std::string> base
 			{
 					{ Param::version, "v0.07" },
+					{ Param::saveVersion, "v1.00" },
 					{ Param::gameName, "Tetarango" },
 					{ Param::organizationName, "AW Games" },
 					{ Param::logToConsole, TRUE },
@@ -64,10 +66,10 @@ namespace Config
 				base[Param::launchToLastScene] = FALSE;
 				base[Param::useAssetPack] = FALSE;
 				base[Param::saveWholeSceneOnClose] = TRUE;
+				//base[Param::runTests] = TRUE;
 				//base[Param::visualizeClipRects] = TRUE;
 				//base[Param::visualizeContainers] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
-				//base[Param::runTests] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
 			}
