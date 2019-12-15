@@ -1,3 +1,3 @@
 python scripts/makeAssetPackage.py .
 python scripts/makePackage.py .
-mv asset.pack MiniatureTactics/asset.pack
+mv asset.pack Tetarango/asset.pack

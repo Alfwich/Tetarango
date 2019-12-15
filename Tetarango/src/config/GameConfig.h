@@ -36,8 +36,8 @@ namespace Config
 		const std::map<Param, std::string> getConfig() {
 			std::map<Param, std::string> base
 			{
-					{ Param::version, "v0.06" },
-					{ Param::gameName, "Tetrango" },
+					{ Param::version, "v0.07" },
+					{ Param::gameName, "Tetarango" },
 					{ Param::organizationName, "AW Games" },
 					{ Param::logToConsole, TRUE },
 					{ Param::logToFile, TRUE },

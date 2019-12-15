@@ -5,11 +5,12 @@ from distutils.dir_util import copy_tree
 platform_folders = ["x64"]
 package_folders = ["DEV", "PROD_DEBUG", "PROD"]
 debug_packages = ["DEV", "PROD_DEBUG"]
-resource_folders = ["MiniatureTactics/res"]
+resource_folders = ["Tetarango/res"]
 resource_exclude_files = [".xcf"]
-dll_folders = ["MiniatureTactics"]
+dll_folders = ["Tetarango"]
 
-version_file_location = "MiniatureTactics/src/config/GameConfig.h"
+version_file_location = "Tetarango/src/config/GameConfig.h"
+package_prefix = "TET_"
 output_folder = "packages"
 
 def getAppVersion():
@@ -35,7 +36,7 @@ def main():
     if not os.path.exists(packageFolder):
         os.mkdir(packageFolder)
 
-    versionRootDir = packageFolder + "/MT_" + version + datetime.datetime.now().strftime("_%m-%d-%y-%H.%M.%S")
+    versionRootDir = packageFolder + "/" + package_prefix + version + datetime.datetime.now().strftime("_%m-%d-%y-%H.%M.%S")
     print("Making package for version=" + version)
 
     if not os.path.exists(versionRootDir):
