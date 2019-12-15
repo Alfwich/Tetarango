@@ -32,13 +32,15 @@ namespace MT
 		void performTargetedFrameUpdate(double frameTime);
 		void performTargetlessFrameUpdate(double frameTime);
 
+		std::shared_ptr<INotifyOnTransition> getNotificationPtr();
+
 	public:
 		Transition(std::shared_ptr<Time> time, TimeScope scopeName);
 
 		int getObjectIdEnterFrame();
 		int getId();
 
-		std::weak_ptr<INotifyOnTransition> listener;
+		std::weak_ptr<ApplicationObject> listener;
 
 		void startTransition(std::shared_ptr<Renderable> target, double durationMS, Rect targetRect, double targetAlpha = -1.0);
 		void startTargetlessTransition(double durationMS);

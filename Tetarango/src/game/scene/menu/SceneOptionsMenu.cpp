@@ -407,23 +407,11 @@ namespace MTGame
 			setVolLabels();
 		}
 
-		if (stopSoundTimeoutId != 0)
-		{
-			modules->event->unregisterTimeoutCallback(stopSoundTimeoutId);
-			stopSoundTimeoutId = 0;
-		}
-
-		stopSoundTimeoutId = modules->event->registerTimeoutCallback(shared_from_this(), 2000.0);
+		setTimeout(2000.0, &stopSoundTimeoutId);
 
 		if (playEffectSound)
 		{
-			if (playSoundTimeoutId != 0)
-			{
-				modules->event->unregisterTimeoutCallback(playSoundTimeoutId);
-				playSoundTimeoutId = 0;
-			}
-
-			playSoundTimeoutId = modules->event->registerTimeoutCallback(shared_from_this(), 500.0);
+			setTimeout(500.0, &playSoundTimeoutId);
 		}
 	}
 

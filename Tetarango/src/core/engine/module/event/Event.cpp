@@ -213,48 +213,6 @@ namespace MT
 		}
 	}
 
-	void Event::processPostRenderCallbacks()
-	{
-		if (postRenderCallbacks.empty())
-		{
-			return;
-		}
-
-		processingOnPostRenders = true;
-
-		for (auto callback : postRenderCallbacks)
-		{
-			const auto ptr = callback.lock();
-			if (ptr != nullptr)
-			{
-				ptr->onPostRender();
-			}
-		}
-
-		processingOnPostRenders = false;
-
-		postRenderCallbacks.clear();
-
-		for (auto callback : postRenderProcessedCallbacks)
-		{
-			postRenderCallbacks.push_back(callback);
-		}
-
-		postRenderProcessedCallbacks.clear();
-	}
-
-	void Event::registerPostRenderCallback(std::shared_ptr<EnterFrameListener> listener)
-	{
-		if (processingOnPostRenders)
-		{
-			postRenderProcessedCallbacks.push_back(listener);
-		}
-		else
-		{
-			postRenderCallbacks.push_back(listener);
-		}
-	}
-
 	int Event::registerTimeoutCallback(std::shared_ptr<EnterFrameListener> listener, double timeoutMS)
 	{
 		const auto bundle = std::make_shared<TimeoutBundle>(timeoutId++, listener, timeoutMS);

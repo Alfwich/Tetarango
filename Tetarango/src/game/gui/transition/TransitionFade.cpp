@@ -17,7 +17,7 @@ namespace MTGame
 	void TransitionFade::onInitialAttach()
 	{
 		fadeTransition = modules->animation->createTransition();
-		fadeTransition->listener = std::dynamic_pointer_cast<MT::INotifyOnTransition>(shared_from_this());
+		fadeTransition->listener = weak_from_this();
 	}
 
 	void TransitionFade::onCreateChildren()

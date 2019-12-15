@@ -179,37 +179,35 @@ namespace MTGame
 		}
 	}
 
-	void SceneTetris::onPostRender()
+	void SceneTetris::onTimeoutCalled(int id)
 	{
-		if (deferPostRenderCount > 0)
+		if (id == saveScreenshotTimeoutId)
 		{
-			deferPostRenderCount--;
-			modules->event->registerPostRenderCallback(shared_from_this());
-			return;
-		}
+			auto imageCatcher = std::make_shared<MT::CachedImage>();
+			imageCatcher->setShouldSerializeImage(true);
+			imageCatcher->captureWholeScreen();
 
-		auto imageCatcher = std::make_shared<MT::CachedImage>();
-		imageCatcher->setShouldSerializeImage(true);
-		imageCatcher->captureWholeScreen();
+			const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
+			std::string path;
+			switch (currentSaveSlotId)
+			{
+			case 1:
+				path = storagePath(StorePaths::System_SaveSlot1_Image);
+				break;
+			case 2:
+				path = storagePath(StorePaths::System_SaveSlot2_Image);
+				break;
+			case 3:
+				path = storagePath(StorePaths::System_SaveSlot3_Image);
+				break;
+			}
 
-		const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
-		std::string path;
-		switch (currentSaveSlotId)
-		{
-		case 1:
-			path = storagePath(StorePaths::System_SaveSlot1_Image);
-			break;
-		case 2:
-			path = storagePath(StorePaths::System_SaveSlot2_Image);
-			break;
-		case 3:
-			path = storagePath(StorePaths::System_SaveSlot3_Image);
-			break;
-		}
+			if (!path.empty())
+			{
+				modules->storage->getClient()->writeString(path, modules->serialization->serialize(imageCatcher));
+			}
 
-		if (!path.empty())
-		{
-			modules->storage->getClient()->writeString(path, modules->serialization->serialize(imageCatcher));
+			saveScreenshotTimeoutId = 0;
 		}
 	}
 
@@ -284,7 +282,6 @@ namespace MTGame
 
 	void SceneTetris::onAboutToSave()
 	{
-		deferPostRenderCount = 1;
-		modules->event->registerPostRenderCallback(shared_from_this());
+		setTimeout(100.0, &saveScreenshotTimeoutId);
 	}
 }

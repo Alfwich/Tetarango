@@ -145,7 +145,6 @@ namespace MT
 			processApplicationEvents();
 			modules->event->processEnterFrames(frameTime);
 			render();
-			modules->event->processPostRenderCallbacks();
 			modules->collision->processCollisions();
 		}
 		cleanup();

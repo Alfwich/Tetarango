@@ -11,7 +11,10 @@ namespace MTGame
 	class TitleGame : public MT::Container, public MT::INotifyOnTransition
 	{
 		std::shared_ptr<MT::Text> primaryTitle;
-		std::vector<std::shared_ptr<MT::Element>> titles;
+		std::vector<std::shared_ptr<MT::Text>> titles;
+
+		std::shared_ptr<MT::Transition> introTransition;
+		std::shared_ptr<MT::Transition> continuousTransition;
 
 	public:
 		TitleGame();
@@ -19,7 +22,13 @@ namespace MTGame
 		void setFontSize(int fontSize);
 		int getFontSize();
 
+		void onInitialAttach();
 		void onCreateChildren();
 		void onLayoutChildren();
+
+		void onTimeoutCalled();
+
+		void onTransitionAnimationFrame(double position, int id);
+		void onTransitionCompleted();
 	};
 }

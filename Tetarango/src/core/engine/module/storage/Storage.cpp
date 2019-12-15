@@ -1,5 +1,10 @@
 #include "Storage.h"
 
+namespace
+{
+	const auto dataFileExtension = ".gdata";
+}
+
 namespace MT
 {
 	std::string Storage::serializeStore(std::shared_ptr<StorageClient> client, bool isHumanReadable)
@@ -68,9 +73,12 @@ namespace MT
 		}
 
 		const auto archiveVersion = getVersionFromRaw(&serializedData);
-		if (archiveVersion != gameConfig->getConfigString(Config::Param::saveVersion))
+		const auto expectedVersion = gameConfig->getConfigString(Config::Param::saveVersion);
+		if (archiveVersion != expectedVersion)
 		{
 			// TODO: Convert old save files to new format if needed
+			Logger::instance()->logCritical("Storage::Found different save file version: " + archiveVersion + " than what was expected: " + expectedVersion);
+			return;
 		}
 
 		while (!StringHelper::startsWith_Offset(&serializedData, cursorPosition, archiveEndTag))
@@ -177,7 +185,7 @@ namespace MT
 
 	void Storage::loadScope(std::shared_ptr<StorageClient> client)
 	{
-		auto savedData = filesystem->readContentsFromFile(client->getScopeName() + ".data");
+		auto savedData = filesystem->readContentsFromFile(client->getScopeName() + dataFileExtension);
 
 		if (!savedData.empty())
 		{
@@ -228,7 +236,7 @@ namespace MT
 			[](std::shared_ptr<AsyncOperationBundle<std::pair<std::shared_ptr<Storage>, std::shared_ptr<Filesystem>>, std::string>> bundle) -> std::shared_ptr<std::unordered_map<std::string, std::string>> {
 			const auto storage = bundle->service->first;
 			const auto filesystem = bundle->service->second;
-			auto readResult = filesystem->readContentsFromFile((*bundle->data) + ".data");
+			auto readResult = filesystem->readContentsFromFile((*bundle->data) + dataFileExtension);
 			return storage->hydrateRawDataToRawScope(readResult);
 		}
 		, weak_from_this(), WorkerTaskCode::STORE_LOAD_DATA);
@@ -280,12 +288,12 @@ namespace MT
 
 		compress(dataToStore);
 
-		filesystem->writeContentToFile(client->getScopeName() + ".data", dataToStore);
+		filesystem->writeContentToFile(client->getScopeName() + dataFileExtension, dataToStore);
 
 		if (gameConfig->getConfigBool(Config::Param::saveReadableStoreFiles))
 		{
 			const auto readableData = serializeStore(client, true);
-			filesystem->writeContentToFile(client->getScopeName() + ".readable.txt", readableData);
+			filesystem->writeContentToFile(client->getScopeName() + dataFileExtension + ".txt", readableData);
 		}
 
 		Logger::instance()->log("Storage::Saved scopeName=" + client->getScopeName() + " to disk");

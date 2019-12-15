@@ -69,7 +69,7 @@ namespace MTGame
 	void SceneSplash::onInitialAttach()
 	{
 		splashTransition = modules->animation->createTransitionForTimeScope(MT::TimeScope::Menu);
-		splashTransition->listener = std::dynamic_pointer_cast<MT::INotifyOnTransition>(shared_from_this());
+		splashTransition->listener = weak_from_this();
 
 		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, baseSceneWeakThisRef());
 		modules->input->keyboard->registerKey(SDL_SCANCODE_SPACE, baseSceneWeakThisRef());

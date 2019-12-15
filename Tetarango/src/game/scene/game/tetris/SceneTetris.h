@@ -13,7 +13,7 @@ namespace MTGame
 
 	class SceneTetris : public BaseScene
 	{
-		int score = 0, deferPostRenderCount = 0;
+		int score = 0, saveScreenshotTimeoutId = 0;
 		bool isLeftDown = false, isRightDown = false, saveScreenOnNextEnterFrame = false, hasPlayedGameOverSound = false;
 		std::shared_ptr<MT::Timer> keyRepeatTimer;
 		std::shared_ptr<MT::Text> scoreText;
@@ -39,7 +39,7 @@ namespace MTGame
 		virtual std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
 
 		void onEnterFrame(double deltaTime);
-		void onPostRender();
+		void onTimeoutCalled(int id);
 		void onKeyPressed(SDL_Scancode key);
 		void onKeyReleased(SDL_Scancode key);
 		void onAboutToSave();

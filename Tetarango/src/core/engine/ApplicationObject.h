@@ -139,6 +139,9 @@ namespace MT
 		int getObjectIdEnterFrame();
 		virtual void enableEnterFrame(int priority = 0);
 		virtual void disableEnterFrame();
+
+		int setTimeout(double timeoutMS);
+		void setTimeout(double timeoutMS, int* timeoutIdLocation);
 	};
 
 	template<typename T>

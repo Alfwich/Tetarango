@@ -498,4 +498,19 @@ namespace MT
 			enterFramePriority = 0;
 		}
 	}
+
+	int ApplicationObject::setTimeout(double timeoutMS)
+	{
+		return modules->event->registerTimeoutCallback(shared_from_this(), timeoutMS);
+	}
+
+	void ApplicationObject::setTimeout(double timeoutMS, int* timeoutIdLocation)
+	{
+		if (timeoutIdLocation != 0)
+		{
+			modules->event->unregisterTimeoutCallback(*timeoutIdLocation);
+		}
+
+		*timeoutIdLocation = setTimeout(timeoutMS);
+	}
 }

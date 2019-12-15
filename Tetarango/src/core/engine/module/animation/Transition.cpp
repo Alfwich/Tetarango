@@ -58,7 +58,7 @@ namespace MT
 		enterFrameActivated = true;
 
 		target->onTransitionStart();
-		const auto listenerPtr = listener.lock();
+		const auto listenerPtr = getNotificationPtr();
 		if (listenerPtr != nullptr)
 		{
 			listenerPtr->onTransitionStarted(id);
@@ -75,7 +75,7 @@ namespace MT
 		playing = true;
 		enterFrameActivated = true;
 
-		const auto listenerPtr = listener.lock();
+		const auto listenerPtr = getNotificationPtr();
 		if (listenerPtr != nullptr)
 		{
 			listenerPtr->onTransitionStarted(id);
@@ -155,7 +155,7 @@ namespace MT
 		{
 			target->onTransitionFrame(1.0, endRect, endAlpha, id);
 
-			const auto listenerPtr = listener.lock();
+			const auto listenerPtr = getNotificationPtr();
 			if (listenerPtr != nullptr)
 			{
 				listenerPtr->onTransitionAnimationFrame(1.0, id);
@@ -190,7 +190,7 @@ namespace MT
 			auto intermediaryAlpha = startAlpha * (1.0 - pos) + endAlpha * pos;
 			target->onTransitionFrame(pos, intermediaryRect, intermediaryAlpha, id);
 
-			const auto listenerPtr = listener.lock();
+			const auto listenerPtr = getNotificationPtr();
 			if (listenerPtr != nullptr)
 			{
 				listenerPtr->onTransitionAnimationFrame(pos, id);
@@ -204,7 +204,7 @@ namespace MT
 
 		if (position >= duration)
 		{
-			const auto listenerPtr = listener.lock();
+			const auto listenerPtr = getNotificationPtr();
 			if (listenerPtr != nullptr)
 			{
 				listenerPtr->onTransitionAnimationFrame(1.0, id);
@@ -232,11 +232,18 @@ namespace MT
 		}
 		else
 		{
-			const auto listenerPtr = listener.lock();
+			const auto listenerPtr = getNotificationPtr();
 			if (listenerPtr != nullptr)
 			{
 				listenerPtr->onTransitionAnimationFrame(position / duration, id);
 			}
 		}
+	}
+
+	std::shared_ptr<INotifyOnTransition> Transition::getNotificationPtr()
+	{
+		const auto ptr = listener.lock();
+
+		return ptr != nullptr ? std::dynamic_pointer_cast<INotifyOnTransition>(ptr) : nullptr;
 	}
 }
