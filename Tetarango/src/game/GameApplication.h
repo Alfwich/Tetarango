@@ -7,6 +7,7 @@
 #include "GameConfig.h"
 #include "ui/renderable/element/Rectangle.h"
 #include "engine/module/display/DisplayRoot.h"
+#include "engine/Application.h"
 
 namespace AWGame
 {

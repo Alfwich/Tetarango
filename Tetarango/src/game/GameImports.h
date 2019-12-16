@@ -1,7 +1,6 @@
 #pragma once
 
 // AWCore
-#include "engine/Application.h"
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
 #include "ui/renderable/element/Rectangle.h"
 #include "ui/renderable/element/Text.h"
@@ -15,7 +14,7 @@
 // Scenes
 #include "scene/Scenes.h"
 #include "scene/test/TestScene.h"
-#include "scene/test/TestSpaceScene.h"
+#include "scene/test/TestScene2.h"
 #include "scene/menu/SceneSplash.h"
 #include "scene/menu/SceneMainMenu.h"
 #include "scene/menu/SceneOptionsMenu.h"

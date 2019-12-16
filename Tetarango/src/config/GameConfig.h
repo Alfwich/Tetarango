@@ -68,7 +68,7 @@ namespace Config
 				base[Param::saveWholeSceneOnClose] = TRUE;
 				//base[Param::visualizeContainers] = TRUE;
 				//base[Param::visualizeClipRects] = TRUE;
-				//base[Param::runTests] = TRUE;
+				base[Param::runTests] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;

@@ -261,7 +261,7 @@
     <ClCompile Include="src\game\scene\test\TestScene.cpp" />
     <ClCompile Include="src\core\ui\renderable\Zone.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\trace\Trace.cpp" />
-    <ClCompile Include="src\game\scene\test\TestSpaceScene.cpp" />
+    <ClCompile Include="src\game\scene\test\TestScene2.cpp" />
     <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -398,7 +398,7 @@
     <ClInclude Include="src\game\scene\test\TestScene.h" />
     <ClInclude Include="src\core\ui\renderable\Zone.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\trace\Trace.h" />
-    <ClInclude Include="src\game\scene\test\TestSpaceScene.h" />
+    <ClInclude Include="src\game\scene\test\TestScene2.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\core\img\solid.png" />

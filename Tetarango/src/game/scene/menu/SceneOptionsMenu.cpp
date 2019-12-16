@@ -179,6 +179,12 @@ namespace AWGame
 		wireframeModeCheckbox->clickListener = weak_from_this();
 		add(wireframeModeCheckbox);
 
+		debugRenderingCheckbox = std::make_shared<CheckBoxBasic>();
+		debugRenderingCheckbox->setText("Debug Rendering");
+		debugRenderingCheckbox->setChecked(config.visualizeContainers || config.visualizeClipRects);
+		debugRenderingCheckbox->clickListener = weak_from_this();
+		add(debugRenderingCheckbox);
+
 		masterVolScrollBar = std::make_shared<ScrollBarBasic>();
 		masterVolScrollBar->setSize(200.0, 20.0);
 		masterVolScrollBar->setHorizontal(true);
@@ -265,6 +271,7 @@ namespace AWGame
 
 		openGlCompatibilityModeCheckbox->toBottomLeftOf(msaa16xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
+		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
 
 		vsyncOffCheckbox->toRightOf(fullscreenCheckbox, 405.0);
 		vsyncOnCheckbox->toBottomLeftOf(vsyncOffCheckbox, 0.0, checkboxYOffset);
@@ -383,6 +390,14 @@ namespace AWGame
 		{
 			config.openGlWireframeMode = !config.openGlWireframeMode;
 			wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
+			shouldEnableApply = true;
+		}
+
+		if (id == debugRenderingCheckbox->getId())
+		{
+			config.visualizeClipRects = !(config.visualizeClipRects || config.visualizeContainers);
+			config.visualizeContainers = config.visualizeClipRects;
+			debugRenderingCheckbox->setChecked(config.visualizeClipRects);
 			shouldEnableApply = true;
 		}
 

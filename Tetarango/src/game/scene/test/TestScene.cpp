@@ -25,9 +25,6 @@ namespace AWGame
 
 		modules->input->keyboard->registerKey(SDL_SCANCODE_ESCAPE, weak_from_this());
 		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, weak_from_this());
-
-		spawnTimer = modules->time->createTimer(AWCore::TimeScope::Game);
-		spawnTimer->start();
 	}
 
 	void TestScene::onAttach()
@@ -48,11 +45,6 @@ namespace AWGame
 		backdrop->setTexture("test-scene-background");
 		backdrop->setSizeToEffectiveInfinity();
 		add(backdrop);
-
-		screenRectContainer = std::make_shared<AWCore::Container>();
-		screenRectContainer->zIndex = 10;
-		screenRectContainer->renderPositionMode = AWCore::RenderPositionMode::Absolute;
-		add(screenRectContainer);
 
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
@@ -131,83 +123,6 @@ namespace AWGame
 			}
 
 		}
-
-		/*
-		for (auto teamId = 0; teamId < 10; ++teamId)
-		{
-			const auto spawnX = MT::NumberHelper::random(-2000, 2000),
-				spawnY = MT::NumberHelper::random(-2000, 2000);
-			for (auto i = 0; i < 5; ++i)
-			{
-				auto npc = std::make_shared<PawnHuman>();
-				npc->setPosition(spawnX + MT::NumberHelper::random(-100, 100), spawnY + MT::NumberHelper::random(-100, 100));
-				npc->setTeam(teamId);
-				npc->setController(std::make_shared<PawnControllerAICombatSimple>());
-				generator.provisionCombatPawn(npc);
-				add(npc);
-			}
-		}
-
-		for (auto i = 0; i < 20; ++i)
-		{
-			auto npc = std::make_shared<PawnHuman>();
-			npc->setPosition(MT::NumberHelper::random(-2000, 2000), MT::NumberHelper::random(-2000, 2000));
-			npc->setController(std::make_shared<PawnControllerAINpc>());
-			generator.provisionNonCombatPawn(npc);
-			add(npc);
-		}
-
-		auto globalSystem = std::make_shared<MT::ParticleSystem>();
-		globalSystem->setGlobalReceiver(true);
-		add(globalSystem);
-	}
-
-	void TestScene::onEnterFrame(double frameTime)
-	{
-		auto child = findChildWithName<MT::ApplicationObject>("rotation-root");
-		auto renderable = std::dynamic_pointer_cast<MT::Renderable>(child);
-		if (renderable == nullptr)
-		{
-			return;
-		}
-
-		auto rotation = 30 * (frameTime / 1000.0);
-		renderable->rotate(rotation * 1);
-
-		if (player != nullptr && camera != nullptr)
-		{
-			camera->setX(player->getX());
-			camera->setY(player->getY());
-		}
-
-		if (false && spawnTimer->getTicks() > 1000)
-		{
-			for (auto i = 0; i < 10; ++i)
-			{
-				auto npc = std::make_shared<PawnHuman>();
-				npc->setPosition(MT::NumberHelper::random(-1000, 1000), MT::NumberHelper::random(-1000, 1000));
-				npc->setTeam(1);
-				npc->setController(std::make_shared<PawnControllerAICombatSimple>());
-				generator.provisionCombatPawn(npc);
-				add(npc);
-			}
-			spawnTimer->start();
-		}
-
-		screenRectContainer->destroyChildren();
-		for (const auto child : children)
-		{
-			const auto pawnPtr = std::dynamic_pointer_cast<PawnHuman>(child);
-			if (pawnPtr != nullptr)
-			{
-				const auto sR = child->getScreenRect();
-				const auto r = std::make_shared<MT::Rectangle>();
-				r->setSizeAndPosition(sR->x, sR->y, sR->w, sR->h);
-				r->movePosition(sR->w / 2.0, sR->h / 2.0);
-				screenRectContainer->add(r);
-			}
-		}
-		*/
 	}
 
 	void TestScene::onChildrenHydrated()

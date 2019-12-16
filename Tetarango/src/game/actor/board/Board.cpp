@@ -344,7 +344,7 @@ namespace AWGame
 
 	void Board::onEnterFrame(double deltaTime)
 	{
-		if (isFallingEnabled && !hasFailedToPlacePiece && actionTimer->isAboveThresholdAndRestart(isFastFalling ? 25 : 250))
+		if (isFallingEnabled && !hasFailedToPlacePiece && actionTimer->isAboveThresholdAndRestart(isFastFalling ? 25 : 750))
 		{
 			for (auto it = transitions.begin(); it != transitions.end();)
 			{

@@ -12,6 +12,8 @@ namespace
 	const auto displayWireframeModeParamKey = "display-wireframe-mode";
 	const auto displayDoubleBufferParamKey = "display-double-buffer";
 	const auto displayFrameLimiterParamKey = "display-frame-limiter";
+	const auto displayDebugClipRectsParamKey = "display-debug-clip-rects-buffer";
+	const auto displayDebugContainersParamKey = "display-debug-containers-limiter";
 
 	const auto masterVolParamKey = "vol-master";
 	const auto generalVolParamKey = "vol-general";
@@ -38,6 +40,8 @@ namespace AWGame
 			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
 			screenConfig.useDoubleBuffer = storageClient->readBool(displayDoubleBufferParamKey);
 			screenConfig.frameLimiter = storageClient->readInt(displayFrameLimiterParamKey);
+			screenConfig.visualizeClipRects = storageClient->readBool(displayDebugClipRectsParamKey);
+			screenConfig.visualizeContainers = storageClient->readBool(displayDebugContainersParamKey);
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
@@ -84,7 +88,7 @@ namespace AWGame
 			if (gameConfig->getConfigBool(Config::Param::enableTestScenes))
 			{
 				masterSceneContainer->add(std::make_shared<TestScene>());
-				masterSceneContainer->add(std::make_shared<TestSpaceScene>());
+				masterSceneContainer->add(std::make_shared<TestSpace2>());
 			}
 
 			masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Splash));
@@ -160,6 +164,8 @@ namespace AWGame
 		storageClient->writeInt(displayFrameLimiterParamKey, screenConfig.frameLimiter);
 		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
 		storageClient->writeBool(displayWireframeModeParamKey, screenConfig.openGlWireframeMode);
+		storageClient->writeBool(displayDebugClipRectsParamKey, screenConfig.visualizeClipRects);
+		storageClient->writeBool(displayDebugContainersParamKey, screenConfig.visualizeContainers);
 
 		if (masterSceneContainer != nullptr)
 		{

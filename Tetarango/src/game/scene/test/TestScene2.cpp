@@ -1,4 +1,4 @@
-#include "TestSpaceScene.h"
+#include "TestScene2.h"
 
 #include <random>
 #include "GameImports.h"
@@ -13,13 +13,13 @@ namespace
 namespace AWGame
 {
 
-	TestSpaceScene::TestSpaceScene() : AWCore::Scene("test_space_scene")
+	TestSpace2::TestSpace2() : AWCore::Scene("test_space_scene")
 	{
 		rebuildOnLoad = true;
-		enableSerialization<TestSpaceScene>();
+		enableSerialization<TestSpace2>();
 	}
 
-	void TestSpaceScene::onInitialAttach()
+	void TestSpace2::onInitialAttach()
 	{
 		enableEnterFrame();
 		setTimeScope(AWCore::TimeScope::Game);
@@ -27,12 +27,12 @@ namespace AWGame
 		modules->input->keyboard->registerKeys({ SDL_SCANCODE_ESCAPE, SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3 }, weak_from_this());
 	}
 
-	void TestSpaceScene::onAttach()
+	void TestSpace2::onAttach()
 	{
 		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
 	}
 
-	void TestSpaceScene::onCreateChildren()
+	void TestSpace2::onCreateChildren()
 	{
 		const auto mainGameMenu = std::make_shared<GameMainMenu>();
 		mainGameMenu->zIndex = 20;
@@ -56,18 +56,18 @@ namespace AWGame
 		add(globalSystem);
 	}
 
-	void TestSpaceScene::onChildrenHydrated()
+	void TestSpace2::onChildrenHydrated()
 	{
 		globalSystem = findChildWithName<AWCore::ParticleSystem>(starSystemId);
 		AWCore::NumberHelper::seedRng(getSceneName());
 		globalSystem->emitImmediatelyWithFactory(3000, std::make_shared<ParticleSpaceBackgroundParticleFactory>());
 	}
 
-	void TestSpaceScene::onEnterFrame(double frameTime)
+	void TestSpace2::onEnterFrame(double frameTime)
 	{
 	}
 
-	void TestSpaceScene::onKeyPressed(SDL_Scancode key)
+	void TestSpace2::onKeyPressed(SDL_Scancode key)
 	{
 		switch (key)
 		{

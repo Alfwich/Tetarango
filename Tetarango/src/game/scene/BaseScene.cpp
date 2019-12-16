@@ -20,7 +20,7 @@ namespace AWGame
 	void BaseScene::primeScenes()
 	{
 		std::make_unique<TestScene>();
-		std::make_unique<TestSpaceScene>();
+		std::make_unique<TestSpace2>();
 
 		std::make_unique<SceneSplash>();
 		std::make_unique<SceneMainMenu>();

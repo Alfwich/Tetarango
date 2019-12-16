@@ -87,8 +87,8 @@ namespace AWCore
 			break;
 		}
 
-		currentConfig.visualizeContainers = gameConfig->getConfigBool(Config::Param::visualizeContainers);
-		currentConfig.visualizeClipRects = gameConfig->getConfigBool(Config::Param::visualizeClipRects);
+		currentConfig.visualizeContainers = currentConfig.visualizeContainers || gameConfig->getConfigBool(Config::Param::visualizeContainers);
+		currentConfig.visualizeClipRects = currentConfig.visualizeClipRects || gameConfig->getConfigBool(Config::Param::visualizeClipRects);
 
 		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, currentConfig.width, currentConfig.height, windowFlags);
 
