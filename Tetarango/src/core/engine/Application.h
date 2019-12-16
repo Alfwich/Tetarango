@@ -20,11 +20,14 @@ namespace AWCore
 	{
 	private:
 		std::shared_ptr<Timer> frameTimer;
-		double startFrameTime = 0.0, targetFrameTime = 0.0;
+		double startFrameTime = 0.0, targetFrameTime = 0.0, frameTime = 0.0;
 		bool running = false;
 
+		void updateFrameTime();
+		void processEnterFrames();
 		void processApplicationEvents();
-		void doFrameLimit();
+		void processCollisions();
+		void doFrameLimitIfNeeded();
 
 	protected:
 		ScreenConfig screenConfig;

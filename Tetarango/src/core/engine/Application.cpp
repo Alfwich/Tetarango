@@ -141,12 +141,12 @@ namespace AWCore
 		ready();
 		while (running)
 		{
-			double frameTime = std::min(100.0, frameTimer->getTicksAndRestart());
+			updateFrameTime();
 			processApplicationEvents();
-			modules->event->processEnterFrames(frameTime);
+			processEnterFrames();
 			render();
-			modules->collision->processCollisions();
-			doFrameLimit();
+			processCollisions();
+			doFrameLimitIfNeeded();
 		}
 		cleanup();
 
@@ -167,10 +167,19 @@ namespace AWCore
 		SDL_Quit();
 	}
 
+	void Application::updateFrameTime()
+	{
+		frameTime = std::min(100.0, frameTimer->getTicksAndRestart());
+		startFrameTime = modules->time->getHighResolutionTicks();
+	}
+
+	void Application::processEnterFrames()
+	{
+		modules->event->processEnterFrames(frameTime);
+	}
+
 	void Application::processApplicationEvents()
 	{
-		startFrameTime = Time::getHighResolutionTicks();
-
 		for (auto e : modules->event->processEvents())
 		{
 			switch (e->code)
@@ -191,18 +200,24 @@ namespace AWCore
 		}
 	}
 
-	void Application::doFrameLimit()
+	void Application::doFrameLimitIfNeeded()
 	{
 		if (screenConfig.frameLimiter > 0)
 		{
-			const auto timeDiff = targetFrameTime - (Time::getHighResolutionTicks() - startFrameTime);
-			if (timeDiff > 1.0)
+			const auto timeDiffToDelay = targetFrameTime - (modules->time->getHighResolutionTicks() - startFrameTime) - 1.0;
+			if (timeDiffToDelay > 0.0)
 			{
-				SDL_Delay((int)std::floor(timeDiff) - 1);
+				modules->time->delay((Uint32)std::floor(timeDiffToDelay));
 			}
 
-			while (Time::getHighResolutionTicks() - startFrameTime < targetFrameTime) {}
+			// Spinlock the rest of the time
+			modules->time->spinlock(startFrameTime, targetFrameTime);
 		}
+	}
+
+	void Application::processCollisions()
+	{
+		modules->collision->processCollisions();
 	}
 
 	void Application::exit()

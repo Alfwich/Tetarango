@@ -5,6 +5,7 @@ namespace
 {
 	const auto testMusicName = "tetris-music";
 	const auto testSoundName = "tetris-clear-row";
+	const auto fontSize = 24;
 	const std::vector<int> frameLimits = {
 		0,
 		30,
@@ -28,18 +29,7 @@ namespace AWGame
 
 	void SceneOptionsMenu::onInitialAttach()
 	{
-		info = modules->screen->getAllSupportedDisplayModes();
-
-		modules->input->mouse->registerMouseWheel(weak_from_this());
-		modules->input->keyboard->registerKey(SDL_SCANCODE_RETURN, weak_from_this());
-
-		config = modules->screen->getCurrentScreenConfig();
-	}
-
-	void SceneOptionsMenu::onAttach()
-	{
-		BaseScene::onAttach();
-		config = modules->screen->getCurrentScreenConfig();
+		modules->input->keyboard->registerKeys({ SDL_SCANCODE_RETURN, SDL_SCANCODE_BACKSPACE }, weak_from_this());
 	}
 
 	void SceneOptionsMenu::onDetach()
@@ -54,8 +44,11 @@ namespace AWGame
 
 	void SceneOptionsMenu::onCreateChildren()
 	{
+		info = modules->screen->getAllSupportedDisplayModes();
+		config = modules->screen->getCurrentScreenConfig();
+
 		optionsMenuTitle = std::make_shared<AWCore::Text>();
-		optionsMenuTitle->setFont("medium", 28);
+		optionsMenuTitle->setFont("medium", fontSize);
 		optionsMenuTitle->setText("Options");
 		add(optionsMenuTitle);
 
@@ -156,6 +149,24 @@ namespace AWGame
 		msaa16xCheckbox->clickListener = weak_from_this();
 		add(msaa16xCheckbox);
 
+		vsyncOffCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
+		vsyncOffCheckbox->setText("VSync Off");
+		vsyncOffCheckbox->setChecked(config.vMode == AWCore::VsyncModes::Disabled);
+		vsyncOffCheckbox->clickListener = weak_from_this();
+		add(vsyncOffCheckbox);
+
+		vsyncOnCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
+		vsyncOnCheckbox->setText("VSync On");
+		vsyncOnCheckbox->setChecked(config.vMode == AWCore::VsyncModes::Enabled);
+		vsyncOnCheckbox->clickListener = weak_from_this();
+		add(vsyncOnCheckbox);
+
+		vsyncAdaptiveCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
+		vsyncAdaptiveCheckbox->setText("VSync Adaptive");
+		vsyncAdaptiveCheckbox->setChecked(config.vMode == AWCore::VsyncModes::Adaptive);
+		vsyncAdaptiveCheckbox->clickListener = weak_from_this();
+		add(vsyncAdaptiveCheckbox);
+
 		openGlCompatibilityModeCheckbox = std::make_shared<CheckBoxBasic>();
 		openGlCompatibilityModeCheckbox->setText("OpenGL Compatibility Mode");
 		openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
@@ -194,20 +205,25 @@ namespace AWGame
 		add(frameLimiterScrollBar);
 
 		masterVolLabel = std::make_shared<AWCore::Text>();
-		masterVolLabel->setFont("medium", 28);
+		masterVolLabel->setFont("medium", fontSize);
 		add(masterVolLabel);
 
 		generalVolLabel = std::make_shared<AWCore::Text>();
-		generalVolLabel->setFont("medium", 28);
+		generalVolLabel->setFont("medium", fontSize);
 		add(generalVolLabel);
 
 		musicVolLabel = std::make_shared<AWCore::Text>();
-		musicVolLabel->setFont("medium", 28);
+		musicVolLabel->setFont("medium", fontSize);
 		add(musicVolLabel);
 
-		frameLimiterLabel = std::make_shared<AWCore::Text>();
-		frameLimiterLabel->setFont("medium", 28);
-		add(frameLimiterLabel);
+		frameLimiterLabelPrefix = std::make_shared<AWCore::Text>();
+		frameLimiterLabelPrefix->setFont("medium", fontSize);
+		frameLimiterLabelPrefix->setText("Frame Limiter ");
+		add(frameLimiterLabelPrefix);
+
+		frameLimiterLabelValue = std::make_shared<AWCore::Text>();
+		frameLimiterLabelValue->setFont("medium", fontSize);
+		add(frameLimiterLabelValue);
 
 		masterVolScrollBar->setScrollPositionInstantly(modules->sound->getMasterVolume());
 		generalVolScrollBar->setScrollPositionInstantly(modules->sound->getEffectVolume());
@@ -221,7 +237,7 @@ namespace AWGame
 	{
 		const auto generalElementOffset = 5.0;
 		const auto verticalScreenBorderOffset = 100.0;
-		const auto optionsXOffset = 50.0;
+		const auto optionsXOffset = 40.0;
 		const auto checkboxYOffset = 10.0;
 		const auto checkboxYGroupOffset = 32.0;
 
@@ -231,7 +247,7 @@ namespace AWGame
 		resetButton->toRightOf(applyButton, generalElementOffset, 0.0);
 		backButton->toLeftOf(applyButton, generalElementOffset, 0.0);
 
-		resolutionScrollArea->centerAlignSelf(generalElementOffset + (getScreenWidth() - 879.0) / 2.0, (getScreenHeight() - 600.0) / 2.0);
+		resolutionScrollArea->centerAlignSelf(generalElementOffset + (getScreenWidth() - 859.0) / 2.0, (getScreenHeight() - 600.0) / 2.0);
 		resolutionScrollArea->floorAlignSelf();
 		{
 			auto r = resolutionScrollArea->getRect();
@@ -250,17 +266,22 @@ namespace AWGame
 		openGlCompatibilityModeCheckbox->toBottomLeftOf(msaa16xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
 		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
 
-		masterVolLabel->toRightOf(windowedCheckbox, 415.0);
+		vsyncOffCheckbox->toRightOf(fullscreenCheckbox, 405.0);
+		vsyncOnCheckbox->toBottomLeftOf(vsyncOffCheckbox, 0.0, checkboxYOffset);
+		vsyncAdaptiveCheckbox->toBottomLeftOf(vsyncOnCheckbox, 0.0, checkboxYOffset);
+
+		frameLimiterLabelPrefix->toBottomLeftOf(vsyncAdaptiveCheckbox, 0.0, checkboxYGroupOffset);
+		frameLimiterLabelValue->toRightOf(frameLimiterLabelPrefix);
+		frameLimiterScrollBar->toBottomLeftOf(frameLimiterLabelPrefix, 0.0, checkboxYOffset);
+
+		masterVolLabel->toBottomLeftOf(frameLimiterScrollBar, 0.0, checkboxYGroupOffset);
 		masterVolScrollBar->toBottomLeftOf(masterVolLabel, 0.0, checkboxYOffset);
 
-		generalVolLabel->toBottomLeftOf(masterVolScrollBar, 0.0, checkboxYGroupOffset);
+		generalVolLabel->toBottomLeftOf(masterVolScrollBar, 0.0, checkboxYOffset);
 		generalVolScrollBar->toBottomLeftOf(generalVolLabel, 0.0, checkboxYOffset);
 
-		musicVolLabel->toBottomLeftOf(generalVolScrollBar, 0.0, checkboxYGroupOffset);
+		musicVolLabel->toBottomLeftOf(generalVolScrollBar, 0.0, checkboxYOffset);
 		musicVolScrollBar->toBottomLeftOf(musicVolLabel, 0.0, checkboxYOffset);
-
-		frameLimiterLabel->toBottomLeftOf(musicVolScrollBar, 0.0, checkboxYGroupOffset);
-		frameLimiterScrollBar->toBottomLeftOf(frameLimiterLabel, 0.0, checkboxYOffset);
 	}
 
 	void SceneOptionsMenu::onTimeoutCalled(int id)
@@ -295,14 +316,6 @@ namespace AWGame
 
 		auto shouldEnableApply = false;
 		auto shouldNotifyApplication = false;
-		if (id == resetButton->getId())
-		{
-			config = AWCore::ScreenConfig();
-			modules->sound->setMasterVolume(1.0);
-			modules->sound->setEffectVolume(0.8);
-			modules->sound->setMusicVolume(0.6);
-			shouldNotifyApplication = true;
-		}
 
 		if (id == applyButton->getId())
 		{
@@ -342,6 +355,21 @@ namespace AWGame
 		if (id == msaa16xCheckbox->getId())
 		{
 			shouldEnableApply = setMsaaMode(16);
+		}
+
+		if (id == vsyncOffCheckbox->getId())
+		{
+			shouldEnableApply = setVsyncMode(AWCore::VsyncModes::Disabled);
+		}
+
+		if (id == vsyncOnCheckbox->getId())
+		{
+			shouldEnableApply = setVsyncMode(AWCore::VsyncModes::Enabled);
+		}
+
+		if (id == vsyncAdaptiveCheckbox->getId())
+		{
+			shouldEnableApply = setVsyncMode(AWCore::VsyncModes::Adaptive);
 		}
 
 		if (id == openGlCompatibilityModeCheckbox->getId())
@@ -390,6 +418,15 @@ namespace AWGame
 			frameLimiterScrollBar->setScrollPosition(frameLimitToPosition(config.frameLimiter));
 		}
 
+		if (id == resetButton->getId())
+		{
+			config = AWCore::ScreenConfig();
+			modules->sound->setMasterVolume(1.0);
+			modules->sound->setEffectVolume(0.8);
+			modules->sound->setMusicVolume(0.6);
+			shouldNotifyApplication = true;
+		}
+
 		if (shouldEnableApply)
 		{
 			applyButton->setEnabled(true);
@@ -413,6 +450,14 @@ namespace AWGame
 				applyButton->setEnabled(false);
 			}
 			break;
+
+		case SDL_SCANCODE_BACKSPACE:
+			config = AWCore::ScreenConfig();
+			modules->sound->setMasterVolume(1.0);
+			modules->sound->setEffectVolume(0.8);
+			modules->sound->setMusicVolume(0.6);
+			modules->event->pushEvent(std::make_shared<AWCore::ReprovisionScreenApplicationEvent>(config));
+			applyButton->setEnabled(false);
 		}
 	}
 
@@ -532,18 +577,50 @@ namespace AWGame
 		return true;
 	}
 
+	bool SceneOptionsMenu::setVsyncMode(AWCore::VsyncModes mode)
+	{
+		if (config.vMode == mode)
+		{
+			return false;
+		}
+
+		vsyncOffCheckbox->setChecked(false);
+		vsyncOnCheckbox->setChecked(false);
+		vsyncAdaptiveCheckbox->setChecked(false);
+
+		switch (mode)
+		{
+		case AWCore::VsyncModes::Disabled:
+			vsyncOffCheckbox->setChecked(true);
+			break;
+
+		case AWCore::VsyncModes::Enabled:
+			vsyncOnCheckbox->setChecked(true);
+			break;
+
+		case AWCore::VsyncModes::Adaptive:
+			vsyncAdaptiveCheckbox->setChecked(true);
+			break;
+		}
+
+		config.vMode = mode;
+
+		return true;
+
+	}
+
 	void SceneOptionsMenu::setDynamicLabels()
 	{
 		masterVolLabel->setText("Master Volume " + volumeToString(modules->sound->getMasterVolume()));
 		generalVolLabel->setText("Effect Volume " + volumeToString(modules->sound->getEffectVolume()));
 		musicVolLabel->setText("Music Volume " + volumeToString(modules->sound->getMusicVolume()));
-		if (config.frameLimiter == 0)
+		if (config.frameLimiter < 30)
 		{
-			frameLimiterLabel->setText("Frame Limiter Off");
+			frameLimiterLabelValue->setText("Off");
 		}
 		else
 		{
-			frameLimiterLabel->setText("Frame Limiter " + std::to_string(config.frameLimiter) + " fps");
+			frameLimiterLabelValue->setText(std::to_string(config.frameLimiter) + " fps");
 		}
 
 		layout();

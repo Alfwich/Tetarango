@@ -6,6 +6,7 @@ namespace
 	const auto displayWidthParamKey = "display-width";
 	const auto displayHeightParamKey = "display-height";
 	const auto displayModeParamKey = "display-fullscreen";
+	const auto displayVsyncModeParamKey = "display-v-sync-mode";
 	const auto displayMSAAParamKey = "display-MSAA";
 	const auto displayOpenGLCompatibilityParamKey = "display-open-gl-compadibility";
 	const auto displayWireframeModeParamKey = "display-wireframe-mode";
@@ -31,6 +32,7 @@ namespace AWGame
 			screenConfig.width = storageClient->readInt(displayWidthParamKey);
 			screenConfig.height = storageClient->readInt(displayHeightParamKey);
 			screenConfig.mode = (AWCore::ScreenModes)storageClient->readInt(displayModeParamKey);
+			screenConfig.vMode = (AWCore::VsyncModes)storageClient->readInt(displayVsyncModeParamKey);
 			screenConfig.msaaSamples = storageClient->readInt(displayMSAAParamKey);
 			screenConfig.openGLCompatibilityMode = storageClient->readBool(displayOpenGLCompatibilityParamKey);
 			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
@@ -153,6 +155,7 @@ namespace AWGame
 		storageClient->writeInt(displayWidthParamKey, screenConfig.width);
 		storageClient->writeInt(displayHeightParamKey, screenConfig.height);
 		storageClient->writeInt(displayModeParamKey, (int)screenConfig.mode);
+		storageClient->writeInt(displayVsyncModeParamKey, (int)screenConfig.vMode);
 		storageClient->writeInt(displayMSAAParamKey, screenConfig.msaaSamples);
 		storageClient->writeInt(displayFrameLimiterParamKey, screenConfig.frameLimiter);
 		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);

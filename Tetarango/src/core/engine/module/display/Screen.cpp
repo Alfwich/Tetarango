@@ -1,5 +1,12 @@
 #include "Screen.h"
 
+namespace
+{
+	const auto VsyncOn = 1;
+	const auto VsyncOff = 0;
+	const auto VsyncAdaptive = -1;
+}
+
 namespace AWCore
 {
 
@@ -88,6 +95,33 @@ namespace AWCore
 		renderer = std::make_shared<Renderer>(window, currentConfig, renderer);
 
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+
+		switch (currentConfig.vMode)
+		{
+		case VsyncModes::Adaptive:
+			if (SDL_GL_SetSwapInterval(VsyncAdaptive) == -1)
+			{
+				currentConfig.vMode = VsyncModes::Enabled;
+				if (SDL_GL_SetSwapInterval(VsyncOn) == -1)
+				{
+					currentConfig.vMode = VsyncModes::Disabled;
+					SDL_GL_SetSwapInterval(VsyncOff);
+				}
+			}
+			break;
+
+		case VsyncModes::Enabled:
+			if (SDL_GL_SetSwapInterval(VsyncOn) == -1)
+			{
+				currentConfig.vMode = VsyncModes::Disabled;
+				SDL_GL_SetSwapInterval(VsyncOff);
+			}
+			break;
+
+		case VsyncModes::Disabled:
+		default:
+			SDL_GL_SetSwapInterval(VsyncOff);
+		}
 
 		return window != nullptr && renderer->getOpenGLContext() != nullptr;
 	}
