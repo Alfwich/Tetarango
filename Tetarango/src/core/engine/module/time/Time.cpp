@@ -7,6 +7,7 @@ namespace AWCore
 	{
 		createTimeScope(TimeScope::Global, 1.0);
 		createTimeScope(TimeScope::ApplicationFrameTimer, 1.0);
+		createTimeScope(TimeScope::ApplicationFrameLimitTimer, 1.0);
 	}
 
 	void Time::createTimeScope(TimeScope scopeName, double timeFactor)

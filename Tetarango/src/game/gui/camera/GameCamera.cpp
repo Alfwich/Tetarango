@@ -17,7 +17,7 @@ namespace AWGame
 		modules->input->gamepad->registerAxis(0, AWCore::GamepadAxisMapping::RIGHT, weak_from_this());
 
 		setZoomLimits(0.25, 8.0);
-		setDefaultsAndReset(0.5, 0.0, 0.0);
+		setDefaultsAndReset(1.0, 0.0, 0.0);
 		setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		setTimeScope(AWCore::TimeScope::Camera);
 

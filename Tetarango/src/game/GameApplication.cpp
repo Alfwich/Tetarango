@@ -10,6 +10,7 @@ namespace
 	const auto displayOpenGLCompatibilityParamKey = "display-open-gl-compadibility";
 	const auto displayWireframeModeParamKey = "display-wireframe-mode";
 	const auto displayDoubleBufferParamKey = "display-double-buffer";
+	const auto displayFrameLimiterParamKey = "display-frame-limiter";
 
 	const auto masterVolParamKey = "vol-master";
 	const auto generalVolParamKey = "vol-general";
@@ -34,6 +35,7 @@ namespace AWGame
 			screenConfig.openGLCompatibilityMode = storageClient->readBool(displayOpenGLCompatibilityParamKey);
 			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
 			screenConfig.useDoubleBuffer = storageClient->readBool(displayDoubleBufferParamKey);
+			screenConfig.frameLimiter = storageClient->readInt(displayFrameLimiterParamKey);
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
@@ -152,6 +154,7 @@ namespace AWGame
 		storageClient->writeInt(displayHeightParamKey, screenConfig.height);
 		storageClient->writeInt(displayModeParamKey, (int)screenConfig.mode);
 		storageClient->writeInt(displayMSAAParamKey, screenConfig.msaaSamples);
+		storageClient->writeInt(displayFrameLimiterParamKey, screenConfig.frameLimiter);
 		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
 		storageClient->writeBool(displayWireframeModeParamKey, screenConfig.openGlWireframeMode);
 

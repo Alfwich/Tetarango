@@ -37,14 +37,16 @@ namespace AWGame
 		std::shared_ptr<ScrollBarBasic> masterVolScrollBar;
 		std::shared_ptr<ScrollBarBasic> generalVolScrollBar;
 		std::shared_ptr<ScrollBarBasic> musicVolScrollBar;
+		std::shared_ptr<ScrollBarBasic> frameLimiterScrollBar;
 
 		std::shared_ptr<AWCore::Text> masterVolLabel;
 		std::shared_ptr<AWCore::Text> generalVolLabel;
 		std::shared_ptr<AWCore::Text> musicVolLabel;
+		std::shared_ptr<AWCore::Text> frameLimiterLabel;
 
 		bool setMsaaMode(int samples);
 		bool setScreenMode(AWCore::ScreenModes mode);
-		void setVolLabels();
+		void setDynamicLabels();
 		std::string volumeToString(double volume);
 
 	public:

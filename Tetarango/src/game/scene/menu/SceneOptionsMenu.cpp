@@ -76,6 +76,11 @@ namespace AWGame
 		std::shared_ptr<ButtonBasic> prevResolutionButton;
 		for (const auto resolution : info.resolutions)
 		{
+			if (AWCore::StringHelper::getDisplayComponentForDisplayString(resolution, 0) < 1240 || AWCore::StringHelper::getDisplayComponentForDisplayString(resolution, 1) < 1024)
+			{
+				continue;
+			}
+
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
 			if (config.mode == AWCore::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
@@ -171,6 +176,12 @@ namespace AWGame
 		musicVolScrollBar->scrollListener = weak_from_this();
 		add(musicVolScrollBar);
 
+		frameLimiterScrollBar = std::make_shared<ScrollBarBasic>();
+		frameLimiterScrollBar->setSize(200.0, 20.0);
+		frameLimiterScrollBar->setHorizontal(true);
+		frameLimiterScrollBar->scrollListener = weak_from_this();
+		add(frameLimiterScrollBar);
+
 		masterVolLabel = std::make_shared<AWCore::Text>();
 		masterVolLabel->setFont("medium", 28);
 		add(masterVolLabel);
@@ -183,11 +194,16 @@ namespace AWGame
 		musicVolLabel->setFont("medium", 28);
 		add(musicVolLabel);
 
+		frameLimiterLabel = std::make_shared<AWCore::Text>();
+		frameLimiterLabel->setFont("medium", 28);
+		add(frameLimiterLabel);
+
 		masterVolScrollBar->setScrollPositionInstantly(modules->sound->getMasterVolume());
 		generalVolScrollBar->setScrollPositionInstantly(modules->sound->getEffectVolume());
 		musicVolScrollBar->setScrollPositionInstantly(modules->sound->getMusicVolume());
+		frameLimiterScrollBar->setScrollPositionInstantly(config.frameLimiter / 240);
 
-		setVolLabels();
+		setDynamicLabels();
 	}
 
 	void SceneOptionsMenu::onLayoutChildren()
@@ -231,6 +247,9 @@ namespace AWGame
 
 		musicVolLabel->toBottomLeftOf(generalVolScrollBar, 0.0, checkboxYGroupOffset);
 		musicVolScrollBar->toBottomLeftOf(musicVolLabel, 0.0, checkboxYOffset);
+
+		frameLimiterLabel->toBottomLeftOf(musicVolScrollBar, 0.0, checkboxYGroupOffset);
+		frameLimiterScrollBar->toBottomLeftOf(frameLimiterLabel, 0.0, checkboxYOffset);
 	}
 
 	void SceneOptionsMenu::onTimeoutCalled(int id)
@@ -384,30 +403,43 @@ namespace AWGame
 	void SceneOptionsMenu::onScrollBarScroll(int id, double position)
 	{
 		auto playEffectSound = false;
+		auto shouldMuteSound = false;
 		if (id == masterVolScrollBar->getId() && modules->sound->getMasterVolume() != position)
 		{
 			modules->sound->setMasterVolume(position);
 			modules->sound->playMusic(testMusicName);
-			setVolLabels();
+			setDynamicLabels();
 
 			playEffectSound = true;
+			shouldMuteSound = true;
 		}
 		else if (id == generalVolScrollBar->getId() && modules->sound->getEffectVolume() != position)
 		{
 			modules->sound->setEffectVolume(position);
 			modules->sound->stopMusic(testMusicName);
-			setVolLabels();
+			setDynamicLabels();
 
 			playEffectSound = true;
+			shouldMuteSound = true;
 		}
 		else if (id == musicVolScrollBar->getId() && modules->sound->getMusicVolume() != position)
 		{
 			modules->sound->setMusicVolume(position);
 			modules->sound->playMusic(testMusicName);
-			setVolLabels();
+			setDynamicLabels();
+			shouldMuteSound = true;
+		}
+		else if (id == frameLimiterScrollBar->getId() && config.frameLimiter != (int)(position * 240.0))
+		{
+			config.frameLimiter = (int)(position * 240.0);
+			applyButton->setEnabled(true);
+			setDynamicLabels();
 		}
 
-		setTimeout(2000.0, &stopSoundTimeoutId);
+		if (shouldMuteSound)
+		{
+			setTimeout(2000.0, &stopSoundTimeoutId);
+		}
 
 		if (playEffectSound)
 		{
@@ -484,11 +516,19 @@ namespace AWGame
 		return true;
 	}
 
-	void SceneOptionsMenu::setVolLabels()
+	void SceneOptionsMenu::setDynamicLabels()
 	{
 		masterVolLabel->setText("Master Volume " + volumeToString(modules->sound->getMasterVolume()));
 		generalVolLabel->setText("Effect Volume " + volumeToString(modules->sound->getEffectVolume()));
 		musicVolLabel->setText("Music Volume " + volumeToString(modules->sound->getMusicVolume()));
+		if (config.frameLimiter == 0)
+		{
+			frameLimiterLabel->setText("Frame Limiter Off");
+		}
+		else
+		{
+			frameLimiterLabel->setText("Frame Limiter " + std::to_string(std::max(20, config.frameLimiter)) + " fps");
+		}
 
 		layout();
 	}

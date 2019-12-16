@@ -76,11 +76,15 @@ namespace AWGame
 
 	void SceneTetris::onCreateChildren()
 	{
+		const auto testBlock = std::make_shared<Block>();
+
 		board = std::make_shared<Board>(10, 24);
+		board->setCellSize(testBlock->getWidth(), testBlock->getHeight());
 		board->name = "board";
 		add(board);
 
 		previewBoard = std::make_shared<Board>(5, 5);
+		previewBoard->setCellSize(testBlock->getWidth(), testBlock->getHeight());
 		previewBoard->name = "preview-board";
 		previewBoard->disableBoardFalling();
 		previewBoard->addTetromino(blockColorGenerator.getTetromino());
@@ -95,7 +99,7 @@ namespace AWGame
 		scoreText = std::make_shared<AWCore::Text>();
 		scoreText->name = "score-text";
 		scoreText->setTextColor(255, 255, 255);
-		scoreText->setFont("medium", 100);
+		scoreText->setFont("medium", 48);
 		updateScoreText();
 		scoreText->toRightOf(board, 10);
 		add(scoreText);

@@ -101,6 +101,7 @@ namespace AWGame
 		label = std::make_shared<AWCore::Text>();
 		label->name = labelName;
 		label->setFont("medium", 30);
+		label->setTextColor(0, 0, 0);
 		label->setText(text);
 		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
 		add(label);

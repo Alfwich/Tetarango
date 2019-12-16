@@ -11,7 +11,7 @@ namespace AWGame
 	class Board : public AWCore::Element
 	{
 		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true;
-		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 64, cellHeight = 64;
+		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 32, cellHeight = 32;
 		std::vector<std::shared_ptr<AWCore::Transition>> transitions;
 		std::vector<std::shared_ptr<Block>> currentBlocks;
 		std::vector<std::shared_ptr<Block>> eliminiatedBlocks;

@@ -24,28 +24,18 @@ namespace AWCore
 			this->modes = modes;
 			for (const auto mode : modes)
 			{
-				if (mode.w < 1000)
-				{
-					continue;
-				}
-
 				const auto k = std::to_string(mode.w) + "x" + std::to_string(mode.h);
 				if (std::find(resolutions.begin(), resolutions.end(), k) == resolutions.end())
 				{
 					resolutions.push_back(k);
 				}
-				refreshs.insert(mode.refresh_rate);
-				formats.insert(mode.format);
 			}
 
-			std::sort(resolutions.begin(), resolutions.end());
-			std::reverse(resolutions.begin(), resolutions.end());
+			std::sort(resolutions.begin(), resolutions.end(), [](const std::string& a, const std::string& b) { return AWCore::StringHelper::getDisplayComponentForDisplayString(a, 0) > AWCore::StringHelper::getDisplayComponentForDisplayString(b, 0); });
 		};
 
 		std::vector<SDL_DisplayMode> modes;
 		std::vector<std::string> resolutions;
-		std::unordered_set<int> refreshs;
-		std::unordered_set<int> formats;
 
 		int widthForResolution(std::string resolution) { return StringHelper::getDisplayComponentForDisplayString(&resolution, 0); }
 		int heightForResolution(std::string resolution) { return StringHelper::getDisplayComponentForDisplayString(&resolution, 1); }

@@ -6,6 +6,7 @@ namespace AWCore
 	{
 		None,
 		ApplicationFrameTimer,
+		ApplicationFrameLimitTimer,
 		Global,
 		Game,
 		Menu,

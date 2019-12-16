@@ -151,9 +151,16 @@ namespace AWCore
 			return result;
 		}
 
-		int static inline getDisplayComponentForDisplayString(std::string* str, int cmp)
+		int static inline getDisplayComponentForDisplayString(std::string* inStr, int cmp)
 		{
-			int delimitPos = distanceToLeft(str, "x");
+			const auto str = std::string(*inStr);
+			return getDisplayComponentForDisplayString(str, cmp);
+		}
+
+		int static inline getDisplayComponentForDisplayString(const std::string& inStr, int cmp)
+		{
+			auto str = std::string(inStr);
+			int delimitPos = distanceToLeft(&str, "x");
 
 			if (delimitPos == -1)
 			{
@@ -162,11 +169,11 @@ namespace AWCore
 
 			if (cmp == 0)
 			{
-				return std::stoi(getSliceOfCharVector(str, 0, delimitPos));
+				return std::stoi(getSliceOfCharVector(&str, 0, delimitPos));
 			}
 			else if (cmp == 1)
 			{
-				return std::stoi(getSliceOfCharVector(str, delimitPos + 1, (unsigned int)str->size() - delimitPos));
+				return std::stoi(getSliceOfCharVector(&str, delimitPos + 1, (unsigned int)str.size() - delimitPos));
 			}
 
 			return 0;

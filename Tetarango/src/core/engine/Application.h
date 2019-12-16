@@ -19,10 +19,11 @@ namespace AWCore
 	class Application : public IInputListener, public INotifyOnCompletion, public std::enable_shared_from_this<Application>
 	{
 	private:
-		std::shared_ptr<Timer> frameTimer;
+		std::shared_ptr<Timer> frameTimer, limitTimer;
 		bool running = false;
 
 		void processApplicationEvents();
+		void doFrameLimit();
 
 	protected:
 		ScreenConfig screenConfig;

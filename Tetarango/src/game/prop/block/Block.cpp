@@ -1,10 +1,7 @@
 #include "Block.h"
-#include "BlockAnimations.h"
 
 namespace
 {
-	const AWGame::Blocks config;
-
 	const std::string blockTextureName = "prop-blocks";
 	const std::string blockAnimationName = "block-animations";
 }
@@ -13,22 +10,40 @@ namespace AWGame
 {
 	Block::Block()
 	{
+		setSize(32, 32);
 		enableSerialization<Block>();
 	}
 
 	void Block::onLoadResources()
 	{
-		modules->texture->loadTexture(config.blockTexturePath, blockTextureName);
-		modules->animation->addAnimationSet(std::make_shared<BlockAnimations>(config), blockAnimationName);
+		modules->texture->loadTexture("res/game/img/prop/block/blocks.png", blockTextureName);
+
+		auto animationSet = std::make_shared<AWCore::AnimationSet>();
+		{
+			int fps = 15;
+			AWCore::RectI frameSize = {
+				0,
+				0,
+				32,
+				32
+			};
+
+			{
+				auto anim = animationSet->startNewAnimation("default");
+				anim->setFps(fps);
+				anim->addGeneralFrames(0, 0, frameSize.w, frameSize.h, 1);
+			}
+		}
+
+		modules->animation->addAnimationSet(animationSet, blockAnimationName);
 	}
 
 	void Block::onInitialAttach()
 	{
 		AWCore::Animated::onInitialAttach();
-		setSize(64, 64);
 		setTexture(blockTextureName);
 		setAnimationSet(blockAnimationName);
-		setCurrentAnimation("block-basic");
+		setCurrentAnimation("default");
 	}
 
 	void Block::onCreateChildren()

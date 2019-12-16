@@ -64,6 +64,7 @@ namespace AWCore
 		modules->onInit();
 
 		frameTimer = modules->time->createTimer(AWCore::TimeScope::ApplicationFrameTimer, true);
+		limitTimer = modules->time->createTimer(AWCore::TimeScope::ApplicationFrameLimitTimer, true);
 		root = std::make_shared<DisplayRoot>();
 
 		return true;
@@ -142,10 +143,12 @@ namespace AWCore
 		while (running)
 		{
 			double frameTime = std::min(100.0, frameTimer->getTicksAndRestart());
+			limitTimer->start();
 			processApplicationEvents();
 			modules->event->processEnterFrames(frameTime);
 			render();
 			modules->collision->processCollisions();
+			doFrameLimit();
 		}
 		cleanup();
 
@@ -185,6 +188,16 @@ namespace AWCore
 				}
 				break;
 			}
+		}
+	}
+
+	void Application::doFrameLimit()
+	{
+		if (screenConfig.frameLimiter > 0)
+		{
+			const auto expected = 1000.0 / std::max(20, screenConfig.frameLimiter);
+			while (limitTimer->getTicks() < expected) {}
+			limitTimer->start();
 		}
 	}
 

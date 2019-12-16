@@ -54,7 +54,6 @@ namespace AWGame
 	void Board::onLoadResources()
 	{
 		modules->texture->loadTexture("res/game/img/actor/board/board-background.png", "board-background");
-
 		modules->sound->loadSoundClip("res/game/snd/piece-land.wav", pieceLandSoundName);
 	}
 
