@@ -66,12 +66,12 @@ namespace Config
 				base[Param::launchToLastScene] = FALSE;
 				base[Param::useAssetPack] = FALSE;
 				base[Param::saveWholeSceneOnClose] = TRUE;
-				//base[Param::visualizeContainers] = TRUE;
-				//base[Param::visualizeClipRects] = TRUE;
-				base[Param::runTests] = TRUE;
+				//base[Param::runTests] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
+				//base[Param::visualizeContainers] = TRUE;
+				//base[Param::visualizeClipRects] = TRUE;
 			}
 			else if (GAME_ENVIRONMENT == "PROD")
 			{

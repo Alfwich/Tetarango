@@ -70,9 +70,6 @@ namespace AWGame
 
 		resolutionScrollArea = std::make_shared<ScrollArea>();
 		resolutionScrollArea->setExpandToChildren(false);
-		resolutionScrollArea->setSize(180.0, 505.0);
-		resolutionScrollArea->setScrollerHeight(505.0);
-		resolutionScrollArea->setScrollAmount(45.0);
 		add(resolutionScrollArea);
 
 		resolutionButtons.clear();
@@ -86,6 +83,7 @@ namespace AWGame
 
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
+			resolutionButton->setSize(180.0, 60.0);
 			if (config.mode == AWCore::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
 				resolutionButton->setEnabled(false);
@@ -246,6 +244,7 @@ namespace AWGame
 		const auto optionsXOffset = 40.0;
 		const auto checkboxYOffset = 10.0;
 		const auto checkboxYGroupOffset = 32.0;
+		const auto numResolutionButtonsToShow = 7.0;
 
 		optionsMenuTitle->setPosition(getScreenWidth() / 2.0, verticalScreenBorderOffset / 2.0);
 
@@ -253,14 +252,40 @@ namespace AWGame
 		resetButton->toRightOf(applyButton, generalElementOffset, 0.0);
 		backButton->toLeftOf(applyButton, generalElementOffset, 0.0);
 
-		resolutionScrollArea->centerAlignSelf(generalElementOffset + (getScreenWidth() - 859.0) / 2.0, (getScreenHeight() - 600.0) / 2.0);
-		resolutionScrollArea->floorAlignSelf();
+		for (const auto checkbox : getChildrenOfType<CheckBoxBasic>())
 		{
-			auto r = resolutionScrollArea->getRect();
-			resolutionScrollArea->setClipRect(AWCore::Rect(0.0, 0.0, r.w + 30.0, r.h));
+			if (checkbox->getWidth() > fullscreenCheckbox->getWidth())
+			{
+				fullscreenCheckbox->setWidth(checkbox->getWidth());
+			}
 		}
 
-		fullscreenCheckbox->toRightTopOf(resolutionScrollArea, optionsXOffset);
+		fullscreenCheckbox->toBottomOf(optionsMenuTitle, 0.0, verticalScreenBorderOffset);
+
+		double horScreenPadding = 0.0;
+		if (!resolutionButtons.empty())
+		{
+			const auto exampleButton = resolutionButtons.front();
+			const auto availableVerticalScreen = applyButton->getY() - optionsMenuTitle->getY();
+			resolutionScrollArea->visible = true;
+			resolutionScrollArea->setScrollAmount(exampleButton->getHalfHeight());
+			resolutionScrollArea->setSize(exampleButton->getWidth(), (exampleButton->getHeight() + generalElementOffset) * std::min(numResolutionButtonsToShow, availableVerticalScreen / (exampleButton->getHeight() + 2.0 * generalElementOffset)));
+			resolutionScrollArea->setScrollerHeight(resolutionScrollArea->getHeight());
+
+			horScreenPadding = fullscreenCheckbox->getY() - resolutionScrollArea->getWidth() / 2.0;
+
+			resolutionScrollArea->toLeftTopOf(fullscreenCheckbox, horScreenPadding, 0.0);
+			resolutionScrollArea->floorAlignSelf();
+			{
+				auto r = resolutionScrollArea->getRect();
+				resolutionScrollArea->setClipRect(AWCore::Rect(0.0, 0.0, r.w + 30.0, r.h));
+			}
+		}
+		else
+		{
+			resolutionScrollArea->visible = false;
+		}
+
 		fullscreenDesktopCheckbox->toBottomLeftOf(fullscreenCheckbox, 0.0, checkboxYOffset);
 		windowedCheckbox->toBottomLeftOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
 
@@ -273,7 +298,7 @@ namespace AWGame
 		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
 		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
 
-		vsyncOffCheckbox->toRightOf(fullscreenCheckbox, 405.0);
+		vsyncOffCheckbox->toRightOf(fullscreenCheckbox, horScreenPadding, 0.0);
 		vsyncOnCheckbox->toBottomLeftOf(vsyncOffCheckbox, 0.0, checkboxYOffset);
 		vsyncAdaptiveCheckbox->toBottomLeftOf(vsyncOnCheckbox, 0.0, checkboxYOffset);
 

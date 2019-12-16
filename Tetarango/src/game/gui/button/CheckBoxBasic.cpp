@@ -26,8 +26,8 @@ namespace AWGame
 {
 	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{
-		setExpandToChildren(false);
-		setSize(40.0, 40.0);
+		//setExpandToChildren(false);
+		//setSize(40.0, 40.0);
 		enableSerialization<CheckBoxBasic>();
 	}
 
@@ -122,7 +122,7 @@ namespace AWGame
 		label->setFont("medium", 30);
 		label->setText(text);
 		label->setColor(getColor());
-		label->centerAlignSelf();
+		label->centerAlignSelf(45.0);
 		add(label);
 	}
 

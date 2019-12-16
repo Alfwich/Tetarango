@@ -17,12 +17,12 @@ namespace AWCore
 
 	int TextureText::getOriginalWidth()
 	{
-		return ogWidth;
+		return originalW;
 	}
 
 	int TextureText::getOriginalHeight()
 	{
-		return ogHeight;
+		return originalH;
 	}
 
 	void TextureText::rebind()
@@ -65,8 +65,8 @@ namespace AWCore
 
 		bindOpenGLTexture(tempSurface, textRenderConfiguration);
 
-		ogWidth = tempSurface->w;
-		ogHeight = tempSurface->h;
+		originalW = tempSurface->w;
+		originalH = tempSurface->h;
 
 		SDL_FreeSurface(tempSurface);
 	}

@@ -26,7 +26,7 @@ namespace AWCore
 
 	class TextureText : public Texture
 	{
-		int ogWidth = 0, ogHeight = 0;
+		int originalW = 0, originalH = 0;
 		TextureTextRenderConfiguration config;
 
 		void bindOpenGLTexture(SDL_Surface* surface, const TextureTextRenderConfiguration& textRenderConfiguration);
