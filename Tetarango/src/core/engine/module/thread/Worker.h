@@ -8,7 +8,7 @@
 #include "WorkerStatus.h"
 #include "AsyncBundles.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Worker : public std::enable_shared_from_this<Worker>

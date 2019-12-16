@@ -6,7 +6,7 @@
 
 #include "engine/module/collision/ICollidable.h"
 
-namespace MT
+namespace AWCore
 {
 
 
@@ -16,7 +16,7 @@ namespace MT
 		double minDim = 50;
 		bool hasSplit = false;
 
-		MT::Rect dim;
+		AWCore::Rect dim;
 
 		std::shared_ptr<QuadMap> nw, ne, sw, se;
 		std::list<std::shared_ptr<ICollidable>> children;

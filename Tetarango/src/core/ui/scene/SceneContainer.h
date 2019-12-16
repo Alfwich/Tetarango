@@ -7,7 +7,7 @@
 #include "Scene.h"
 #include "SceneTransitionBundle.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class SceneContainer : public ApplicationObject

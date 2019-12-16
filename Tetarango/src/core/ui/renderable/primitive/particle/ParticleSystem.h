@@ -10,7 +10,7 @@
 #include "Particle.h"
 #include "IParticleFactory.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class ParticleSystem : public Primitive

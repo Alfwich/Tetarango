@@ -1,6 +1,6 @@
 #include "Rect.h"
 
-namespace MT
+namespace AWCore
 {
 
 	SDL_Rect Rect::asSdlRect()

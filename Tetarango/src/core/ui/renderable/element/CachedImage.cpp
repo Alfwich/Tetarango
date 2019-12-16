@@ -10,9 +10,9 @@ namespace
 	const auto imageDataSizeParamName = "imageSize";
 }
 
-namespace MT
+namespace AWCore
 {
-	void CachedImage::updateCachedImage(std::shared_ptr<MT::ImageBundle> bundle)
+	void CachedImage::updateCachedImage(std::shared_ptr<AWCore::ImageBundle> bundle)
 	{
 		const auto texture = modules->texture->getEmptyTextureForKey("__cached_image_" + std::to_string(getId()));
 		texture->rebindWithImageBundle(bundle);
@@ -26,7 +26,7 @@ namespace MT
 
 	std::shared_ptr<ImageBundle> CachedImage::compressImage()
 	{
-		const auto result = std::make_shared<MT::ImageBundle>();
+		const auto result = std::make_shared<AWCore::ImageBundle>();
 
 		modules->asset->compressRawImageToPng(imageData, result);
 
@@ -37,13 +37,13 @@ namespace MT
 	{
 		if (imageData == nullptr)
 		{
-			imageData = std::make_shared<MT::ImageBundle>();
+			imageData = std::make_shared<AWCore::ImageBundle>();
 		}
 
 		if (imageData->data.capacity() < size)
 		{
 			imageData->data.resize(size);
-			imageData->type = MT::ImageBundleType::Unspecificed;
+			imageData->type = AWCore::ImageBundleType::Unspecificed;
 		}
 	}
 
@@ -93,7 +93,7 @@ namespace MT
 				dataRow--;
 			}
 
-			imageData->type = MT::ImageBundleType::Raw;
+			imageData->type = AWCore::ImageBundleType::Raw;
 			imageData->width = w;
 			imageData->height = h;
 			serializationClient->setInt(imageWidthParamName, w);
@@ -101,7 +101,7 @@ namespace MT
 			return true;
 		}
 
-		MT::Logger::instance()->logCritical("CachedImage::OpenGL Error reported: " + std::to_string(err));
+		AWCore::Logger::instance()->logCritical("CachedImage::OpenGL Error reported: " + std::to_string(err));
 		return false;
 	}
 
@@ -153,7 +153,7 @@ namespace MT
 				updateImageDataBuffer((int)end);
 				imageData->data.clear();
 				std::copy(data.begin(), data.end(), std::back_inserter(imageData->data));
-				imageData->type = MT::ImageBundleType::Png;
+				imageData->type = AWCore::ImageBundleType::Png;
 				imageData->width = w;
 				imageData->height = h;
 				updateCachedImage(imageData);
@@ -199,20 +199,20 @@ namespace MT
 		}
 	}
 
-	std::shared_ptr<MT::SerializationClient> CachedImage::doSerialize(MT::SerializationHint hint)
+	std::shared_ptr<AWCore::SerializationClient> CachedImage::doSerialize(AWCore::SerializationHint hint)
 	{
-		if (imageData != nullptr && serializationClient->getBool(shouldSerializeImageParamName) && hint == MT::SerializationHint::SERIALIZE)
+		if (imageData != nullptr && serializationClient->getBool(shouldSerializeImageParamName) && hint == AWCore::SerializationHint::SERIALIZE)
 		{
 			std::string data;
 			const auto client = serializationClient->getClient("__cached_image__", hint);
-			if (imageData->type == MT::ImageBundleType::Raw)
+			if (imageData->type == AWCore::ImageBundleType::Raw)
 			{
-				auto pngImageData = std::make_shared<MT::ImageBundle>();
+				auto pngImageData = std::make_shared<AWCore::ImageBundle>();
 				modules->asset->compressRawImageToPng(imageData, pngImageData);
 				imageData = pngImageData;
 			}
 
-			if (imageData->type == MT::ImageBundleType::Png)
+			if (imageData->type == AWCore::ImageBundleType::Png)
 			{
 				for (const auto c : imageData->data)
 				{

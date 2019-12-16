@@ -11,7 +11,7 @@
 #include "engine/module/asset/Asset.h"
 
 
-namespace MT
+namespace AWCore
 {
 
 	class SoundContainer

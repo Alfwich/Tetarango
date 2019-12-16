@@ -5,15 +5,15 @@
 
 namespace AWGame
 {
-	class TestParticleFactory : public MT::IParticleFactory
+	class TestParticleFactory : public AWCore::IParticleFactory
 	{
 		int r, g, b;
 	public:
 		TestParticleFactory();
 		TestParticleFactory(int r, int g, int b);
-		std::shared_ptr<MT::Particle> makeParticle(MT::ParticleCreationBundle& bundle);
+		std::shared_ptr<AWCore::Particle> makeParticle(AWCore::ParticleCreationBundle& bundle);
 
-		virtual std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
+		virtual std::shared_ptr<AWCore::SerializationClient> doSerialize(AWCore::SerializationHint hint);
 	};
 
 }

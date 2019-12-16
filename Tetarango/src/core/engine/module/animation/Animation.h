@@ -7,7 +7,7 @@
 #include "util/Rect.h"
 #include "engine/module/time/Time.h"
 
-namespace MT
+namespace AWCore
 {
 	class Animation
 	{

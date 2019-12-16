@@ -11,7 +11,7 @@
 #include "engine/module/event/EnterFrameListener.h"
 #include "engine/module/collision/ICollidable.h"
 
-namespace MT
+namespace AWCore
 {
 	class SystemModuleBundle;
 	class SceneTransitionBundle;
@@ -124,7 +124,7 @@ namespace MT
 		const std::list<std::shared_ptr<ApplicationObject>>& getChildrenRenderOrder();
 
 		template <typename T>
-		const std::list<std::shared_ptr<T>> getChildrenOfType();
+		const std::list<std::shared_ptr<T>> getChildrenOfType(bool checkChildren = false);
 
 		virtual std::shared_ptr<Schematic> getSchematic();
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
@@ -200,7 +200,7 @@ namespace MT
 	}
 
 	template<typename T>
-	inline const std::list<std::shared_ptr<T>> ApplicationObject::getChildrenOfType()
+	inline const std::list<std::shared_ptr<T>> ApplicationObject::getChildrenOfType(bool checkChildren)
 	{
 		std::list<std::shared_ptr<T>> result;
 
@@ -211,6 +211,17 @@ namespace MT
 			if (typedPtr != nullptr)
 			{
 				result.push_back(typedPtr);
+			}
+		}
+
+		if (checkChildren)
+		{
+			for (const auto c1 : children)
+			{
+				for (const auto childResult: c1->getChildrenOfType<T>(checkChildren))
+				{
+					result.push_back(childResult);
+				}
 			}
 		}
 

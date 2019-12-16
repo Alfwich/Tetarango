@@ -5,7 +5,7 @@
 #include "SoundContainer.h"
 #include "SoundClip.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Sound : public IBaseModule

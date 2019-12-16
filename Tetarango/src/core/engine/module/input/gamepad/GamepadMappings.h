@@ -3,7 +3,7 @@
 #include <string>
 #include <SDL.h>
 
-namespace MT
+namespace AWCore
 {
 	// In-App understood mapping
 	enum AxisMapping

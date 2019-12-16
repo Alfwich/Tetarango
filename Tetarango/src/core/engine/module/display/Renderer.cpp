@@ -65,7 +65,7 @@ namespace
 	};
 }
 
-namespace MT
+namespace AWCore
 {
 	Renderer::Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer)
 	{
@@ -498,7 +498,7 @@ namespace MT
 				testRect->zIndex = 20;
 				testRect->setAlpha(0.25);
 				testRect->onInitialAttach();
-				colorStack.push(MT::Color::red());
+				colorStack.push(AWCore::Color::red());
 				renderElement(testRect, &Rect(), &RenderPackage());
 				colorStack.pop();
 			}
@@ -532,7 +532,7 @@ namespace MT
 
 		if (rend->rotateInParentSpace)
 		{
-			double rotationRad = renderPackage->rotation * MT::NumberHelper::degToRad;
+			double rotationRad = renderPackage->rotation * AWCore::NumberHelper::degToRad;
 			double newX = computed->x + rectMiddleX;
 			double newY = computed->y + rectMiddleY;
 			double oX = computed->x + (originW / 2.0) - (computed->w / 2.0);
@@ -686,7 +686,7 @@ namespace MT
 
 		mat4x4_identity(m);
 
-		mat4x4_rotate_Z(m, m, renderPackage->rotation * MT::NumberHelper::degToRad);
+		mat4x4_rotate_Z(m, m, renderPackage->rotation * AWCore::NumberHelper::degToRad);
 		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
 		mat4x4_translate(t, cX, cY, cY + (ele->zIndex + renderPackage->depth) * layerFactor);
 
@@ -744,7 +744,7 @@ namespace MT
 
 		mat4x4_identity(m);
 
-		mat4x4_rotate_Z(m, m, renderPackage->rotation * MT::NumberHelper::degToRad);
+		mat4x4_rotate_Z(m, m, renderPackage->rotation * AWCore::NumberHelper::degToRad);
 		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
 		mat4x4_translate(t, cX, cY, cY + (20 + renderPackage->depth) * layerFactor);
 
@@ -803,7 +803,7 @@ namespace MT
 				const auto cH = particle->h / 2.0;
 				const auto cX = computed->x + particle->x + cW;
 				const auto cY = computed->y + particle->y + cH;
-				const auto rotation = (renderPackage->rotation + particle->r) * MT::NumberHelper::degToRad;
+				const auto rotation = (renderPackage->rotation + particle->r) * AWCore::NumberHelper::degToRad;
 
 				mat4x4_identity(m);
 

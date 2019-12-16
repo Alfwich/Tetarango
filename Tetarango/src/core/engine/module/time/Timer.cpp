@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-namespace MT
+namespace AWCore
 {
 
 	Timer::Timer(Time* time, TimeScope timeScope, bool isPure, bool isUnstoppable)

@@ -9,7 +9,7 @@
 #include "engine/module/logger/Logger.h"
 #include "engine/module/thread/Thread.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Serialization : public IBaseModule

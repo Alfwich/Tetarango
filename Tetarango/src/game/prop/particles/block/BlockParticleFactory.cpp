@@ -4,7 +4,7 @@
 
 namespace AWGame
 {
-	BlockParticle::BlockParticle(std::shared_ptr<MT::TextureContainer> textureContainer)
+	BlockParticle::BlockParticle(std::shared_ptr<AWCore::TextureContainer> textureContainer)
 	{
 		particleTexture = textureContainer->getTexture("__solid__");
 	}
@@ -25,7 +25,7 @@ namespace AWGame
 		enableSerialization<BlockParticleFactory>();
 	}
 
-	void BlockParticleFactory::setModColor(const MT::Color* color)
+	void BlockParticleFactory::setModColor(const AWCore::Color* color)
 	{
 		if (color != nullptr)
 		{
@@ -36,22 +36,22 @@ namespace AWGame
 		}
 	}
 
-	std::shared_ptr<MT::Particle> BlockParticleFactory::makeParticle(MT::ParticleCreationBundle& bundle)
+	std::shared_ptr<AWCore::Particle> BlockParticleFactory::makeParticle(AWCore::ParticleCreationBundle& bundle)
 	{
 		const auto particle = std::make_shared<BlockParticle>(modules->texture);
 		particle->zIndex = -1;
 		particle->cModR = modColor.r;
 		particle->cModG = modColor.g;
 		particle->cModB = modColor.b;
-		auto pi = MT::NumberHelper::PI;
-		auto r = (MT::NumberHelper::chance(50) ? pi : 0) + (MT::NumberHelper::random(-(pi / 4), pi / 4));
-		const auto rV = MT::NumberHelper::random(200, 4000);
-		particle->x = -(bundle.rect.w / 2.0) + MT::NumberHelper::random(bundle.rect.w);
-		particle->y = -(bundle.rect.h / 2.0) + MT::NumberHelper::random(bundle.rect.h);
+		auto pi = AWCore::NumberHelper::PI;
+		auto r = (AWCore::NumberHelper::chance(50) ? pi : 0) + (AWCore::NumberHelper::random(-(pi / 4), pi / 4));
+		const auto rV = AWCore::NumberHelper::random(200, 4000);
+		particle->x = -(bundle.rect.w / 2.0) + AWCore::NumberHelper::random(bundle.rect.w);
+		particle->y = -(bundle.rect.h / 2.0) + AWCore::NumberHelper::random(bundle.rect.h);
 		particle->xV = std::cos(r) * rV;
 		particle->yV = std::sin(r) * rV;
-		particle->ogW = MT::NumberHelper::random(3, 12);
-		particle->ogH = MT::NumberHelper::random(3, 12);
+		particle->ogW = AWCore::NumberHelper::random(3, 12);
+		particle->ogH = AWCore::NumberHelper::random(3, 12);
 		particle->timeLeft = 10000.0;
 		particle->totalLife = 10000.0;
 

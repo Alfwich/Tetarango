@@ -5,7 +5,7 @@ namespace
 	const auto dataFileExtension = ".gdata";
 }
 
-namespace MT
+namespace AWCore
 {
 	std::string Storage::serializeStore(std::shared_ptr<StorageClient> client, bool isHumanReadable)
 	{
@@ -114,6 +114,20 @@ namespace MT
 
 		if (!checkAndMoveIfCorrect(&serializedData, archiveStartTag, 0))
 		{
+			return result;
+		}
+
+		if (!checkAndMoveIfCorrect(&serializedData, archiveVersionStartTag, 0))
+		{
+			return result;
+		}
+
+		const auto archiveVersion = getVersionFromRaw(&serializedData);
+		const auto expectedVersion = gameConfig->getConfigString(Config::Param::saveVersion);
+		if (archiveVersion != expectedVersion)
+		{
+			// TODO: Convert old save files to new format if needed
+			Logger::instance()->logCritical("Storage::Found different save file version: " + archiveVersion + " than what was expected: " + expectedVersion);
 			return result;
 		}
 

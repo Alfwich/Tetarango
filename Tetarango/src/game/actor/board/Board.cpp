@@ -7,7 +7,7 @@ namespace
 
 namespace AWGame
 {
-	std::shared_ptr<MT::Transition> Board::getTransition()
+	std::shared_ptr<AWCore::Transition> Board::getTransition()
 	{
 		return modules->animation->createGameTransition();
 	}
@@ -124,7 +124,7 @@ namespace AWGame
 			}
 
 			const auto t = modules->animation->createTransition();
-			t->startTransition(child, 200.0, MT::Rect(child->getX() + (cellWidth * boardWidth) * MT::NumberHelper::random(-1, 1), child->getY() + (cellHeight * boardHeight) * MT::NumberHelper::random(-1, 1), 0, 0), 0.0);
+			t->startTransition(child, 200.0, AWCore::Rect(child->getX() + (cellWidth * boardWidth) * AWCore::NumberHelper::random(-1, 1), child->getY() + (cellHeight * boardHeight) * AWCore::NumberHelper::random(-1, 1), 0, 0), 0.0);
 			transitions.push_back(t);
 
 			child->blockX = -1;
@@ -137,10 +137,17 @@ namespace AWGame
 		const auto blockPtr = std::dynamic_pointer_cast<Block>(ao);
 		if (blockPtr != nullptr)
 		{
+			if (blockPtr->blockX == -1 && blockPtr->blockY == -1)
+			{
+				return;
+			}
+
 			const auto mapOffset = calcMapOffset(blockPtr);
-			if (hasFailedToPlacePiece || blockMap.count(calcMapOffset(blockPtr)) != 0)
+			if (blockMap.count(mapOffset) != 0)
 			{
 				hasFailedToPlacePiece = true;
+				blockMap.at(mapOffset)->removeFromParent();
+				blockMap.erase(mapOffset);
 			}
 
 			blockMap[mapOffset] = blockPtr;
@@ -228,7 +235,7 @@ namespace AWGame
 				blockMap[calcMapOffset(currentPiece)] = currentPiece;
 
 				const auto t = modules->animation->createGameTransition();
-				t->startTransition(currentPiece, 50.0, MT::Rect(currentPiece->blockX * cellWidth, currentPiece->blockY * cellHeight, cellHeight, cellWidth));
+				t->startTransition(currentPiece, 50.0, AWCore::Rect(currentPiece->blockX * cellWidth, currentPiece->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}
 		}
@@ -285,7 +292,7 @@ namespace AWGame
 				blockMap[calcMapOffset(currentPiece)] = currentPiece;
 
 				const auto t = modules->animation->createGameTransition();
-				t->startTransition(currentPiece, 50.0, MT::Rect(currentPiece->blockX * cellWidth, currentPiece->blockY * cellHeight, cellHeight, cellWidth));
+				t->startTransition(currentPiece, 50.0, AWCore::Rect(currentPiece->blockX * cellWidth, currentPiece->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}
 		}
@@ -293,14 +300,14 @@ namespace AWGame
 
 	void Board::onInitialAttach()
 	{
-		actionTimer = modules->time->createTimer(MT::TimeScope::Game);
+		actionTimer = modules->time->createTimer(AWCore::TimeScope::Game);
 		actionTimer->start();
 		enableEnterFrame();
 	}
 
 	void Board::onCreateChildren()
 	{
-		background = std::make_shared<MT::NineSlice>();
+		background = std::make_shared<AWCore::NineSlice>();
 		background->name = "background";
 		background->zIndex = -2;
 		updateBoardIfNeeded();
@@ -311,18 +318,18 @@ namespace AWGame
 
 	void Board::onChildrenHydrated()
 	{
-		background = findChildWithName<MT::NineSlice>("background");
+		background = findChildWithName<AWCore::NineSlice>("background");
 
 		for (const auto child : getChildrenOfType<Block>())
 		{
-			if (!child->hasSettled)
+			if (!child->hasSettled && child->blockX != -1 && child->blockY != -1)
 			{
 				currentBlocks.push_back(child);
 			}
 		}
 	}
 
-	std::shared_ptr<MT::SerializationClient> Board::doSerialize(MT::SerializationHint hint)
+	std::shared_ptr<AWCore::SerializationClient> Board::doSerialize(AWCore::SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__board__", hint);
 
@@ -333,7 +340,7 @@ namespace AWGame
 		isFallingEnabled = client->serializeBool("board-is-falling-enabled", isFallingEnabled);
 		hasFailedToPlacePiece = client->serializeBool("board-has-failed-to-place-piece", hasFailedToPlacePiece);
 
-		return MT::Element::doSerialize(hint);
+		return AWCore::Element::doSerialize(hint);
 	}
 
 	void Board::onEnterFrame(double deltaTime)
@@ -388,7 +395,7 @@ namespace AWGame
 				blockMap.erase(calcMapOffset(outgoingBlock->blockX, outgoingBlock->blockY));
 
 				const auto t = modules->animation->createTransition();
-				t->startTransition(outgoingBlock, 200.0, MT::Rect(outgoingBlock->getX() + (cellWidth * boardWidth) * MT::NumberHelper::random(-1, 1), outgoingBlock->getY(), cellWidth, 0), 0.0);
+				t->startTransition(outgoingBlock, 200.0, AWCore::Rect(outgoingBlock->getX() + (cellWidth * boardWidth) * AWCore::NumberHelper::random(-1, 1), outgoingBlock->getY(), cellWidth, 0), 0.0);
 				transitions.push_back(t);
 
 				outgoingBlock->blockX = -1;
@@ -425,7 +432,7 @@ namespace AWGame
 				blockMap[calcMapOffset(blockToDrop)] = blockToDrop;
 
 				const auto t = modules->animation->createGameTransition();
-				t->startTransition(blockToDrop, 50.0, MT::Rect(blockToDrop->blockX * cellWidth, blockToDrop->blockY * cellHeight, cellHeight, cellWidth));
+				t->startTransition(blockToDrop, 50.0, AWCore::Rect(blockToDrop->blockX * cellWidth, blockToDrop->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}
 
@@ -496,7 +503,7 @@ namespace AWGame
 				blockMap[calcMapOffset(blockToDrop)] = blockToDrop;
 
 				const auto t = modules->animation->createGameTransition();
-				t->startTransition(blockToDrop, 50.0, MT::Rect(blockToDrop->blockX * cellWidth, blockToDrop->blockY * cellHeight, cellHeight, cellWidth));
+				t->startTransition(blockToDrop, 50.0, AWCore::Rect(blockToDrop->blockX * cellWidth, blockToDrop->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}
 		}

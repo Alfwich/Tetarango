@@ -1,7 +1,7 @@
 #include "Animated.h"
 #include "ui/renderable/container/Container.h"
 
-namespace MT
+namespace AWCore
 {
 
 	Animated::Animated()

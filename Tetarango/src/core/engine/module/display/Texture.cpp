@@ -1,5 +1,5 @@
 #include "Texture.h"
-namespace MT
+namespace AWCore
 {
 	Texture::Texture(std::shared_ptr<Screen> screen)
 	{

@@ -59,7 +59,7 @@ namespace Config
 
 			base[Param::storageLocation] = base[Param::gameName];
 
-			if (MT_ENVIRONMENT == "DEV" || MT_ENVIRONMENT == "PROD_DEBUG")
+			if (GAME_ENVIRONMENT == "DEV" || GAME_ENVIRONMENT == "PROD_DEBUG")
 			{
 				base[Param::gameName] = base[Param::gameName] + " - DEV - " + base[Param::version];
 				base[Param::storageLocation] += " " + base[Param::version] + " - Debug";
@@ -73,7 +73,7 @@ namespace Config
 				//base[Param::enableTestScenes] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
 			}
-			else if (MT_ENVIRONMENT == "PROD")
+			else if (GAME_ENVIRONMENT == "PROD")
 			{
 				//base[Param::enableTestScenes] = TRUE;
 				//base[ConfigParam::throwOnCriticalLog] = TRUE;
@@ -81,7 +81,7 @@ namespace Config
 			}
 			else
 			{
-				throw "GameConfig::Environment not found for value=" + std::string(MT_ENVIRONMENT);
+				throw "GameConfig::Environment not found for value=" + std::string(GAME_ENVIRONMENT);
 			}
 
 			return base;

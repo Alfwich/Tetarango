@@ -5,7 +5,7 @@
 #include <map>
 #include "SerializationClient.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Serializer;

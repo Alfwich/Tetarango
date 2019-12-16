@@ -5,7 +5,7 @@ namespace
 	const auto elementAutoSizeToTextureParam = "element-a-s-t-t";
 }
 
-namespace MT
+namespace AWCore
 {
 
 	Element::Element()

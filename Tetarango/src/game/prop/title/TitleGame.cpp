@@ -5,10 +5,10 @@
 namespace
 {
 	const auto fontSizeParam = "t-g-f-s";
-	std::vector<MT::Color> colors
+	std::vector<AWCore::Color> colors
 	{
-		MT::Color::white(),
-		MT::Color(64, 64, 64)
+		AWCore::Color::white(),
+		AWCore::Color(64, 64, 64)
 	};
 }
 
@@ -42,10 +42,10 @@ namespace AWGame
 
 	void TitleGame::onCreateChildren()
 	{
-		primaryTitle = std::make_shared<MT::Text>();
+		primaryTitle = std::make_shared<AWCore::Text>();
 		primaryTitle->setFont("medium", getFontSize());
 		primaryTitle->setText(modules->gameConfig->getConfigString(Config::Param::gameName));
-		primaryTitle->setColor(MT::Color::white());
+		primaryTitle->setColor(AWCore::Color::white());
 		primaryTitle->centerAlignSelf();
 		primaryTitle->visible = false;
 		add(primaryTitle);
@@ -55,12 +55,12 @@ namespace AWGame
 		auto zIndex = -1;
 		for (const auto c : primaryTitle->getText())
 		{
-			const auto newTitle = std::make_shared<MT::Text>();
+			const auto newTitle = std::make_shared<AWCore::Text>();
 			newTitle->setFont("medium", getFontSize());
 			newTitle->setAlpha(0.0);
 			newTitle->setColor(colors[0]);
 			newTitle->setText(std::string(1, c));
-			newTitle->zIndex = MT::NumberHelper::clamp<int>(zIndex--, -20, 0);
+			newTitle->zIndex = AWCore::NumberHelper::clamp<int>(zIndex--, -20, 0);
 
 			titles.push_back(newTitle);
 			add(newTitle);
@@ -71,7 +71,7 @@ namespace AWGame
 
 	void TitleGame::onLayoutChildren()
 	{
-		std::shared_ptr<MT::Text> lastTitle;
+		std::shared_ptr<AWCore::Text> lastTitle;
 		for (const auto title : titles)
 		{
 			if (lastTitle != nullptr)
@@ -101,9 +101,9 @@ namespace AWGame
 		{
 			if (id == introTransition->getId())
 			{
-				const auto p = MT::NumberHelper::clamp(std::pow(position, 1.0 / 5.0), 0.0, 1.0);
+				const auto p = AWCore::NumberHelper::clamp(std::pow(position, 1.0 / 5.0), 0.0, 1.0);
 				title->setAlpha(p);
-				const auto offset = std::sin((title->getX() / (getWidth() / 2.0)) + p * MT::NumberHelper::PI * 2.0) * 200.0;
+				const auto offset = std::sin((title->getX() / (getWidth() / 2.0)) + p * AWCore::NumberHelper::PI * 2.0) * 200.0;
 				title->setY(primaryTitle->getY() + offset * (1.0 - p));
 			}
 			else if (id == continuousTransition->getId())
@@ -123,13 +123,13 @@ namespace AWGame
 				if (position < 0.5)
 				{
 					const auto p = position * 2.0;
-					const auto offset = std::sin(period + p * MT::NumberHelper::PI * 2.0) * 10.0;
+					const auto offset = std::sin(period + p * AWCore::NumberHelper::PI * 2.0) * 10.0;
 					title->setY(primaryTitle->getY() - std::abs(offset * p));
 				}
 				else
 				{
 					const auto p = (position - 0.5) * 2.0;
-					const auto offset = std::sin(period + p * MT::NumberHelper::PI * 2.0) * 10.0;
+					const auto offset = std::sin(period + p * AWCore::NumberHelper::PI * 2.0) * 10.0;
 					title->setY(primaryTitle->getY() - std::abs(offset * (1.0 - p)));
 				}
 			}

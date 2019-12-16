@@ -12,7 +12,7 @@
 #include "engine/module/SystemModuleBundle.h"
 #include "engine/module/display/ScreenConfig.h"
 
-namespace MT
+namespace AWCore
 {
 	class DisplayRoot;
 

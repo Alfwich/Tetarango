@@ -1,7 +1,7 @@
 #include "SoundContainer.h"
 
 
-namespace MT
+namespace AWCore
 {
 	void SoundContainer::bindAsset(std::shared_ptr<Asset> asset)
 	{

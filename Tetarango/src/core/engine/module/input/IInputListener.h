@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include "gamepad/GamepadMappings.h"
 
-namespace MT
+namespace AWCore
 {
 	enum class InputMode {
 		Unspecified,

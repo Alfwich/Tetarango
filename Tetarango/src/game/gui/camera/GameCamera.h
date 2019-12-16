@@ -6,7 +6,7 @@
 namespace AWGame
 {
 
-	class GameCamera : public BaseGui, public MT::Camera
+	class GameCamera : public BaseGui, public AWCore::Camera
 	{
 		bool upDown = false, leftDown = false, downDown = false, rightDown = false, zoomInPressed = false, zoomOutPressed = false;
 		double xAxis = 0.0, yAxis = 0.0;
@@ -19,6 +19,6 @@ namespace AWGame
 		void onDetach();
 		void onEnterFrame(double frameTime);
 		void onKey(SDL_Scancode code, bool pressed);
-		void onGamepadAxisChanged(int gamepadIndex, MT::GamepadAxisMapping axis, double value);
+		void onGamepadAxisChanged(int gamepadIndex, AWCore::GamepadAxisMapping axis, double value);
 	};
 }

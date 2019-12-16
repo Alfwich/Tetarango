@@ -5,10 +5,10 @@
 namespace AWGame
 {
 
-	class TestParticle : public MT::Particle
+	class TestParticle : public AWCore::Particle
 	{
 	public:
-		TestParticle(std::shared_ptr<MT::TextureContainer> textureContainer);
+		TestParticle(std::shared_ptr<AWCore::TextureContainer> textureContainer);
 		void onEnterFrame(double deltaTime);
 	};
 

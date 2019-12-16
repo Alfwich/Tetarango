@@ -1,6 +1,6 @@
 #include "Thread.h"
 
-namespace MT
+namespace AWCore
 {
 	Thread::Thread()
 	{

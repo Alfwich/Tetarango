@@ -8,7 +8,7 @@
 #include "engine/module/storage/Storage.h"
 #include "ImageBundle.h"
 
-namespace MT
+namespace AWCore
 {
 	class ResourceBundle
 	{

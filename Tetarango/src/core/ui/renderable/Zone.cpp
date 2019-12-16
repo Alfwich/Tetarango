@@ -2,7 +2,7 @@
 
 #include "ui/renderable/element/Rectangle.h"
 
-namespace MT
+namespace AWCore
 {
 
 	Zone::Zone()

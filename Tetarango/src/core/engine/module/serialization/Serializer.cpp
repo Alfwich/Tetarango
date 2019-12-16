@@ -2,7 +2,7 @@
 
 #include "util/StringHelper.h"
 
-namespace MT
+namespace AWCore
 {
 	void Serializer::addChildData(std::string childData)
 	{

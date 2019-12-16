@@ -6,7 +6,7 @@ namespace
 	const double collisionSearchRadius = 250.0;
 }
 
-namespace MT
+namespace AWCore
 {
 	bool Collision::checkForCollision(const std::shared_ptr<ICollidable>& a, const std::shared_ptr<ICollidable>& b)
 	{

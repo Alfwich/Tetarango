@@ -8,7 +8,7 @@
 #include "engine/module/event/Event.h"
 #include "engine/module/IBaseModule.h"
 
-namespace MT
+namespace AWCore
 {
 	class AnimationContainer : public IBaseModule
 	{

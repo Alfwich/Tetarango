@@ -18,12 +18,12 @@ namespace AWGame
 	{
 		BaseScene::onInitialAttach();
 
-		gameTitleTransition = modules->animation->createTransitionForTimeScope(MT::TimeScope::Menu);
+		gameTitleTransition = modules->animation->createTransitionForTimeScope(AWCore::TimeScope::Menu);
 	}
 
 	void SceneMainMenu::onCreateChildren()
 	{
-		rootContainer = std::make_shared<MT::Container>();
+		rootContainer = std::make_shared<AWCore::Container>();
 		rootContainer->setAlpha(0.0);
 		rootContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		rootContainer->centerAlignSelf();
@@ -34,7 +34,7 @@ namespace AWGame
 		gameTitle->toTopOf(rootContainer, 0.0, -gameTitle->getHalfHeight() - modules->screen->getHeight() * 0.35);
 
 		const auto buttonOffset = modules->screen->getHeight() * buttonVerticalPaddingFactor;
-		const auto centerContainer = std::make_shared<MT::Container>();
+		const auto centerContainer = std::make_shared<AWCore::Container>();
 		centerContainer->setExpandToChildren(true);
 		centerContainer->centerWithin(rootContainer, 0, gameTitle->getBottom() / 2.0);
 		rootContainer->add(centerContainer);
@@ -79,7 +79,7 @@ namespace AWGame
 
 		if (id == exitButton->getId())
 		{
-			modules->event->pushEvent(std::make_shared<MT::ApplicationEvent>(MT::Events::QuitRequested));
+			modules->event->pushEvent(std::make_shared<AWCore::ApplicationEvent>(AWCore::Events::QuitRequested));
 		}
 	}
 }

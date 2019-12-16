@@ -14,7 +14,7 @@
 #include "EnterFrameListener.h"
 #include "ApplicationEvent.h"
 
-namespace MT
+namespace AWCore
 {
 	class Event : public IBaseModule
 	{

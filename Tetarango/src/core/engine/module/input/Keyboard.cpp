@@ -1,6 +1,6 @@
 #include "Keyboard.h"
 
-namespace MT
+namespace AWCore
 {
 
 	void Keyboard::registerKey(SDL_Scancode code, std::weak_ptr<IInputListener> listener)

@@ -3,7 +3,7 @@
 #include <string>
 #include "engine/module/display/ScreenConfig.h"
 
-namespace MT
+namespace AWCore
 {
 
 	enum class Events {

@@ -5,7 +5,7 @@
 #include "engine/module/time/timer.h"
 #include "util/Rect.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Trace : public Primitive 

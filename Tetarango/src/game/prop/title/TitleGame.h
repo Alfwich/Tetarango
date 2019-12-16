@@ -8,13 +8,13 @@
 
 namespace AWGame
 {
-	class TitleGame : public MT::Container, public MT::INotifyOnTransition
+	class TitleGame : public AWCore::Container, public AWCore::INotifyOnTransition
 	{
-		std::shared_ptr<MT::Text> primaryTitle;
-		std::vector<std::shared_ptr<MT::Text>> titles;
+		std::shared_ptr<AWCore::Text> primaryTitle;
+		std::vector<std::shared_ptr<AWCore::Text>> titles;
 
-		std::shared_ptr<MT::Transition> introTransition;
-		std::shared_ptr<MT::Transition> continuousTransition;
+		std::shared_ptr<AWCore::Transition> introTransition;
+		std::shared_ptr<AWCore::Transition> continuousTransition;
 
 	public:
 		TitleGame();

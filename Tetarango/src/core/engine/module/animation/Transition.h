@@ -7,7 +7,7 @@
 #include "util/Rect.h"
 #include "INotifyOnTransition.h"
 
-namespace MT
+namespace AWCore
 {
 	class Renderable;
 	class ApplicationObject;

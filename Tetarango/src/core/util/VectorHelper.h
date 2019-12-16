@@ -5,7 +5,7 @@
 
 #include "util/StringHelper.h"
 
-namespace MT
+namespace AWCore
 {
 	class VectorHelper
 	{

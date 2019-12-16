@@ -21,18 +21,18 @@ namespace AWGame
 
 	void GameMainMenu::onInitialAttach()
 	{
-		setTimeScope(MT::TimeScope::Menu);
+		setTimeScope(AWCore::TimeScope::Menu);
 	}
 
 	void GameMainMenu::onCreateChildren()
 	{
-		const auto backgroundFade = std::make_shared<MT::Rectangle>();
+		const auto backgroundFade = std::make_shared<AWCore::Rectangle>();
 		backgroundFade->name = "background";
 		backgroundFade->setColor(0, 0, 0);
 		backgroundFade->setAlpha(0.5);
 		add(backgroundFade);
 
-		const auto centeringContainer = std::make_shared<MT::Container>();
+		const auto centeringContainer = std::make_shared<AWCore::Container>();
 		centeringContainer->name = "center-c";
 		centeringContainer->zIndex = 2;
 		centeringContainer->setExpandToChildren(true);
@@ -68,10 +68,10 @@ namespace AWGame
 	{
 		setSize(modules->screen->getWidth(), modules->screen->getHeight());
 
-		const auto backgroundFade = findChildWithName<MT::Rectangle>("background");
+		const auto backgroundFade = findChildWithName<AWCore::Rectangle>("background");
 		backgroundFade->matchSizeAndCenter(this);
 
-		const auto centeringContainer = findChildWithName<MT::Container>("center-c");
+		const auto centeringContainer = findChildWithName<AWCore::Container>("center-c");
 		centeringContainer->centerWithin(this);
 	}
 
@@ -93,13 +93,13 @@ namespace AWGame
 			}
 			else
 			{
-				findFirstInParentChain<MT::SceneContainer>()->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
+				findFirstInParentChain<AWCore::SceneContainer>()->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 			}
 		}
 		else if (id == backButton->getId())
 		{
 			this->visible = false;
-			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
+			modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
 		}
 		else if (id == saveButton->getId())
 		{
@@ -127,7 +127,7 @@ namespace AWGame
 			return;
 		}
 
-		modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 0.0);
 		visible = true;
 	}
 
@@ -139,7 +139,7 @@ namespace AWGame
 			return;
 		}
 
-		modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
+		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
 		visible = false;
 	}
 

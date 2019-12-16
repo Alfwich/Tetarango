@@ -1,7 +1,7 @@
 #include "Transition.h"
 
 
-namespace MT
+namespace AWCore
 {
 	Transition::Transition(std::shared_ptr<Time> time, TimeScope scopeName)
 	{

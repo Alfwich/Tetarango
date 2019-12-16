@@ -1,6 +1,6 @@
 #include "Serialization.h"
 
-namespace MT
+namespace AWCore
 {
 	Serialization::Serialization()
 	{

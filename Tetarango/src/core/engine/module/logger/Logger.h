@@ -9,7 +9,7 @@
 #include "SDL.h"
 #include "engine/module/IBaseModule.h"
 
-namespace MT
+namespace AWCore
 {
 	class Filesystem;
 	class Time;

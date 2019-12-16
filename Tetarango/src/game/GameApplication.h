@@ -11,9 +11,9 @@
 namespace AWGame
 {
 
-	class GameApplication : public MT::Application
+	class GameApplication : public AWCore::Application
 	{
-		std::shared_ptr<MT::SceneContainer> masterSceneContainer;
+		std::shared_ptr<AWCore::SceneContainer> masterSceneContainer;
 
 	public:
 		void onInit();

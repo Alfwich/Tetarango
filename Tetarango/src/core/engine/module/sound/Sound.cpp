@@ -3,7 +3,7 @@
 #include "SDL_mixer.h"
 #include "util/NumberHelper.h"
 
-namespace MT
+namespace AWCore
 {
 
 	void Sound::onInit()
@@ -28,7 +28,7 @@ namespace MT
 
 		if (soundClip != nullptr && soundClip->getChunk() != nullptr)
 		{
-			int vol = MT::NumberHelper::clamp<int>((int)(masterVolume * effectVolume * volume * 128.0), 0, 128);
+			int vol = AWCore::NumberHelper::clamp<int>((int)(masterVolume * effectVolume * volume * 128.0), 0, 128);
 			Mix_VolumeChunk(soundClip->getChunk(), vol);
 			Mix_PlayChannel(-1, soundClip->getChunk(), 0);
 		}
@@ -75,7 +75,7 @@ namespace MT
 
 	void Sound::setMasterVolume(double volume)
 	{
-		masterVolume = MT::NumberHelper::clamp(volume, 0.0, 1.0);
+		masterVolume = AWCore::NumberHelper::clamp(volume, 0.0, 1.0);
 		setMusicVolume(musicVolume);
 	}
 
@@ -87,7 +87,7 @@ namespace MT
 	void Sound::setMusicVolume(double volume)
 	{
 		musicVolume = volume;
-		Mix_VolumeMusic(MT::NumberHelper::clamp<int>((int)(musicVolume * masterVolume * 128.0), 0, 128));
+		Mix_VolumeMusic(AWCore::NumberHelper::clamp<int>((int)(musicVolume * masterVolume * 128.0), 0, 128));
 	}
 
 	double Sound::getMusicVolume()

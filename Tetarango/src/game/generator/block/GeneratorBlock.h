@@ -25,7 +25,7 @@ namespace AWGame
 	public:
 		GeneratorBlock();
 
-		MT::Color getBlockColor(BlockColor value = BlockColor::None);
+		AWCore::Color getBlockColor(BlockColor value = BlockColor::None);
 
 		std::vector<std::shared_ptr<Block>> getTetromino();
 	};

@@ -1,6 +1,6 @@
 #include "Worker.h"
 
-namespace MT
+namespace AWCore
 {
 
 	Worker::Worker(void* data, void *(*toDo)(void *data), std::weak_ptr<INotifyOnCompletion> callback, WORKER_ID workerId)

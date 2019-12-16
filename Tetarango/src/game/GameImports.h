@@ -1,6 +1,6 @@
 #pragma once
 
-// MT
+// AWCore
 #include "engine/Application.h"
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
 #include "ui/renderable/element/Rectangle.h"

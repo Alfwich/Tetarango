@@ -13,11 +13,11 @@ namespace AWGame
 
 	class SceneOptionsMenu : public BaseScene
 	{
-		MT::DisplayModeInfo info;
-		MT::ScreenConfig config;
+		AWCore::DisplayModeInfo info;
+		AWCore::ScreenConfig config;
 		int stopSoundTimeoutId = 0, playSoundTimeoutId = 0;
 
-		std::shared_ptr<MT::Text> optionsMenuTitle;
+		std::shared_ptr<AWCore::Text> optionsMenuTitle;
 		std::shared_ptr<ButtonBasic> backButton;
 		std::shared_ptr<ButtonBasic> applyButton;
 		std::shared_ptr<ButtonBasic> resetButton;
@@ -38,12 +38,12 @@ namespace AWGame
 		std::shared_ptr<ScrollBarBasic> generalVolScrollBar;
 		std::shared_ptr<ScrollBarBasic> musicVolScrollBar;
 
-		std::shared_ptr<MT::Text> masterVolLabel;
-		std::shared_ptr<MT::Text> generalVolLabel;
-		std::shared_ptr<MT::Text> musicVolLabel;
+		std::shared_ptr<AWCore::Text> masterVolLabel;
+		std::shared_ptr<AWCore::Text> generalVolLabel;
+		std::shared_ptr<AWCore::Text> musicVolLabel;
 
 		bool setMsaaMode(int samples);
-		bool setScreenMode(MT::ScreenModes mode);
+		bool setScreenMode(AWCore::ScreenModes mode);
 		void setVolLabels();
 		std::string volumeToString(double volume);
 

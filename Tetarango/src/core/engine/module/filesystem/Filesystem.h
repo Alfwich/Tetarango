@@ -5,7 +5,7 @@
 #include "engine/module/IBaseModule.h"
 #include "engine/module/thread/Thread.h"
 
-namespace MT
+namespace AWCore
 {
 	class Filesystem : public IBaseModule
 	{

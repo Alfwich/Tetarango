@@ -2,7 +2,7 @@
 
 #include "Element.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Rectangle : public Element

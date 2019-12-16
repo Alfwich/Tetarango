@@ -12,7 +12,7 @@ namespace
 namespace AWGame
 {
 
-	TestScene::TestScene() : MT::Scene("test_scene")
+	TestScene::TestScene() : AWCore::Scene("test_scene")
 	{
 		rebuildOnLoad = true;
 		enableSerialization<TestScene>();
@@ -21,18 +21,18 @@ namespace AWGame
 	void TestScene::onInitialAttach()
 	{
 		enableEnterFrame();
-		setTimeScope(MT::TimeScope::Game);
+		setTimeScope(AWCore::TimeScope::Game);
 
 		modules->input->keyboard->registerKey(SDL_SCANCODE_ESCAPE, weak_from_this());
-		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, weak_from_this());
 
-		spawnTimer = modules->time->createTimer(MT::TimeScope::Game);
+		spawnTimer = modules->time->createTimer(AWCore::TimeScope::Game);
 		spawnTimer->start();
 	}
 
 	void TestScene::onAttach()
 	{
-		modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
+		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
 	}
 
 	void TestScene::onCreateChildren()
@@ -40,18 +40,18 @@ namespace AWGame
 		const auto mainGameMenu = std::make_shared<GameMainMenu>();
 		mainGameMenu->zIndex = 20;
 		mainGameMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		mainGameMenu->renderPositionMode = MT::RenderPositionMode::Absolute;
+		mainGameMenu->renderPositionMode = AWCore::RenderPositionMode::Absolute;
 		mainGameMenu->visible = false;
 		add(mainGameMenu);
 
-		const auto backdrop = std::make_shared<MT::Backdrop>();
+		const auto backdrop = std::make_shared<AWCore::Backdrop>();
 		backdrop->setTexture("test-scene-background");
 		backdrop->setSizeToEffectiveInfinity();
 		add(backdrop);
 
-		screenRectContainer = std::make_shared<MT::Container>();
+		screenRectContainer = std::make_shared<AWCore::Container>();
 		screenRectContainer->zIndex = 10;
-		screenRectContainer->renderPositionMode = MT::RenderPositionMode::Absolute;
+		screenRectContainer->renderPositionMode = AWCore::RenderPositionMode::Absolute;
 		add(screenRectContainer);
 
 		camera = std::make_shared<GameCamera>();
@@ -59,11 +59,11 @@ namespace AWGame
 		camera->setZoomLimits(4.0, 1.0);
 		camera->setDefaultsAndReset(2.0, 0.0, 0.0);
 		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		camera->setTimeScope(MT::TimeScope::Camera);
+		camera->setTimeScope(AWCore::TimeScope::Camera);
 		add(camera);
 
-		auto parentEle = std::make_shared<MT::Rectangle>();
-		auto hatEle = std::make_shared<MT::Rectangle>();
+		auto parentEle = std::make_shared<AWCore::Rectangle>();
+		auto hatEle = std::make_shared<AWCore::Rectangle>();
 		{
 			parentEle->name = "rotation-root";
 			parentEle->setPosition(500, 500);
@@ -78,14 +78,14 @@ namespace AWGame
 			hatEle->setSize(400, 50);
 			parentEle->add(hatEle);
 
-			auto pRect = std::make_shared<MT::Rectangle>();
+			auto pRect = std::make_shared<AWCore::Rectangle>();
 			pRect->name = "left";
 			pRect->setColor(0, 0, 0xff);
 			pRect->setSizeAndPosition(0.0, hatEle->getHeight() / 2.0, 50.0, 50.0);
 			hatEle->add(pRect);
 
 			{
-				std::shared_ptr<MT::Rectangle> rect = std::make_shared<MT::Rectangle>();
+				std::shared_ptr<AWCore::Rectangle> rect = std::make_shared<AWCore::Rectangle>();
 				rect->name = "middle";
 				rect->setColor(0xff, 0xff, 0xff);
 				rect->setSizeAndPosition(hatEle->getWidth() / 2.0, hatEle->getHeight() / 2.0, 50.0, 50.0);
@@ -93,7 +93,7 @@ namespace AWGame
 			}
 
 			{
-				std::shared_ptr<MT::Rectangle> rect = std::make_shared<MT::Rectangle>();
+				std::shared_ptr<AWCore::Rectangle> rect = std::make_shared<AWCore::Rectangle>();
 				rect->name = "right";
 				rect->setColor(0, 0xff, 0xff);
 				rect->setSizeAndPosition(hatEle->getWidth(), hatEle->getHeight() / 2.0, 50.0, 50.0);
@@ -101,14 +101,14 @@ namespace AWGame
 			}
 
 			{
-				std::shared_ptr<MT::Rectangle> cRect = std::make_shared<MT::Rectangle>();
+				std::shared_ptr<AWCore::Rectangle> cRect = std::make_shared<AWCore::Rectangle>();
 				cRect->setColor(0, 0, 0);
 				cRect->setSizeAndPosition(pRect->getWidth() / 2.0, pRect->getHeight() / 2.0, 3.0, 3.0);
 				pRect->add(cRect);
 			}
 
 			{
-				auto text = std::make_shared<MT::Text>("medium", 28);
+				auto text = std::make_shared<AWCore::Text>("medium", 28);
 				text->setText("Tetris Test");
 				text->setTextColor(0xff, 0xff, 0xff);
 				text->setPosition(hatEle->getWidth() / 2.0, hatEle->getHeight() / 2.0);
@@ -123,7 +123,7 @@ namespace AWGame
 				for (auto i = 0; i < 5; ++i)
 				{
 					auto newBlock = std::make_shared<AWGame::Block>();
-					newBlock->setColor(MT::Color::random());
+					newBlock->setColor(AWCore::Color::random());
 					newBlock->setPosition(i * 64, 0);
 					newBlock->zIndex = 1;
 					board->add(newBlock);
@@ -221,7 +221,7 @@ namespace AWGame
 	{
 		if (key == SDL_SCANCODE_ESCAPE)
 		{
-			const auto applicationSceneContainer = findFirstInParentChain<MT::SceneContainer>();
+			const auto applicationSceneContainer = findFirstInParentChain<AWCore::SceneContainer>();
 			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 		}
 	}

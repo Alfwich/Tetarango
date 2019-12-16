@@ -7,7 +7,7 @@
 #include <memory>
 #include "util/Rect.h"
 
-namespace MT
+namespace AWCore
 {
 	enum class SerializationHint
 	{

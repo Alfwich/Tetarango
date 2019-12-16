@@ -1,6 +1,6 @@
 #include "Input.h"
 
-namespace MT
+namespace AWCore
 {
 	Input::Input()
 	{

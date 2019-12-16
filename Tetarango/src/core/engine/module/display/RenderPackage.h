@@ -2,7 +2,7 @@
 
 #include "util/QuadMap.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class RenderPackage

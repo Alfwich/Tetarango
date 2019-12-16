@@ -5,7 +5,7 @@
 #include <vector>
 #include <ctype.h>
 
-namespace MT
+namespace AWCore
 {
 
 	class StringHelper

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "SDL.h"
 
-namespace MT
+namespace AWCore
 {
 	void Asset::decodeAssetPack(std::string path)
 	{
@@ -240,7 +240,7 @@ namespace MT
 
 		outBundle->width = inBundle->width;
 		outBundle->height = inBundle->height;
-		outBundle->type = MT::ImageBundleType::Png;
+		outBundle->type = AWCore::ImageBundleType::Png;
 
 		png_destroy_write_struct(&p, &info_ptr);
 	}

@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-namespace MT
+namespace AWCore
 {
 	void Filesystem::bindThread(std::shared_ptr<Thread> thread)
 	{

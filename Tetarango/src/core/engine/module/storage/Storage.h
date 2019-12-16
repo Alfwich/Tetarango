@@ -9,7 +9,7 @@
 #include "HuffmanEncoder.h"
 #include "StorageClient.h"
 
-namespace MT
+namespace AWCore
 {
 	class Storage : public IBaseModule
 	{

@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-namespace MT
+namespace AWCore
 {
 	Scene::Scene() : Scene(std::string())
 	{

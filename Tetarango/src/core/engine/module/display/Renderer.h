@@ -14,7 +14,7 @@
 #include "util/QuadMap.h"
 #include "util/Color.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Renderer

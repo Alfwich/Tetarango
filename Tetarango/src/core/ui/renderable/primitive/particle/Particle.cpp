@@ -1,7 +1,7 @@
 #include "Particle.h"
 
 
-namespace MT
+namespace AWCore
 {
 	std::shared_ptr<Texture> Particle::getTexture()
 	{

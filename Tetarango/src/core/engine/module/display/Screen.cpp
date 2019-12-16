@@ -1,6 +1,6 @@
 #include "Screen.h"
 
-namespace MT
+namespace AWCore
 {
 
 	Screen::~Screen()

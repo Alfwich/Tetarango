@@ -7,7 +7,7 @@
 #include "ISerializable.h"
 #include "SerializationTags.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Serializer

@@ -19,7 +19,7 @@ namespace AWGame
 
 		// Head
 		std::string blockTexturePath = "res/game/img/prop/block/blocks.png";
-		MT::RectI blockTextureSize = { 0, 0, 512, 512 };
+		AWCore::RectI blockTextureSize = { 0, 0, 512, 512 };
 		const std::map<BlockTypes, std::string> blocks{
 			{ BlockTypes::Basic, "block-basic" }
 		};

@@ -5,7 +5,7 @@
 #include "Gamepad/Gamepad.h"
 #include "engine/module/IBaseModule.h"
 
-namespace MT
+namespace AWCore
 {
 	class Input : public IBaseModule
 	{

@@ -3,7 +3,7 @@
 #include <memory>
 #include "WorkerStatus.h"
 
-namespace MT
+namespace AWCore
 {
 	class AsyncResultBundle
 	{

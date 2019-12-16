@@ -6,7 +6,7 @@
 #include "ScreenConfig.h"
 #include "engine/module/collision/Collision.h"
 
-namespace MT
+namespace AWCore
 {
 	class ApplicationObject;
 	class Collision;

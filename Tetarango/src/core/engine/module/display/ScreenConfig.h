@@ -1,5 +1,5 @@
 #pragma once
-namespace MT
+namespace AWCore
 {
 	enum class ScreenModes
 	{

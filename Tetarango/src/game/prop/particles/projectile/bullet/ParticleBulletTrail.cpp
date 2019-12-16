@@ -4,7 +4,7 @@
 namespace AWGame
 {
 
-	ParticleBulletTrail::ParticleBulletTrail(std::shared_ptr<MT::TextureContainer> textureContainer)
+	ParticleBulletTrail::ParticleBulletTrail(std::shared_ptr<AWCore::TextureContainer> textureContainer)
 	{
 		particleTexture = textureContainer->getTexture("__solid__");
 	}

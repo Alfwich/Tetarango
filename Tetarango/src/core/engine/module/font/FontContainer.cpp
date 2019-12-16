@@ -1,6 +1,6 @@
 #include "FontContainer.h"
 
-namespace MT
+namespace AWCore
 {
 	FontContainer::FontContainer()
 	{

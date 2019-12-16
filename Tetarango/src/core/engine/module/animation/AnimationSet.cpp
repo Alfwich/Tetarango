@@ -1,7 +1,7 @@
 #include "AnimationSet.h"
 
 
-namespace MT
+namespace AWCore
 {
 
 

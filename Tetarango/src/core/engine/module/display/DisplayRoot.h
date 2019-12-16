@@ -2,7 +2,7 @@
 
 #include "engine/ApplicationObject.h"
 
-namespace MT
+namespace AWCore
 {
 	class DisplayRoot : public ApplicationObject
 	{

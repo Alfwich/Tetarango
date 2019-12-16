@@ -1,6 +1,6 @@
 #include "SceneContainer.h"
 
-namespace MT
+namespace AWCore
 {
 
 	SceneContainer::SceneContainer()

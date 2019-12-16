@@ -1,6 +1,6 @@
 #include "Font.h"
 
-namespace MT
+namespace AWCore
 {
 
 	Font::Font(std::string name, TTF_Font* font, int fontSize, FontContainer* container)

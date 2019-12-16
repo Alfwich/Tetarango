@@ -22,15 +22,15 @@ namespace AWGame
 
 	void TransitionFade::onCreateChildren()
 	{
-		fadeRectangle = std::make_shared<MT::Rectangle>();
+		fadeRectangle = std::make_shared<AWCore::Rectangle>();
 		fadeRectangle->name = fadeRectName;
-		fadeRectangle->setColor(MT::Color::black());
+		fadeRectangle->setColor(AWCore::Color::black());
 		add(fadeRectangle);
 	}
 
 	void TransitionFade::onChildrenHydrated()
 	{
-		fadeRectangle = findChildWithName<MT::Rectangle>(fadeRectName);
+		fadeRectangle = findChildWithName<AWCore::Rectangle>(fadeRectName);
 	}
 
 	void TransitionFade::onLayoutChildren()
@@ -72,7 +72,7 @@ namespace AWGame
 	void TransitionFade::fadeIn()
 	{
 		visible = true;
-		fadeTransition->startTransition(std::dynamic_pointer_cast<MT::Renderable>(shared_from_this()), getDuration(), getRect(), 1.0);
+		fadeTransition->startTransition(std::dynamic_pointer_cast<AWCore::Renderable>(shared_from_this()), getDuration(), getRect(), 1.0);
 	}
 
 	void TransitionFade::fadeInImmediately()
@@ -83,7 +83,7 @@ namespace AWGame
 
 	void TransitionFade::fadeOut()
 	{
-		fadeTransition->startTransition(std::dynamic_pointer_cast<MT::Renderable>(shared_from_this()), getDuration(), getRect(), 0.0);
+		fadeTransition->startTransition(std::dynamic_pointer_cast<AWCore::Renderable>(shared_from_this()), getDuration(), getRect(), 0.0);
 	}
 
 	void TransitionFade::fadeOutImmediately()

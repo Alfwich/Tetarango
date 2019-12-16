@@ -2,7 +2,7 @@
 
 #include "util/NumberHelper.h"
 
-namespace MT
+namespace AWCore
 {
 	void Renderable::setColor(const Color& color)
 	{

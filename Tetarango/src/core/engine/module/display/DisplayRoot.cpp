@@ -1,6 +1,6 @@
 #include "DisplayRoot.h"
 
-namespace MT
+namespace AWCore
 {
 	DisplayRoot::DisplayRoot()
 	{

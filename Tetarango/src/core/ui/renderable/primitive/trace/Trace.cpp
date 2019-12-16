@@ -3,7 +3,7 @@
 #include "util/NumberHelper.h"
 #include "ui/renderable/element/Rectangle.h"
 
-namespace MT
+namespace AWCore
 {
 	Trace::Trace()
 	{
@@ -14,12 +14,12 @@ namespace MT
 	{
 		for (int i = 0; i < numSegments; ++i)
 		{
-			add(std::make_shared<MT::Rectangle>());
+			add(std::make_shared<AWCore::Rectangle>());
 		}
 
 		auto baseColor = getColor();
 		int segmentPos = 0;
-		for (const auto rect : getChildrenOfType<MT::Rectangle>())
+		for (const auto rect : getChildrenOfType<AWCore::Rectangle>())
 		{
 			rect->setColor(baseColor->lerp(endColor, segmentPos++ / numSegments));
 		}
@@ -55,7 +55,7 @@ namespace MT
 		const auto h = getHeight();
 		auto lastRect = Rect();
 
-		for (const auto rect : getChildrenOfType<MT::Rectangle>())
+		for (const auto rect : getChildrenOfType<AWCore::Rectangle>())
 		{
 			if (tD > d)
 			{

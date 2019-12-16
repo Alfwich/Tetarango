@@ -1,6 +1,6 @@
 #pragma once
 
-namespace MT
+namespace AWCore
 {
 	class EnterFrameListener
 	{

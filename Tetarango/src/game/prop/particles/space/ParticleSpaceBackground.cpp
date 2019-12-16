@@ -4,7 +4,7 @@
 namespace AWGame
 {
 
-	ParticleSpaceBackground::ParticleSpaceBackground(std::shared_ptr<MT::TextureContainer> textureContainer)
+	ParticleSpaceBackground::ParticleSpaceBackground(std::shared_ptr<AWCore::TextureContainer> textureContainer)
 	{
 		particleTexture = textureContainer->getTexture("__solid__");
 	}

@@ -7,7 +7,7 @@ namespace
 	const auto cornerSizeParamName = "corner-size";
 }
 
-namespace MT
+namespace AWCore
 {
 	NineSlice::NineSlice()
 	{
@@ -30,7 +30,7 @@ namespace MT
 
 		if (nineSliceAnimationSet == nullptr)
 		{
-			nineSliceAnimationSet = std::make_shared<MT::AnimationSet>();
+			nineSliceAnimationSet = std::make_shared<AWCore::AnimationSet>();
 		}
 
 		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
@@ -50,7 +50,7 @@ namespace MT
 			}
 		}
 
-		for (const auto animated : getChildrenOfType<MT::Animated>())
+		for (const auto animated : getChildrenOfType<AWCore::Animated>())
 		{
 			animated->setTexture(texture);
 			animated->setAnimationSet(nineSliceAnimationSet);
@@ -96,7 +96,7 @@ namespace MT
 
 	void NineSlice::onCreateChildren()
 	{
-		topLeft = std::make_shared<MT::Animated>();
+		topLeft = std::make_shared<AWCore::Animated>();
 		topLeft->name = "tl";
 		topLeft->sizeToAnimation = false;
 		topLeft->setAnimationSet(nineSliceAnimationSet);
@@ -104,7 +104,7 @@ namespace MT
 		topLeft->setTexture(texture);
 		add(topLeft);
 
-		top = std::make_shared<MT::Animated>();
+		top = std::make_shared<AWCore::Animated>();
 		top->name = "t";
 		top->sizeToAnimation = false;
 		top->setAnimationSet(nineSliceAnimationSet);
@@ -112,7 +112,7 @@ namespace MT
 		top->setTexture(texture);
 		add(top);
 
-		topRight = std::make_shared<MT::Animated>();
+		topRight = std::make_shared<AWCore::Animated>();
 		topRight->name = "tr";
 		topRight->sizeToAnimation = false;
 		topRight->setAnimationSet(nineSliceAnimationSet);
@@ -120,7 +120,7 @@ namespace MT
 		topRight->setTexture(texture);
 		add(topRight);
 
-		left = std::make_shared<MT::Animated>();
+		left = std::make_shared<AWCore::Animated>();
 		left->name = "l";
 		left->sizeToAnimation = false;
 		left->setAnimationSet(nineSliceAnimationSet);
@@ -128,7 +128,7 @@ namespace MT
 		left->setTexture(texture);
 		add(left);
 
-		center = std::make_shared<MT::Animated>();
+		center = std::make_shared<AWCore::Animated>();
 		center->name = "c";
 		center->sizeToAnimation = false;
 		center->setAnimationSet(nineSliceAnimationSet);
@@ -136,7 +136,7 @@ namespace MT
 		center->setTexture(texture);
 		add(center);
 
-		right = std::make_shared<MT::Animated>();
+		right = std::make_shared<AWCore::Animated>();
 		right->name = "r";
 		right->sizeToAnimation = false;
 		right->setAnimationSet(nineSliceAnimationSet);
@@ -144,7 +144,7 @@ namespace MT
 		right->setTexture(texture);
 		add(right);
 
-		bottomLeft = std::make_shared<MT::Animated>();
+		bottomLeft = std::make_shared<AWCore::Animated>();
 		bottomLeft->name = "bl";
 		bottomLeft->sizeToAnimation = false;
 		bottomLeft->setAnimationSet(nineSliceAnimationSet);
@@ -152,7 +152,7 @@ namespace MT
 		bottomLeft->setTexture(texture);
 		add(bottomLeft);
 
-		bottom = std::make_shared<MT::Animated>();
+		bottom = std::make_shared<AWCore::Animated>();
 		bottom->name = "b";
 		bottom->sizeToAnimation = false;
 		bottom->setAnimationSet(nineSliceAnimationSet);
@@ -160,7 +160,7 @@ namespace MT
 		bottom->setTexture(texture);
 		add(bottom);
 
-		bottomRight = std::make_shared<MT::Animated>();
+		bottomRight = std::make_shared<AWCore::Animated>();
 		bottomRight->name = "br";
 		bottomRight->sizeToAnimation = false;
 		bottomRight->setAnimationSet(nineSliceAnimationSet);
@@ -171,17 +171,17 @@ namespace MT
 
 	void NineSlice::onChildrenHydrated()
 	{
-		topRight = findChildWithName<MT::Animated>("tr");
-		top = findChildWithName<MT::Animated>("t");
-		topLeft = findChildWithName<MT::Animated>("tl");
+		topRight = findChildWithName<AWCore::Animated>("tr");
+		top = findChildWithName<AWCore::Animated>("t");
+		topLeft = findChildWithName<AWCore::Animated>("tl");
 
-		right = findChildWithName<MT::Animated>("r");
-		center = findChildWithName<MT::Animated>("c");
-		left = findChildWithName<MT::Animated>("l");
+		right = findChildWithName<AWCore::Animated>("r");
+		center = findChildWithName<AWCore::Animated>("c");
+		left = findChildWithName<AWCore::Animated>("l");
 
-		bottomRight = findChildWithName<MT::Animated>("br");
-		bottom = findChildWithName<MT::Animated>("b");
-		bottomLeft = findChildWithName<MT::Animated>("bl");
+		bottomRight = findChildWithName<AWCore::Animated>("br");
+		bottom = findChildWithName<AWCore::Animated>("b");
+		bottomLeft = findChildWithName<AWCore::Animated>("bl");
 
 		generateNineSliceAnimationSet();
 	}
@@ -223,7 +223,7 @@ namespace MT
 
 	void NineSlice::play(std::string animationName)
 	{
-		for (const auto animated : getChildrenOfType<MT::Animated>())
+		for (const auto animated : getChildrenOfType<AWCore::Animated>())
 		{
 			animated->setAnimationPrefix(animationName);
 			animated->play(animated->getCurrentAnimationName());

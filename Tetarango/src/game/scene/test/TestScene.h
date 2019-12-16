@@ -11,11 +11,11 @@
 namespace AWGame
 {
 
-	class TestScene : public MT::Scene
+	class TestScene : public AWCore::Scene
 	{
 		std::shared_ptr<GameCamera> camera;
-		std::shared_ptr<MT::Container> screenRectContainer;
-		std::shared_ptr<MT::Timer> spawnTimer;
+		std::shared_ptr<AWCore::Container> screenRectContainer;
+		std::shared_ptr<AWCore::Timer> spawnTimer;
 
 	public:
 		TestScene();

@@ -5,7 +5,7 @@
 #include "util/Rect.h"
 #include "engine/module/display/Texture.h"
 
-namespace MT
+namespace AWCore
 {
 	class Particle
 	{

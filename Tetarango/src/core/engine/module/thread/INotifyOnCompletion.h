@@ -3,7 +3,7 @@
 #include <memory>
 #include "WorkerStatus.h"
 
-namespace MT
+namespace AWCore
 {
 	typedef unsigned int WORKER_ID;
 	class AsyncResultBundle;

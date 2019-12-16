@@ -3,7 +3,7 @@
 #include "engine/ApplicationObject.h"
 #include "ui/renderable/Renderable.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class Container : public ApplicationObject, public Renderable 

@@ -71,7 +71,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MT_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -92,7 +92,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MT_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -116,7 +116,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;MT_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

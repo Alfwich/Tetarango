@@ -43,18 +43,18 @@ namespace AWGame
 
 	void SceneSplash::onCreateChildren()
 	{
-		blockContainer = std::make_shared<MT::Container>();
+		blockContainer = std::make_shared<AWCore::Container>();
 		blockContainer->setColor(88, 88, 88);
 		blockContainer->setExpandToChildren(false);
 		blockContainer->zIndex = -10;
 		add(blockContainer);
 
-		splashText = std::make_shared<MT::Text>();
+		splashText = std::make_shared<AWCore::Text>();
 		splashText->setFont("medium", titleFontSizeBig);
 		splashText->setText("built with");
 		add(splashText);
 
-		splashImage = std::make_shared<MT::Element>();
+		splashImage = std::make_shared<AWCore::Element>();
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
@@ -63,17 +63,17 @@ namespace AWGame
 		titleGame->setFontSize(150);
 		add(titleGame);
 
-		loadingProgressBar = std::make_shared<MT::Element>();
+		loadingProgressBar = std::make_shared<AWCore::Element>();
 		loadingProgressBar->setTexture(loadingPatternTextureName);
 		add(loadingProgressBar);
 	}
 
 	void SceneSplash::onInitialAttach()
 	{
-		splashTransition = modules->animation->createTransitionForTimeScope(MT::TimeScope::Menu);
+		splashTransition = modules->animation->createTransitionForTimeScope(AWCore::TimeScope::Menu);
 		splashTransition->listener = weak_from_this();
 
-		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, baseSceneWeakThisRef());
+		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, baseSceneWeakThisRef());
 		modules->input->keyboard->registerKey(SDL_SCANCODE_SPACE, baseSceneWeakThisRef());
 	}
 
@@ -92,8 +92,8 @@ namespace AWGame
 	void SceneSplash::onTransitionAnimationFrame(double position)
 	{
 		const auto currentTransitionSeconds = position * splashTransitionTimeInSeconds;
-		const auto scaledMainPositionIn = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorIn), 0.0, 1.0);
-		const auto scaledMainPositionOut = MT::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorOut), 0.0, 1.0);
+		const auto scaledMainPositionIn = AWCore::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorIn), 0.0, 1.0);
+		const auto scaledMainPositionOut = AWCore::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorOut), 0.0, 1.0);
 
 		loadingProgressBar->setWidth(getScreenWidth() * position);
 		loadingProgressBar->centerAlignSelf(0.0, getScreenHeight() - loadingProgressBar->getHeight());
@@ -101,7 +101,7 @@ namespace AWGame
 		if (currentTransitionSeconds >= splashTransitionTimeInSeconds - 1.0)
 		{
 			const auto p = currentTransitionSeconds - (splashTransitionTimeInSeconds - 1.0);
-			loadingProgressBar->setAlpha(MT::NumberHelper::clamp<double>(1.0 - p, 0.0, 1.0));
+			loadingProgressBar->setAlpha(AWCore::NumberHelper::clamp<double>(1.0 - p, 0.0, 1.0));
 		}
 
 		if (state == 0)
@@ -167,9 +167,9 @@ namespace AWGame
 				{
 					for (auto block : blockColorGenerator.getTetromino())
 					{
-						const auto randomX = MT::NumberHelper::random(blockHeightGenerationLimit, -100);
-						const auto randomY = MT::NumberHelper::random(blockHeightGenerationLimit, -100);
-						block->setScale(MT::NumberHelper::random(0.25, 0.75));
+						const auto randomX = AWCore::NumberHelper::random(blockHeightGenerationLimit, -100);
+						const auto randomY = AWCore::NumberHelper::random(blockHeightGenerationLimit, -100);
+						block->setScale(AWCore::NumberHelper::random(0.25, 0.75));
 						block->setX(randomX);
 						block->setY(randomY);
 						blocks.push_back(block);
@@ -204,7 +204,7 @@ namespace AWGame
 
 			if (state == 7)
 			{
-				block->setScale(MT::NumberHelper::clamp<double>(block->getScaleX() - frameTime / 1000.0, 0.0, 1.0));
+				block->setScale(AWCore::NumberHelper::clamp<double>(block->getScaleX() - frameTime / 1000.0, 0.0, 1.0));
 			}
 		}
 	}

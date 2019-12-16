@@ -1,6 +1,6 @@
 #include "Time.h"
 
-namespace MT
+namespace AWCore
 {
 
 	void Time::onInit()

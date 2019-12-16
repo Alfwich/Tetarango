@@ -1,6 +1,6 @@
 #include "Hydrater.h"
 
-namespace MT
+namespace AWCore
 {
 
 	std::unordered_map<std::string, std::shared_ptr<Schematic>> Hydrater::schematics;

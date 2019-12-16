@@ -14,7 +14,7 @@ namespace MTTest
 	class Tests
 	{
 	public:
-		static void run(std::shared_ptr<MT::SystemModuleBundle> modules)
+		static void run(std::shared_ptr<AWCore::SystemModuleBundle> modules)
 		{
 			Tests::serializationTests(modules->serialization);
 			Tests::filesystemTests(modules->filesystem);
@@ -40,7 +40,7 @@ namespace MTTest
 			}
 		}
 
-		static void filesystemTests(std::shared_ptr<MT::Filesystem> fs)
+		static void filesystemTests(std::shared_ptr<AWCore::Filesystem> fs)
 		{
 			const std::string filename("test-file.txt");
 			std::string fileContent("");
@@ -58,12 +58,12 @@ namespace MTTest
 			Tests::assertEqual("FILESYSTEM", fs->readContentsFromFile(filename), fileContent);
 		}
 
-		static void memoryAndDeepTreeTests(std::shared_ptr<MT::SystemModuleBundle> modules)
+		static void memoryAndDeepTreeTests(std::shared_ptr<AWCore::SystemModuleBundle> modules)
 		{
 
 			while (true)
 			{
-				std::shared_ptr<MT::Scene> infScene = std::make_unique<MT::Scene>("second");
+				std::shared_ptr<AWCore::Scene> infScene = std::make_unique<AWCore::Scene>("second");
 				{
 					{
 						std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
@@ -94,9 +94,9 @@ namespace MTTest
 				}
 
 				std::string t = modules->serialization->serialize(infScene);
-				std::shared_ptr<MT::ISerializable> o = modules->serialization->hydrate(t);
+				std::shared_ptr<AWCore::ISerializable> o = modules->serialization->hydrate(t);
 
-				std::shared_ptr<MT::Scene> infS = std::make_unique<MT::Scene>("inf");
+				std::shared_ptr<AWCore::Scene> infS = std::make_unique<AWCore::Scene>("inf");
 				for (int i = 0; i < 1000; ++i)
 				{
 					std::shared_ptr<TestActor> t = std::make_unique<TestActor>();
@@ -105,40 +105,40 @@ namespace MTTest
 			}
 		}
 
-		static void serializationTests(std::shared_ptr<MT::Serialization> serialization)
+		static void serializationTests(std::shared_ptr<AWCore::Serialization> serialization)
 		{
 
-			std::shared_ptr<MT::Scene> infScene = std::make_unique<MT::Scene>("second");
+			std::shared_ptr<AWCore::Scene> infScene = std::make_unique<AWCore::Scene>("second");
 			{
 
 				std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
 				to->setPosition(460.0, 140.0);
 				infScene->add(to);
 				{
-					std::shared_ptr<MT::Rectangle> rect4 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect4 = std::make_unique<AWCore::Rectangle>();
 					rect4->setColor(0xff, 0, 0xff);
 					rect4->setSizeAndPosition(450, 130, 300.0, 300.0);
 					infScene->add(rect4);
 
 
-					std::shared_ptr<MT::Rectangle> rect = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect = std::make_unique<AWCore::Rectangle>();
 					rect->setColor(0xff, 0, 0);
 					rect->setSizeAndPosition(0.0, 0.0, 30.0, 30.0);
 					to->add(rect);
 
-					std::shared_ptr<MT::Rectangle> rect2 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect2 = std::make_unique<AWCore::Rectangle>();
 					rect2->setColor(0, 0xff, 0);
 					rect2->setSizeAndPosition(30.0, 0.0, 30.0, 30.0);
 					rect->add(rect2);
 
-					std::shared_ptr<MT::Rectangle> rect3 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect3 = std::make_unique<AWCore::Rectangle>();
 					rect3->setColor(0, 0, 0xff);
 					rect3->setSizeAndPosition(-15, 30.0, 30.0, 30.0);
 					rect2->add(rect3);
 				}
 
 				{
-					std::shared_ptr<MT::Rectangle> rect4 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect4 = std::make_unique<AWCore::Rectangle>();
 					rect4->setColor(0xff, 0, 0xff);
 					rect4->setSizeAndPosition(450, 130, 300.0, 300.0);
 					infScene->add(rect4);
@@ -147,24 +147,24 @@ namespace MTTest
 					to->setPosition(460.0, 140.0);
 					infScene->add(to);
 
-					std::shared_ptr<MT::Rectangle> rect = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect = std::make_unique<AWCore::Rectangle>();
 					rect->setColor(0xff, 0, 0);
 					rect->setSizeAndPosition(0.0, 0.0, 30.0, 30.0);
 					to->add(rect);
 
-					std::shared_ptr<MT::Rectangle> rect2 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect2 = std::make_unique<AWCore::Rectangle>();
 					rect2->setColor(0, 0xff, 0);
 					rect2->setSizeAndPosition(30.0, 0.0, 30.0, 30.0);
 					rect->add(rect2);
 
-					std::shared_ptr<MT::Rectangle> rect3 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect3 = std::make_unique<AWCore::Rectangle>();
 					rect3->setColor(0, 0, 0xff);
 					rect3->setSizeAndPosition(-15, 30.0, 30.0, 30.0);
 					rect2->add(rect3);
 				}
 
 				{
-					std::shared_ptr<MT::Rectangle> rect4 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect4 = std::make_unique<AWCore::Rectangle>();
 					rect4->setColor(0xff, 0, 0xff);
 					rect4->setSizeAndPosition(450, 130, 300.0, 300.0);
 					infScene->add(rect4);
@@ -173,17 +173,17 @@ namespace MTTest
 					to->setPosition(460.0, 140.0);
 					infScene->add(to);
 
-					std::shared_ptr<MT::Rectangle> rect = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect = std::make_unique<AWCore::Rectangle>();
 					rect->setColor(0xff, 0, 0);
 					rect->setSizeAndPosition(0.0, 0.0, 30.0, 30.0);
 					to->add(rect);
 
-					std::shared_ptr<MT::Rectangle> rect2 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect2 = std::make_unique<AWCore::Rectangle>();
 					rect2->setColor(0, 0xff, 0);
 					rect2->setSizeAndPosition(30.0, 0.0, 30.0, 30.0);
 					rect->add(rect2);
 
-					std::shared_ptr<MT::Rectangle> rect3 = std::make_unique<MT::Rectangle>();
+					std::shared_ptr<AWCore::Rectangle> rect3 = std::make_unique<AWCore::Rectangle>();
 					rect3->setColor(0, 0, 0xff);
 					rect3->setSizeAndPosition(-15, 30.0, 30.0, 30.0);
 					rect2->add(rect3);
@@ -198,7 +198,7 @@ namespace MTTest
 			for (int i = 0; i < 5; ++i)
 			{
 				auto o = serialization->hydrate(t);
-				auto ao = std::static_pointer_cast<MT::ApplicationObject>(o);
+				auto ao = std::static_pointer_cast<AWCore::ApplicationObject>(o);
 
 				if (ao == nullptr)
 				{
@@ -218,7 +218,7 @@ namespace MTTest
 			}
 		}
 
-		static void textCompressionTests(std::shared_ptr<MT::Storage> storage)
+		static void textCompressionTests(std::shared_ptr<AWCore::Storage> storage)
 		{
 			{
 				std::string testStr = "abcd";
@@ -302,7 +302,7 @@ namespace MTTest
 			}
 		}
 
-		static void encodingTests(std::shared_ptr<MT::Storage> storage)
+		static void encodingTests(std::shared_ptr<AWCore::Storage> storage)
 		{
 			{
 				std::string test1 = "hello world!";
@@ -374,7 +374,7 @@ namespace MTTest
 		static void rngTests()
 		{
 			{
-				const auto rng = std::make_shared<MT::RandomGenerator<int>>();
+				const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
 
 				rng->registerCase(0, 0.5);
 				rng->registerCase(1, 0.5);
@@ -397,7 +397,7 @@ namespace MTTest
 			for (int k = 0; k < totalTestPasses; ++k)
 			{
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 1.0);
 					rng->registerCase(1, 0.0);
@@ -418,7 +418,7 @@ namespace MTTest
 				}
 
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 1.0);
 					rng->registerCase(1, 0.0);
@@ -442,7 +442,7 @@ namespace MTTest
 				}
 
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 0.0);
 					rng->registerCase(1, 0.0);
@@ -467,7 +467,7 @@ namespace MTTest
 				}
 
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 0.0);
 					rng->registerCase(1, 0.0);
@@ -492,7 +492,7 @@ namespace MTTest
 				}
 
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 0.1);
 					rng->registerCase(1, 0.0);
@@ -517,7 +517,7 @@ namespace MTTest
 				}
 
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 0.01);
 					rng->registerCase(1, 0.0);
@@ -542,8 +542,8 @@ namespace MTTest
 				}
 
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
-					const auto rng2 = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
+					const auto rng2 = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 0.0);
 					rng->registerCase(1, 0.0);
@@ -573,8 +573,8 @@ namespace MTTest
 				}
 
 				{
-					const auto rng = std::make_shared<MT::RandomGenerator<int>>();
-					const auto rng2 = std::make_shared<MT::RandomGenerator<int>>();
+					const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
+					const auto rng2 = std::make_shared<AWCore::RandomGenerator<int>>();
 
 					rng->registerCase(0, 0.0);
 					rng->registerCase(1, 0.0);
@@ -608,9 +608,9 @@ namespace MTTest
 			}
 
 			{
-				const auto rng = std::make_shared<MT::RandomGenerator<int>>();
-				const auto rng2 = std::make_shared<MT::RandomGenerator<int>>();
-				const auto rng3 = std::make_shared<MT::RandomGenerator<int>>();
+				const auto rng = std::make_shared<AWCore::RandomGenerator<int>>();
+				const auto rng2 = std::make_shared<AWCore::RandomGenerator<int>>();
+				const auto rng3 = std::make_shared<AWCore::RandomGenerator<int>>();
 
 				rng->registerCase(0, 0.0);
 				rng->registerCase(1, 0.0);

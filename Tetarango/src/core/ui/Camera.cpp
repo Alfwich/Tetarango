@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-namespace MT
+namespace AWCore
 {
 	double Camera::getX()
 	{

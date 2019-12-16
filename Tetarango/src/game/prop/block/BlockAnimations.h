@@ -7,7 +7,7 @@
 namespace AWGame
 {
 
-	class BlockAnimations : public MT::AnimationSet
+	class BlockAnimations : public AWCore::AnimationSet
 	{
 		const Blocks& config;
 
@@ -17,14 +17,14 @@ namespace AWGame
 		void onLoadAnimations()
 		{
 			{
-				auto anim = std::shared_ptr<MT::Animation>();
+				auto anim = std::shared_ptr<AWCore::Animation>();
 				auto index = 0;
 
 				// Head Apparel
 				for (const auto blockEntry : config.blocks)
 				{
 					const std::string blockName = blockEntry.second;
-					const MT::RectI offset = {
+					const AWCore::RectI offset = {
 						0, 64 * index, 64, 64
 					};
 

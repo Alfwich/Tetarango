@@ -1,7 +1,7 @@
 #include "QuadMap.h"
 
 
-namespace MT
+namespace AWCore
 {
 	QuadMap::QuadMap(double x, double y, double w, double h)
 	{

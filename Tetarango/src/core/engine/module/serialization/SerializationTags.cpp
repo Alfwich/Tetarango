@@ -1,6 +1,6 @@
 #include "SerializationTags.h"
 
-namespace MT
+namespace AWCore
 {
 	const char* SerializationTags::ARCHIVE_START_TAG = "##SCENE_ARCHIVE_START##";
 	const char* SerializationTags::ARCHIVE_END_TAG = "##SCENE_ARCHIVE_END##";

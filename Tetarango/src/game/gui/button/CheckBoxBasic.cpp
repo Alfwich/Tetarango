@@ -35,12 +35,12 @@ namespace AWGame
 	{
 		modules->texture->loadTexture(checkboxTexturePath, checkBoxBasicId);
 
-		auto animationSet = std::make_shared<MT::AnimationSet>();
+		auto animationSet = std::make_shared<AWCore::AnimationSet>();
 		{
 			auto row = 0;
 			auto col = 0;
 
-			MT::RectI frameSize = {
+			AWCore::RectI frameSize = {
 				0,
 				0,
 				40,
@@ -100,7 +100,7 @@ namespace AWGame
 
 	void CheckBoxBasic::onCreateChildren()
 	{
-		checkbox = std::make_shared<MT::Animated>();
+		checkbox = std::make_shared<AWCore::Animated>();
 		if (guiBaseName == getGuis().buttons.at(GuiButton::RadioBoxBasic))
 		{
 			checkbox->setAnimationPrefix(skins[1]);
@@ -117,7 +117,7 @@ namespace AWGame
 		checkbox->centerAlignSelf();
 		add(checkbox);
 
-		label = std::make_shared<MT::Text>();
+		label = std::make_shared<AWCore::Text>();
 		label->name = "button_text";
 		label->setFont("medium", 30);
 		label->setText(text);
@@ -128,14 +128,14 @@ namespace AWGame
 
 	void CheckBoxBasic::onChildrenHydrated()
 	{
-		checkbox = findChildWithName<MT::Animated>("checkbox");
-		label = findChildWithName<MT::Text>("button_text");
+		checkbox = findChildWithName<AWCore::Animated>("checkbox");
+		label = findChildWithName<AWCore::Text>("button_text");
 	}
 
 	void CheckBoxBasic::onInitialAttach()
 	{
 		enableEnterFrame();
-		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, weak_from_this());
 	}
 
 	void CheckBoxBasic::onLayoutChildren()
@@ -152,14 +152,14 @@ namespace AWGame
 
 	void CheckBoxBasic::checkIsHovering(int x, int y)
 	{
-		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == MT::RenderPositionMode::Unspecified ? screenRect : worldRect;
+		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AWCore::RenderPositionMode::Unspecified ? screenRect : worldRect;
 
 		isHovering =
 			x < rect.x + rect.w && x > rect.x &&
 			y < rect.y + rect.h && y > rect.y;
 	}
 
-	void CheckBoxBasic::onMouseButton(MT::MouseButton button, bool pressed)
+	void CheckBoxBasic::onMouseButton(AWCore::MouseButton button, bool pressed)
 	{
 		const auto isLocked = serializationClient->getBool(isLockedParamName, false);
 		if (isLocked)
@@ -169,7 +169,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case MT::MouseButton::Left:
+		case AWCore::MouseButton::Left:
 			if (!pressed)
 			{
 				if (isHovering && isPressed)

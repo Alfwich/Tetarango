@@ -25,10 +25,10 @@ namespace AWGame
 		modules->texture->loadTexture("res/game/img/ui/scrollbar/scrollbar_basic.png", scrollbarBasicTextureId);
 
 		{
-			auto animationSet = std::make_shared<MT::AnimationSet>();
+			auto animationSet = std::make_shared<AWCore::AnimationSet>();
 			{
 				int fps = 15;
-				MT::RectI frameSize = {
+				AWCore::RectI frameSize = {
 					0,
 					0,
 					40,
@@ -51,10 +51,10 @@ namespace AWGame
 		}
 
 		{
-			auto animationSet = std::make_shared<MT::AnimationSet>();
+			auto animationSet = std::make_shared<AWCore::AnimationSet>();
 			{
 				int fps = 15;
-				MT::RectI frameSize = {
+				AWCore::RectI frameSize = {
 					3,
 					40,
 					34,
@@ -104,7 +104,7 @@ namespace AWGame
 
 	void ScrollBarBasic::setScrollerHeight(double height)
 	{
-		serializationClient->setDouble(scrollbarHeightParamName, MT::NumberHelper::clamp<double>(height, 0.0, 1.0));
+		serializationClient->setDouble(scrollbarHeightParamName, AWCore::NumberHelper::clamp<double>(height, 0.0, 1.0));
 		layout();
 	}
 
@@ -125,7 +125,7 @@ namespace AWGame
 
 	void ScrollBarBasic::setScrollPositionInstantly(double pos)
 	{
-		const auto value = MT::NumberHelper::clamp<double>(pos, 0.0, 1.0);
+		const auto value = AWCore::NumberHelper::clamp<double>(pos, 0.0, 1.0);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
 
 		updateScrollerPosition(true);
@@ -139,7 +139,7 @@ namespace AWGame
 
 	void ScrollBarBasic::setScrollPosition(double pos)
 	{
-		const auto value = MT::NumberHelper::clamp<double>(pos, 0.0, 1.0);
+		const auto value = AWCore::NumberHelper::clamp<double>(pos, 0.0, 1.0);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
 
 		updateScrollerPosition();
@@ -158,7 +158,7 @@ namespace AWGame
 
 	void ScrollBarBasic::onCreateChildren()
 	{
-		background = std::make_shared<MT::NineSlice>();
+		background = std::make_shared<AWCore::NineSlice>();
 		background->name = scrollbarBasicBackgroundId;
 		background->setTexture(scrollbarBasicTextureId);
 		background->setAnimationSet(scrollbarBasicBackgroundId);
@@ -166,7 +166,7 @@ namespace AWGame
 		add(background);
 		background->play("black");
 
-		scroller = std::make_shared<MT::NineSlice>();
+		scroller = std::make_shared<AWCore::NineSlice>();
 		scroller->name = scrollbarBasicScrollerId;
 		scroller->setTexture(scrollbarBasicTextureId);
 		scroller->setAnimationSet(scrollbarBasicScrollerId);
@@ -178,14 +178,14 @@ namespace AWGame
 
 	void ScrollBarBasic::onChildrenHydrated()
 	{
-		background = findChildWithName<MT::NineSlice>(scrollbarBasicBackgroundId);
-		scroller = findChildWithName<MT::NineSlice>(scrollbarBasicScrollerId);
+		background = findChildWithName<AWCore::NineSlice>(scrollbarBasicBackgroundId);
+		scroller = findChildWithName<AWCore::NineSlice>(scrollbarBasicScrollerId);
 	}
 
 	void ScrollBarBasic::onInitialAttach()
 	{
 		scrollerTransition = modules->animation->createTransition();
-		modules->input->mouse->registerMouseButton(MT::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, weak_from_this());
 		enableEnterFrame();
 	}
 
@@ -217,14 +217,14 @@ namespace AWGame
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)
 	{
-		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == MT::RenderPositionMode::Unspecified ? background->getScreenRect() : background->getWorldRect();
+		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AWCore::RenderPositionMode::Unspecified ? background->getScreenRect() : background->getWorldRect();
 
 		isHovering =
 			x < rect->x + rect->w && x > rect->x &&
 			y < rect->y + rect->h && y > rect->y;
 	}
 
-	void ScrollBarBasic::onMouseButton(MT::MouseButton button, bool pressed)
+	void ScrollBarBasic::onMouseButton(AWCore::MouseButton button, bool pressed)
 	{
 		const auto isEnabled = serializationClient->getBool(enabledParamName, true);
 		if (!isEnabled)
@@ -234,7 +234,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case MT::MouseButton::Left:
+		case AWCore::MouseButton::Left:
 			if (!pressed)
 			{
 				const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());

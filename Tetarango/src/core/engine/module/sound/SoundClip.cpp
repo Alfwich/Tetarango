@@ -2,7 +2,7 @@
 
 #include "SDL_mixer.h"
 
-namespace MT
+namespace AWCore
 {
 	SoundClip::SoundClip(std::string path, std::shared_ptr<Asset> asset)
 	{

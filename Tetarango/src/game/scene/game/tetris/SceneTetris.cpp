@@ -36,7 +36,7 @@ namespace AWGame
 			return;
 		}
 
-		scoreText->setText("Score: " + MT::StringHelper::padLeft(std::to_string(score), 10, '0'));
+		scoreText->setText("Score: " + AWCore::StringHelper::padLeft(std::to_string(score), 10, '0'));
 	}
 
 	void SceneTetris::onInitialAttach()
@@ -49,7 +49,7 @@ namespace AWGame
 
 		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE, SDL_SCANCODE_0 }, weak_from_this());
 
-		keyRepeatTimer = modules->time->createTimer(MT::TimeScope::Game);
+		keyRepeatTimer = modules->time->createTimer(AWCore::TimeScope::Game);
 		keyRepeatTimer->start();
 
 
@@ -92,7 +92,7 @@ namespace AWGame
 		camera->name = "camera";
 		add(camera);
 
-		scoreText = std::make_shared<MT::Text>();
+		scoreText = std::make_shared<AWCore::Text>();
 		scoreText->name = "score-text";
 		scoreText->setTextColor(255, 255, 255);
 		scoreText->setFont("medium", 100);
@@ -100,7 +100,7 @@ namespace AWGame
 		scoreText->toRightOf(board, 10);
 		add(scoreText);
 
-		particleSystem = std::make_shared<MT::ParticleSystem>();
+		particleSystem = std::make_shared<AWCore::ParticleSystem>();
 		particleSystem->zIndex = -5;
 		particleSystem->name = "p-system";
 		particleSystem->setSize(modules->screen->getWidth() * 2.0, modules->screen->getHeight() * 2.0);
@@ -109,7 +109,7 @@ namespace AWGame
 		particleSystem->emitImmediately(40);
 		add(particleSystem);
 
-		blockParticleSystem = std::make_shared<MT::ParticleSystem>();
+		blockParticleSystem = std::make_shared<AWCore::ParticleSystem>();
 		blockParticleSystem->zIndex = -5;
 		blockParticleSystem->name = "p-b-system";
 		blockParticleSystem->matchSizeAndCenter(board);
@@ -121,13 +121,13 @@ namespace AWGame
 		board = findChildWithName<Board>("board");
 		previewBoard = findChildWithName<Board>("preview-board");
 		camera = findChildWithName<GameCamera>("camera");
-		scoreText = findChildWithName<MT::Text>("score-text");
-		particleSystem = findChildWithName<MT::ParticleSystem>("p-system");
+		scoreText = findChildWithName<AWCore::Text>("score-text");
+		particleSystem = findChildWithName<AWCore::ParticleSystem>("p-system");
 		particleSystem->emitImmediately(40);
-		blockParticleSystem = findChildWithName<MT::ParticleSystem>("p-b-system");
+		blockParticleSystem = findChildWithName<AWCore::ParticleSystem>("p-b-system");
 	}
 
-	std::shared_ptr<MT::SerializationClient> SceneTetris::doSerialize(MT::SerializationHint hint)
+	std::shared_ptr<AWCore::SerializationClient> SceneTetris::doSerialize(AWCore::SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__scene__", hint);
 		score = client->serializeInt("score", score);
@@ -193,7 +193,7 @@ namespace AWGame
 	{
 		if (id == saveScreenshotTimeoutId)
 		{
-			auto imageCatcher = std::make_shared<MT::CachedImage>();
+			auto imageCatcher = std::make_shared<AWCore::CachedImage>();
 			imageCatcher->setShouldSerializeImage(true);
 			imageCatcher->captureWholeScreen();
 
@@ -225,26 +225,6 @@ namespace AWGame
 	{
 		switch (key)
 		{
-		case SDL_SCANCODE_1:
-			board->enableFastFall();
-			break;
-
-		case SDL_SCANCODE_2:
-			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.25);
-			break;
-
-		case SDL_SCANCODE_3:
-			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 5.0);
-			break;
-
-		case SDL_SCANCODE_4:
-			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
-			break;
-
-		case SDL_SCANCODE_5:
-			modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1000.0);
-			break;
-
 		case SDL_SCANCODE_LEFT:
 			isLeftDown = true;
 			break;

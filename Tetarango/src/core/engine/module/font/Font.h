@@ -6,7 +6,7 @@
 #include <SDL_ttf.h>
 
 #include "engine/module/display/Screen.h"
-namespace MT
+namespace AWCore
 {
 
 	class FontContainer;

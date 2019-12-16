@@ -24,7 +24,7 @@ namespace AWGame
 
 	void Block::onInitialAttach()
 	{
-		MT::Animated::onInitialAttach();
+		AWCore::Animated::onInitialAttach();
 		setSize(64, 64);
 		setTexture(blockTextureName);
 		setAnimationSet(blockAnimationName);
@@ -33,10 +33,10 @@ namespace AWGame
 
 	void Block::onCreateChildren()
 	{
-		MT::Animated::onCreateChildren();
+		AWCore::Animated::onCreateChildren();
 	}
 
-	std::shared_ptr<MT::SerializationClient> Block::doSerialize(MT::SerializationHint hint)
+	std::shared_ptr<AWCore::SerializationClient> Block::doSerialize(AWCore::SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__block__", hint);
 

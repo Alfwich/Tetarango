@@ -10,14 +10,14 @@
 namespace AWGame
 {
 
-	class ScrollBarBasic : public BaseGui, public MT::Container
+	class ScrollBarBasic : public BaseGui, public AWCore::Container
 	{
 		int startMousePositionOnClick = 0;
 		double startMousePositionScrollPosition = 0.0;
 		bool isHovering = false, isPressed = false, wasPressed = false;
-		std::shared_ptr<MT::NineSlice> background;
-		std::shared_ptr<MT::NineSlice> scroller;
-		std::shared_ptr<MT::Transition> scrollerTransition;
+		std::shared_ptr<AWCore::NineSlice> background;
+		std::shared_ptr<AWCore::NineSlice> scroller;
+		std::shared_ptr<AWCore::Transition> scrollerTransition;
 		void updateScrollerPosition(bool instant = false);
 
 	public:
@@ -41,7 +41,7 @@ namespace AWGame
 		void onDetach();
 		void onLayoutChildren();
 		void checkIsHovering(int x, int y);
-		void onMouseButton(MT::MouseButton button, bool pressed);
+		void onMouseButton(AWCore::MouseButton button, bool pressed);
 		void onEnterFrame(double frameTime);
 
 		void setEnabled(bool flag);

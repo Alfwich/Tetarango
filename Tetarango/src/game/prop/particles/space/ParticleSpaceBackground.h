@@ -5,10 +5,10 @@
 namespace AWGame
 {
 
-	class ParticleSpaceBackground : public MT::Particle
+	class ParticleSpaceBackground : public AWCore::Particle
 	{
 	public:
-		ParticleSpaceBackground(std::shared_ptr<MT::TextureContainer> textureContainer);
+		ParticleSpaceBackground(std::shared_ptr<AWCore::TextureContainer> textureContainer);
 		void onEnterFrame(double deltaTime);
 	};
 

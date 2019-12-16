@@ -1,7 +1,7 @@
 #include "AnimationContainer.h"
 
 
-namespace MT
+namespace AWCore
 {
 	void AnimationContainer::bindTime(std::shared_ptr<Time> time)
 	{

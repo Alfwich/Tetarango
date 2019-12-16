@@ -10,7 +10,7 @@ resource_exclude_files = [".xcf"]
 dll_folders = ["Tetarango"]
 
 version_file_location = "Tetarango/src/config/GameConfig.h"
-package_prefix = "TET_"
+package_prefix = "TETARANGO_"
 output_folder = "packages"
 
 def getAppVersion():

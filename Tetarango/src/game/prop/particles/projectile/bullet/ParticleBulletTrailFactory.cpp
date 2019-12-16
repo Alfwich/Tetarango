@@ -7,7 +7,7 @@ namespace AWGame
 		enableSerialization<ParticleBulletTrailParticleFactory>();
 	}
 
-	std::shared_ptr<MT::Particle> ParticleBulletTrailParticleFactory::makeParticle(MT::ParticleCreationBundle& bundle)
+	std::shared_ptr<AWCore::Particle> ParticleBulletTrailParticleFactory::makeParticle(AWCore::ParticleCreationBundle& bundle)
 	{
 		const auto particle = std::make_shared<ParticleBulletTrail>(modules->texture);
 		particle->w = bundle.rect.w;
@@ -17,7 +17,7 @@ namespace AWGame
 		particle->r = bundle.rotation;
 		particle->totalLife = 100.0;
 		particle->timeLeft = 100.0;
-		particle->clip = MT::Rect(0, 0, 1, 1);
+		particle->clip = AWCore::Rect(0, 0, 1, 1);
 
 		return particle;
 	}

@@ -4,11 +4,11 @@
 
 namespace AWGame
 {
-	class ParticleHitFleshFactory : public MT::IParticleFactory
+	class ParticleHitFleshFactory : public AWCore::IParticleFactory
 	{
 	public:
 		ParticleHitFleshFactory();
-		std::shared_ptr<MT::Particle> makeParticle(MT::ParticleCreationBundle& bundle);
+		std::shared_ptr<AWCore::Particle> makeParticle(AWCore::ParticleCreationBundle& bundle);
 	};
 
 }

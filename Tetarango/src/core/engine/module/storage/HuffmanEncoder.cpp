@@ -7,7 +7,7 @@
 #include <sstream>
 #include "util/StringHelper.h"
 
-namespace MT
+namespace AWCore
 {
 
 	std::string HuffmanEncoder::encode(std::string input)

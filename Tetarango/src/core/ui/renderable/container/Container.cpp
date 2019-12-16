@@ -8,7 +8,7 @@ namespace
 	const auto debugBgRectName = "__debug__bg__";
 }
 
-namespace MT
+namespace AWCore
 {
 	Container::Container()
 	{
@@ -95,13 +95,13 @@ namespace MT
 	{
 		Renderable::doUpdateDebugChildren();
 
-		const auto existingBg = findChildWithName<MT::Rectangle>(debugBgRectName, false);
+		const auto existingBg = findChildWithName<AWCore::Rectangle>(debugBgRectName, false);
 		if (existingBg == nullptr)
 		{
-			const auto newBg = std::make_shared<MT::Rectangle>();
+			const auto newBg = std::make_shared<AWCore::Rectangle>();
 			newBg->name = debugBgRectName;
 			newBg->setAlpha(0.25);
-			newBg->setColor(MT::Color::random());
+			newBg->setColor(AWCore::Color::random());
 			newBg->zIndex = 1;
 			newBg->matchSizeAndCenter(this);
 			add(newBg);

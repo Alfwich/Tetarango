@@ -9,7 +9,7 @@
 #include "GamepadMappings.h"
 #include "engine/module/input/IInputListener.h"
 
-namespace MT
+namespace AWCore
 {
 
 	class GamepadIDBundle {

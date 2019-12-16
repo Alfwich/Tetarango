@@ -18,7 +18,7 @@
 
 #include "Tests.h"
 
-namespace MT
+namespace AWCore
 {
 	Application::Application()
 	{
@@ -63,7 +63,7 @@ namespace MT
 		modules->logger->log("Application::Init modules");
 		modules->onInit();
 
-		frameTimer = modules->time->createTimer(MT::TimeScope::ApplicationFrameTimer, true);
+		frameTimer = modules->time->createTimer(AWCore::TimeScope::ApplicationFrameTimer, true);
 		root = std::make_shared<DisplayRoot>();
 
 		return true;
@@ -95,9 +95,9 @@ namespace MT
 
 		if (gameConfig->getConfigBool(Config::Param::runTests))
 		{
-			MT::Logger::instance()->logCritical("Tests::Running tests");
+			AWCore::Logger::instance()->logCritical("Tests::Running tests");
 			MTTest::Tests::run(modules);
-			MT::Logger::instance()->logCritical("Tests::Done.");
+			AWCore::Logger::instance()->logCritical("Tests::Done.");
 		}
 
 		modules->logger->log("Application::Ready modules");
@@ -172,12 +172,12 @@ namespace MT
 		{
 			switch (e->code)
 			{
-			case MT::Events::QuitRequested:
+			case AWCore::Events::QuitRequested:
 				exit();
 				break;
 
-			case MT::Events::ReprovisionScreen:
-				const auto reprovisionScreenEvent = std::static_pointer_cast<MT::ReprovisionScreenApplicationEvent>(e);
+			case AWCore::Events::ReprovisionScreen:
+				const auto reprovisionScreenEvent = std::static_pointer_cast<AWCore::ReprovisionScreenApplicationEvent>(e);
 				if (e != nullptr)
 				{
 					screenConfig = reprovisionScreenEvent->config;

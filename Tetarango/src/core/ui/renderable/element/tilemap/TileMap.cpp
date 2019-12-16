@@ -1,6 +1,6 @@
 #include "TileMap.h"
 
-namespace MT
+namespace AWCore
 {
 
 	TileMap::TileMap()

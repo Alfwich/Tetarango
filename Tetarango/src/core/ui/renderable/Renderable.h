@@ -6,7 +6,7 @@
 #include "util/Rect.h"
 #include "util/Color.h"
 
-namespace MT
+namespace AWCore
 {
 	class ApplicationObject;
 

@@ -29,7 +29,7 @@ namespace AWGame
 		{
 			screenConfig.width = storageClient->readInt(displayWidthParamKey);
 			screenConfig.height = storageClient->readInt(displayHeightParamKey);
-			screenConfig.mode = (MT::ScreenModes)storageClient->readInt(displayModeParamKey);
+			screenConfig.mode = (AWCore::ScreenModes)storageClient->readInt(displayModeParamKey);
 			screenConfig.msaaSamples = storageClient->readInt(displayMSAAParamKey);
 			screenConfig.openGLCompatibilityMode = storageClient->readBool(displayOpenGLCompatibilityParamKey);
 			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
@@ -51,15 +51,15 @@ namespace AWGame
 	{
 		modules->screen->setClearColor(0, 0, 0);
 
-		modules->time->createTimeScope(MT::TimeScope::Game, 0.0);
-		modules->time->createTimeScope(MT::TimeScope::Menu, 1.0);
-		modules->time->createTimeScope(MT::TimeScope::Camera, 1.0);
+		modules->time->createTimeScope(AWCore::TimeScope::Game, 0.0);
+		modules->time->createTimeScope(AWCore::TimeScope::Menu, 1.0);
+		modules->time->createTimeScope(AWCore::TimeScope::Camera, 1.0);
 
 		const auto storageClient = modules->storage->getClient();
 
 		if (gameConfig->getConfigBool(Config::Param::hydrateOnLoad) && storageClient->hasKey("whole_scene_graph"))
 		{
-			masterSceneContainer = std::static_pointer_cast<MT::SceneContainer>(modules->serialization->hydrate(storageClient->readSring("whole_scene_graph")));
+			masterSceneContainer = std::static_pointer_cast<AWCore::SceneContainer>(modules->serialization->hydrate(storageClient->readSring("whole_scene_graph")));
 			root->add(masterSceneContainer);
 
 			if (!gameConfig->getConfigBool(Config::Param::launchToLastScene))
@@ -69,7 +69,7 @@ namespace AWGame
 		}
 		else
 		{
-			masterSceneContainer = std::make_shared<MT::SceneContainer>();
+			masterSceneContainer = std::make_shared<AWCore::SceneContainer>();
 			root->add(masterSceneContainer);
 
 			masterSceneContainer->add(std::make_shared<SceneSplash>());
@@ -133,13 +133,13 @@ namespace AWGame
 		{
 			screenConfig.width = 1024;
 			screenConfig.height = 768;
-			screenConfig.mode = MT::ScreenModes::Windowed;
+			screenConfig.mode = AWCore::ScreenModes::Windowed;
 		}
 		else
 		{
 			screenConfig.width = width;
 			screenConfig.height = height;
-			screenConfig.mode = MT::ScreenModes::Windowed;
+			screenConfig.mode = AWCore::ScreenModes::Windowed;
 		}
 
 		return true;

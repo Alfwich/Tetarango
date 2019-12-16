@@ -61,7 +61,7 @@ namespace AWGame
 		return gameFileStoragePrefix + std::to_string((int)path);
 	}
 
-	BaseScene::BaseScene(SceneGame name) : MT::Scene(config.game.at(name)) {}
+	BaseScene::BaseScene(SceneGame name) : AWCore::Scene(config.game.at(name)) {}
 
 	int BaseScene::getScreenWidth()
 	{
@@ -88,12 +88,12 @@ namespace AWGame
 		}
 	}
 
-	void BaseScene::transitionToSceneWithBundle(SceneGame scene, MT::SceneTransitionBundle & bundle)
+	void BaseScene::transitionToSceneWithBundle(SceneGame scene, AWCore::SceneTransitionBundle & bundle)
 	{
 		transitionToSceneWithBundle(config.game.at(scene), bundle);
 	}
 
-	void BaseScene::transitionToSceneWithBundle(std::string sceneName, MT::SceneTransitionBundle& bundle)
+	void BaseScene::transitionToSceneWithBundle(std::string sceneName, AWCore::SceneTransitionBundle& bundle)
 	{
 		const auto rootSceneContainer = getSceneContainer();
 
@@ -103,7 +103,7 @@ namespace AWGame
 		}
 	}
 
-	std::weak_ptr<MT::ApplicationObject> BaseScene::baseSceneWeakThisRef()
+	std::weak_ptr<AWCore::ApplicationObject> BaseScene::baseSceneWeakThisRef()
 	{
 		return std::dynamic_pointer_cast<ApplicationObject>(shared_from_this());
 	}

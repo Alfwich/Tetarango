@@ -2,7 +2,7 @@
 
 #include "SerializationTags.h"
 
-namespace MT
+namespace AWCore
 {
 	void SerializationClient::bindClient(SerializationClient* parentClient)
 	{

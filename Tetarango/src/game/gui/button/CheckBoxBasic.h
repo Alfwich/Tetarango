@@ -9,11 +9,11 @@
 namespace AWGame
 {
 
-	class CheckBoxBasic: public BaseGui, public MT::Container
+	class CheckBoxBasic: public BaseGui, public AWCore::Container
 	{
 		std::string text;
-		std::shared_ptr<MT::Animated> checkbox;
-		std::shared_ptr<MT::Text> label;
+		std::shared_ptr<AWCore::Animated> checkbox;
+		std::shared_ptr<AWCore::Text> label;
 		bool isHovering = false, isPressed = false;
 
 	public:
@@ -28,7 +28,7 @@ namespace AWGame
 		void onLayoutChildren();
 		void onDetach();
 		void checkIsHovering(int x, int y);
-		void onMouseButton(MT::MouseButton button, bool pressed);
+		void onMouseButton(AWCore::MouseButton button, bool pressed);
 		void onEnterFrame(double frameTime);
 
 		std::weak_ptr<ApplicationObject> clickListener;

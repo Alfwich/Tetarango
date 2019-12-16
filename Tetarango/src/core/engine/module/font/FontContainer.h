@@ -8,7 +8,7 @@
 #include "engine/module/IBaseModule.h"
 #include "engine/module/asset/Asset.h"
 
-namespace MT
+namespace AWCore
 {
 	class Font;
 

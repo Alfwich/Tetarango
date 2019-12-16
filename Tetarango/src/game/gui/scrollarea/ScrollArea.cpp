@@ -43,7 +43,7 @@ namespace AWGame
 
 	void ScrollArea::onCreateChildren()
 	{
-		container = std::make_shared<MT::ScrollContainer>();
+		container = std::make_shared<AWCore::ScrollContainer>();
 		container->name = containerId;
 		container->setExpandToChildren(true);
 		add(container);
@@ -60,7 +60,7 @@ namespace AWGame
 
 	void ScrollArea::onChildrenHydrated()
 	{
-		container = findChildWithName<MT::ScrollContainer>(containerId);
+		container = findChildWithName<AWCore::ScrollContainer>(containerId);
 		scroller = findChildWithName<ScrollBarBasic>(scrollerId);
 		scroller->scrollListener = weak_from_this();
 	}

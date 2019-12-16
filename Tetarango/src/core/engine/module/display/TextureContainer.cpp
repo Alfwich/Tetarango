@@ -1,6 +1,6 @@
 #include "TextureContainer.h"
 
-namespace MT
+namespace AWCore
 {
 	void TextureContainer::bindScreen(std::shared_ptr<Screen> screen)
 	{

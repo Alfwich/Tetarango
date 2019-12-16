@@ -46,8 +46,8 @@ namespace AWGame
 	{
 		modules->input->keyboard->registerKey(SDL_SCANCODE_ESCAPE, baseSceneWeakThisRef());
 
-		setTimeScope(MT::TimeScope::Game);
-		modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+		setTimeScope(AWCore::TimeScope::Game);
+		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 0.0);
 
 		const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
 
@@ -86,7 +86,7 @@ namespace AWGame
 		gameMainMenu->name = mainMenuId;
 		gameMainMenu->zIndex = 18;
 		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		gameMainMenu->renderPositionMode = MT::RenderPositionMode::Absolute;
+		gameMainMenu->renderPositionMode = AWCore::RenderPositionMode::Absolute;
 		gameMainMenu->visible = false;
 		add(gameMainMenu);
 
@@ -97,11 +97,11 @@ namespace AWGame
 		globalTransition->zIndex = 20;
 		globalTransition->listener = std::dynamic_pointer_cast<INotifyOnFade>(shared_from_this());
 		globalTransition->setSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
-		globalTransition->renderPositionMode = MT::RenderPositionMode::Absolute;
+		globalTransition->renderPositionMode = AWCore::RenderPositionMode::Absolute;
 		add(globalTransition);
 
-		gameLabel = std::make_shared<MT::Text>();
-		gameLabel->setTextRenderMode(MT::TextRenderMode::Fast);
+		gameLabel = std::make_shared<AWCore::Text>();
+		gameLabel->setTextRenderMode(AWCore::TextRenderMode::Fast);
 		gameLabel->setFont("medium", 80);
 		int i = serializationClient->getInt(storagePath(StorePaths::SlotId));
 		gameLabel->setTextColor(0, 0, 0xff);
@@ -109,7 +109,7 @@ namespace AWGame
 		gameLabel->setPosition(gameLabel->getWidth(), gameLabel->getHeight());
 		add(gameLabel);
 
-		masterSceneContainer = std::make_shared<MT::SceneContainer>();
+		masterSceneContainer = std::make_shared<AWCore::SceneContainer>();
 		masterSceneContainer->name = masterSceneContainerId;
 		masterSceneContainer->notifyOnTransition = weak_from_this();
 		add(masterSceneContainer);
@@ -117,7 +117,7 @@ namespace AWGame
 		masterSceneContainer->add(std::make_shared<SceneTetris>());
 		masterSceneContainer->add(std::make_shared<SceneOptionsMenu>());
 
-		globalParticleSystem = std::make_shared<MT::ParticleSystem>();
+		globalParticleSystem = std::make_shared<AWCore::ParticleSystem>();
 		globalParticleSystem->name = starSystemId;
 		globalParticleSystem->setGlobalReceiver(true);
 		add(globalParticleSystem);
@@ -140,8 +140,8 @@ namespace AWGame
 
 	void SceneMainGame::onChildrenHydrated()
 	{
-		masterSceneContainer = findChildWithName<MT::SceneContainer>(masterSceneContainerId);
-		globalParticleSystem = findChildWithName<MT::ParticleSystem>(starSystemId);
+		masterSceneContainer = findChildWithName<AWCore::SceneContainer>(masterSceneContainerId);
+		globalParticleSystem = findChildWithName<AWCore::ParticleSystem>(starSystemId);
 		gameMainMenu = findChildWithName<GameMainMenu>(mainMenuId);
 		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		gameMainMenu->hide();
@@ -154,12 +154,12 @@ namespace AWGame
 		hud = findChildWithName<BaseHud>(hudId);
 	}
 
-	void SceneMainGame::onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code)
+	void SceneMainGame::onWorkError(AWCore::WORKER_ID workerId, WorkerTaskCode code)
 	{
 		// TODO
 	}
 
-	void SceneMainGame::onWorkDone(MT::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<MT::AsyncResultBundle> result)
+	void SceneMainGame::onWorkDone(AWCore::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AWCore::AsyncResultBundle> result)
 	{
 		switch (code)
 		{
@@ -172,7 +172,7 @@ namespace AWGame
 
 			if (backOutToMainMenuAfterSave && hasFinishedTransition)
 			{
-				const auto applicationSceneContainer = findFirstInParentChain<MT::SceneContainer>();
+				const auto applicationSceneContainer = findFirstInParentChain<AWCore::SceneContainer>();
 				modules->storage->cleanupScopeAsync(storageScopeName);
 				removeFromParent();
 				applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
@@ -192,7 +192,7 @@ namespace AWGame
 
 	void SceneMainGame::onFadeOut()
 	{
-		this->modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 1.0);
+		this->modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
 		hasFinishedTransition = true;
 	}
 
@@ -202,7 +202,7 @@ namespace AWGame
 
 		if (backOutToMainMenuAfterSave && hasSavedData)
 		{
-			const auto applicationSceneContainer = findFirstInParentChain<MT::SceneContainer>();
+			const auto applicationSceneContainer = findFirstInParentChain<AWCore::SceneContainer>();
 			removeFromParent();
 			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 			hasFinishedTransition = true;
@@ -211,7 +211,7 @@ namespace AWGame
 		{
 			masterSceneContainer->transitionToSceneWithBundle(nextSceneName, transitionBundle);
 			nextSceneName = std::string();
-			transitionBundle = MT::SceneTransitionBundle();
+			transitionBundle = AWCore::SceneTransitionBundle();
 			globalTransition->fadeOut();
 		}
 		else
@@ -232,15 +232,15 @@ namespace AWGame
 
 	void SceneMainGame::transitionToScene(std::string scene)
 	{
-		MT::SceneTransitionBundle bundle;
+		AWCore::SceneTransitionBundle bundle;
 		transitionToSceneWithBundle(scene, bundle);
 	}
 
-	void SceneMainGame::transitionToSceneWithBundle(std::string scene, MT::SceneTransitionBundle& bundle)
+	void SceneMainGame::transitionToSceneWithBundle(std::string scene, AWCore::SceneTransitionBundle& bundle)
 	{
 		hasFinishedTransition = false;
 
-		this->modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+		this->modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 0.0);
 		transitionBundle = bundle;
 		nextSceneName = scene;
 		globalTransition->fadeIn();
@@ -251,7 +251,7 @@ namespace AWGame
 		backOutToMainMenuAfterSave = true;
 		hasFinishedTransition = false;
 
-		this->modules->time->changeTimeFactorForScope(MT::TimeScope::Game, 0.0);
+		this->modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 0.0);
 		saveGameData();
 		globalTransition->fadeIn();
 	}
@@ -300,13 +300,13 @@ namespace AWGame
 		gameMainMenu->show();
 	}
 
-	std::shared_ptr<MT::SerializationClient> SceneMainGame::doSerialize(MT::SerializationHint hint)
+	std::shared_ptr<AWCore::SerializationClient> SceneMainGame::doSerialize(AWCore::SerializationHint hint)
 	{
 		if (!nextSceneName.empty())
 		{
 			masterSceneContainer->transitionToSceneWithBundle(nextSceneName, transitionBundle);
 			nextSceneName = std::string();
-			transitionBundle = MT::SceneTransitionBundle();
+			transitionBundle = AWCore::SceneTransitionBundle();
 		}
 
 		const auto client = serializationClient->getClient("scene_main_game", hint);

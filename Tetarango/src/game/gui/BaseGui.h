@@ -36,8 +36,8 @@ namespace AWGame
 		BaseGui(GuiScrollBar scrollBar);
 		BaseGui(GuiScrollArea scrollArea);
 
-		std::weak_ptr<MT::ApplicationObject> clickListener;
-		std::weak_ptr<MT::ApplicationObject> scrollListener;
+		std::weak_ptr<AWCore::ApplicationObject> clickListener;
+		std::weak_ptr<AWCore::ApplicationObject> scrollListener;
 	};
 
 }

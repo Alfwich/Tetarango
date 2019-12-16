@@ -8,7 +8,7 @@ namespace AWGame
 
 	class SceneSavedGamesMenu : public BaseScene
 	{
-		std::shared_ptr<MT::Text> savedGamesMenuTitle;
+		std::shared_ptr<AWCore::Text> savedGamesMenuTitle;
 		std::shared_ptr<ButtonBasic> saveSlot1;
 		std::shared_ptr<ButtonBasic> saveSlot2;
 		std::shared_ptr<ButtonBasic> saveSlot3;
@@ -29,8 +29,8 @@ namespace AWGame
 
 		void onButtonClicked(int id);
 
-		void onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code);
-		void onWorkDone(MT::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<MT::AsyncResultBundle> result);
+		void onWorkError(AWCore::WORKER_ID workerId, WorkerTaskCode code);
+		void onWorkDone(AWCore::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AWCore::AsyncResultBundle> result);
 	};
 
 }

@@ -4,7 +4,7 @@
 #include "engine/ApplicationObject.h"
 #include "engine/module/thread/INotifyOnCompletion.h"
 
-namespace MT
+namespace AWCore
 {
 	class SceneContainer;
 

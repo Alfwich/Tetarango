@@ -8,7 +8,7 @@
 namespace AWGame
 {
 
-	class BaseScene : public MT::Scene, public IGuiListener
+	class BaseScene : public AWCore::Scene, public IGuiListener
 	{
 	protected:
 		static const Scenes& getScenes();
@@ -31,8 +31,8 @@ namespace AWGame
 		virtual void transitionToScene(SceneGame scene);
 		virtual void transitionToScene(std::string sceneName);
 
-		virtual void transitionToSceneWithBundle(SceneGame scene, MT::SceneTransitionBundle& bundle);
-		virtual void transitionToSceneWithBundle(std::string sceneName, MT::SceneTransitionBundle& bundle);
+		virtual void transitionToSceneWithBundle(SceneGame scene, AWCore::SceneTransitionBundle& bundle);
+		virtual void transitionToSceneWithBundle(std::string sceneName, AWCore::SceneTransitionBundle& bundle);
 
 		std::weak_ptr<ApplicationObject> baseSceneWeakThisRef();
 

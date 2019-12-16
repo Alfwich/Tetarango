@@ -1,6 +1,6 @@
 #include "TextureText.h"
 
-namespace MT
+namespace AWCore
 {
 	TextureText::~TextureText()
 	{

@@ -19,14 +19,14 @@ namespace AWGame
 	class SceneMainGame : public BaseScene, public INotifyOnFade
 	{
 		std::shared_ptr<TransitionFade> globalTransition;
-		std::shared_ptr<MT::ParticleSystem> globalParticleSystem;
-		std::shared_ptr<MT::SceneContainer> masterSceneContainer;
-		std::shared_ptr<MT::Text> gameLabel;
+		std::shared_ptr<AWCore::ParticleSystem> globalParticleSystem;
+		std::shared_ptr<AWCore::SceneContainer> masterSceneContainer;
+		std::shared_ptr<AWCore::Text> gameLabel;
 		std::shared_ptr<GameMainMenu> gameMainMenu;
 
 		std::shared_ptr<BaseHud> hud;
 
-		MT::SceneTransitionBundle transitionBundle;
+		AWCore::SceneTransitionBundle transitionBundle;
 		std::string getSaveSlotFilePath();
 		std::string storageScopeName, nextSceneName;
 		bool isSavingData = false, hasSavedData = false, hasFinishedTransition = false, backOutToMainMenuAfterSave = false, menuEnabled = false;
@@ -39,13 +39,13 @@ namespace AWGame
 		void onDisplayProvisioned();
 		void onChildrenHydrated();
 		void onKeyPressed(SDL_Scancode key);
-		void onWorkError(MT::WORKER_ID workerId, WorkerTaskCode code);
-		void onWorkDone(MT::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<MT::AsyncResultBundle> result);
+		void onWorkError(AWCore::WORKER_ID workerId, WorkerTaskCode code);
+		void onWorkDone(AWCore::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AWCore::AsyncResultBundle> result);
 		void onFadeOut();
 		void onFadeIn();
 
 		bool isTransitioning();
-		void transitionToSceneWithBundle(std::string scene, MT::SceneTransitionBundle& bundle);
+		void transitionToSceneWithBundle(std::string scene, AWCore::SceneTransitionBundle& bundle);
 		void transitionToScene(SceneGame scene);
 		void transitionToScene(std::string scene);
 		void backOutToMainMenu();
@@ -56,7 +56,7 @@ namespace AWGame
 		void showOptions();
 		void hideOptions();
 
-		std::shared_ptr<MT::SerializationClient> doSerialize(MT::SerializationHint hint);
+		std::shared_ptr<AWCore::SerializationClient> doSerialize(AWCore::SerializationHint hint);
 	};
 
 }

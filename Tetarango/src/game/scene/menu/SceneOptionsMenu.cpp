@@ -44,7 +44,7 @@ namespace AWGame
 
 	void SceneOptionsMenu::onCreateChildren()
 	{
-		optionsMenuTitle = std::make_shared<MT::Text>();
+		optionsMenuTitle = std::make_shared<AWCore::Text>();
 		optionsMenuTitle->setFont("medium", 28);
 		optionsMenuTitle->setText("Options");
 		add(optionsMenuTitle);
@@ -78,7 +78,7 @@ namespace AWGame
 		{
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
-			if (config.mode == MT::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+			if (config.mode == AWCore::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
 				resolutionButton->setEnabled(false);
 			}
@@ -101,19 +101,19 @@ namespace AWGame
 
 		fullscreenCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenCheckbox->setText("Fullscreen");
-		fullscreenCheckbox->setChecked(config.mode == MT::ScreenModes::Fullscreen);
+		fullscreenCheckbox->setChecked(config.mode == AWCore::ScreenModes::Fullscreen);
 		fullscreenCheckbox->clickListener = weak_from_this();
 		add(fullscreenCheckbox);
 
 		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
-		fullscreenDesktopCheckbox->setChecked(config.mode == MT::ScreenModes::FullscreenDesktop);
+		fullscreenDesktopCheckbox->setChecked(config.mode == AWCore::ScreenModes::FullscreenDesktop);
 		fullscreenDesktopCheckbox->clickListener = weak_from_this();
 		add(fullscreenDesktopCheckbox);
 
 		windowedCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		windowedCheckbox->setText("Window");
-		windowedCheckbox->setChecked(config.mode == MT::ScreenModes::Windowed);
+		windowedCheckbox->setChecked(config.mode == AWCore::ScreenModes::Windowed);
 		windowedCheckbox->clickListener = weak_from_this();
 		add(windowedCheckbox);
 
@@ -171,15 +171,15 @@ namespace AWGame
 		musicVolScrollBar->scrollListener = weak_from_this();
 		add(musicVolScrollBar);
 
-		masterVolLabel = std::make_shared<MT::Text>();
+		masterVolLabel = std::make_shared<AWCore::Text>();
 		masterVolLabel->setFont("medium", 28);
 		add(masterVolLabel);
 
-		generalVolLabel = std::make_shared<MT::Text>();
+		generalVolLabel = std::make_shared<AWCore::Text>();
 		generalVolLabel->setFont("medium", 28);
 		add(generalVolLabel);
 
-		musicVolLabel = std::make_shared<MT::Text>();
+		musicVolLabel = std::make_shared<AWCore::Text>();
 		musicVolLabel->setFont("medium", 28);
 		add(musicVolLabel);
 
@@ -208,7 +208,7 @@ namespace AWGame
 		resolutionScrollArea->floorAlignSelf();
 		{
 			auto r = resolutionScrollArea->getRect();
-			resolutionScrollArea->setClipRect(MT::Rect(0.0, 0.0, r.w + 30.0, r.h));
+			resolutionScrollArea->setClipRect(AWCore::Rect(0.0, 0.0, r.w + 30.0, r.h));
 		}
 
 		fullscreenCheckbox->toRightTopOf(resolutionScrollArea, optionsXOffset);
@@ -267,7 +267,7 @@ namespace AWGame
 		auto shouldNotifyApplication = false;
 		if (id == resetButton->getId())
 		{
-			config = MT::ScreenConfig();
+			config = AWCore::ScreenConfig();
 			modules->sound->setMasterVolume(1.0);
 			modules->sound->setEffectVolume(0.8);
 			modules->sound->setMusicVolume(0.6);
@@ -281,17 +281,17 @@ namespace AWGame
 
 		if (id == fullscreenCheckbox->getId())
 		{
-			shouldEnableApply = setScreenMode(MT::ScreenModes::Fullscreen);
+			shouldEnableApply = setScreenMode(AWCore::ScreenModes::Fullscreen);
 		}
 
 		if (id == windowedCheckbox->getId())
 		{
-			shouldEnableApply = setScreenMode(MT::ScreenModes::Windowed);
+			shouldEnableApply = setScreenMode(AWCore::ScreenModes::Windowed);
 		}
 
 		if (id == fullscreenDesktopCheckbox->getId())
 		{
-			shouldEnableApply = setScreenMode(MT::ScreenModes::FullscreenDesktop);
+			shouldEnableApply = setScreenMode(AWCore::ScreenModes::FullscreenDesktop);
 		}
 
 		if (id == msaaOffCheckbox->getId())
@@ -337,15 +337,15 @@ namespace AWGame
 			if (resolutionButton->getId() == id && buttonUpperBound <= containerLowerBound && buttonLowerBound >= containerUpperBound)
 			{
 				auto newResolution = resolutionButton->getText();
-				config.width = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
-				config.height = MT::StringHelper::getDisplayComponentForDisplayString(&newResolution, 1);
+				config.width = AWCore::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
+				config.height = AWCore::StringHelper::getDisplayComponentForDisplayString(&newResolution, 1);
 				shouldEnableApply = true;
 			}
 		}
 
 		for (const auto resolutionButton : resolutionButtons)
 		{
-			if (config.mode == MT::ScreenModes::FullscreenDesktop || (resolutionButton->getText() == std::to_string(config.width) + "x" + std::to_string(config.height)))
+			if (config.mode == AWCore::ScreenModes::FullscreenDesktop || (resolutionButton->getText() == std::to_string(config.width) + "x" + std::to_string(config.height)))
 			{
 				resolutionButton->setEnabled(false);
 			}
@@ -362,7 +362,7 @@ namespace AWGame
 
 		if (shouldNotifyApplication)
 		{
-			modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
+			modules->event->pushEvent(std::make_shared<AWCore::ReprovisionScreenApplicationEvent>(config));
 			applyButton->setEnabled(false);
 		}
 	}
@@ -374,7 +374,7 @@ namespace AWGame
 		case SDL_SCANCODE_RETURN:
 			if (applyButton->getEnabled() == true)
 			{
-				modules->event->pushEvent(std::make_shared<MT::ReprovisionScreenApplicationEvent>(config));
+				modules->event->pushEvent(std::make_shared<AWCore::ReprovisionScreenApplicationEvent>(config));
 				applyButton->setEnabled(false);
 			}
 			break;
@@ -453,7 +453,7 @@ namespace AWGame
 		return true;
 	}
 
-	bool SceneOptionsMenu::setScreenMode(MT::ScreenModes mode)
+	bool SceneOptionsMenu::setScreenMode(AWCore::ScreenModes mode)
 	{
 		if (config.mode == mode)
 		{
@@ -466,15 +466,15 @@ namespace AWGame
 
 		switch (mode)
 		{
-		case MT::ScreenModes::Fullscreen:
+		case AWCore::ScreenModes::Fullscreen:
 			fullscreenCheckbox->setChecked(true);
 			break;
 
-		case MT::ScreenModes::Windowed:
+		case AWCore::ScreenModes::Windowed:
 			windowedCheckbox->setChecked(true);
 			break;
 
-		case MT::ScreenModes::FullscreenDesktop:
+		case AWCore::ScreenModes::FullscreenDesktop:
 			fullscreenDesktopCheckbox->setChecked(true);
 			break;
 		}
