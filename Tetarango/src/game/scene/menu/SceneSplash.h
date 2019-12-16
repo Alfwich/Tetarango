@@ -30,6 +30,7 @@ namespace AWGame
 		SceneSplash();
 
 		void onLoadResources();
+
 		void onCreateChildren();
 		void onInitialAttach();
 		void onAttach();

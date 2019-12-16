@@ -8,7 +8,8 @@ namespace
 {
 	const auto sdlLogoTextureName = "splash-sdl-logo";
 	const auto openGLLogoTextureName = "splash-opengl-logo";
-	const auto loadingPatternTextureName = "splash-loading-pattern";
+	const auto loadingPattenTextureName = "splash-loading-pattern";
+	const auto awGamesLogoTextureName = "splash-aw-games-logo";
 	const auto verticalOffset = -128.0;
 	const auto splashTransitionTimeInSeconds = 16.5;
 	const auto fadeInHorMovement = 250.0;
@@ -38,7 +39,8 @@ namespace AWGame
 	{
 		modules->texture->loadTexture("res/game/img/splash/sdl-logo.png", sdlLogoTextureName);
 		modules->texture->loadTexture("res/game/img/splash/opengl-logo.png", openGLLogoTextureName);
-		modules->texture->loadTexture("res/game/img/splash/loading-pattern.png", loadingPatternTextureName);
+		modules->texture->loadTexture("res/game/img/splash/loading-pattern.png", loadingPattenTextureName);
+		modules->texture->loadTexture("res/game/img/splash/aw-games-logo.png", awGamesLogoTextureName);
 	}
 
 	void SceneSplash::onCreateChildren()
@@ -64,7 +66,7 @@ namespace AWGame
 		add(titleGame);
 
 		loadingProgressBar = std::make_shared<AWCore::Element>();
-		loadingProgressBar->setTexture(loadingPatternTextureName);
+		loadingProgressBar->setTexture(loadingPattenTextureName);
 		add(loadingProgressBar);
 	}
 
@@ -143,6 +145,7 @@ namespace AWGame
 				splashText->setFontSize(titleFontSizeBig);
 				const auto orgName = modules->gameConfig->getConfigString(Config::Param::organizationName);
 				splashText->setText(orgName + " Presents");
+				splashImage->setTexture(awGamesLogoTextureName);
 				if (splashText->getWidth() > getScreenWidth())
 				{
 					splashText->setFontSize(titleFontSizeSmall);
@@ -151,15 +154,19 @@ namespace AWGame
 		}
 		else if (state == 4)
 		{
-			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0);
+			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
 			splashText->setAlpha(scaledMainPositionIn);
+			splashImage->toTopOf(splashText);
+			splashImage->setAlpha(scaledMainPositionIn);
 
 			tryToGotoNextState(position, 2.0);
 		}
 		else if (state == 5)
 		{
-			splashText->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0);
+			splashText->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
+			splashImage->toTopOf(splashText);
+			splashImage->setAlpha(1.0 - scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
 			{
