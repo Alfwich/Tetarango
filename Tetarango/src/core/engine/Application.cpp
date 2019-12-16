@@ -33,7 +33,7 @@ namespace AWCore
 		modules = std::make_shared<SystemModuleBundle>();
 		modules->logger->log("Application::Run");
 
-		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_AUDIO) != 0)
+		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
 			modules->logger->logFatal("Application::SDL::Failed to init: " + std::string(SDL_GetError()));
 		}
@@ -141,7 +141,6 @@ namespace AWCore
 		ready();
 		while (running)
 		{
-			startFrameTime = modules->time->getHighResolutionTicks();
 			double frameTime = std::min(100.0, frameTimer->getTicksAndRestart());
 			processApplicationEvents();
 			modules->event->processEnterFrames(frameTime);
@@ -170,6 +169,8 @@ namespace AWCore
 
 	void Application::processApplicationEvents()
 	{
+		startFrameTime = Time::getHighResolutionTicks();
+
 		for (auto e : modules->event->processEvents())
 		{
 			switch (e->code)
@@ -194,7 +195,13 @@ namespace AWCore
 	{
 		if (screenConfig.frameLimiter > 0)
 		{
-			while (modules->time->getHighResolutionTicks() - startFrameTime < targetFrameTime) {}
+			const auto timeDiff = targetFrameTime - (Time::getHighResolutionTicks() - startFrameTime);
+			if (timeDiff > 1.0)
+			{
+				SDL_Delay((int)std::floor(timeDiff) - 1);
+			}
+
+			while (Time::getHighResolutionTicks() - startFrameTime < targetFrameTime) {}
 		}
 	}
 

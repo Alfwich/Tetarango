@@ -2,10 +2,16 @@
 
 namespace AWCore
 {
+	Uint64 Time::startHighPerformancePosition = 0;
+
+	double Time::getHighResolutionTicks()
+	{
+		return (SDL_GetPerformanceCounter() - startHighPerformancePosition) / (double)SDL_GetPerformanceFrequency() * 1000.0;
+	}
 
 	void Time::onInit()
 	{
-		startHighPerformancePosition = SDL_GetPerformanceCounter();
+		Time::startHighPerformancePosition = SDL_GetPerformanceCounter();
 		createTimeScope(TimeScope::Global, 1.0);
 		createTimeScope(TimeScope::ApplicationFrameTimer, 1.0);
 	}
@@ -76,10 +82,6 @@ namespace AWCore
 		return SDL_GetTicks();
 	}
 
-	double Time::getHighResolutionTicks()
-	{
-		return (SDL_GetPerformanceCounter() - startHighPerformancePosition) / (double)SDL_GetPerformanceFrequency() * 1000.0;
-	}
 
 	void Time::delay(Uint32 ms)
 	{
