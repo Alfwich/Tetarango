@@ -21,6 +21,7 @@ namespace AWCore
 	class Time : public IBaseModule
 	{
 		std::unordered_map<TimeScope, std::shared_ptr<TimeScopeBundle>> timeScopes;
+		Uint64 startHighPerformancePosition;
 
 	public:
 		void createTimeScope(TimeScope scopeName, double timeFactor);
@@ -30,6 +31,10 @@ namespace AWCore
 		double getGlobalTimeFactor();
 		double getComputedTimeFactor(TimeScope compositeScopeName);
 		bool hasTimeScope(TimeScope scopeName);
+
+		Uint32 getTicks();
+		double getHighResolutionTicks();
+		void delay(Uint32 ms);
 
 		std::shared_ptr<Timer> createTimer();
 		std::shared_ptr<Timer> createTimer(TimeScope scopeName, bool isUnstoppable = false);

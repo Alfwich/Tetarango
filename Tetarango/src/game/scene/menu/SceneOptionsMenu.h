@@ -48,6 +48,8 @@ namespace AWGame
 		bool setScreenMode(AWCore::ScreenModes mode);
 		void setDynamicLabels();
 		std::string volumeToString(double volume);
+		int positionToFrameLimit(double position);
+		double frameLimitToPosition(int limit);
 
 	public:
 		SceneOptionsMenu();

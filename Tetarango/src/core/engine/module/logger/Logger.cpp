@@ -207,18 +207,18 @@ namespace AWCore
 
 	std::string Logger::getTimestamp()
 	{
-		auto time = SDL_GetTicks();
-		unsigned int hours = time / 3600000;
-		time -= hours * 3600000;
-		unsigned int mins = time / 60000;
-		time -= mins * 60000;
-		unsigned int secs = time / 1000;
-		time -= secs * 1000;
+		auto t = time->getTicks();
+		unsigned int hours = t / 3600000;
+		t -= hours * 3600000;
+		unsigned int mins = t / 60000;
+		t -= mins * 60000;
+		unsigned int secs = t / 1000;
+		t -= secs * 1000;
 
 		return convertAndPad(hours, 2, '0')
 			+ ':' + convertAndPad(mins, 2, '0')
 			+ ':' + convertAndPad(secs, 2, '0')
-			+ ':' + convertAndPad(time, 4, '0');
+			+ ':' + convertAndPad(t, 4, '0');
 	}
 }
 

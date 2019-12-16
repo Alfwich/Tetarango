@@ -25,13 +25,13 @@ namespace AWCore
 	{
 		if (paused)
 		{
-			unsigned int delta = SDL_GetTicks() - pausedTicks;
+			unsigned int delta = time->getTicks() - pausedTicks;
 			currentTicks += delta;
 			paused = false;
 		}
 		else
 		{
-			currentTicks = SDL_GetTicks();
+			currentTicks = time->getTicks();
 			running = true;
 		}
 	}
@@ -64,7 +64,7 @@ namespace AWCore
 			return;
 		}
 
-		pausedTicks = SDL_GetTicks();
+		pausedTicks = time->getTicks();
 		paused = true;
 	}
 
@@ -80,12 +80,12 @@ namespace AWCore
 
 	double Timer::getTicks()
 	{
-		return (SDL_GetTicks() - currentTicks) * getTimeFactor();
+		return (time->getTicks() - currentTicks) * getTimeFactor();
 	}
 
 	double Timer::getTicksAndRestart()
 	{
-		unsigned int currentTicks = SDL_GetTicks();
+		unsigned int currentTicks = time->getTicks();
 		unsigned int result = currentTicks - this->currentTicks;
 		this->currentTicks = currentTicks;
 		return (result)* getTimeFactor();

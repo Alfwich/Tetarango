@@ -64,7 +64,6 @@ namespace AWCore
 		modules->onInit();
 
 		frameTimer = modules->time->createTimer(AWCore::TimeScope::ApplicationFrameTimer, true);
-		limitTimer = modules->time->createTimer(AWCore::TimeScope::ApplicationFrameLimitTimer, true);
 		root = std::make_shared<DisplayRoot>();
 
 		return true;
@@ -142,8 +141,8 @@ namespace AWCore
 		ready();
 		while (running)
 		{
+			startFrameTime = modules->time->getHighResolutionTicks();
 			double frameTime = std::min(100.0, frameTimer->getTicksAndRestart());
-			limitTimer->start();
 			processApplicationEvents();
 			modules->event->processEnterFrames(frameTime);
 			render();
@@ -195,9 +194,7 @@ namespace AWCore
 	{
 		if (screenConfig.frameLimiter > 0)
 		{
-			const auto expected = 1000.0 / std::max(20, screenConfig.frameLimiter);
-			while (limitTimer->getTicks() < expected) {}
-			limitTimer->start();
+			while (modules->time->getHighResolutionTicks() - startFrameTime < targetFrameTime) {}
 		}
 	}
 
@@ -218,6 +215,12 @@ namespace AWCore
 		if (modules->screen->init(screenConfig, gameConfig->getConfigString(Config::Param::gameName)))
 		{
 			modules->texture->rebindAllTextures();
+
+			if (screenConfig.frameLimiter > 0)
+			{
+				targetFrameTime = (1000.0 / screenConfig.frameLimiter);
+			}
+
 			onProvisionedScreen();
 		}
 		else if (onFailedToProvisionScreen())

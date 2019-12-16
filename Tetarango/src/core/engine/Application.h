@@ -19,7 +19,8 @@ namespace AWCore
 	class Application : public IInputListener, public INotifyOnCompletion, public std::enable_shared_from_this<Application>
 	{
 	private:
-		std::shared_ptr<Timer> frameTimer, limitTimer;
+		std::shared_ptr<Timer> frameTimer;
+		double startFrameTime = 0.0, targetFrameTime = 0.0;
 		bool running = false;
 
 		void processApplicationEvents();

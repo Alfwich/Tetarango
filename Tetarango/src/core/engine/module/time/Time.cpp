@@ -5,9 +5,9 @@ namespace AWCore
 
 	void Time::onInit()
 	{
+		startHighPerformancePosition = SDL_GetPerformanceCounter();
 		createTimeScope(TimeScope::Global, 1.0);
 		createTimeScope(TimeScope::ApplicationFrameTimer, 1.0);
-		createTimeScope(TimeScope::ApplicationFrameLimitTimer, 1.0);
 	}
 
 	void Time::createTimeScope(TimeScope scopeName, double timeFactor)
@@ -69,6 +69,21 @@ namespace AWCore
 	bool Time::hasTimeScope(TimeScope scopeName)
 	{
 		return timeScopes.count(scopeName) == 1;
+	}
+
+	Uint32 Time::getTicks()
+	{
+		return SDL_GetTicks();
+	}
+
+	double Time::getHighResolutionTicks()
+	{
+		return (SDL_GetPerformanceCounter() - startHighPerformancePosition) / (double)SDL_GetPerformanceFrequency() * 1000.0;
+	}
+
+	void Time::delay(Uint32 ms)
+	{
+		SDL_Delay(ms);
 	}
 
 	std::shared_ptr<Timer> Time::createTimer()

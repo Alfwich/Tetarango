@@ -1,11 +1,21 @@
 #include "SceneOptionsMenu.h"
-#include "gui/camera/GameCamera.h"
 #include "scene/game/SceneMainGame.h"
 
 namespace
 {
 	const auto testMusicName = "tetris-music";
 	const auto testSoundName = "tetris-clear-row";
+	const std::vector<int> frameLimits = {
+		0,
+		30,
+		60,
+		90,
+		120,
+		144,
+		165,
+		200,
+		240
+	};
 }
 
 namespace AWGame
@@ -179,6 +189,7 @@ namespace AWGame
 		frameLimiterScrollBar = std::make_shared<ScrollBarBasic>();
 		frameLimiterScrollBar->setSize(200.0, 20.0);
 		frameLimiterScrollBar->setHorizontal(true);
+		frameLimiterScrollBar->clickListener = weak_from_this();
 		frameLimiterScrollBar->scrollListener = weak_from_this();
 		add(frameLimiterScrollBar);
 
@@ -201,7 +212,7 @@ namespace AWGame
 		masterVolScrollBar->setScrollPositionInstantly(modules->sound->getMasterVolume());
 		generalVolScrollBar->setScrollPositionInstantly(modules->sound->getEffectVolume());
 		musicVolScrollBar->setScrollPositionInstantly(modules->sound->getMusicVolume());
-		frameLimiterScrollBar->setScrollPositionInstantly(config.frameLimiter / 240);
+		frameLimiterScrollBar->setScrollPositionInstantly(frameLimitToPosition(config.frameLimiter));
 
 		setDynamicLabels();
 	}
@@ -374,6 +385,11 @@ namespace AWGame
 			}
 		}
 
+		if (id == frameLimiterScrollBar->getId())
+		{
+			frameLimiterScrollBar->setScrollPosition(frameLimitToPosition(config.frameLimiter));
+		}
+
 		if (shouldEnableApply)
 		{
 			applyButton->setEnabled(true);
@@ -429,9 +445,9 @@ namespace AWGame
 			setDynamicLabels();
 			shouldMuteSound = true;
 		}
-		else if (id == frameLimiterScrollBar->getId() && config.frameLimiter != (int)(position * 240.0))
+		else if (id == frameLimiterScrollBar->getId() && config.frameLimiter != positionToFrameLimit(position))
 		{
-			config.frameLimiter = (int)(position * 240.0);
+			config.frameLimiter = positionToFrameLimit(position);
 			applyButton->setEnabled(true);
 			setDynamicLabels();
 		}
@@ -527,7 +543,7 @@ namespace AWGame
 		}
 		else
 		{
-			frameLimiterLabel->setText("Frame Limiter " + std::to_string(std::max(20, config.frameLimiter)) + " fps");
+			frameLimiterLabel->setText("Frame Limiter " + std::to_string(config.frameLimiter) + " fps");
 		}
 
 		layout();
@@ -537,4 +553,27 @@ namespace AWGame
 	{
 		return std::to_string((int)(volume * 100.0));
 	}
+
+	int SceneOptionsMenu::positionToFrameLimit(double position)
+	{
+		const int i = std::ceil(position * (frameLimits.size() - 1));
+		return frameLimits[i];
+	}
+
+	double SceneOptionsMenu::frameLimitToPosition(int limit)
+	{
+		auto i = 0;
+		for (const auto lim : frameLimits)
+		{
+			if (lim == limit)
+			{
+				break;
+			}
+
+			++i;
+		}
+
+		return i / (double)frameLimits.size();
+	}
+
 }
