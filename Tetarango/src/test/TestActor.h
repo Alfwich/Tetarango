@@ -8,7 +8,7 @@ namespace MTTest
 	{
 	public:
 		TestActor() {
-			this->enableSerialization<TestActor>();
+			this->registerSerialization<TestActor>();
 		}
 	};
 

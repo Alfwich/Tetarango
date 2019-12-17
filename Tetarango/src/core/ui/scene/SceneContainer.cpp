@@ -5,7 +5,7 @@ namespace AW
 
 	SceneContainer::SceneContainer()
 	{
-		enableSerialization<SceneContainer>();
+		registerSerialization<SceneContainer>();
 	}
 
 	SceneContainer::SceneContainer(std::vector<std::shared_ptr<Scene>> scenes)

@@ -8,7 +8,7 @@ namespace AW
 	{
 		frame = 0;
 		fpsOffset = 0;
-		enableSerialization<Animated>();
+		registerSerialization<Animated>();
 	}
 
 	void Animated::updateFrame(double frameTime)

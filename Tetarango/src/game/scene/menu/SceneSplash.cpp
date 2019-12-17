@@ -32,7 +32,7 @@ namespace AWGame
 	SceneSplash::SceneSplash() : BaseScene(SceneGame::Splash)
 	{
 		rebuildOnLoad = true;
-		enableSerialization<SceneSplash>();
+		registerSerialization<SceneSplash>();
 	}
 
 	void SceneSplash::onLoadResources()

@@ -16,7 +16,7 @@ namespace AW
 		renderType = RenderType::None;
 		modules = SystemModuleBundle::getModuleBundle();
 
-		enableSerialization<ApplicationObject>();
+		registerSerialization<ApplicationObject>();
 	}
 
 	int ApplicationObject::getNextId()
@@ -415,6 +415,8 @@ namespace AW
 		renderPositionMode = (RenderPositionMode)client->serializeInt("r-p-m", (int)renderPositionMode);
 		renderPositionProcessing = (RenderPositionProcessing)client->serializeInt("r-p-p-m", (int)renderPositionProcessing);
 		renderTextureMode = (RenderTextureMode)client->serializeInt("r-t-m", (int)renderPositionProcessing);
+		renderDepthTest = (RenderDepthTest)client->serializeInt("r-d-t-e", (int)renderDepthTest);
+		renderMultiSampleMode = (RenderMultiSampleMode)client->serializeInt("r-m-s-m", (int)renderMultiSampleMode);
 		hasCreatedChildren = client->serializeBool("h-c-c", hasCreatedChildren);
 		setInputMode((InputMode)client->serializeInt("i-n-m", (int)getInputMode()));
 
@@ -472,7 +474,7 @@ namespace AW
 
 	bool ApplicationObject::shouldSerializeSelf()
 	{
-		return serializeEnabled && !getTag(ATags::IsDebugElement);
+		return serializationEnabled && !getTag(ATags::IsDebugElement);
 	}
 
 	bool ApplicationObject::collisionEnabled()

@@ -14,7 +14,7 @@ namespace AW
 		renderTextureMode = RenderTextureMode::LinearWrapping;
 		disableCulling = true;
 
-		enableSerialization<Backdrop>();
+		registerSerialization<Backdrop>();
 	}
 
 	void Backdrop::setSizeToEffectiveInfinity()

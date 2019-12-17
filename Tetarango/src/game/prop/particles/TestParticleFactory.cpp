@@ -14,7 +14,7 @@ namespace AWGame
 		this->g = g;
 		this->b = b;
 
-		enableSerialization<TestParticleFactory>();
+		registerSerialization<TestParticleFactory>();
 	}
 
 	std::shared_ptr<AW::Particle> TestParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)

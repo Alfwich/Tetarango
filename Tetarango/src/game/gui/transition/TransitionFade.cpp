@@ -11,7 +11,7 @@ namespace AWGame
 
 	TransitionFade::TransitionFade() : BaseGui(GuiTransition::TransitionFade)
 	{
-		enableSerialization<TransitionFade>();
+		registerSerialization<TransitionFade>();
 	}
 
 	void TransitionFade::onInitialAttach()

@@ -17,7 +17,7 @@ namespace AW
 {
 	ScrollContainer::ScrollContainer()
 	{
-		enableSerialization<ScrollContainer>();
+		registerSerialization<ScrollContainer>();
 	}
 
 	void ScrollContainer::onInitialAttach()

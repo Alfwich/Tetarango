@@ -12,7 +12,7 @@ namespace AW
 	NineSlice::NineSlice()
 	{
 		renderType = RenderType::Container;
-		enableSerialization<NineSlice>();
+		registerSerialization<NineSlice>();
 	}
 
 	void NineSlice::setCornerSize(unsigned int cornerSize)

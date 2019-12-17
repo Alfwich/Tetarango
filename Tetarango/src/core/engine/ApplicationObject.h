@@ -65,10 +65,10 @@ namespace AW
 		virtual Rect* getCollisionRect();
 
 		template<typename T>
-		void enableSerialization();
+		void registerSerialization();
 
 		std::string name;
-		bool visible = true, serializeEnabled = true;
+		bool visible = true, serializationEnabled = true;
 
 		void activate();
 		void deactivate();
@@ -80,6 +80,8 @@ namespace AW
 		int zIndex = 0;
 		RenderType renderType = RenderType::None;
 		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
+		RenderDepthTest renderDepthTest = RenderDepthTest::Unspecified;
+		RenderMultiSampleMode renderMultiSampleMode = RenderMultiSampleMode::Unspecified;
 		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
 		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
 		RenderPositionMode getFirstNonUnspecifiedRenderPositionMode();
@@ -238,7 +240,7 @@ namespace AW
 	}
 
 	template<typename T>
-	inline void ApplicationObject::enableSerialization()
+	inline void ApplicationObject::registerSerialization()
 	{
 		this->typeName = std::string(typeid(T).name());
 		if (this->modules->serialization->hasSchematic(this->typeName))

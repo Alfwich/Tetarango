@@ -7,7 +7,7 @@ namespace AW
 	{
 		disableCulling = true;
 		renderType = RenderType::ParticleSystem;
-		enableSerialization<ParticleSystem>();
+		registerSerialization<ParticleSystem>();
 	}
 
 	void ParticleSystem::onInitialAttach()

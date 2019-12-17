@@ -41,7 +41,7 @@ namespace AWGame
 
 	Board::Board()
 	{
-		enableSerialization<Board>();
+		registerSerialization<Board>();
 	}
 
 	Board::Board(unsigned int boardWidth, unsigned int boardHeight) : Board()

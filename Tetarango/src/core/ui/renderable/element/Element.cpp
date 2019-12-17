@@ -11,7 +11,7 @@ namespace AW
 	Element::Element()
 	{
 		renderType = RenderType::Element;
-		enableSerialization<Element>();
+		registerSerialization<Element>();
 	}
 
 	std::shared_ptr<Rect> Element::getTextureClipRect()

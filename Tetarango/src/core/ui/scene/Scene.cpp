@@ -10,7 +10,7 @@ namespace AW
 	{
 		this->sceneName = sceneName;
 		activate();
-		enableSerialization<Scene>();
+		registerSerialization<Scene>();
 	}
 
 	std::shared_ptr<SceneContainer> Scene::getSceneContainer()

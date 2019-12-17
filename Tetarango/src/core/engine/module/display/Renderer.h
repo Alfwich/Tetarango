@@ -33,6 +33,8 @@ namespace AW
 		std::stack<Color> colorStack;
 		std::stack<RenderPositionProcessing> renderProcessingStack;
 		std::stack<RenderTextureMode> textureModeStack;
+		std::stack<RenderDepthTest> renderDepthStack;
+		std::stack<RenderMultiSampleMode> renderMultiSampleModeStack;
 
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 

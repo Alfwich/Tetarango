@@ -4,7 +4,7 @@ namespace AW
 {
 	Rectangle::Rectangle()
 	{
-		enableSerialization<Rectangle>();
+		registerSerialization<Rectangle>();
 	}
 
 	void Rectangle::onLoadResources()

@@ -15,7 +15,7 @@ namespace AWGame
 	TestScene::TestScene() : AW::Scene("test_scene")
 	{
 		rebuildOnLoad = true;
-		enableSerialization<TestScene>();
+		registerSerialization<TestScene>();
 	}
 
 	void TestScene::onInitialAttach()

@@ -8,24 +8,6 @@
 
 namespace
 {
-	const char* inlineDefaultFragmentShader =
-		R"(
-			#version 330 core
-			in vec2 UV;
-			in vec4 colorMod;
-			in mat4 UVp;
-			out vec4 color;
-			uniform sampler2D myTextureSampler;
-			void main() {
-			   vec4 c = texture(myTextureSampler, (UVp* vec4(UV, 1, 1)).xy).rgba;
-			   vec4 fC = c * colorMod;
-				if (fC.a == 0)
-					discard;
-
-				color = fC;
-			};
-		)";
-
 	const char* inlineDefaultVertexShader =
 		R"(
 			#version 330 core
@@ -43,6 +25,24 @@ namespace
 				UV = vertexUV;
 				UVp = UVproj;
 				colorMod = cMod;
+			};
+		)";
+
+	const char* inlineDefaultFragmentShader =
+		R"(
+			#version 330 core
+			in vec2 UV;
+			in vec4 colorMod;
+			in mat4 UVp;
+			out vec4 color;
+			uniform sampler2D myTextureSampler;
+			void main() {
+			   vec4 c = texture(myTextureSampler, (UVp* vec4(UV, 1, 1)).xy).rgba;
+			   vec4 fC = c * colorMod;
+				if (fC.a == 0)
+					discard;
+
+				color = fC;
 			};
 		)";
 
@@ -72,6 +72,8 @@ namespace AW
 		renderPositionModeStack.push(RenderPositionMode::Positioned);
 		renderProcessingStack.push(RenderPositionProcessing::None);
 		textureModeStack.push(RenderTextureMode::LinearNoWrap);
+		renderDepthStack.push(RenderDepthTest::Disabled);
+		renderMultiSampleModeStack.push(RenderMultiSampleMode::Disabled);
 
 		if (oldRenderer != nullptr)
 		{
@@ -329,8 +331,6 @@ namespace AW
 		glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		glEnable(GL_MULTISAMPLE);
-		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -340,8 +340,6 @@ namespace AW
 		SDL_GL_SwapWindow(screen->getWindow());
 
 		glDisable(GL_BLEND);
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_MULTISAMPLE);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		glUseProgram(0);
@@ -352,6 +350,26 @@ namespace AW
 		if (renderPackage->stencilDepth > 0)
 		{
 			glStencilFunc(GL_EQUAL, 1, 0xFF);
+		}
+
+		const auto depthIsEnabled = glIsEnabled(GL_DEPTH_TEST);
+		if (renderDepthStack.top() == RenderDepthTest::Enabled && !depthIsEnabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+		else if (depthIsEnabled)
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+
+		const auto msaaIsEnabled = glIsEnabled(GL_MULTISAMPLE);
+		if (renderMultiSampleModeStack.top() == RenderMultiSampleMode::Enabled && !msaaIsEnabled)
+		{
+			glEnable(GL_MULTISAMPLE);
+		}
+		else if (msaaIsEnabled)
+		{
+			glDisable(GL_MULTISAMPLE);
 		}
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -432,6 +450,16 @@ namespace AW
 			textureModeStack.push(ao->renderTextureMode);
 		}
 
+		if (ao->renderDepthTest != RenderDepthTest::Unspecified)
+		{
+			renderDepthStack.push(ao->renderDepthTest);
+		}
+
+		if (ao->renderMultiSampleMode != RenderMultiSampleMode::Unspecified)
+		{
+			renderMultiSampleModeStack.push(ao->renderMultiSampleMode);
+		}
+
 		bool pushedColorStack = false;
 		std::shared_ptr<Rectangle> debugElement = nullptr;
 		switch (ao->renderType)
@@ -472,7 +500,7 @@ namespace AW
 				if (currentScreenConfig.visualizeContainers)
 				{
 					debugElement = std::make_shared<Rectangle>();
-					debugElement->serializeEnabled = false;
+					debugElement->serializationEnabled = false;
 					debugElement->setTag(ATags::IsDebugElement, true);
 					debugElement->matchSize(container);
 					debugElement->topLeftAlignSelf();
@@ -523,7 +551,7 @@ namespace AW
 			{
 				const auto testRect = std::make_shared<Rectangle>();
 				testRect->setTag(AW::ATags::IsDebugElement, true);
-				testRect->serializeEnabled = false;
+				testRect->serializationEnabled = false;
 				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
 				testRect->zIndex = 20;
 				testRect->setAlpha(0.25);
@@ -539,6 +567,16 @@ namespace AW
 			{
 				glDisable(GL_STENCIL_TEST);
 			}
+		}
+
+		if (ao->renderMultiSampleMode != RenderMultiSampleMode::Unspecified)
+		{
+			renderMultiSampleModeStack.pop();
+		}
+
+		if (ao->renderDepthTest != RenderDepthTest::Unspecified)
+		{
+			renderDepthStack.pop();
 		}
 
 		if (ao->renderTextureMode != RenderTextureMode::LinearNoWrap)

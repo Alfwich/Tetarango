@@ -43,6 +43,20 @@ namespace AW
 		Absolute
 	};
 
+	enum class RenderDepthTest
+	{
+		Unspecified,
+		Enabled,
+		Disabled
+	};
+
+	enum class RenderMultiSampleMode
+	{
+		Unspecified,
+		Enabled,
+		Disabled
+	};
+
 	class Renderable : public ISerializableDataSubscriber
 	{
 		double rot = 0.0, alpha = 1.0;

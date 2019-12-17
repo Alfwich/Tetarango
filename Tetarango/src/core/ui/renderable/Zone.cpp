@@ -10,7 +10,7 @@ namespace AW
 		zIndex = 20;
 		setRequestReconciliation(true);
 		setTag(ATags::IsZone, true);
-		enableSerialization<Zone>();
+		registerSerialization<Zone>();
 	}
 
 	void Zone::visualize()

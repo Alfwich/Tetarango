@@ -6,7 +6,7 @@ namespace AW
 	TileMap::TileMap()
 	{
 		renderType = RenderType::TileMap;
-		enableSerialization<TileMap>();
+		registerSerialization<TileMap>();
 	}
 
 	int TileMap::getTileWidth()

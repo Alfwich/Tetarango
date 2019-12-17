@@ -11,7 +11,7 @@ namespace AWGame
 	Block::Block()
 	{
 		setSize(32, 32);
-		enableSerialization<Block>();
+		registerSerialization<Block>();
 	}
 
 	void Block::onLoadResources()

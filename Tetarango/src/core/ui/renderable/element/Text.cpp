@@ -19,7 +19,7 @@ namespace AW
 		setTextColor(0xff, 0xff, 0xff);
 		setBackgroundColor(0x00, 0x00, 0x00);
 		renderType = RenderType::Container;
-		enableSerialization<Text>();
+		registerSerialization<Text>();
 	}
 
 	Text::~Text()

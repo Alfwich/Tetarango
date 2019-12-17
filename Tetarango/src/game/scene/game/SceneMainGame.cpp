@@ -39,7 +39,7 @@ namespace AWGame
 
 	SceneMainGame::SceneMainGame() : BaseScene(SceneGame::MainGame)
 	{
-		enableSerialization<SceneMainGame>();
+		registerSerialization<SceneMainGame>();
 	}
 
 	void SceneMainGame::onInitialAttach()
