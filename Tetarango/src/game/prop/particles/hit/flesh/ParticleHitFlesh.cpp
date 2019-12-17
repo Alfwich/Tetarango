@@ -3,7 +3,7 @@
 namespace AWGame
 {
 
-	ParticleHitFlesh::ParticleHitFlesh(std::shared_ptr<AWCore::TextureContainer> textureContainer)
+	ParticleHitFlesh::ParticleHitFlesh(std::shared_ptr<AW::TextureContainer> textureContainer)
 	{
 		particleTexture = textureContainer->getTexture("particle-hit-flesh");
 	}

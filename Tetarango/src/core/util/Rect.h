@@ -3,7 +3,7 @@
 #include <memory>
 #include <Sdl.h>
 
-namespace AWCore
+namespace AW
 {
 	class Rect
 	{

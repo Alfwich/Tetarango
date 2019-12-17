@@ -5,7 +5,7 @@ namespace
 	const auto textPositioningElementName = "text-pos-ele";
 }
 
-namespace AWCore
+namespace AW
 {
 	Text::Text() : Text(std::string(), 0) {}
 
@@ -195,7 +195,7 @@ namespace AWCore
 		textPositioningElement->setPosition(getHalfWidth(), getHalfHeight());
 	}
 
-	void Text::setClipRect(AWCore::Rect rect)
+	void Text::setClipRect(AW::Rect rect)
 	{
 		if (textPositioningElement != nullptr)
 		{

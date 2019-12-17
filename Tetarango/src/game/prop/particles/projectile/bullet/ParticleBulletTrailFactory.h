@@ -5,11 +5,11 @@
 
 namespace AWGame
 {
-	class ParticleBulletTrailParticleFactory : public AWCore::IParticleFactory
+	class ParticleBulletTrailParticleFactory : public AW::IParticleFactory
 	{
 	public:
 		ParticleBulletTrailParticleFactory();
-		std::shared_ptr<AWCore::Particle> makeParticle(AWCore::ParticleCreationBundle& bundle);
+		std::shared_ptr<AW::Particle> makeParticle(AW::ParticleCreationBundle& bundle);
 	};
 
 }

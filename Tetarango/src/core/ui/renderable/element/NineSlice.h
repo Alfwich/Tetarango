@@ -3,7 +3,7 @@
 #include "ui/renderable/element/Animated.h"
 #include "ui/renderable/container/Container.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class NineSlice : public Container

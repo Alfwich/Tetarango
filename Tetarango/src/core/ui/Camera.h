@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include "engine/ApplicationObject.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Camera : public ApplicationObject

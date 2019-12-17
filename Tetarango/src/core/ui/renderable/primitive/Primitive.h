@@ -6,7 +6,7 @@
 #include "engine/module/display/RenderPackage.h"
 #include "util/Color.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Primitive : public ApplicationObject, public Renderable

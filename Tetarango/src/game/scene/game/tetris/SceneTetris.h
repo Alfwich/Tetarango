@@ -15,10 +15,10 @@ namespace AWGame
 	{
 		int score = 0, saveScreenshotTimeoutId = 0;
 		bool isLeftDown = false, isRightDown = false, saveScreenOnNextEnterFrame = false, hasPlayedGameOverSound = false;
-		std::shared_ptr<AWCore::Timer> keyRepeatTimer;
-		std::shared_ptr<AWCore::Text> scoreText;
-		std::shared_ptr<AWCore::ParticleSystem> particleSystem;
-		std::shared_ptr<AWCore::ParticleSystem> blockParticleSystem;
+		std::shared_ptr<AW::Timer> keyRepeatTimer;
+		std::shared_ptr<AW::Text> scoreText;
+		std::shared_ptr<AW::ParticleSystem> particleSystem;
+		std::shared_ptr<AW::ParticleSystem> blockParticleSystem;
 		std::shared_ptr<Board> board;
 		std::shared_ptr<Board> previewBoard;
 		std::shared_ptr<GameCamera> camera;
@@ -36,7 +36,7 @@ namespace AWGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 
-		virtual std::shared_ptr<AWCore::SerializationClient> doSerialize(AWCore::SerializationHint hint);
+		virtual std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 
 		void onEnterFrame(double deltaTime);
 		void onTimeoutCalled(int id);

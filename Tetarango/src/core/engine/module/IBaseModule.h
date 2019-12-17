@@ -5,7 +5,7 @@
 #include "thread/INotifyOnCompletion.h"
 #include "GameConfig.h"
 
-namespace AWCore
+namespace AW
 {
 	class IBaseModule : public INotifyOnCompletion, public std::enable_shared_from_this<IBaseModule>
 	{

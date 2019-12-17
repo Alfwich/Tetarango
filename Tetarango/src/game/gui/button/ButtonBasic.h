@@ -10,11 +10,11 @@
 namespace AWGame
 {
 
-	class ButtonBasic : public BaseGui, public AWCore::Container
+	class ButtonBasic : public BaseGui, public AW::Container
 	{
 		std::string text;
-		std::shared_ptr<AWCore::Text> label;
-		std::shared_ptr<AWCore::NineSlice> background;
+		std::shared_ptr<AW::Text> label;
+		std::shared_ptr<AW::NineSlice> background;
 		bool isHovering = false, isPressed = false;
 	public:
 		ButtonBasic();
@@ -26,7 +26,7 @@ namespace AWGame
 		void onInitialAttach();
 		void onDetach();
 		void checkIsHovering(int x, int y);
-		void onMouseButton(AWCore::MouseButton button, bool pressed);
+		void onMouseButton(AW::MouseButton button, bool pressed);
 		void onEnterFrame(double frameTime);
 
 		void setText(std::string text);

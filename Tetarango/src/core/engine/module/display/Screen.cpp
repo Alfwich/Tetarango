@@ -7,7 +7,7 @@ namespace
 	const auto VsyncAdaptive = -1;
 }
 
-namespace AWCore
+namespace AW
 {
 
 	Screen::~Screen()

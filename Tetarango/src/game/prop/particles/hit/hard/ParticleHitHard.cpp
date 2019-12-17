@@ -3,7 +3,7 @@
 namespace AWGame
 {
 
-	ParticleHitHard::ParticleHitHard(std::shared_ptr<AWCore::TextureContainer> textureContainer)
+	ParticleHitHard::ParticleHitHard(std::shared_ptr<AW::TextureContainer> textureContainer)
 	{
 		particleTexture = textureContainer->getTexture("particle-hit-hard");
 	}

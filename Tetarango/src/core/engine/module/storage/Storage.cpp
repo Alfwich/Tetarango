@@ -5,7 +5,7 @@ namespace
 	const auto dataFileExtension = ".gdata";
 }
 
-namespace AWCore
+namespace AW
 {
 	std::string Storage::serializeStore(std::shared_ptr<StorageClient> client, bool isHumanReadable)
 	{

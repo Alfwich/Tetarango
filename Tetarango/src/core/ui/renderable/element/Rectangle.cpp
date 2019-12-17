@@ -1,6 +1,6 @@
 #include "Rectangle.h"
 
-namespace AWCore
+namespace AW
 {
 	Rectangle::Rectangle()
 	{

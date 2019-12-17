@@ -23,10 +23,10 @@ namespace AWGame
 		modules->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
 		modules->texture->loadTexture("res/game/img/ui/button/proto_button.png", buttonBasicId);
 
-		auto animationSet = std::make_shared<AWCore::AnimationSet>();
+		auto animationSet = std::make_shared<AW::AnimationSet>();
 		{
 			int fps = 15;
-			AWCore::RectI frameSize = {
+			AW::RectI frameSize = {
 				0,
 				0,
 				64,
@@ -90,7 +90,7 @@ namespace AWGame
 
 	void ButtonBasic::onCreateChildren()
 	{
-		background = std::make_shared<AWCore::NineSlice>();
+		background = std::make_shared<AW::NineSlice>();
 		background->setTexture(buttonBasicId);
 		background->setAnimationSet(buttonBasicId);
 		background->matchSizeAndCenter(this);
@@ -98,7 +98,7 @@ namespace AWGame
 		background->name = backgroundName;
 		add(background);
 
-		label = std::make_shared<AWCore::Text>();
+		label = std::make_shared<AW::Text>();
 		label->name = labelName;
 		label->setFont("medium", 30);
 		label->setTextColor(0, 0, 0);
@@ -109,15 +109,15 @@ namespace AWGame
 
 	void ButtonBasic::onChildrenHydrated()
 	{
-		label = findChildWithName<AWCore::Text>(labelName);
-		background = findChildWithName<AWCore::NineSlice>(backgroundName);
+		label = findChildWithName<AW::Text>(labelName);
+		background = findChildWithName<AW::NineSlice>(backgroundName);
 	}
 
 	void ButtonBasic::onInitialAttach()
 	{
 		enableEnterFrame();
 
-		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
 	}
 
 	void ButtonBasic::onDetach()
@@ -128,14 +128,14 @@ namespace AWGame
 
 	void ButtonBasic::checkIsHovering(int x, int y)
 	{
-		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AWCore::RenderPositionMode::Unspecified ? screenRect : worldRect;
+		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AW::RenderPositionMode::Unspecified ? screenRect : worldRect;
 
 		isHovering =
 			x < rect.x + rect.w && x > rect.x &&
 			y < rect.y + rect.h && y > rect.y;
 	}
 
-	void ButtonBasic::onMouseButton(AWCore::MouseButton button, bool pressed)
+	void ButtonBasic::onMouseButton(AW::MouseButton button, bool pressed)
 	{
 		const auto isEnabled = getEnabled();
 		if (!isEnabled)
@@ -145,7 +145,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case AWCore::MouseButton::Left:
+		case AW::MouseButton::Left:
 			if (!pressed)
 			{
 				const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());

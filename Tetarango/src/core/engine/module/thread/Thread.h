@@ -9,7 +9,7 @@
 #include "engine/module/IBaseModule.h"
 #include "INotifyOnCompletion.h"
 
-namespace AWCore
+namespace AW
 {
 	class AsyncResultBundle;
 	class Worker;

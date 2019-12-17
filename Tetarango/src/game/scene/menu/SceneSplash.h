@@ -10,19 +10,19 @@
 namespace AWGame
 {
 
-	class SceneSplash : public BaseScene, public AWCore::INotifyOnTransition
+	class SceneSplash : public BaseScene, public AW::INotifyOnTransition
 	{
-		std::shared_ptr<AWCore::Transition> splashTransition;
+		std::shared_ptr<AW::Transition> splashTransition;
 		int state = 0;
 		double animationOffset = 0.0;
 
-		std::shared_ptr<AWCore::Container> blockContainer;
-		std::shared_ptr<AWCore::Text> splashText;
-		std::shared_ptr<AWCore::Element> splashImage;
+		std::shared_ptr<AW::Container> blockContainer;
+		std::shared_ptr<AW::Text> splashText;
+		std::shared_ptr<AW::Element> splashImage;
 		std::vector<std::shared_ptr<Block>> blocks;
 		std::shared_ptr<TitleGame> titleGame;
 
-		std::shared_ptr<AWCore::Element> loadingProgressBar;
+		std::shared_ptr<AW::Element> loadingProgressBar;
 
 		bool tryToGotoNextState(double position, double timeThreshold);
 

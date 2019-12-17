@@ -5,7 +5,7 @@
 #include <string>
 #include "engine/module/asset/ImageBundle.h"
 
-namespace AWCore
+namespace AW
 {
 	class Screen;
 	class Asset;

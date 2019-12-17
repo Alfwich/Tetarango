@@ -8,7 +8,7 @@
 #include "engine/module/font/Font.h"
 #include "util/Color.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Text : public Container
@@ -51,7 +51,7 @@ namespace AWCore
 		void onChildrenHydrated();
 		void onLayoutChildren();
 
-		void setClipRect(AWCore::Rect rect);
+		void setClipRect(AW::Rect rect);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 	};

@@ -1,6 +1,6 @@
 #include "Time.h"
 
-namespace AWCore
+namespace AW
 {
 
 	void Time::onInit()

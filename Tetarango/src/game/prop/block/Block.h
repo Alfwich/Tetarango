@@ -6,7 +6,7 @@
 
 namespace AWGame
 {
-	class Block : public AWCore::Animated, public BaseProp
+	class Block : public AW::Animated, public BaseProp
 	{
 	public:
 		Block();
@@ -16,6 +16,6 @@ namespace AWGame
 		void onLoadResources();
 		void onInitialAttach();
 		void onCreateChildren();
-		std::shared_ptr<AWCore::SerializationClient> doSerialize(AWCore::SerializationHint hint);
+		std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 	};
 }

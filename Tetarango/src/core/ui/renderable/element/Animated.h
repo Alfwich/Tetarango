@@ -7,7 +7,7 @@
 #include "engine/module/time/Timer.h"
 #include "util/Rect.h"
 
-namespace AWCore
+namespace AW
 {
 
 

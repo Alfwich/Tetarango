@@ -6,7 +6,7 @@ namespace
 	const double effectiveInfinity = 50000;
 }
 
-namespace AWCore
+namespace AW
 {
 	Backdrop::Backdrop()
 	{

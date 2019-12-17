@@ -1,6 +1,6 @@
 #include "Mouse.h"
 
-namespace AWCore
+namespace AW
 {
 
 	void Mouse::handleMouseMove(int x, int y)

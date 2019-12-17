@@ -3,7 +3,7 @@
 namespace AWGame
 {
 
-	ParticleFiring::ParticleFiring(std::shared_ptr<AWCore::TextureContainer> textureContainer)
+	ParticleFiring::ParticleFiring(std::shared_ptr<AW::TextureContainer> textureContainer)
 	{
 		particleTexture = textureContainer->getTexture("particle-firing");
 	}

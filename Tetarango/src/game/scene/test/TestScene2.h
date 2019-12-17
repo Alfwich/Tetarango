@@ -8,10 +8,10 @@
 namespace AWGame
 {
 
-	class TestSpace2 : public AWCore::Scene
+	class TestSpace2 : public AW::Scene
 	{
 		std::shared_ptr<GameCamera> camera;
-		std::shared_ptr<AWCore::ParticleSystem> globalSystem;
+		std::shared_ptr<AW::ParticleSystem> globalSystem;
 
 	public:
 		TestSpace2();

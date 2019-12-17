@@ -1,6 +1,6 @@
 #include "Input.h"
 
-namespace AWCore
+namespace AW
 {
 	Input::Input()
 	{

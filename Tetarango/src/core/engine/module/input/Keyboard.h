@@ -6,7 +6,7 @@
 #include <SDL.h>
 #include "engine/module/input/IInputListener.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Keyboard

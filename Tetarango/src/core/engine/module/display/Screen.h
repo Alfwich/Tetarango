@@ -6,7 +6,7 @@
 #include "ScreenConfig.h"
 #include "engine/module/collision/Collision.h"
 
-namespace AWCore
+namespace AW
 {
 	class ApplicationObject;
 	class Collision;
@@ -31,7 +31,7 @@ namespace AWCore
 				}
 			}
 
-			std::sort(resolutions.begin(), resolutions.end(), [](const std::string& a, const std::string& b) { return AWCore::StringHelper::getDisplayComponentForDisplayString(a, 0) > AWCore::StringHelper::getDisplayComponentForDisplayString(b, 0); });
+			std::sort(resolutions.begin(), resolutions.end(), [](const std::string& a, const std::string& b) { return AW::StringHelper::getDisplayComponentForDisplayString(a, 0) > AW::StringHelper::getDisplayComponentForDisplayString(b, 0); });
 		};
 
 		std::vector<SDL_DisplayMode> modes;

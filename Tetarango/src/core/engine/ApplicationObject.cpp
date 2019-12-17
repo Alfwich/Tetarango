@@ -5,10 +5,10 @@
 namespace
 {
 	int nextId = 100;
-	const auto renderOrderLambda = [](const std::shared_ptr<AWCore::ApplicationObject>& a, const std::shared_ptr<AWCore::ApplicationObject>& b) {return a->zIndex < b->zIndex;};
+	const auto renderOrderLambda = [](const std::shared_ptr<AW::ApplicationObject>& a, const std::shared_ptr<AW::ApplicationObject>& b) {return a->zIndex < b->zIndex;};
 }
 
-namespace AWCore
+namespace AW
 {
 	ApplicationObject::ApplicationObject()
 	{

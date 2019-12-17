@@ -10,7 +10,7 @@
 #include "ICollidable.h"
 #include "util/QuadMap.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Collision : public IBaseModule

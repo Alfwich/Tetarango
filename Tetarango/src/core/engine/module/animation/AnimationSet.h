@@ -6,7 +6,7 @@
 #include "Animation.h"
 #include "engine/module/logger/Logger.h"
 
-namespace AWCore
+namespace AW
 {
 	class AnimationSet
 	{

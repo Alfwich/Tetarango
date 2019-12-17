@@ -65,11 +65,12 @@ namespace
 	};
 }
 
-namespace AWCore
+namespace AW
 {
 	Renderer::Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer)
 	{
 		renderPositionModeStack.push(RenderPositionMode::Positioned);
+		renderProcessingStack.push(RenderPositionProcessing::None);
 
 		if (oldRenderer != nullptr)
 		{
@@ -421,6 +422,12 @@ namespace AWCore
 			renderPackage.stencilDepth++;
 		}
 
+		switch (ao->renderPositionProcessing)
+		{
+		case RenderPositionProcessing::Floor:
+			renderProcessingStack.push(ao->renderPositionProcessing);
+		}
+
 		bool pushedColorStack = false;
 		switch (ao->renderType)
 		{
@@ -447,17 +454,18 @@ namespace AWCore
 
 		case RenderType::Container:
 		{
-			const auto renderable = std::dynamic_pointer_cast<Renderable>(ao);
-			if (renderable != nullptr)
+			const auto container = std::dynamic_pointer_cast<Container>(ao);
+			if (container != nullptr)
 			{
-				pushedColorStack = updateColorStack(renderable);
-				renderUpdateRect(renderable, &computed, &renderPackage);
+				container->performAutoLayoutIfNeeded();
+				pushedColorStack = updateColorStack(container);
+				renderUpdateRect(container, &computed, &renderPackage);
 				ao->setWorldRect(&computed);
 				ao->updateScreenRect(&renderPackage);
 
 				if (currentScreenConfig.visualizeContainers)
 				{
-					renderable->doUpdateDebugChildren();
+					container->doUpdateDebugChildren();
 				}
 			}
 
@@ -494,12 +502,14 @@ namespace AWCore
 			if (currentScreenConfig.visualizeClipRects)
 			{
 				const auto testRect = std::make_shared<Rectangle>();
+				testRect->setTag(AW::AOTags::IsDebugElement, true);
 				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
 				testRect->zIndex = 20;
 				testRect->setAlpha(0.25);
 				testRect->onInitialAttach();
-				colorStack.push(AWCore::Color::red());
+				colorStack.push(AW::Color::red());
 				renderElement(testRect, &Rect(), &RenderPackage());
+				testRect->removeFromParent();
 				colorStack.pop();
 			}
 
@@ -509,6 +519,12 @@ namespace AWCore
 			{
 				glDisable(GL_STENCIL_TEST);
 			}
+		}
+
+		switch (ao->renderPositionProcessing)
+		{
+		case RenderPositionProcessing::Floor:
+			renderProcessingStack.pop();
 		}
 
 		switch (ao->renderPositionMode)
@@ -525,6 +541,12 @@ namespace AWCore
 		auto rectMiddleX = (rect.x - rect.w / 2.0);
 		auto rectMiddleY = (rect.y - rect.h / 2.0);
 
+		if (renderProcessingStack.top() == RenderPositionProcessing::Floor)
+		{
+			rectMiddleX = std::floor(rectMiddleX);
+			rectMiddleY = std::floor(rectMiddleY);
+		}
+
 		double originW = computed->w;
 		double originH = computed->h;
 		computed->w = rect.w;
@@ -532,7 +554,7 @@ namespace AWCore
 
 		if (rend->rotateInParentSpace)
 		{
-			double rotationRad = renderPackage->rotation * AWCore::NumberHelper::degToRad;
+			double rotationRad = renderPackage->rotation * AW::NumberHelper::degToRad;
 			double newX = computed->x + rectMiddleX;
 			double newY = computed->y + rectMiddleY;
 			double oX = computed->x + (originW / 2.0) - (computed->w / 2.0);
@@ -544,6 +566,7 @@ namespace AWCore
 
 			computed->x = (xP + oX);
 			computed->y = (yP + oY);
+
 		}
 		else
 		{
@@ -686,7 +709,7 @@ namespace AWCore
 
 		mat4x4_identity(m);
 
-		mat4x4_rotate_Z(m, m, renderPackage->rotation * AWCore::NumberHelper::degToRad);
+		mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
 		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
 		mat4x4_translate(t, cX, cY, cY + (ele->zIndex + renderPackage->depth) * layerFactor);
 
@@ -744,7 +767,7 @@ namespace AWCore
 
 		mat4x4_identity(m);
 
-		mat4x4_rotate_Z(m, m, renderPackage->rotation * AWCore::NumberHelper::degToRad);
+		mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
 		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
 		mat4x4_translate(t, cX, cY, cY + (20 + renderPackage->depth) * layerFactor);
 
@@ -803,7 +826,7 @@ namespace AWCore
 				const auto cH = particle->h / 2.0;
 				const auto cX = computed->x + particle->x + cW;
 				const auto cY = computed->y + particle->y + cH;
-				const auto rotation = (renderPackage->rotation + particle->r) * AWCore::NumberHelper::degToRad;
+				const auto rotation = (renderPackage->rotation + particle->r) * AW::NumberHelper::degToRad;
 
 				mat4x4_identity(m);
 

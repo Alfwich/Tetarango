@@ -2,7 +2,7 @@
 
 #include "Element.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Backdrop : public Element

@@ -36,7 +36,7 @@ namespace AWGame
 			return;
 		}
 
-		scoreText->setText("Score: " + AWCore::StringHelper::padLeft(std::to_string(score), 10, '0'));
+		scoreText->setText("Score: " + AW::StringHelper::padLeft(std::to_string(score), 10, '0'));
 	}
 
 	void SceneTetris::onInitialAttach()
@@ -49,7 +49,7 @@ namespace AWGame
 
 		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE, SDL_SCANCODE_0 }, weak_from_this());
 
-		keyRepeatTimer = modules->time->createTimer(AWCore::TimeScope::Game);
+		keyRepeatTimer = modules->time->createTimer(AW::TimeScope::Game);
 		keyRepeatTimer->start();
 
 
@@ -96,7 +96,7 @@ namespace AWGame
 		camera->name = "camera";
 		add(camera);
 
-		scoreText = std::make_shared<AWCore::Text>();
+		scoreText = std::make_shared<AW::Text>();
 		scoreText->name = "score-text";
 		scoreText->setTextColor(255, 255, 255);
 		scoreText->setFont("medium", 48);
@@ -104,7 +104,7 @@ namespace AWGame
 		scoreText->toRightOf(board, 10);
 		add(scoreText);
 
-		particleSystem = std::make_shared<AWCore::ParticleSystem>();
+		particleSystem = std::make_shared<AW::ParticleSystem>();
 		particleSystem->zIndex = -5;
 		particleSystem->name = "p-system";
 		particleSystem->setSize(modules->screen->getWidth() * 2.0, modules->screen->getHeight() * 2.0);
@@ -113,7 +113,7 @@ namespace AWGame
 		particleSystem->emitImmediately(40);
 		add(particleSystem);
 
-		blockParticleSystem = std::make_shared<AWCore::ParticleSystem>();
+		blockParticleSystem = std::make_shared<AW::ParticleSystem>();
 		blockParticleSystem->zIndex = -5;
 		blockParticleSystem->name = "p-b-system";
 		blockParticleSystem->matchSizeAndCenter(board);
@@ -125,13 +125,13 @@ namespace AWGame
 		board = findChildWithName<Board>("board");
 		previewBoard = findChildWithName<Board>("preview-board");
 		camera = findChildWithName<GameCamera>("camera");
-		scoreText = findChildWithName<AWCore::Text>("score-text");
-		particleSystem = findChildWithName<AWCore::ParticleSystem>("p-system");
+		scoreText = findChildWithName<AW::Text>("score-text");
+		particleSystem = findChildWithName<AW::ParticleSystem>("p-system");
 		particleSystem->emitImmediately(40);
-		blockParticleSystem = findChildWithName<AWCore::ParticleSystem>("p-b-system");
+		blockParticleSystem = findChildWithName<AW::ParticleSystem>("p-b-system");
 	}
 
-	std::shared_ptr<AWCore::SerializationClient> SceneTetris::doSerialize(AWCore::SerializationHint hint)
+	std::shared_ptr<AW::SerializationClient> SceneTetris::doSerialize(AW::SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__scene__", hint);
 		score = client->serializeInt("score", score);
@@ -197,7 +197,7 @@ namespace AWGame
 	{
 		if (id == saveScreenshotTimeoutId)
 		{
-			auto imageCatcher = std::make_shared<AWCore::CachedImage>();
+			auto imageCatcher = std::make_shared<AW::CachedImage>();
 			imageCatcher->setShouldSerializeImage(true);
 			imageCatcher->captureWholeScreen();
 

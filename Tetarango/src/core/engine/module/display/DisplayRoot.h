@@ -2,7 +2,7 @@
 
 #include "engine/ApplicationObject.h"
 
-namespace AWCore
+namespace AW
 {
 	class DisplayRoot : public ApplicationObject
 	{

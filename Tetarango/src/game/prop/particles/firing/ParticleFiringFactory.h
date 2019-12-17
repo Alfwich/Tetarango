@@ -4,11 +4,11 @@
 
 namespace AWGame
 {
-	class ParticleFiringFactory : public AWCore::IParticleFactory
+	class ParticleFiringFactory : public AW::IParticleFactory
 	{
 	public:
 		ParticleFiringFactory();
-		std::shared_ptr<AWCore::Particle> makeParticle(AWCore::ParticleCreationBundle& bundle);
+		std::shared_ptr<AW::Particle> makeParticle(AW::ParticleCreationBundle& bundle);
 	};
 
 }

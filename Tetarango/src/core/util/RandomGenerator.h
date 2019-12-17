@@ -7,7 +7,7 @@
 
 #include "NumberHelper.h"
 
-namespace AWCore
+namespace AW
 {
 
 	template<typename T>

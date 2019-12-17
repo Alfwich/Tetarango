@@ -3,7 +3,7 @@
 
 namespace
 {
-	AWCore::RandomGenerator<AWGame::BlockColor> defaultColorGenerator;
+	AW::RandomGenerator<AWGame::BlockColor> defaultColorGenerator;
 }
 
 namespace AWGame
@@ -30,7 +30,7 @@ namespace AWGame
 		}
 	}
 
-	AWCore::Color GeneratorBlock::getBlockColor(BlockColor value)
+	AW::Color GeneratorBlock::getBlockColor(BlockColor value)
 	{
 		if (value == BlockColor::None)
 		{
@@ -40,32 +40,32 @@ namespace AWGame
 		switch (value)
 		{
 		case BlockColor::Purple:
-			return AWCore::Color(0xa001efff);
+			return AW::Color(0xa001efff);
 			break;
 
 		case BlockColor::Blue:
-			return AWCore::Color(0x0001f2ff);
+			return AW::Color(0x0001f2ff);
 			break;
 
 		case BlockColor::Red:
-			return AWCore::Color(0xf00100ff);
+			return AW::Color(0xf00100ff);
 			break;
 
 		case BlockColor::Yellow:
-			return AWCore::Color(0xf0f001ff);
+			return AW::Color(0xf0f001ff);
 			break;
 
 		case BlockColor::Green:
-			return AWCore::Color(0x00f000ff);
+			return AW::Color(0x00f000ff);
 			break;
 
 		case BlockColor::Orange:
-			return AWCore::Color(0xefa000ff);
+			return AW::Color(0xefa000ff);
 			break;
 
 		default:
 		case BlockColor::Cyan:
-			return AWCore::Color(0x01f0f1ff);
+			return AW::Color(0x01f0f1ff);
 			break;
 		}
 	}

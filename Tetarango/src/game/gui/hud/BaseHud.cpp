@@ -6,6 +6,6 @@ namespace AWGame
 
 	bool BaseHud::isActive()
 	{
-		return modules->time->getTimeFactorForScope(AWCore::TimeScope::Game) > 0.0;
+		return modules->time->getTimeFactorForScope(AW::TimeScope::Game) > 0.0;
 	}
 }

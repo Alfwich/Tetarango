@@ -2,7 +2,7 @@
 
 #include <set>
 
-namespace AWCore
+namespace AW
 {
 	enum class CollisionScope
 	{

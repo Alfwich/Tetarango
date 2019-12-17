@@ -11,14 +11,15 @@
 #include "engine/module/event/EnterFrameListener.h"
 #include "engine/module/collision/ICollidable.h"
 
-namespace AWCore
+namespace AW
 {
 	class SystemModuleBundle;
 	class SceneTransitionBundle;
 
 	enum class AOTags {
 		IsRootElement = 1,
-		IsZone = 2
+		IsZone = 2,
+		IsDebugElement = 4
 	};
 
 	class ApplicationObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<ApplicationObject>
@@ -75,6 +76,7 @@ namespace AWCore
 		int zIndex = 0;
 		RenderType renderType = RenderType::None;
 		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
+		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
 		RenderPositionMode getFirstNonUnspecifiedRenderPositionMode();
 
 		bool isAttached();

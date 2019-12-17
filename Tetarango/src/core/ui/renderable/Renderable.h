@@ -6,7 +6,7 @@
 #include "util/Rect.h"
 #include "util/Color.h"
 
-namespace AWCore
+namespace AW
 {
 	class ApplicationObject;
 
@@ -27,6 +27,12 @@ namespace AWCore
 		Unspecified,
 		Positioned,
 		Absolute
+	};
+
+	enum class RenderPositionProcessing
+	{
+		None,
+		Floor
 	};
 
 	class Renderable : public ISerializableDataSubscriber
@@ -92,8 +98,7 @@ namespace AWCore
 		double getHalfWidth();
 		double getHalfHeight();
 
-		void centerAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
-		void floorAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
+		void topLeftAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
 
 		void centerWithin(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
 		void centerWithin(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);

@@ -3,7 +3,7 @@
 #include <memory>
 #include "ui/renderable/element/Element.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class TileMap : public Element

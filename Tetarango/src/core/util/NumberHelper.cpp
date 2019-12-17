@@ -1,6 +1,6 @@
 #include "NumberHelper.h"
 
-namespace AWCore
+namespace AW
 {
 	const double NumberHelper::PI = 3.14159265359;
 	const double NumberHelper::degToRad = 0.01745329251;

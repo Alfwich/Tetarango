@@ -13,7 +13,7 @@ namespace
 	const auto scrollSpeedInMsParamName = "scroll-container-speed-ms";
 }
 
-namespace AWCore
+namespace AW
 {
 	ScrollContainer::ScrollContainer()
 	{
@@ -36,7 +36,6 @@ namespace AWCore
 	{
 		scrollContainer = std::make_shared<Container>();
 		scrollContainer->name = scrollContainerName;
-		scrollContainer->setExpandToChildren(true);
 		add(scrollContainer);
 	}
 
@@ -47,6 +46,7 @@ namespace AWCore
 
 	void ScrollContainer::onLayoutChildren()
 	{
+		scrollContainer->resizeSelfToChildrenAndCenterChildren();
 		const auto scrollAmount = serializationClient->getDouble(scrollAmountParamName);
 		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 50);
 		Rect target = scrollContainer->getRect();
@@ -114,7 +114,7 @@ namespace AWCore
 	{
 		const auto min = serializationClient->getDouble(scrollAmountMinParamName, -1.0);
 		const auto max = serializationClient->getDouble(scrollAmountMaxParamName, 1.0);
-		serializationClient->setDouble(scrollAmountParamName, AWCore::NumberHelper::clamp<double>(amount, min, max));
+		serializationClient->setDouble(scrollAmountParamName, AW::NumberHelper::clamp<double>(amount, min, max));
 		layout();
 	}
 

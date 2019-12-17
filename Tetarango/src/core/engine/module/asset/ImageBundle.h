@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace AWCore
+namespace AW
 {
 	enum ImageBundleType
 	{

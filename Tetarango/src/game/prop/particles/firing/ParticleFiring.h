@@ -5,10 +5,10 @@
 namespace AWGame
 {
 
-	class ParticleFiring : public AWCore::Particle
+	class ParticleFiring : public AW::Particle
 	{
 	public:
-		ParticleFiring(std::shared_ptr<AWCore::TextureContainer> textureContainer);
+		ParticleFiring(std::shared_ptr<AW::TextureContainer> textureContainer);
 		void onEnterFrame(double frameTime);
 	};
 

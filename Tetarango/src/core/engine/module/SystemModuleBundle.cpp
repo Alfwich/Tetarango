@@ -1,6 +1,6 @@
 #include "SystemModuleBundle.h"
 
-namespace AWCore
+namespace AW
 {
 	SystemModuleBundle* SystemModuleBundle::staticModuleBundle;
 

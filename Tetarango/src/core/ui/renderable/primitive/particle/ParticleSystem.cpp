@@ -1,7 +1,7 @@
 #include "ParticleSystem.h"
 
 
-namespace AWCore
+namespace AW
 {
 	ParticleSystem::ParticleSystem()
 	{

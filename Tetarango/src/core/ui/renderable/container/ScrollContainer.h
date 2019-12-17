@@ -2,7 +2,7 @@
 
 #include "Container.h"
 
-namespace AWCore
+namespace AW
 {
 	class ScrollContainer : public Container
 	{

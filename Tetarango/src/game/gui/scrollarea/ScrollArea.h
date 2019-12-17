@@ -12,10 +12,10 @@
 namespace AWGame
 {
 
-	class ScrollArea: public BaseGui, public AWCore::Container, public IGuiListener
+	class ScrollArea: public BaseGui, public AW::Container, public IGuiListener
 	{
 		bool scrollResolutionsDownPressed = false, scrollResolutionsUpPressed = false;
-		std::shared_ptr<AWCore::ScrollContainer> container;
+		std::shared_ptr<AW::ScrollContainer> container;
 		std::shared_ptr<ScrollBarBasic> scroller;
 		double getScrollMaxLimit();
 

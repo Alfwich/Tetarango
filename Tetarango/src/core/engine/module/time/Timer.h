@@ -5,7 +5,7 @@
 #include <SDL.h>
 #include "TimeScope.h"
 
-namespace AWCore
+namespace AW
 {
 	class Time;
 

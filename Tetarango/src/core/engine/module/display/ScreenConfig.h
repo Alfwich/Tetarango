@@ -1,5 +1,5 @@
 #pragma once
-namespace AWCore
+namespace AW
 {
 	enum class ScreenModes
 	{

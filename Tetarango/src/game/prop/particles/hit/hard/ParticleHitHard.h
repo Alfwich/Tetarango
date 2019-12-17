@@ -5,10 +5,10 @@
 namespace AWGame
 {
 
-	class ParticleHitHard : public AWCore::Particle
+	class ParticleHitHard : public AW::Particle
 	{
 	public:
-		ParticleHitHard(std::shared_ptr<AWCore::TextureContainer> textureContainer);
+		ParticleHitHard(std::shared_ptr<AW::TextureContainer> textureContainer);
 		void onEnterFrame(double frameTime);
 	};
 

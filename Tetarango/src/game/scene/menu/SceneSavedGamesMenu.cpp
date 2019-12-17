@@ -19,12 +19,12 @@ namespace AWGame
 
 	void SceneSavedGamesMenu::onCreateChildren()
 	{
-		const auto rootContainer = std::make_shared<AWCore::Container>();
+		const auto rootContainer = std::make_shared<AW::Container>();
 		rootContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
-		rootContainer->centerAlignSelf();
+		rootContainer->topLeftAlignSelf();
 		add(rootContainer);
 
-		savedGamesMenuTitle = std::make_shared<AWCore::Text>();
+		savedGamesMenuTitle = std::make_shared<AW::Text>();
 		savedGamesMenuTitle->setFont("medium", 28);
 		savedGamesMenuTitle->setText("Saved Games");
 		savedGamesMenuTitle->toTopOf(rootContainer, 0, -savedGamesMenuTitle->getHalfHeight() - modules->screen->getHeight() * 0.25);
@@ -32,13 +32,12 @@ namespace AWGame
 
 		const auto client = modules->storage->getClient();
 		const auto buttonOffset = modules->screen->getHeight() * buttonVerticalPaddingFactor;
-		const auto centerContainer = std::make_shared<AWCore::Container>();
-		centerContainer->setExpandToChildren(true);
+		const auto centerContainer = std::make_shared<AW::Container>();
 		centerContainer->centerWithin(rootContainer, 0, savedGamesMenuTitle->getBottom() / 2.0);
 		rootContainer->add(centerContainer);
 
 		saveSlot1 = std::make_shared<ButtonBasic>();
-		saveSlot1->centerAlignSelf();
+		saveSlot1->topLeftAlignSelf();
 		if (client->readBool(storagePath(StorePaths::System_SaveSlot1)))
 		{
 			saveSlot1->setText("Load 1");
@@ -53,7 +52,7 @@ namespace AWGame
 		const auto img1 = client->readSring(storagePath(StorePaths::System_SaveSlot1_Image));
 		if (!img1.empty())
 		{
-			const auto cachedImage = std::dynamic_pointer_cast<AWCore::CachedImage>(modules->serialization->hydrate(img1));
+			const auto cachedImage = std::dynamic_pointer_cast<AW::CachedImage>(modules->serialization->hydrate(img1));
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
@@ -79,7 +78,7 @@ namespace AWGame
 		const auto img2 = client->readSring(storagePath(StorePaths::System_SaveSlot2_Image));
 		if (!img2.empty())
 		{
-			const auto cachedImage = std::dynamic_pointer_cast<AWCore::CachedImage>(modules->serialization->hydrate(img2));
+			const auto cachedImage = std::dynamic_pointer_cast<AW::CachedImage>(modules->serialization->hydrate(img2));
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
@@ -105,7 +104,7 @@ namespace AWGame
 		const auto img3 = client->readSring(storagePath(StorePaths::System_SaveSlot3_Image));
 		if (!img3.empty())
 		{
-			const auto cachedImage = std::dynamic_pointer_cast<AWCore::CachedImage>(modules->serialization->hydrate(img3));
+			const auto cachedImage = std::dynamic_pointer_cast<AW::CachedImage>(modules->serialization->hydrate(img3));
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
@@ -123,7 +122,6 @@ namespace AWGame
 
 		if (modules->gameConfig->getConfigBool(Config::Param::enableTestScenes))
 		{
-			centerContainer->setExpandToChildren(false);
 			testSceneButton = std::make_shared<ButtonBasic>();
 			testSceneButton->setColor(128, 255, 255);
 			testSceneButton->toRightOf(backButton, buttonOffset);
@@ -138,6 +136,8 @@ namespace AWGame
 			testSpaceSceneButton->clickListener = baseSceneWeakThisRef();
 			centerContainer->add(testSpaceSceneButton);
 		}
+
+		centerContainer->resizeSelfToChildrenAndCenterChildren();
 	}
 
 	void SceneSavedGamesMenu::onButtonClicked(int id)
@@ -205,12 +205,12 @@ namespace AWGame
 		}
 	}
 
-	void SceneSavedGamesMenu::onWorkError(AWCore::WORKER_ID workerId, WorkerTaskCode code)
+	void SceneSavedGamesMenu::onWorkError(AW::WORKER_ID workerId, WorkerTaskCode code)
 	{
 		enableButtons();
 	}
 
-	void SceneSavedGamesMenu::onWorkDone(AWCore::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AWCore::AsyncResultBundle> result)
+	void SceneSavedGamesMenu::onWorkDone(AW::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AW::AsyncResultBundle> result)
 	{
 		switch (code)
 		{

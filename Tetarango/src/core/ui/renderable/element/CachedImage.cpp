@@ -10,9 +10,9 @@ namespace
 	const auto imageDataSizeParamName = "imageSize";
 }
 
-namespace AWCore
+namespace AW
 {
-	void CachedImage::updateCachedImage(std::shared_ptr<AWCore::ImageBundle> bundle)
+	void CachedImage::updateCachedImage(std::shared_ptr<AW::ImageBundle> bundle)
 	{
 		const auto texture = modules->texture->getEmptyTextureForKey("__cached_image_" + std::to_string(getId()));
 		texture->rebindWithImageBundle(bundle);
@@ -26,7 +26,7 @@ namespace AWCore
 
 	std::shared_ptr<ImageBundle> CachedImage::compressImage()
 	{
-		const auto result = std::make_shared<AWCore::ImageBundle>();
+		const auto result = std::make_shared<AW::ImageBundle>();
 
 		modules->asset->compressRawImageToPng(imageData, result);
 
@@ -37,13 +37,13 @@ namespace AWCore
 	{
 		if (imageData == nullptr)
 		{
-			imageData = std::make_shared<AWCore::ImageBundle>();
+			imageData = std::make_shared<AW::ImageBundle>();
 		}
 
 		if (imageData->data.capacity() < size)
 		{
 			imageData->data.resize(size);
-			imageData->type = AWCore::ImageBundleType::Unspecificed;
+			imageData->type = AW::ImageBundleType::Unspecificed;
 		}
 	}
 
@@ -93,7 +93,7 @@ namespace AWCore
 				dataRow--;
 			}
 
-			imageData->type = AWCore::ImageBundleType::Raw;
+			imageData->type = AW::ImageBundleType::Raw;
 			imageData->width = w;
 			imageData->height = h;
 			serializationClient->setInt(imageWidthParamName, w);
@@ -101,7 +101,7 @@ namespace AWCore
 			return true;
 		}
 
-		AWCore::Logger::instance()->logCritical("CachedImage::OpenGL Error reported: " + std::to_string(err));
+		AW::Logger::instance()->logCritical("CachedImage::OpenGL Error reported: " + std::to_string(err));
 		return false;
 	}
 
@@ -153,7 +153,7 @@ namespace AWCore
 				updateImageDataBuffer((int)end);
 				imageData->data.clear();
 				std::copy(data.begin(), data.end(), std::back_inserter(imageData->data));
-				imageData->type = AWCore::ImageBundleType::Png;
+				imageData->type = AW::ImageBundleType::Png;
 				imageData->width = w;
 				imageData->height = h;
 				updateCachedImage(imageData);
@@ -199,20 +199,20 @@ namespace AWCore
 		}
 	}
 
-	std::shared_ptr<AWCore::SerializationClient> CachedImage::doSerialize(AWCore::SerializationHint hint)
+	std::shared_ptr<AW::SerializationClient> CachedImage::doSerialize(AW::SerializationHint hint)
 	{
-		if (imageData != nullptr && serializationClient->getBool(shouldSerializeImageParamName) && hint == AWCore::SerializationHint::SERIALIZE)
+		if (imageData != nullptr && serializationClient->getBool(shouldSerializeImageParamName) && hint == AW::SerializationHint::SERIALIZE)
 		{
 			std::string data;
 			const auto client = serializationClient->getClient("__cached_image__", hint);
-			if (imageData->type == AWCore::ImageBundleType::Raw)
+			if (imageData->type == AW::ImageBundleType::Raw)
 			{
-				auto pngImageData = std::make_shared<AWCore::ImageBundle>();
+				auto pngImageData = std::make_shared<AW::ImageBundle>();
 				modules->asset->compressRawImageToPng(imageData, pngImageData);
 				imageData = pngImageData;
 			}
 
-			if (imageData->type == AWCore::ImageBundleType::Png)
+			if (imageData->type == AW::ImageBundleType::Png)
 			{
 				for (const auto c : imageData->data)
 				{

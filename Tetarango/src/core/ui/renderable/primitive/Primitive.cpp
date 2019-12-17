@@ -1,6 +1,6 @@
 #include "Primitive.h"
 
-namespace AWCore
+namespace AW
 {
 
 	Primitive::Primitive()

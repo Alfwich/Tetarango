@@ -26,8 +26,6 @@ namespace AWGame
 {
 	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{
-		//setExpandToChildren(false);
-		//setSize(40.0, 40.0);
 		enableSerialization<CheckBoxBasic>();
 	}
 
@@ -35,12 +33,12 @@ namespace AWGame
 	{
 		modules->texture->loadTexture(checkboxTexturePath, checkBoxBasicId);
 
-		auto animationSet = std::make_shared<AWCore::AnimationSet>();
+		auto animationSet = std::make_shared<AW::AnimationSet>();
 		{
 			auto row = 0;
 			auto col = 0;
 
-			AWCore::RectI frameSize = {
+			AW::RectI frameSize = {
 				0,
 				0,
 				40,
@@ -100,7 +98,7 @@ namespace AWGame
 
 	void CheckBoxBasic::onCreateChildren()
 	{
-		checkbox = std::make_shared<AWCore::Animated>();
+		checkbox = std::make_shared<AW::Animated>();
 		if (guiBaseName == getGuis().buttons.at(GuiButton::RadioBoxBasic))
 		{
 			checkbox->setAnimationPrefix(skins[1]);
@@ -114,34 +112,34 @@ namespace AWGame
 		checkbox->setAnimationSet(checkBoxBasicId);
 		checkbox->setDefaultAnimationName("default");
 		checkbox->setSize(40.0, 40.0);
-		checkbox->centerAlignSelf();
+		checkbox->topLeftAlignSelf();
 		add(checkbox);
 
-		label = std::make_shared<AWCore::Text>();
+		label = std::make_shared<AW::Text>();
 		label->name = "button_text";
-		label->setFont("medium", 30);
+		label->setFont("medium", 24);
 		label->setText(text);
 		label->setColor(getColor());
-		label->centerAlignSelf(45.0);
+		label->topLeftAlignSelf(45.0);
 		add(label);
 	}
 
 	void CheckBoxBasic::onChildrenHydrated()
 	{
-		checkbox = findChildWithName<AWCore::Animated>("checkbox");
-		label = findChildWithName<AWCore::Text>("button_text");
+		checkbox = findChildWithName<AW::Animated>("checkbox");
+		label = findChildWithName<AW::Text>("button_text");
 	}
 
 	void CheckBoxBasic::onInitialAttach()
 	{
 		enableEnterFrame();
-		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
 	}
 
 	void CheckBoxBasic::onLayoutChildren()
 	{
-		checkbox->centerAlignSelf();
 		label->toRightOf(checkbox, 5.0);
+		resizeSelfToChildrenAndCenterChildren();
 	}
 
 	void CheckBoxBasic::onDetach()
@@ -152,14 +150,14 @@ namespace AWGame
 
 	void CheckBoxBasic::checkIsHovering(int x, int y)
 	{
-		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AWCore::RenderPositionMode::Unspecified ? screenRect : worldRect;
+		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AW::RenderPositionMode::Unspecified ? screenRect : worldRect;
 
 		isHovering =
 			x < rect.x + rect.w && x > rect.x &&
 			y < rect.y + rect.h && y > rect.y;
 	}
 
-	void CheckBoxBasic::onMouseButton(AWCore::MouseButton button, bool pressed)
+	void CheckBoxBasic::onMouseButton(AW::MouseButton button, bool pressed)
 	{
 		const auto isLocked = serializationClient->getBool(isLockedParamName, false);
 		if (isLocked)
@@ -169,7 +167,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case AWCore::MouseButton::Left:
+		case AW::MouseButton::Left:
 			if (!pressed)
 			{
 				if (isHovering && isPressed)

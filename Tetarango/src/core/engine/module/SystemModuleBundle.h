@@ -15,7 +15,7 @@
 #include "thread/Thread.h"
 #include "asset/Asset.h"
 
-namespace AWCore
+namespace AW
 {
 	class TextureContainer;
 	class AnimationContainer;

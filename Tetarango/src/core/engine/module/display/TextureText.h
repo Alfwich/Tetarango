@@ -4,7 +4,7 @@
 #include "engine/module/font/Font.h"
 #include "util/Color.h"
 
-namespace AWCore
+namespace AW
 {
 
 	enum class TextRenderMode

@@ -4,26 +4,15 @@
 
 namespace
 {
-	const auto expandToChildrenParamName = "eXtc";
 	const auto debugBgRectName = "__debug__bg__";
 }
 
-namespace AWCore
+namespace AW
 {
 	Container::Container()
 	{
 		renderType = RenderType::Container;
 		enableSerialization<Container>();
-	}
-
-	void Container::setExpandToChildren(bool flag)
-	{
-		serializationClient->setBool(expandToChildrenParamName, flag);
-	}
-
-	bool Container::getExpandToChildren()
-	{
-		return serializationClient->getBool(expandToChildrenParamName, true);
 	}
 
 	void Container::setSizeToScreenSize()
@@ -39,55 +28,77 @@ namespace AWCore
 		return ApplicationObject::doSerialize(hint);
 	}
 
-	void Container::add(std::shared_ptr<ApplicationObject> obj)
+	void Container::resizeSelfToChildrenAndCenterChildren()
 	{
+		isAutoLayingOut = true;
 
-		ApplicationObject::add(obj);
-
-		if (!getExpandToChildren())
+		if (debugRect != nullptr)
 		{
-			return;
+			debugRect->removeFromParent();
 		}
 
-		const auto renderablePtr = std::dynamic_pointer_cast<Renderable>(obj);
-		if (renderablePtr != nullptr)
+		Rect childrenBounds{ 100000.0, 100000.0, 0.0, 0.0 };
+		for (const auto renderable : getChildrenOfType<Renderable>())
 		{
 			const auto r = getRect();
-			const auto rC = renderablePtr->getRect();
+			const auto rC = renderable->getRect();
 
-			double xDelta = rC.x + rC.w / 2.0;
-			if (r.w < xDelta)
+			if (rC.x - rC.w / 2.0 < childrenBounds.x)
 			{
-				setWidth(xDelta);
+				childrenBounds.x = rC.x - rC.w / 2.0;
 			}
 
-			double yDelta = rC.y + rC.h / 2.0;
-			if (r.h < yDelta)
+			if (rC.x + rC.w / 2.0 > childrenBounds.w)
 			{
-				setHeight(yDelta);
+				childrenBounds.w = rC.x + rC.w / 2.0;
+			}
+
+			if (rC.y - rC.h / 2.0 < childrenBounds.y)
+			{
+				childrenBounds.y = rC.y - rC.h / 2.0;
+			}
+
+			if (rC.y + rC.h / 2.0 > childrenBounds.h)
+			{
+				childrenBounds.h = rC.y + rC.h / 2.0;
 			}
 		}
+
+		childrenBounds.x = std::floor(childrenBounds.x);
+		childrenBounds.y = std::floor(childrenBounds.y);
+		childrenBounds.w = std::floor(childrenBounds.w);
+		childrenBounds.h = std::floor(childrenBounds.h);
+
+		setSize(childrenBounds.w - childrenBounds.x, childrenBounds.h - childrenBounds.y);
+
+		for (const auto renderable : getChildrenOfType<Renderable>())
+		{
+			renderable->movePosition(-childrenBounds.x, -childrenBounds.y);
+		}
+
+		isAutoLayingOut = false;
 	}
 
 	void Container::setWidth(double newWidth)
 	{
 		Renderable::setWidth(newWidth);
-		performAutoLayout();
+		shouldAutoLayout = true;
 	}
 
 	void Container::setHeight(double newHeight)
 	{
 		Renderable::setHeight(newHeight);
-		performAutoLayout();
+		shouldAutoLayout = true;
 	}
 
-	void Container::performAutoLayout()
+	void Container::performAutoLayoutIfNeeded()
 	{
-		if (!isAutoLayingOut)
+		if (!isAutoLayingOut && shouldAutoLayout)
 		{
 			isAutoLayingOut = true;
 			layout();
 			isAutoLayingOut = false;
+			shouldAutoLayout = false;
 		}
 	}
 
@@ -95,20 +106,21 @@ namespace AWCore
 	{
 		Renderable::doUpdateDebugChildren();
 
-		const auto existingBg = findChildWithName<AWCore::Rectangle>(debugBgRectName, false);
-		if (existingBg == nullptr)
+		if (debugRect == nullptr)
 		{
-			const auto newBg = std::make_shared<AWCore::Rectangle>();
-			newBg->name = debugBgRectName;
-			newBg->setAlpha(0.25);
-			newBg->setColor(AWCore::Color::random());
-			newBg->zIndex = 1;
-			newBg->matchSizeAndCenter(this);
-			add(newBg);
+			debugRect = std::make_shared<AW::Rectangle>();
+			debugRect->name = debugBgRectName;
+			debugRect->setTag(AW::AOTags::IsDebugElement, true);
+			debugRect->setAlpha(0.25);
+			debugRect->setColor(AW::Color(0, AW::NumberHelper::randomInt(0, 255), AW::NumberHelper::randomInt(0, 255)));
+			debugRect->zIndex = 1;
+			add(debugRect);
 		}
-		else
+		else if (!debugRect->isAttached())
 		{
-			existingBg->matchSizeAndCenter(this);
+			add(debugRect);
 		}
+
+		debugRect->matchSizeAndCenter(this);
 	}
 }

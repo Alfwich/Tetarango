@@ -2,7 +2,8 @@
 
 namespace
 {
-	const double buttonVerticalPaddingFactor = 0.1;
+	const double titleDistanceFromMenuItems = 200.0;
+	const double menuItemDistance = 35.0;
 }
 
 namespace AWGame
@@ -18,44 +19,43 @@ namespace AWGame
 	{
 		BaseScene::onInitialAttach();
 
-		gameTitleTransition = modules->animation->createTransitionForTimeScope(AWCore::TimeScope::Menu);
+		gameTitleTransition = modules->animation->createTransitionForTimeScope(AW::TimeScope::Menu);
 	}
 
 	void SceneMainMenu::onCreateChildren()
 	{
-		rootContainer = std::make_shared<AWCore::Container>();
+		rootContainer = std::make_shared<AW::Container>();
 		rootContainer->setAlpha(0.0);
 		rootContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
-		rootContainer->centerAlignSelf();
+		rootContainer->topLeftAlignSelf();
 		add(rootContainer);
 
-		gameTitle = std::make_shared<TitleGame>();
-		rootContainer->add(gameTitle);
-		gameTitle->toTopOf(rootContainer, 0.0, -gameTitle->getHalfHeight() - modules->screen->getHeight() * 0.35);
-
-		const auto buttonOffset = modules->screen->getHeight() * buttonVerticalPaddingFactor;
-		const auto centerContainer = std::make_shared<AWCore::Container>();
-		centerContainer->setExpandToChildren(true);
-		centerContainer->centerWithin(rootContainer, 0, gameTitle->getBottom() / 2.0);
+		const auto centerContainer = std::make_shared<AW::Container>();
+		centerContainer->centerWithin(rootContainer);
 		rootContainer->add(centerContainer);
+
+		gameTitle = std::make_shared<TitleGame>();
+		centerContainer->add(gameTitle);
 
 		playButton = std::make_shared<ButtonBasic>();
 		playButton->setText("Play");
 		playButton->clickListener = baseSceneWeakThisRef();
-		playButton->centerAlignSelf();
+		playButton->toBottomOf(gameTitle, 0.0, titleDistanceFromMenuItems);
 		centerContainer->add(playButton);
 
 		optionButton = std::make_shared<ButtonBasic>();
 		optionButton->setText("Options");
 		optionButton->clickListener = baseSceneWeakThisRef();
-		optionButton->toBottomOf(playButton, 0, buttonOffset);
+		optionButton->toBottomOf(playButton, 0, menuItemDistance);
 		centerContainer->add(optionButton);
 
 		exitButton = std::make_shared<ButtonBasic>();
 		exitButton->setText("Exit");
 		exitButton->clickListener = baseSceneWeakThisRef();
-		exitButton->toBottomOf(optionButton, 0, buttonOffset);
+		exitButton->toBottomOf(optionButton, 0, menuItemDistance);
 		centerContainer->add(exitButton);
+
+		centerContainer->resizeSelfToChildrenAndCenterChildren();
 	}
 
 	void SceneMainMenu::onAttach()
@@ -79,7 +79,7 @@ namespace AWGame
 
 		if (id == exitButton->getId())
 		{
-			modules->event->pushEvent(std::make_shared<AWCore::ApplicationEvent>(AWCore::Events::QuitRequested));
+			modules->event->pushEvent(std::make_shared<AW::ApplicationEvent>(AW::Events::QuitRequested));
 		}
 	}
 }

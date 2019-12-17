@@ -1,5 +1,5 @@
 #include "Gamepad.h"
-namespace AWCore
+namespace AW
 {
 
 	Gamepad::Gamepad()

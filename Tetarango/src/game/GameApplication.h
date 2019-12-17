@@ -12,9 +12,9 @@
 namespace AWGame
 {
 
-	class GameApplication : public AWCore::Application
+	class GameApplication : public AW::Application
 	{
-		std::shared_ptr<AWCore::SceneContainer> masterSceneContainer;
+		std::shared_ptr<AW::SceneContainer> masterSceneContainer;
 
 	public:
 		void onInit();

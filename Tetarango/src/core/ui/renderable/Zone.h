@@ -2,7 +2,7 @@
 
 #include "ui/renderable/container/Container.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Zone : public Container

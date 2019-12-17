@@ -1,6 +1,6 @@
 #include "Serialization.h"
 
-namespace AWCore
+namespace AW
 {
 	Serialization::Serialization()
 	{

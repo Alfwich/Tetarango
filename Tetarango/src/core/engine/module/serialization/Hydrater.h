@@ -6,7 +6,7 @@
 #include "SerializationTags.h"
 #include "util/StringHelper.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Hydrater

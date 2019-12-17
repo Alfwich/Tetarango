@@ -11,10 +11,10 @@
 namespace AWGame
 {
 
-	class TransitionFade : public BaseGui, public AWCore::Container, public AWCore::INotifyOnTransition
+	class TransitionFade : public BaseGui, public AW::Container, public AW::INotifyOnTransition
 	{
-		std::shared_ptr<AWCore::Transition> fadeTransition;
-		std::shared_ptr<AWCore::Rectangle> fadeRectangle;
+		std::shared_ptr<AW::Transition> fadeTransition;
+		std::shared_ptr<AW::Rectangle> fadeRectangle;
 
 	public:
 

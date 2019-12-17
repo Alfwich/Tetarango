@@ -18,10 +18,10 @@ namespace AWGame
 	{
 		modules->texture->loadTexture("res/game/img/prop/block/blocks.png", blockTextureName);
 
-		auto animationSet = std::make_shared<AWCore::AnimationSet>();
+		auto animationSet = std::make_shared<AW::AnimationSet>();
 		{
 			int fps = 15;
-			AWCore::RectI frameSize = {
+			AW::RectI frameSize = {
 				0,
 				0,
 				32,
@@ -40,7 +40,7 @@ namespace AWGame
 
 	void Block::onInitialAttach()
 	{
-		AWCore::Animated::onInitialAttach();
+		AW::Animated::onInitialAttach();
 		setTexture(blockTextureName);
 		setAnimationSet(blockAnimationName);
 		setCurrentAnimation("default");
@@ -48,10 +48,10 @@ namespace AWGame
 
 	void Block::onCreateChildren()
 	{
-		AWCore::Animated::onCreateChildren();
+		AW::Animated::onCreateChildren();
 	}
 
-	std::shared_ptr<AWCore::SerializationClient> Block::doSerialize(AWCore::SerializationHint hint)
+	std::shared_ptr<AW::SerializationClient> Block::doSerialize(AW::SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__block__", hint);
 

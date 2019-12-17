@@ -1,6 +1,6 @@
 #pragma once
 
-namespace AWCore
+namespace AW
 {
 	class EnterFrameListener
 	{

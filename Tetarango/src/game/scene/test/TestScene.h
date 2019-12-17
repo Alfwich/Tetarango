@@ -11,7 +11,7 @@
 namespace AWGame
 {
 
-	class TestScene : public AWCore::Scene
+	class TestScene : public AW::Scene
 	{
 		std::shared_ptr<GameCamera> camera;
 

@@ -8,18 +8,18 @@
 
 namespace AWGame
 {
-	class Board : public AWCore::Element
+	class Board : public AW::Element
 	{
 		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true;
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 32, cellHeight = 32;
-		std::vector<std::shared_ptr<AWCore::Transition>> transitions;
+		std::vector<std::shared_ptr<AW::Transition>> transitions;
 		std::vector<std::shared_ptr<Block>> currentBlocks;
 		std::vector<std::shared_ptr<Block>> eliminiatedBlocks;
 		std::map<int, std::shared_ptr<Block>> blockMap;
-		std::shared_ptr<AWCore::Timer> actionTimer;
-		std::shared_ptr<AWCore::NineSlice> background;
+		std::shared_ptr<AW::Timer> actionTimer;
+		std::shared_ptr<AW::NineSlice> background;
 
-		std::shared_ptr<AWCore::Transition> getTransition();
+		std::shared_ptr<AW::Transition> getTransition();
 		void updateBoardIfNeeded();
 		int calcMapOffset(const std::shared_ptr<Block> blockPtr);
 		int calcMapOffset(unsigned int x, unsigned int y);
@@ -50,7 +50,7 @@ namespace AWGame
 		void onInitialAttach();
 		void onCreateChildren();
 		void onChildrenHydrated();
-		virtual std::shared_ptr<AWCore::SerializationClient> doSerialize(AWCore::SerializationHint hint);
+		virtual std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 		void onEnterFrame(double deltaTime);
 	};
 

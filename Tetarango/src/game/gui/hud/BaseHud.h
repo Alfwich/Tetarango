@@ -6,7 +6,7 @@
 namespace AWGame
 {
 
-	class BaseHud : public BaseGui, public AWCore::Container
+	class BaseHud : public BaseGui, public AW::Container
 	{
 	protected:
 

@@ -21,26 +21,26 @@ namespace AWGame
 
 	void GameMainMenu::onInitialAttach()
 	{
-		setTimeScope(AWCore::TimeScope::Menu);
+		setTimeScope(AW::TimeScope::Menu);
 	}
 
 	void GameMainMenu::onCreateChildren()
 	{
-		const auto backgroundFade = std::make_shared<AWCore::Rectangle>();
+		const auto backgroundFade = std::make_shared<AW::Rectangle>();
 		backgroundFade->name = "background";
 		backgroundFade->setColor(0, 0, 0);
 		backgroundFade->setAlpha(0.5);
 		add(backgroundFade);
 
-		const auto centeringContainer = std::make_shared<AWCore::Container>();
+		const auto centeringContainer = std::make_shared<AW::Container>();
 		centeringContainer->name = "center-c";
 		centeringContainer->zIndex = 2;
-		centeringContainer->setExpandToChildren(true);
+		add(centeringContainer);
 
 		backButton = std::make_shared<ButtonBasic>();
 		backButton->clickListener = weak_from_this();
 		backButton->setText("Back");
-		backButton->centerAlignSelf();
+		backButton->topLeftAlignSelf();
 		centeringContainer->add(backButton);
 
 		optionsButton = std::make_shared<ButtonBasic>();
@@ -61,17 +61,17 @@ namespace AWGame
 		mainMenuButton->toBottomOf(saveButton, 0, mainMenuButtonOffset);
 		centeringContainer->add(mainMenuButton);
 
-		add(centeringContainer);
+		centeringContainer->resizeSelfToChildrenAndCenterChildren();
 	}
 
 	void GameMainMenu::onLayoutChildren()
 	{
 		setSize(modules->screen->getWidth(), modules->screen->getHeight());
 
-		const auto backgroundFade = findChildWithName<AWCore::Rectangle>("background");
+		const auto backgroundFade = findChildWithName<AW::Rectangle>("background");
 		backgroundFade->matchSizeAndCenter(this);
 
-		const auto centeringContainer = findChildWithName<AWCore::Container>("center-c");
+		const auto centeringContainer = findChildWithName<AW::Container>("center-c");
 		centeringContainer->centerWithin(this);
 	}
 
@@ -93,13 +93,13 @@ namespace AWGame
 			}
 			else
 			{
-				findFirstInParentChain<AWCore::SceneContainer>()->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
+				findFirstInParentChain<AW::SceneContainer>()->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 			}
 		}
 		else if (id == backButton->getId())
 		{
 			this->visible = false;
-			modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		}
 		else if (id == saveButton->getId())
 		{
@@ -127,7 +127,7 @@ namespace AWGame
 			return;
 		}
 
-		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 0.0);
+		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 0.0);
 		visible = true;
 	}
 
@@ -139,7 +139,7 @@ namespace AWGame
 			return;
 		}
 
-		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
+		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		visible = false;
 	}
 

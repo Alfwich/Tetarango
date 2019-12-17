@@ -13,7 +13,7 @@ namespace
 namespace AWGame
 {
 
-	TestSpace2::TestSpace2() : AWCore::Scene("test_space_scene")
+	TestSpace2::TestSpace2() : AW::Scene("test_space_scene")
 	{
 		rebuildOnLoad = true;
 		enableSerialization<TestSpace2>();
@@ -22,14 +22,14 @@ namespace AWGame
 	void TestSpace2::onInitialAttach()
 	{
 		enableEnterFrame();
-		setTimeScope(AWCore::TimeScope::Game);
+		setTimeScope(AW::TimeScope::Game);
 
 		modules->input->keyboard->registerKeys({ SDL_SCANCODE_ESCAPE, SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3 }, weak_from_this());
 	}
 
 	void TestSpace2::onAttach()
 	{
-		modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
+		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 	}
 
 	void TestSpace2::onCreateChildren()
@@ -37,7 +37,7 @@ namespace AWGame
 		const auto mainGameMenu = std::make_shared<GameMainMenu>();
 		mainGameMenu->zIndex = 20;
 		mainGameMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		mainGameMenu->renderPositionMode = AWCore::RenderPositionMode::Absolute;
+		mainGameMenu->renderPositionMode = AW::RenderPositionMode::Absolute;
 		mainGameMenu->visible = false;
 		add(mainGameMenu);
 
@@ -46,10 +46,10 @@ namespace AWGame
 		camera->setZoomLimits(4.0, 1.0);
 		camera->setDefaultsAndReset(2.0, 0.0, 0.0);
 		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		camera->setTimeScope(AWCore::TimeScope::Camera);
+		camera->setTimeScope(AW::TimeScope::Camera);
 		add(camera);
 
-		globalSystem = std::make_shared<AWCore::ParticleSystem>();
+		globalSystem = std::make_shared<AW::ParticleSystem>();
 		globalSystem->name = starSystemId;
 		globalSystem->setSize(5000.0, 5000.0);
 		globalSystem->emitImmediatelyWithFactory(1000, std::make_shared<ParticleSpaceBackgroundParticleFactory>());
@@ -58,8 +58,8 @@ namespace AWGame
 
 	void TestSpace2::onChildrenHydrated()
 	{
-		globalSystem = findChildWithName<AWCore::ParticleSystem>(starSystemId);
-		AWCore::NumberHelper::seedRng(getSceneName());
+		globalSystem = findChildWithName<AW::ParticleSystem>(starSystemId);
+		AW::NumberHelper::seedRng(getSceneName());
 		globalSystem->emitImmediatelyWithFactory(3000, std::make_shared<ParticleSpaceBackgroundParticleFactory>());
 	}
 
@@ -72,19 +72,19 @@ namespace AWGame
 		switch (key)
 		{
 		case SDL_SCANCODE_ESCAPE:
-			findFirstInParentChain<AWCore::SceneContainer>()->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
+			findFirstInParentChain<AW::SceneContainer>()->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 			break;
 
 		case SDL_SCANCODE_1:
-			modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 10.0);
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 10.0);
 			break;
 
 		case SDL_SCANCODE_2:
-			modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 1.0);
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 			break;
 
 		case SDL_SCANCODE_3:
-			modules->time->changeTimeFactorForScope(AWCore::TimeScope::Game, 0.25);
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 0.25);
 			break;
 		}
 	}

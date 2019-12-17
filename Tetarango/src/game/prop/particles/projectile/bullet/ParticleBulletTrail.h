@@ -5,10 +5,10 @@
 namespace AWGame
 {
 
-	class ParticleBulletTrail : public AWCore::Particle
+	class ParticleBulletTrail : public AW::Particle
 	{
 	public:
-		ParticleBulletTrail(std::shared_ptr<AWCore::TextureContainer> textureContainer);
+		ParticleBulletTrail(std::shared_ptr<AW::TextureContainer> textureContainer);
 		void onEnterFrame(double deltaTime);
 	};
 

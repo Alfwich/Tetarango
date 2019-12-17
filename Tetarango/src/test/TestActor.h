@@ -4,7 +4,7 @@
 
 namespace MTTest
 {
-	class TestActor : public AWCore::Animated
+	class TestActor : public AW::Animated
 	{
 	public:
 		TestActor() {

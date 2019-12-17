@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include "engine/module/input/IInputListener.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Mouse

@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-namespace AWCore
+namespace AW
 {
 	Logger* Logger::staticLoggerInstance = nullptr;
 

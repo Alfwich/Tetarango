@@ -3,7 +3,7 @@
 #include "util/NumberHelper.h"
 #include "ui/renderable/element/Rectangle.h"
 
-namespace AWCore
+namespace AW
 {
 	Trace::Trace()
 	{
@@ -14,12 +14,12 @@ namespace AWCore
 	{
 		for (int i = 0; i < numSegments; ++i)
 		{
-			add(std::make_shared<AWCore::Rectangle>());
+			add(std::make_shared<AW::Rectangle>());
 		}
 
 		auto baseColor = getColor();
 		int segmentPos = 0;
-		for (const auto rect : getChildrenOfType<AWCore::Rectangle>())
+		for (const auto rect : getChildrenOfType<AW::Rectangle>())
 		{
 			rect->setColor(baseColor->lerp(endColor, segmentPos++ / numSegments));
 		}
@@ -55,7 +55,7 @@ namespace AWCore
 		const auto h = getHeight();
 		auto lastRect = Rect();
 
-		for (const auto rect : getChildrenOfType<AWCore::Rectangle>())
+		for (const auto rect : getChildrenOfType<AW::Rectangle>())
 		{
 			if (tD > d)
 			{

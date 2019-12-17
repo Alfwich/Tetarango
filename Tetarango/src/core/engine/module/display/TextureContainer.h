@@ -7,7 +7,7 @@
 #include "Texture.h"
 #include "engine/module/IBaseModule.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Screen;

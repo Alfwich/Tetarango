@@ -4,7 +4,7 @@
 #include <math.h>
 #include <algorithm>
 
-namespace AWCore
+namespace AW
 {
 	class NumberHelper
 	{

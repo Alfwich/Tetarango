@@ -14,9 +14,9 @@ namespace AWGame
 		int state = 0;
 
 		std::shared_ptr<TitleGame> gameTitle;
-		std::shared_ptr<AWCore::Transition> gameTitleTransition;
+		std::shared_ptr<AW::Transition> gameTitleTransition;
 
-		std::shared_ptr<AWCore::Container> rootContainer;
+		std::shared_ptr<AW::Container> rootContainer;
 		std::shared_ptr<ButtonBasic> playButton;
 		std::shared_ptr<ButtonBasic> optionButton;
 		std::shared_ptr<ButtonBasic> exitButton;

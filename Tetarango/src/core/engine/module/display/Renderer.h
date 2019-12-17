@@ -14,7 +14,7 @@
 #include "util/QuadMap.h"
 #include "util/Color.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class Renderer
@@ -31,6 +31,7 @@ namespace AWCore
 		std::shared_ptr<Camera> camera;
 		std::stack<RenderPositionMode> renderPositionModeStack;
 		std::stack<Color> colorStack;
+		std::stack<RenderPositionProcessing> renderProcessingStack;
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 
 		void prepareRender(Screen* screen);

@@ -3,7 +3,7 @@
 #include "NumberHelper.h"
 #include "SDL.h"
 
-namespace AWCore
+namespace AW
 {
 	class Color
 	{
@@ -67,10 +67,10 @@ namespace AWCore
 		Color lerp(const Color& other, double p)
 		{
 			return Color(
-				AWCore::NumberHelper::lerp<Uint8>(r, other.r, p),
-				AWCore::NumberHelper::lerp<Uint8>(g, other.g, p),
-				AWCore::NumberHelper::lerp<Uint8>(b, other.b, p),
-				AWCore::NumberHelper::lerp<Uint8>(a, other.a, p)
+				AW::NumberHelper::lerp<Uint8>(r, other.r, p),
+				AW::NumberHelper::lerp<Uint8>(g, other.g, p),
+				AW::NumberHelper::lerp<Uint8>(b, other.b, p),
+				AW::NumberHelper::lerp<Uint8>(a, other.a, p)
 			);
 		}
 

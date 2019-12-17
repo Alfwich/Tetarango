@@ -63,9 +63,9 @@ namespace Config
 			{
 				base[Param::gameName] = base[Param::gameName] + " - DEV - " + base[Param::version];
 				base[Param::storageLocation] += " " + base[Param::version] + " - Debug";
-				base[Param::launchToLastScene] = FALSE;
 				base[Param::useAssetPack] = FALSE;
 				base[Param::saveWholeSceneOnClose] = TRUE;
+				//base[Param::launchToLastScene] = TRUE;
 				//base[Param::runTests] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;

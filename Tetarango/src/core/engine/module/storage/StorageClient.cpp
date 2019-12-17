@@ -2,7 +2,7 @@
 #include "engine/module/logger/Logger.h"
 
 
-namespace AWCore
+namespace AW
 {
 
 	StorageClient::StorageClient(std::unordered_map<std::string, std::string>& store, std::string scopeName) : store(store)

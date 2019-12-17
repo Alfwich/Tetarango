@@ -2,7 +2,7 @@
 
 #include "util/NumberHelper.h"
 
-namespace AWCore
+namespace AW
 {
 	void Renderable::setColor(const Color& color)
 	{
@@ -210,14 +210,9 @@ namespace AWCore
 		return getHeight() / 2.0;
 	}
 
-	void Renderable::centerAlignSelf(double xOffset, double yOffset)
+	void Renderable::topLeftAlignSelf(double xOffset, double yOffset)
 	{
 		setPosition(this->getHalfWidth() + xOffset, this->getHalfHeight() + yOffset);
-	}
-
-	void Renderable::floorAlignSelf(double xOffset, double yOffset)
-	{
-		setPosition(std::floor(getX() + xOffset), std::floor(getY() + yOffset));
 	}
 
 	void Renderable::centerWithin(ApplicationObject* other, double xOffset, double yOffset)

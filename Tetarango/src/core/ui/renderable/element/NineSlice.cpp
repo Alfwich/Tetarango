@@ -7,7 +7,7 @@ namespace
 	const auto cornerSizeParamName = "corner-size";
 }
 
-namespace AWCore
+namespace AW
 {
 	NineSlice::NineSlice()
 	{
@@ -30,7 +30,7 @@ namespace AWCore
 
 		if (nineSliceAnimationSet == nullptr)
 		{
-			nineSliceAnimationSet = std::make_shared<AWCore::AnimationSet>();
+			nineSliceAnimationSet = std::make_shared<AW::AnimationSet>();
 		}
 
 		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
@@ -50,7 +50,7 @@ namespace AWCore
 			}
 		}
 
-		for (const auto animated : getChildrenOfType<AWCore::Animated>())
+		for (const auto animated : getChildrenOfType<AW::Animated>())
 		{
 			animated->setTexture(texture);
 			animated->setAnimationSet(nineSliceAnimationSet);
@@ -96,7 +96,7 @@ namespace AWCore
 
 	void NineSlice::onCreateChildren()
 	{
-		topLeft = std::make_shared<AWCore::Animated>();
+		topLeft = std::make_shared<AW::Animated>();
 		topLeft->name = "tl";
 		topLeft->sizeToAnimation = false;
 		topLeft->setAnimationSet(nineSliceAnimationSet);
@@ -104,7 +104,7 @@ namespace AWCore
 		topLeft->setTexture(texture);
 		add(topLeft);
 
-		top = std::make_shared<AWCore::Animated>();
+		top = std::make_shared<AW::Animated>();
 		top->name = "t";
 		top->sizeToAnimation = false;
 		top->setAnimationSet(nineSliceAnimationSet);
@@ -112,7 +112,7 @@ namespace AWCore
 		top->setTexture(texture);
 		add(top);
 
-		topRight = std::make_shared<AWCore::Animated>();
+		topRight = std::make_shared<AW::Animated>();
 		topRight->name = "tr";
 		topRight->sizeToAnimation = false;
 		topRight->setAnimationSet(nineSliceAnimationSet);
@@ -120,7 +120,7 @@ namespace AWCore
 		topRight->setTexture(texture);
 		add(topRight);
 
-		left = std::make_shared<AWCore::Animated>();
+		left = std::make_shared<AW::Animated>();
 		left->name = "l";
 		left->sizeToAnimation = false;
 		left->setAnimationSet(nineSliceAnimationSet);
@@ -128,7 +128,7 @@ namespace AWCore
 		left->setTexture(texture);
 		add(left);
 
-		center = std::make_shared<AWCore::Animated>();
+		center = std::make_shared<AW::Animated>();
 		center->name = "c";
 		center->sizeToAnimation = false;
 		center->setAnimationSet(nineSliceAnimationSet);
@@ -136,7 +136,7 @@ namespace AWCore
 		center->setTexture(texture);
 		add(center);
 
-		right = std::make_shared<AWCore::Animated>();
+		right = std::make_shared<AW::Animated>();
 		right->name = "r";
 		right->sizeToAnimation = false;
 		right->setAnimationSet(nineSliceAnimationSet);
@@ -144,7 +144,7 @@ namespace AWCore
 		right->setTexture(texture);
 		add(right);
 
-		bottomLeft = std::make_shared<AWCore::Animated>();
+		bottomLeft = std::make_shared<AW::Animated>();
 		bottomLeft->name = "bl";
 		bottomLeft->sizeToAnimation = false;
 		bottomLeft->setAnimationSet(nineSliceAnimationSet);
@@ -152,7 +152,7 @@ namespace AWCore
 		bottomLeft->setTexture(texture);
 		add(bottomLeft);
 
-		bottom = std::make_shared<AWCore::Animated>();
+		bottom = std::make_shared<AW::Animated>();
 		bottom->name = "b";
 		bottom->sizeToAnimation = false;
 		bottom->setAnimationSet(nineSliceAnimationSet);
@@ -160,7 +160,7 @@ namespace AWCore
 		bottom->setTexture(texture);
 		add(bottom);
 
-		bottomRight = std::make_shared<AWCore::Animated>();
+		bottomRight = std::make_shared<AW::Animated>();
 		bottomRight->name = "br";
 		bottomRight->sizeToAnimation = false;
 		bottomRight->setAnimationSet(nineSliceAnimationSet);
@@ -171,17 +171,17 @@ namespace AWCore
 
 	void NineSlice::onChildrenHydrated()
 	{
-		topRight = findChildWithName<AWCore::Animated>("tr");
-		top = findChildWithName<AWCore::Animated>("t");
-		topLeft = findChildWithName<AWCore::Animated>("tl");
+		topRight = findChildWithName<AW::Animated>("tr");
+		top = findChildWithName<AW::Animated>("t");
+		topLeft = findChildWithName<AW::Animated>("tl");
 
-		right = findChildWithName<AWCore::Animated>("r");
-		center = findChildWithName<AWCore::Animated>("c");
-		left = findChildWithName<AWCore::Animated>("l");
+		right = findChildWithName<AW::Animated>("r");
+		center = findChildWithName<AW::Animated>("c");
+		left = findChildWithName<AW::Animated>("l");
 
-		bottomRight = findChildWithName<AWCore::Animated>("br");
-		bottom = findChildWithName<AWCore::Animated>("b");
-		bottomLeft = findChildWithName<AWCore::Animated>("bl");
+		bottomRight = findChildWithName<AW::Animated>("br");
+		bottom = findChildWithName<AW::Animated>("b");
+		bottomLeft = findChildWithName<AW::Animated>("bl");
 
 		generateNineSliceAnimationSet();
 	}
@@ -223,7 +223,7 @@ namespace AWCore
 
 	void NineSlice::play(std::string animationName)
 	{
-		for (const auto animated : getChildrenOfType<AWCore::Animated>())
+		for (const auto animated : getChildrenOfType<AW::Animated>())
 		{
 			animated->setAnimationPrefix(animationName);
 			animated->play(animated->getCurrentAnimationName());

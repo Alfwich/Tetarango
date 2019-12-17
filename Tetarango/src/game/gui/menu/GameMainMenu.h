@@ -7,7 +7,7 @@
 namespace AWGame
 {
 
-	class GameMainMenu : public BaseGui, public AWCore::Container, public IGuiListener
+	class GameMainMenu : public BaseGui, public AW::Container, public IGuiListener
 	{
 		std::shared_ptr<ButtonBasic> backButton;
 		std::shared_ptr<ButtonBasic> optionsButton;

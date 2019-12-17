@@ -4,7 +4,7 @@
 #include "Particle.h"
 #include "engine/ApplicationObject.h"
 
-namespace AWCore
+namespace AW
 {
 	class ParticleCreationBundle
 	{
@@ -21,7 +21,7 @@ namespace AWCore
 		double xVelocity, yVelocity, rotation, alpha;
 	};
 
-	class IParticleFactory : public AWCore::ApplicationObject
+	class IParticleFactory : public AW::ApplicationObject
 	{
 	public:
 		virtual std::shared_ptr<Particle> makeParticle(ParticleCreationBundle& bundle) = 0;

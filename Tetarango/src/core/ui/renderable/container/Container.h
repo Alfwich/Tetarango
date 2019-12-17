@@ -2,24 +2,25 @@
 
 #include "engine/ApplicationObject.h"
 #include "ui/renderable/Renderable.h"
+#include "ui/renderable/element/Rectangle.h"
 
-namespace AWCore
+namespace AW
 {
 
-	class Container : public ApplicationObject, public Renderable 
-	{ 
-		bool isAutoLayingOut = false;
-		void performAutoLayout();
+	class Container : public ApplicationObject, public Renderable
+	{
+		bool isAutoLayingOut = false, shouldAutoLayout = true;
+		std::shared_ptr<AW::Rectangle> debugRect;
 
 	public:
 		Container();
 
-		void setExpandToChildren(bool flag);
-		bool getExpandToChildren();
 		void setSizeToScreenSize();
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
-		virtual void add(std::shared_ptr<ApplicationObject> obj);
+
+		void resizeSelfToChildrenAndCenterChildren();
+		void performAutoLayoutIfNeeded();
 
 		void setWidth(double newWidth);
 		void setHeight(double newHeight);

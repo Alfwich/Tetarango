@@ -1,7 +1,7 @@
 #include "Event.h"
 #include "GL/glew.h"
 
-namespace AWCore
+namespace AW
 {
 
 	void Event::bindInput(std::shared_ptr<Input> input)

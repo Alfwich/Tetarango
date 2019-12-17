@@ -25,10 +25,10 @@ namespace AWGame
 		modules->texture->loadTexture("res/game/img/ui/scrollbar/scrollbar_basic.png", scrollbarBasicTextureId);
 
 		{
-			auto animationSet = std::make_shared<AWCore::AnimationSet>();
+			auto animationSet = std::make_shared<AW::AnimationSet>();
 			{
 				int fps = 15;
-				AWCore::RectI frameSize = {
+				AW::RectI frameSize = {
 					0,
 					0,
 					40,
@@ -51,10 +51,10 @@ namespace AWGame
 		}
 
 		{
-			auto animationSet = std::make_shared<AWCore::AnimationSet>();
+			auto animationSet = std::make_shared<AW::AnimationSet>();
 			{
 				int fps = 15;
-				AWCore::RectI frameSize = {
+				AW::RectI frameSize = {
 					3,
 					40,
 					34,
@@ -104,7 +104,7 @@ namespace AWGame
 
 	void ScrollBarBasic::setScrollerHeight(double height)
 	{
-		serializationClient->setDouble(scrollbarHeightParamName, AWCore::NumberHelper::clamp<double>(height, 0.0, 1.0));
+		serializationClient->setDouble(scrollbarHeightParamName, AW::NumberHelper::clamp<double>(height, 0.0, 1.0));
 		layout();
 	}
 
@@ -125,7 +125,7 @@ namespace AWGame
 
 	void ScrollBarBasic::setScrollPositionInstantly(double pos)
 	{
-		const auto value = AWCore::NumberHelper::clamp<double>(pos, 0.0, 1.0);
+		const auto value = AW::NumberHelper::clamp<double>(pos, 0.0, 1.0);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
 
 		updateScrollerPosition(true);
@@ -139,7 +139,7 @@ namespace AWGame
 
 	void ScrollBarBasic::setScrollPosition(double pos)
 	{
-		const auto value = AWCore::NumberHelper::clamp<double>(pos, 0.0, 1.0);
+		const auto value = AW::NumberHelper::clamp<double>(pos, 0.0, 1.0);
 		serializationClient->setDouble(scrollbarPositionParamName, value);
 
 		updateScrollerPosition();
@@ -158,7 +158,7 @@ namespace AWGame
 
 	void ScrollBarBasic::onCreateChildren()
 	{
-		background = std::make_shared<AWCore::NineSlice>();
+		background = std::make_shared<AW::NineSlice>();
 		background->name = scrollbarBasicBackgroundId;
 		background->setTexture(scrollbarBasicTextureId);
 		background->setAnimationSet(scrollbarBasicBackgroundId);
@@ -166,7 +166,7 @@ namespace AWGame
 		add(background);
 		background->play("black");
 
-		scroller = std::make_shared<AWCore::NineSlice>();
+		scroller = std::make_shared<AW::NineSlice>();
 		scroller->name = scrollbarBasicScrollerId;
 		scroller->setTexture(scrollbarBasicTextureId);
 		scroller->setAnimationSet(scrollbarBasicScrollerId);
@@ -178,14 +178,14 @@ namespace AWGame
 
 	void ScrollBarBasic::onChildrenHydrated()
 	{
-		background = findChildWithName<AWCore::NineSlice>(scrollbarBasicBackgroundId);
-		scroller = findChildWithName<AWCore::NineSlice>(scrollbarBasicScrollerId);
+		background = findChildWithName<AW::NineSlice>(scrollbarBasicBackgroundId);
+		scroller = findChildWithName<AW::NineSlice>(scrollbarBasicScrollerId);
 	}
 
 	void ScrollBarBasic::onInitialAttach()
 	{
 		scrollerTransition = modules->animation->createTransition();
-		modules->input->mouse->registerMouseButton(AWCore::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
 		enableEnterFrame();
 	}
 
@@ -198,7 +198,7 @@ namespace AWGame
 	void ScrollBarBasic::onLayoutChildren()
 	{
 		background->matchSize(this);
-		background->centerAlignSelf();
+		background->topLeftAlignSelf();
 		if (getHorizontal())
 		{
 			const auto scrollerHeight = getScrollerHeight() * getWidth();
@@ -211,20 +211,20 @@ namespace AWGame
 			scroller->setHeight(scrollerHeight);
 			scroller->setWidth(getWidth());
 		}
-		scroller->centerAlignSelf();
+		scroller->topLeftAlignSelf();
 		updateScrollerPosition();
 	}
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)
 	{
-		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AWCore::RenderPositionMode::Unspecified ? background->getScreenRect() : background->getWorldRect();
+		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AW::RenderPositionMode::Unspecified ? background->getScreenRect() : background->getWorldRect();
 
 		isHovering =
 			x < rect->x + rect->w && x > rect->x &&
 			y < rect->y + rect->h && y > rect->y;
 	}
 
-	void ScrollBarBasic::onMouseButton(AWCore::MouseButton button, bool pressed)
+	void ScrollBarBasic::onMouseButton(AW::MouseButton button, bool pressed)
 	{
 		const auto isEnabled = serializationClient->getBool(enabledParamName, true);
 		if (!isEnabled)
@@ -234,7 +234,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case AWCore::MouseButton::Left:
+		case AW::MouseButton::Left:
 			if (!pressed)
 			{
 				const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());

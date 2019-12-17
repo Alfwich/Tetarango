@@ -18,7 +18,7 @@
 
 #include "Tests.h"
 
-namespace AWCore
+namespace AW
 {
 	Application::Application()
 	{
@@ -63,7 +63,7 @@ namespace AWCore
 		modules->logger->log("Application::Init modules");
 		modules->onInit();
 
-		frameTimer = modules->time->createTimer(AWCore::TimeScope::ApplicationFrameTimer, true);
+		frameTimer = modules->time->createTimer(AW::TimeScope::ApplicationFrameTimer, true);
 		root = std::make_shared<DisplayRoot>();
 
 		return true;
@@ -95,9 +95,9 @@ namespace AWCore
 
 		if (gameConfig->getConfigBool(Config::Param::runTests))
 		{
-			AWCore::Logger::instance()->logCritical("Tests::Running tests");
+			AW::Logger::instance()->logCritical("Tests::Running tests");
 			MTTest::Tests::run(modules);
-			AWCore::Logger::instance()->logCritical("Tests::Done.");
+			AW::Logger::instance()->logCritical("Tests::Done.");
 		}
 
 		modules->logger->log("Application::Ready modules");
@@ -184,12 +184,12 @@ namespace AWCore
 		{
 			switch (e->code)
 			{
-			case AWCore::Events::QuitRequested:
+			case AW::Events::QuitRequested:
 				exit();
 				break;
 
-			case AWCore::Events::ReprovisionScreen:
-				const auto reprovisionScreenEvent = std::static_pointer_cast<AWCore::ReprovisionScreenApplicationEvent>(e);
+			case AW::Events::ReprovisionScreen:
+				const auto reprovisionScreenEvent = std::static_pointer_cast<AW::ReprovisionScreenApplicationEvent>(e);
 				if (e != nullptr)
 				{
 					screenConfig = reprovisionScreenEvent->config;

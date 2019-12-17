@@ -1,6 +1,6 @@
 #include "FontContainer.h"
 
-namespace AWCore
+namespace AW
 {
 	FontContainer::FontContainer()
 	{

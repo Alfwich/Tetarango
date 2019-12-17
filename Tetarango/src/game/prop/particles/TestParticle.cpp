@@ -4,14 +4,14 @@
 namespace AWGame
 {
 
-	TestParticle::TestParticle(std::shared_ptr<AWCore::TextureContainer> textureContainer)
+	TestParticle::TestParticle(std::shared_ptr<AW::TextureContainer> textureContainer)
 	{
 		particleTexture = textureContainer->getTexture("test-particle");
 	}
 
 	void TestParticle::onEnterFrame(double deltaTime)
 	{
-		AWCore::Particle::onEnterFrame(deltaTime);
+		AW::Particle::onEnterFrame(deltaTime);
 	}
 
 }

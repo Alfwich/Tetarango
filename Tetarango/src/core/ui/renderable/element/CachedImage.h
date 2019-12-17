@@ -3,19 +3,19 @@
 #include "Element.h"
 #include "engine/module/asset/ImageBundle.h"
 
-namespace AWCore
+namespace AW
 {
 
 	class CachedImage : public Element
 	{
 		std::string textureBindingKey;
-		std::shared_ptr<AWCore::ImageBundle> imageData;
+		std::shared_ptr<AW::ImageBundle> imageData;
 
-		std::shared_ptr<AWCore::ImageBundle> compressImage();
+		std::shared_ptr<AW::ImageBundle> compressImage();
 		void updateImageDataBuffer(int size);
 		void updateImageDataBuffer(int w, int h);
 		bool captureScreenData(int x, int y, int w, int h);
-		void updateCachedImage(std::shared_ptr<AWCore::ImageBundle> bundle);
+		void updateCachedImage(std::shared_ptr<AW::ImageBundle> bundle);
 
 	public:
 		CachedImage();
@@ -29,7 +29,7 @@ namespace AWCore
 		void captureWholeScreen();
 
 		void onInitialAttach();
-		std::shared_ptr<AWCore::SerializationClient> doSerialize(AWCore::SerializationHint hint);
+		std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 	};
 
 }

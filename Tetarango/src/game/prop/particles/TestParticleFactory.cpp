@@ -17,7 +17,7 @@ namespace AWGame
 		enableSerialization<TestParticleFactory>();
 	}
 
-	std::shared_ptr<AWCore::Particle> TestParticleFactory::makeParticle(AWCore::ParticleCreationBundle& bundle)
+	std::shared_ptr<AW::Particle> TestParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)
 	{
 		std::mt19937 rng;
 		rng.seed(std::random_device()());
@@ -44,7 +44,7 @@ namespace AWGame
 		particle->yV = (int)(yVelocity(rng) - bundle.yVelocity / 2.0);
 		particle->totalLife = 2000.0;
 		particle->timeLeft = 2000.0;
-		particle->clip = AWCore::Rect(
+		particle->clip = AW::Rect(
 			randomClip(rng),
 			randomClip(rng),
 			4, 4
@@ -53,7 +53,7 @@ namespace AWGame
 		return particle;
 	}
 
-	std::shared_ptr<AWCore::SerializationClient> TestParticleFactory::doSerialize(AWCore::SerializationHint hint)
+	std::shared_ptr<AW::SerializationClient> TestParticleFactory::doSerialize(AW::SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("test_particle_factory", hint);
 
@@ -61,7 +61,7 @@ namespace AWGame
 		g = client->serializeInt("g", g);
 		b = client->serializeInt("b", b);
 
-		return AWCore::IParticleFactory::doSerialize(hint);
+		return AW::IParticleFactory::doSerialize(hint);
 	}
 }
 

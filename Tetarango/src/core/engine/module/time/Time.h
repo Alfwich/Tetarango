@@ -9,7 +9,7 @@
 #include "engine/module/logger/Logger.h"
 #include "TimeScope.h"
 
-namespace AWCore
+namespace AW
 {
 	class TimeScopeBundle 
 	{

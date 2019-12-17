@@ -5,7 +5,8 @@ namespace
 {
 	const auto testMusicName = "tetris-music";
 	const auto testSoundName = "tetris-clear-row";
-	const auto fontSize = 24;
+	const auto headerFontSize = 28;
+	const auto itemFontSize = 24;
 	const std::vector<int> frameLimits = {
 		0,
 		30,
@@ -47,36 +48,45 @@ namespace AWGame
 		info = modules->screen->getAllSupportedDisplayModes();
 		config = modules->screen->getCurrentScreenConfig();
 
-		optionsMenuTitle = std::make_shared<AWCore::Text>();
-		optionsMenuTitle->setFont("medium", fontSize);
+		rootContainer = std::make_shared<AW::Container>();
+		rootContainer->renderPositionProcessing = AW::RenderPositionProcessing::Floor;
+		rootContainer->setSizeToScreenSize();
+		rootContainer->topLeftAlignSelf();
+		add(rootContainer);
+
+		centeringContainer = std::make_shared<AW::Container>();
+		centeringContainer->matchSizeAndCenter(rootContainer);
+		rootContainer->add(centeringContainer);
+
+		optionsMenuTitle = std::make_shared<AW::Text>();
+		optionsMenuTitle->setFont("medium", headerFontSize);
 		optionsMenuTitle->setText("Options");
-		add(optionsMenuTitle);
+		rootContainer->add(optionsMenuTitle);
 
 		applyButton = std::make_shared<ButtonBasic>();
 		applyButton->setText("Apply");
 		applyButton->clickListener = weak_from_this();
 		applyButton->setEnabled(false);
-		add(applyButton);
+		rootContainer->add(applyButton);
 
 		resetButton = std::make_shared<ButtonBasic>();
 		resetButton->setText("Reset");
 		resetButton->clickListener = weak_from_this();
-		add(resetButton);
+		rootContainer->add(resetButton);
 
 		backButton = std::make_shared<ButtonBasic>();
 		backButton->setText("Back");
 		backButton->clickListener = weak_from_this();
-		add(backButton);
+		rootContainer->add(backButton);
 
 		resolutionScrollArea = std::make_shared<ScrollArea>();
-		resolutionScrollArea->setExpandToChildren(false);
-		add(resolutionScrollArea);
+		centeringContainer->add(resolutionScrollArea);
 
 		resolutionButtons.clear();
 		std::shared_ptr<ButtonBasic> prevResolutionButton;
 		for (const auto resolution : info.resolutions)
 		{
-			if (AWCore::StringHelper::getDisplayComponentForDisplayString(resolution, 0) < 1240 || AWCore::StringHelper::getDisplayComponentForDisplayString(resolution, 1) < 1024)
+			if (AW::StringHelper::getDisplayComponentForDisplayString(resolution, 0) < 1240 || AW::StringHelper::getDisplayComponentForDisplayString(resolution, 1) < 1024)
 			{
 				continue;
 			}
@@ -84,7 +94,7 @@ namespace AWGame
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
 			resolutionButton->setSize(180.0, 60.0);
-			if (config.mode == AWCore::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+			if (config.mode == AW::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
 				resolutionButton->setEnabled(false);
 			}
@@ -94,11 +104,11 @@ namespace AWGame
 
 			if (prevResolutionButton != nullptr)
 			{
-				resolutionButton->toBottomOf(prevResolutionButton, 0, 5);
+				resolutionButton->toBottomOf(prevResolutionButton, 0, 6.0);
 			}
 			else
 			{
-				resolutionButton->centerAlignSelf();
+				resolutionButton->topLeftAlignSelf();
 			}
 
 			prevResolutionButton = resolutionButton;
@@ -107,127 +117,157 @@ namespace AWGame
 
 		fullscreenCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenCheckbox->setText("Fullscreen");
-		fullscreenCheckbox->setChecked(config.mode == AWCore::ScreenModes::Fullscreen);
+		fullscreenCheckbox->setChecked(config.mode == AW::ScreenModes::Fullscreen);
 		fullscreenCheckbox->clickListener = weak_from_this();
-		add(fullscreenCheckbox);
+		centeringContainer->add(fullscreenCheckbox);
 
 		fullscreenDesktopCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		fullscreenDesktopCheckbox->setText("Fullscreen Windowed");
-		fullscreenDesktopCheckbox->setChecked(config.mode == AWCore::ScreenModes::FullscreenDesktop);
+		fullscreenDesktopCheckbox->setChecked(config.mode == AW::ScreenModes::FullscreenDesktop);
 		fullscreenDesktopCheckbox->clickListener = weak_from_this();
-		add(fullscreenDesktopCheckbox);
+		centeringContainer->add(fullscreenDesktopCheckbox);
 
 		windowedCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		windowedCheckbox->setText("Window");
-		windowedCheckbox->setChecked(config.mode == AWCore::ScreenModes::Windowed);
+		windowedCheckbox->setChecked(config.mode == AW::ScreenModes::Windowed);
 		windowedCheckbox->clickListener = weak_from_this();
-		add(windowedCheckbox);
+		centeringContainer->add(windowedCheckbox);
 
 		msaaOffCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaaOffCheckbox->setText("MSAA Off");
+		msaaOffCheckbox->setText("Off");
 		msaaOffCheckbox->setChecked(config.msaaSamples == 0);
 		msaaOffCheckbox->clickListener = weak_from_this();
-		add(msaaOffCheckbox);
+		centeringContainer->add(msaaOffCheckbox);
 
 		msaa4xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaa4xCheckbox->setText("MSAA 4x");
+		msaa4xCheckbox->setText("4x");
 		msaa4xCheckbox->setChecked(config.msaaSamples == 4);
 		msaa4xCheckbox->clickListener = weak_from_this();
-		add(msaa4xCheckbox);
+		centeringContainer->add(msaa4xCheckbox);
 
 		msaa8xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaa8xCheckbox->setText("MSAA 8x");
+		msaa8xCheckbox->setText("8x");
 		msaa8xCheckbox->setChecked(config.msaaSamples == 8);
 		msaa8xCheckbox->clickListener = weak_from_this();
-		add(msaa8xCheckbox);
+		centeringContainer->add(msaa8xCheckbox);
 
 		msaa16xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaa16xCheckbox->setText("MSAA 16x");
+		msaa16xCheckbox->setText("16x");
 		msaa16xCheckbox->setChecked(config.msaaSamples == 16);
 		msaa16xCheckbox->clickListener = weak_from_this();
-		add(msaa16xCheckbox);
+		centeringContainer->add(msaa16xCheckbox);
 
 		vsyncOffCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		vsyncOffCheckbox->setText("VSync Off");
-		vsyncOffCheckbox->setChecked(config.vMode == AWCore::VsyncModes::Disabled);
+		vsyncOffCheckbox->setText("Off");
+		vsyncOffCheckbox->setChecked(config.vMode == AW::VsyncModes::Disabled);
 		vsyncOffCheckbox->clickListener = weak_from_this();
-		add(vsyncOffCheckbox);
+		centeringContainer->add(vsyncOffCheckbox);
 
 		vsyncOnCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		vsyncOnCheckbox->setText("VSync On");
-		vsyncOnCheckbox->setChecked(config.vMode == AWCore::VsyncModes::Enabled);
+		vsyncOnCheckbox->setText("On");
+		vsyncOnCheckbox->setChecked(config.vMode == AW::VsyncModes::Enabled);
 		vsyncOnCheckbox->clickListener = weak_from_this();
-		add(vsyncOnCheckbox);
+		centeringContainer->add(vsyncOnCheckbox);
 
 		vsyncAdaptiveCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		vsyncAdaptiveCheckbox->setText("VSync Adaptive");
-		vsyncAdaptiveCheckbox->setChecked(config.vMode == AWCore::VsyncModes::Adaptive);
+		vsyncAdaptiveCheckbox->setText("Adaptive");
+		vsyncAdaptiveCheckbox->setChecked(config.vMode == AW::VsyncModes::Adaptive);
 		vsyncAdaptiveCheckbox->clickListener = weak_from_this();
-		add(vsyncAdaptiveCheckbox);
+		centeringContainer->add(vsyncAdaptiveCheckbox);
 
 		openGlCompatibilityModeCheckbox = std::make_shared<CheckBoxBasic>();
 		openGlCompatibilityModeCheckbox->setText("OpenGL Compatibility Mode");
 		openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
 		openGlCompatibilityModeCheckbox->clickListener = weak_from_this();
-		add(openGlCompatibilityModeCheckbox);
+		centeringContainer->add(openGlCompatibilityModeCheckbox);
 
 		wireframeModeCheckbox = std::make_shared<CheckBoxBasic>();
 		wireframeModeCheckbox->setText("Wireframe Mode");
 		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
 		wireframeModeCheckbox->clickListener = weak_from_this();
-		add(wireframeModeCheckbox);
+		centeringContainer->add(wireframeModeCheckbox);
 
 		debugRenderingCheckbox = std::make_shared<CheckBoxBasic>();
 		debugRenderingCheckbox->setText("Debug Rendering");
 		debugRenderingCheckbox->setChecked(config.visualizeContainers || config.visualizeClipRects);
 		debugRenderingCheckbox->clickListener = weak_from_this();
-		add(debugRenderingCheckbox);
+		centeringContainer->add(debugRenderingCheckbox);
 
 		masterVolScrollBar = std::make_shared<ScrollBarBasic>();
 		masterVolScrollBar->setSize(200.0, 20.0);
 		masterVolScrollBar->setHorizontal(true);
 		masterVolScrollBar->scrollListener = weak_from_this();
-		add(masterVolScrollBar);
+		centeringContainer->add(masterVolScrollBar);
 
 		generalVolScrollBar = std::make_shared<ScrollBarBasic>();
 		generalVolScrollBar->setSize(200.0, 20.0);
 		generalVolScrollBar->setHorizontal(true);
 		generalVolScrollBar->scrollListener = weak_from_this();
-		add(generalVolScrollBar);
+		centeringContainer->add(generalVolScrollBar);
 
 		musicVolScrollBar = std::make_shared<ScrollBarBasic>();
 		musicVolScrollBar->setSize(200.0, 20.0);
 		musicVolScrollBar->setHorizontal(true);
 		musicVolScrollBar->scrollListener = weak_from_this();
-		add(musicVolScrollBar);
+		centeringContainer->add(musicVolScrollBar);
 
 		frameLimiterScrollBar = std::make_shared<ScrollBarBasic>();
 		frameLimiterScrollBar->setSize(200.0, 20.0);
 		frameLimiterScrollBar->setHorizontal(true);
 		frameLimiterScrollBar->clickListener = weak_from_this();
 		frameLimiterScrollBar->scrollListener = weak_from_this();
-		add(frameLimiterScrollBar);
+		centeringContainer->add(frameLimiterScrollBar);
 
-		masterVolLabel = std::make_shared<AWCore::Text>();
-		masterVolLabel->setFont("medium", fontSize);
-		add(masterVolLabel);
+		resolutionsLabel = std::make_shared<AW::Text>();
+		resolutionsLabel->setFont("medium", headerFontSize);
+		resolutionsLabel->setText("Resolutions");
+		centeringContainer->add(resolutionsLabel);
 
-		generalVolLabel = std::make_shared<AWCore::Text>();
-		generalVolLabel->setFont("medium", fontSize);
-		add(generalVolLabel);
+		msaaLabel = std::make_shared<AW::Text>();
+		msaaLabel->setFont("medium", headerFontSize);
+		msaaLabel->setText("MultiSample AA");
+		centeringContainer->add(msaaLabel);
 
-		musicVolLabel = std::make_shared<AWCore::Text>();
-		musicVolLabel->setFont("medium", fontSize);
-		add(musicVolLabel);
+		vsyncLabel = std::make_shared<AW::Text>();
+		vsyncLabel->setFont("medium", headerFontSize);
+		vsyncLabel->setText("VSync");
+		centeringContainer->add(vsyncLabel);
 
-		frameLimiterLabelPrefix = std::make_shared<AWCore::Text>();
-		frameLimiterLabelPrefix->setFont("medium", fontSize);
+		miscLabel = std::make_shared<AW::Text>();
+		miscLabel->setFont("medium", headerFontSize);
+		miscLabel->setText("Misc");
+		centeringContainer->add(miscLabel);
+
+		displayModeLabel = std::make_shared<AW::Text>();
+		displayModeLabel->setFont("medium", headerFontSize);
+		displayModeLabel->setText("Display Mode");
+		centeringContainer->add(displayModeLabel);
+
+		masterVolLabel = std::make_shared<AW::Text>();
+		masterVolLabel->setFont("medium", itemFontSize);
+		centeringContainer->add(masterVolLabel);
+
+		soundLabel = std::make_shared<AW::Text>();
+		soundLabel->setFont("medium", headerFontSize);
+		soundLabel->setText("Sound");
+		centeringContainer->add(soundLabel);
+
+		generalVolLabel = std::make_shared<AW::Text>();
+		generalVolLabel->setFont("medium", itemFontSize);
+		centeringContainer->add(generalVolLabel);
+
+		musicVolLabel = std::make_shared<AW::Text>();
+		musicVolLabel->setFont("medium", itemFontSize);
+		centeringContainer->add(musicVolLabel);
+
+		frameLimiterLabelPrefix = std::make_shared<AW::Text>();
+		frameLimiterLabelPrefix->setFont("medium", headerFontSize);
 		frameLimiterLabelPrefix->setText("Frame Limiter ");
-		add(frameLimiterLabelPrefix);
+		centeringContainer->add(frameLimiterLabelPrefix);
 
-		frameLimiterLabelValue = std::make_shared<AWCore::Text>();
-		frameLimiterLabelValue->setFont("medium", fontSize);
-		add(frameLimiterLabelValue);
+		frameLimiterLabelValue = std::make_shared<AW::Text>();
+		frameLimiterLabelValue->setFont("medium", headerFontSize);
+		centeringContainer->add(frameLimiterLabelValue);
 
 		masterVolScrollBar->setScrollPositionInstantly(modules->sound->getMasterVolume());
 		generalVolScrollBar->setScrollPositionInstantly(modules->sound->getEffectVolume());
@@ -239,46 +279,28 @@ namespace AWGame
 
 	void SceneOptionsMenu::onLayoutChildren()
 	{
-		const auto generalElementOffset = 5.0;
+		const auto generalElementOffset = 6.0;
 		const auto verticalScreenBorderOffset = 100.0;
 		const auto optionsXOffset = 40.0;
-		const auto checkboxYOffset = 10.0;
+		const auto checkboxYOffset = 8.0;
 		const auto checkboxYGroupOffset = 32.0;
 		const auto numResolutionButtonsToShow = 7.0;
+		const auto horScreenPadding = openGlCompatibilityModeCheckbox->getHalfWidth() + 50.0;
 
-		optionsMenuTitle->setPosition(getScreenWidth() / 2.0, verticalScreenBorderOffset / 2.0);
-
-		applyButton->setPosition(getScreenWidth() / 2.0, getScreenHeight() - verticalScreenBorderOffset);
-		resetButton->toRightOf(applyButton, generalElementOffset, 0.0);
-		backButton->toLeftOf(applyButton, generalElementOffset, 0.0);
-
-		for (const auto checkbox : getChildrenOfType<CheckBoxBasic>())
-		{
-			if (checkbox->getWidth() > fullscreenCheckbox->getWidth())
-			{
-				fullscreenCheckbox->setWidth(checkbox->getWidth());
-			}
-		}
-
-		fullscreenCheckbox->toBottomOf(optionsMenuTitle, 0.0, verticalScreenBorderOffset);
-
-		double horScreenPadding = 0.0;
+		resolutionsLabel->setPosition(0.0, 0.0);
 		if (!resolutionButtons.empty())
 		{
 			const auto exampleButton = resolutionButtons.front();
 			const auto availableVerticalScreen = applyButton->getY() - optionsMenuTitle->getY();
 			resolutionScrollArea->visible = true;
 			resolutionScrollArea->setScrollAmount(exampleButton->getHalfHeight());
-			resolutionScrollArea->setSize(exampleButton->getWidth(), (exampleButton->getHeight() + generalElementOffset) * std::min(numResolutionButtonsToShow, availableVerticalScreen / (exampleButton->getHeight() + 2.0 * generalElementOffset)));
+			resolutionScrollArea->setSize(exampleButton->getWidth(), (exampleButton->getHeight() + generalElementOffset) * numResolutionButtonsToShow);
 			resolutionScrollArea->setScrollerHeight(resolutionScrollArea->getHeight());
 
-			horScreenPadding = fullscreenCheckbox->getY() - resolutionScrollArea->getWidth() / 2.0;
-
-			resolutionScrollArea->toLeftTopOf(fullscreenCheckbox, horScreenPadding, 0.0);
-			resolutionScrollArea->floorAlignSelf();
+			resolutionScrollArea->toBottomOf(resolutionsLabel, 0.0, generalElementOffset);
 			{
 				auto r = resolutionScrollArea->getRect();
-				resolutionScrollArea->setClipRect(AWCore::Rect(0.0, 0.0, r.w + 30.0, r.h));
+				resolutionScrollArea->setClipRect(AW::Rect(0.0, 0.0, r.w + 30.0, r.h));
 			}
 		}
 		else
@@ -286,27 +308,33 @@ namespace AWGame
 			resolutionScrollArea->visible = false;
 		}
 
+		displayModeLabel->toRightOf(resolutionsLabel, std::floor(optionsXOffset + resolutionScrollArea->getWidth() - resolutionsLabel->getWidth()));
+		fullscreenCheckbox->toBottomLeftOf(displayModeLabel, 0.0, checkboxYOffset);
 		fullscreenDesktopCheckbox->toBottomLeftOf(fullscreenCheckbox, 0.0, checkboxYOffset);
 		windowedCheckbox->toBottomLeftOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
 
-		msaaOffCheckbox->toBottomLeftOf(windowedCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
-		msaa4xCheckbox->toBottomLeftOf(msaaOffCheckbox, 0.0, checkboxYOffset);
-		msaa8xCheckbox->toBottomLeftOf(msaa4xCheckbox, 0.0, checkboxYOffset);
-		msaa16xCheckbox->toBottomLeftOf(msaa8xCheckbox, 0.0, checkboxYOffset);
+		msaaLabel->toBottomLeftOf(windowedCheckbox, 0.0, checkboxYGroupOffset);
+		msaaOffCheckbox->toBottomLeftOf(msaaLabel, 0.0, checkboxYOffset);
+		msaa4xCheckbox->toRightOf(msaaOffCheckbox, checkboxYOffset);
+		msaa8xCheckbox->toRightOf(msaa4xCheckbox, checkboxYOffset);
+		msaa16xCheckbox->toRightOf(msaa8xCheckbox, checkboxYOffset);
 
-		openGlCompatibilityModeCheckbox->toBottomLeftOf(msaa16xCheckbox, 0.0, checkboxYOffset + checkboxYGroupOffset);
-		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
-		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
+		vsyncLabel->toBottomLeftOf(msaaOffCheckbox, 0.0, checkboxYGroupOffset);
+		vsyncOffCheckbox->toBottomRightOf(vsyncLabel, 0.0, checkboxYOffset);
+		vsyncOnCheckbox->toRightOf(vsyncOffCheckbox, checkboxYOffset);
+		vsyncAdaptiveCheckbox->toRightOf(vsyncOnCheckbox, checkboxYOffset);
 
-		vsyncOffCheckbox->toRightOf(fullscreenCheckbox, horScreenPadding, 0.0);
-		vsyncOnCheckbox->toBottomLeftOf(vsyncOffCheckbox, 0.0, checkboxYOffset);
-		vsyncAdaptiveCheckbox->toBottomLeftOf(vsyncOnCheckbox, 0.0, checkboxYOffset);
-
-		frameLimiterLabelPrefix->toBottomLeftOf(vsyncAdaptiveCheckbox, 0.0, checkboxYGroupOffset);
+		frameLimiterLabelPrefix->toBottomLeftOf(vsyncOffCheckbox, 0.0, checkboxYGroupOffset);
 		frameLimiterLabelValue->toRightOf(frameLimiterLabelPrefix);
 		frameLimiterScrollBar->toBottomLeftOf(frameLimiterLabelPrefix, 0.0, checkboxYOffset);
 
-		masterVolLabel->toBottomLeftOf(frameLimiterScrollBar, 0.0, checkboxYGroupOffset);
+		miscLabel->toRightOf(displayModeLabel, std::floor(optionsXOffset + (msaa16xCheckbox->getRight() - msaaOffCheckbox->getLeft()) - displayModeLabel->getWidth()), 0.0);
+		openGlCompatibilityModeCheckbox->toBottomLeftOf(miscLabel, 0.0, checkboxYOffset);
+		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
+		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
+
+		soundLabel->toBottomLeftOf(debugRenderingCheckbox, 0.0, checkboxYGroupOffset);
+		masterVolLabel->toBottomLeftOf(soundLabel, 0.0, checkboxYOffset);
 		masterVolScrollBar->toBottomLeftOf(masterVolLabel, 0.0, checkboxYOffset);
 
 		generalVolLabel->toBottomLeftOf(masterVolScrollBar, 0.0, checkboxYOffset);
@@ -314,6 +342,14 @@ namespace AWGame
 
 		musicVolLabel->toBottomLeftOf(generalVolScrollBar, 0.0, checkboxYOffset);
 		musicVolScrollBar->toBottomLeftOf(musicVolLabel, 0.0, checkboxYOffset);
+
+		centeringContainer->resizeSelfToChildrenAndCenterChildren();
+
+		applyButton->toBottomOf(centeringContainer, 0.0, verticalScreenBorderOffset);
+		resetButton->toRightOf(applyButton, generalElementOffset, 0.0);
+		backButton->toLeftOf(applyButton, generalElementOffset, 0.0);
+
+		optionsMenuTitle->toTopOf(centeringContainer, 0.0, verticalScreenBorderOffset);
 	}
 
 	void SceneOptionsMenu::onTimeoutCalled(int id)
@@ -356,17 +392,17 @@ namespace AWGame
 
 		if (id == fullscreenCheckbox->getId())
 		{
-			shouldEnableApply = setScreenMode(AWCore::ScreenModes::Fullscreen);
+			shouldEnableApply = setScreenMode(AW::ScreenModes::Fullscreen);
 		}
 
 		if (id == windowedCheckbox->getId())
 		{
-			shouldEnableApply = setScreenMode(AWCore::ScreenModes::Windowed);
+			shouldEnableApply = setScreenMode(AW::ScreenModes::Windowed);
 		}
 
 		if (id == fullscreenDesktopCheckbox->getId())
 		{
-			shouldEnableApply = setScreenMode(AWCore::ScreenModes::FullscreenDesktop);
+			shouldEnableApply = setScreenMode(AW::ScreenModes::FullscreenDesktop);
 		}
 
 		if (id == msaaOffCheckbox->getId())
@@ -391,17 +427,17 @@ namespace AWGame
 
 		if (id == vsyncOffCheckbox->getId())
 		{
-			shouldEnableApply = setVsyncMode(AWCore::VsyncModes::Disabled);
+			shouldEnableApply = setVsyncMode(AW::VsyncModes::Disabled);
 		}
 
 		if (id == vsyncOnCheckbox->getId())
 		{
-			shouldEnableApply = setVsyncMode(AWCore::VsyncModes::Enabled);
+			shouldEnableApply = setVsyncMode(AW::VsyncModes::Enabled);
 		}
 
 		if (id == vsyncAdaptiveCheckbox->getId())
 		{
-			shouldEnableApply = setVsyncMode(AWCore::VsyncModes::Adaptive);
+			shouldEnableApply = setVsyncMode(AW::VsyncModes::Adaptive);
 		}
 
 		if (id == openGlCompatibilityModeCheckbox->getId())
@@ -435,15 +471,15 @@ namespace AWGame
 			if (resolutionButton->getId() == id && buttonUpperBound <= containerLowerBound && buttonLowerBound >= containerUpperBound)
 			{
 				auto newResolution = resolutionButton->getText();
-				config.width = AWCore::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
-				config.height = AWCore::StringHelper::getDisplayComponentForDisplayString(&newResolution, 1);
+				config.width = AW::StringHelper::getDisplayComponentForDisplayString(&newResolution, 0);
+				config.height = AW::StringHelper::getDisplayComponentForDisplayString(&newResolution, 1);
 				shouldEnableApply = true;
 			}
 		}
 
 		for (const auto resolutionButton : resolutionButtons)
 		{
-			if (config.mode == AWCore::ScreenModes::FullscreenDesktop || (resolutionButton->getText() == std::to_string(config.width) + "x" + std::to_string(config.height)))
+			if (config.mode == AW::ScreenModes::FullscreenDesktop || (resolutionButton->getText() == std::to_string(config.width) + "x" + std::to_string(config.height)))
 			{
 				resolutionButton->setEnabled(false);
 			}
@@ -460,7 +496,7 @@ namespace AWGame
 
 		if (id == resetButton->getId())
 		{
-			config = AWCore::ScreenConfig();
+			config = AW::ScreenConfig();
 			modules->sound->setMasterVolume(1.0);
 			modules->sound->setEffectVolume(0.8);
 			modules->sound->setMusicVolume(0.6);
@@ -474,7 +510,7 @@ namespace AWGame
 
 		if (shouldNotifyApplication)
 		{
-			modules->event->pushEvent(std::make_shared<AWCore::ReprovisionScreenApplicationEvent>(config));
+			modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
 			applyButton->setEnabled(false);
 		}
 	}
@@ -486,17 +522,17 @@ namespace AWGame
 		case SDL_SCANCODE_RETURN:
 			if (applyButton->getEnabled() == true)
 			{
-				modules->event->pushEvent(std::make_shared<AWCore::ReprovisionScreenApplicationEvent>(config));
+				modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
 				applyButton->setEnabled(false);
 			}
 			break;
 
 		case SDL_SCANCODE_BACKSPACE:
-			config = AWCore::ScreenConfig();
+			config = AW::ScreenConfig();
 			modules->sound->setMasterVolume(1.0);
 			modules->sound->setEffectVolume(0.8);
 			modules->sound->setMusicVolume(0.6);
-			modules->event->pushEvent(std::make_shared<AWCore::ReprovisionScreenApplicationEvent>(config));
+			modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
 			applyButton->setEnabled(false);
 		}
 	}
@@ -586,7 +622,7 @@ namespace AWGame
 		return true;
 	}
 
-	bool SceneOptionsMenu::setScreenMode(AWCore::ScreenModes mode)
+	bool SceneOptionsMenu::setScreenMode(AW::ScreenModes mode)
 	{
 		if (config.mode == mode)
 		{
@@ -599,15 +635,15 @@ namespace AWGame
 
 		switch (mode)
 		{
-		case AWCore::ScreenModes::Fullscreen:
+		case AW::ScreenModes::Fullscreen:
 			fullscreenCheckbox->setChecked(true);
 			break;
 
-		case AWCore::ScreenModes::Windowed:
+		case AW::ScreenModes::Windowed:
 			windowedCheckbox->setChecked(true);
 			break;
 
-		case AWCore::ScreenModes::FullscreenDesktop:
+		case AW::ScreenModes::FullscreenDesktop:
 			fullscreenDesktopCheckbox->setChecked(true);
 			break;
 		}
@@ -617,7 +653,7 @@ namespace AWGame
 		return true;
 	}
 
-	bool SceneOptionsMenu::setVsyncMode(AWCore::VsyncModes mode)
+	bool SceneOptionsMenu::setVsyncMode(AW::VsyncModes mode)
 	{
 		if (config.vMode == mode)
 		{
@@ -630,15 +666,15 @@ namespace AWGame
 
 		switch (mode)
 		{
-		case AWCore::VsyncModes::Disabled:
+		case AW::VsyncModes::Disabled:
 			vsyncOffCheckbox->setChecked(true);
 			break;
 
-		case AWCore::VsyncModes::Enabled:
+		case AW::VsyncModes::Enabled:
 			vsyncOnCheckbox->setChecked(true);
 			break;
 
-		case AWCore::VsyncModes::Adaptive:
+		case AW::VsyncModes::Adaptive:
 			vsyncAdaptiveCheckbox->setChecked(true);
 			break;
 		}

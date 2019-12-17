@@ -5,20 +5,20 @@
 
 namespace AWGame
 {
-	class BlockParticleFactory : public AWCore::IParticleFactory
+	class BlockParticleFactory : public AW::IParticleFactory
 	{
-		AWCore::Color modColor;
+		AW::Color modColor;
 	public:
 		BlockParticleFactory();
 
-		void setModColor(const AWCore::Color* color);
-		std::shared_ptr<AWCore::Particle> makeParticle(AWCore::ParticleCreationBundle& bundle);
+		void setModColor(const AW::Color* color);
+		std::shared_ptr<AW::Particle> makeParticle(AW::ParticleCreationBundle& bundle);
 	};
 
-	class BlockParticle : public AWCore::Particle
+	class BlockParticle : public AW::Particle
 	{
 	public:
-		BlockParticle(std::shared_ptr<AWCore::TextureContainer> textureContainer);
+		BlockParticle(std::shared_ptr<AW::TextureContainer> textureContainer);
 		void onEnterFrame(double deltaTime);
 	};
 }

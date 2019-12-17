@@ -43,9 +43,8 @@ namespace AWGame
 
 	void ScrollArea::onCreateChildren()
 	{
-		container = std::make_shared<AWCore::ScrollContainer>();
+		container = std::make_shared<AW::ScrollContainer>();
 		container->name = containerId;
-		container->setExpandToChildren(true);
 		add(container);
 
 		scroller = std::make_shared<ScrollBarBasic>();
@@ -60,7 +59,7 @@ namespace AWGame
 
 	void ScrollArea::onChildrenHydrated()
 	{
-		container = findChildWithName<AWCore::ScrollContainer>(containerId);
+		container = findChildWithName<AW::ScrollContainer>(containerId);
 		scroller = findChildWithName<ScrollBarBasic>(scrollerId);
 		scroller->scrollListener = weak_from_this();
 	}
@@ -73,7 +72,7 @@ namespace AWGame
 
 	void ScrollArea::onLayoutChildren()
 	{
-		container->centerAlignSelf();
+		container->topLeftAlignSelf();
 
 		const auto containerHeight = container->getHeight();
 		const auto myHeight = getHeight();
@@ -120,12 +119,7 @@ namespace AWGame
 		else
 		{
 			container->add(ao);
-
-			if (getExpandToChildren())
-			{
-				matchSize(container);
-			}
-
+			//matchSize(container);
 			layout();
 		}
 	}
@@ -139,12 +133,7 @@ namespace AWGame
 		else
 		{
 			container->remove(ao);
-
-			if (getExpandToChildren())
-			{
-				matchSize(container);
-			}
-
+			//matchSize(container);
 			layout();
 		}
 	}

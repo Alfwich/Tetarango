@@ -5,7 +5,7 @@
 #include "util/StringHelper.h"
 #include "engine/module/asset/Asset.h"
 
-namespace AWCore
+namespace AW
 {
 	class Music
 	{
