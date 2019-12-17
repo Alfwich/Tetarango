@@ -43,6 +43,7 @@ namespace AW
 		virtual std::shared_ptr<Schematic> getSchematic() = 0;
 		virtual std::vector<std::shared_ptr<ISerializable>> getSerializableChildren() = 0;
 		virtual bool shouldSerializeChildren() = 0;
+		virtual bool shouldSerializeSelf() = 0;
 		virtual void childHydrated(std::shared_ptr<ISerializable> child) = 0;
 	};
 }

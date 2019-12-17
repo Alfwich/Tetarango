@@ -61,48 +61,49 @@ namespace AW
 
 		GLenum err = glGetError();
 
-		if (err == GL_NO_ERROR)
+		if (err != GL_NO_ERROR)
 		{
-			int imageDataRow = 0, dataRow = h - 1, imageDataCol = 0, dataCol = 0, imageDataOffset = 0, dataOffset = 0, endRow = h / 2;
-			char r, g, b;
-			while (imageDataRow < endRow)
-			{
-				imageDataCol = 0;
-				dataCol = 0;
-				imageDataOffset = (imageDataRow * w * 3);
-				dataOffset = (dataRow * w * 3);
-				while (imageDataCol < w)
-				{
-					r = *(dataPtr + (imageDataCol * 3) + 0 + imageDataOffset);
-					g = *(dataPtr + (imageDataCol * 3) + 1 + imageDataOffset);
-					b = *(dataPtr + (imageDataCol * 3) + 2 + imageDataOffset);
-
-					*(dataPtr + (imageDataCol * 3) + 0 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 0 + dataOffset);
-					*(dataPtr + (imageDataCol * 3) + 1 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 1 + dataOffset);
-					*(dataPtr + (imageDataCol * 3) + 2 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 2 + dataOffset);
-
-					*(dataPtr + (dataCol * 3) + 0 + dataOffset) = r;
-					*(dataPtr + (dataCol * 3) + 1 + dataOffset) = g;
-					*(dataPtr + (dataCol * 3) + 2 + dataOffset) = b;
-
-					imageDataCol++;
-					dataCol++;
-				}
-
-				imageDataRow++;
-				dataRow--;
-			}
-
-			imageData->type = AW::ImageBundleType::Raw;
-			imageData->width = w;
-			imageData->height = h;
-			serializationClient->setInt(imageWidthParamName, w);
-			serializationClient->setInt(imageHeightParamName, h);
-			return true;
+			AW::Logger::instance()->logCritical("CachedImage::OpenGL Error reported: " + std::to_string(err));
+			return false;
 		}
 
-		AW::Logger::instance()->logCritical("CachedImage::OpenGL Error reported: " + std::to_string(err));
-		return false;
+		int imageDataRow = 0, dataRow = h - 1, imageDataCol = 0, dataCol = 0, imageDataOffset = 0, dataOffset = 0, endRow = h / 2;
+		char r, g, b;
+		while (imageDataRow < endRow)
+		{
+			imageDataCol = 0;
+			dataCol = 0;
+			imageDataOffset = (imageDataRow * w * 3);
+			dataOffset = (dataRow * w * 3);
+			while (imageDataCol < w)
+			{
+				r = *(dataPtr + (imageDataCol * 3) + 0 + imageDataOffset);
+				g = *(dataPtr + (imageDataCol * 3) + 1 + imageDataOffset);
+				b = *(dataPtr + (imageDataCol * 3) + 2 + imageDataOffset);
+
+				*(dataPtr + (imageDataCol * 3) + 0 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 0 + dataOffset);
+				*(dataPtr + (imageDataCol * 3) + 1 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 1 + dataOffset);
+				*(dataPtr + (imageDataCol * 3) + 2 + imageDataOffset) = *(dataPtr + (dataCol * 3) + 2 + dataOffset);
+
+				*(dataPtr + (dataCol * 3) + 0 + dataOffset) = r;
+				*(dataPtr + (dataCol * 3) + 1 + dataOffset) = g;
+				*(dataPtr + (dataCol * 3) + 2 + dataOffset) = b;
+
+				imageDataCol++;
+				dataCol++;
+			}
+
+			std::cout << imageDataRow << " : " << dataRow << std::endl;
+			imageDataRow++;
+			dataRow--;
+		}
+
+		imageData->type = AW::ImageBundleType::Raw;
+		imageData->width = w;
+		imageData->height = h;
+		serializationClient->setInt(imageWidthParamName, w);
+		serializationClient->setInt(imageHeightParamName, h);
+		return true;
 	}
 
 	CachedImage::CachedImage()

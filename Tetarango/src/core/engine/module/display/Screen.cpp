@@ -245,6 +245,16 @@ namespace AW
 		{
 			collision->collisionQuadMap->clear();
 			renderer->render(root, this, collision->collisionQuadMap);
+
+			if (gameConfig->getConfigBool(Config::Param::immediateDebugOutput))
+			{
+				renderer->reportOpenGLErrors();
+			}
 		}
+	}
+
+	void Screen::onCleanup()
+	{
+		renderer->reportOpenGLErrors();
 	}
 }

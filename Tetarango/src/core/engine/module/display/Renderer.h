@@ -32,6 +32,8 @@ namespace AW
 		std::stack<RenderPositionMode> renderPositionModeStack;
 		std::stack<Color> colorStack;
 		std::stack<RenderPositionProcessing> renderProcessingStack;
+		std::stack<RenderTextureMode> textureModeStack;
+
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 
 		void prepareRender(Screen* screen);
@@ -53,6 +55,7 @@ namespace AW
 		void renderPrimitive(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
 
 		void updateClipRectOpenGL(std::shared_ptr<ApplicationObject> ele, Rect* computed, RenderPackage* renderPackage);
+		void bindGLTexture(GLuint textureId);
 
 		void renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
 		void renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);

@@ -71,6 +71,7 @@ namespace AW
 	{
 		renderPositionModeStack.push(RenderPositionMode::Positioned);
 		renderProcessingStack.push(RenderPositionProcessing::None);
+		textureModeStack.push(RenderTextureMode::Default);
 
 		if (oldRenderer != nullptr)
 		{
@@ -278,14 +279,13 @@ namespace AW
 		renderPackage.yOffset = camera == nullptr ? 0.0 : camera->getYOffset();
 		renderPackage.quadMap = qm;
 
-		if (root->getTag(AOTags::IsRootElement))
+		if (root->getTag(ATags::IsRootElement))
 		{
 			rootRect.w = screen->getWidth();
 			rootRect.h = screen->getHeight();
 		}
 
 		renderOpenGL(root, rootRect, screen, &renderPackage);
-		reportOpenGLErrors();
 	}
 
 	void Renderer::renderOpenGL(std::shared_ptr<ApplicationObject> root, Rect rootRect, Screen* screen, RenderPackage* renderPackage)
@@ -422,10 +422,14 @@ namespace AW
 			renderPackage.stencilDepth++;
 		}
 
-		switch (ao->renderPositionProcessing)
+		if (ao->renderPositionProcessing != RenderPositionProcessing::None)
 		{
-		case RenderPositionProcessing::Floor:
 			renderProcessingStack.push(ao->renderPositionProcessing);
+		}
+
+		if (ao->renderTextureMode != RenderTextureMode::Default)
+		{
+			textureModeStack.push(ao->renderTextureMode);
 		}
 
 		bool pushedColorStack = false;
@@ -477,7 +481,7 @@ namespace AW
 		break;
 		}
 
-		if (ao->getTag(AOTags::IsZone))
+		if (ao->getTag(ATags::IsZone))
 		{
 			const auto collidable = std::dynamic_pointer_cast<ICollidable>(ao);
 			renderPackage.quadMap->insert(collidable);
@@ -502,7 +506,7 @@ namespace AW
 			if (currentScreenConfig.visualizeClipRects)
 			{
 				const auto testRect = std::make_shared<Rectangle>();
-				testRect->setTag(AW::AOTags::IsDebugElement, true);
+				testRect->setTag(AW::ATags::IsDebugElement, true);
 				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
 				testRect->zIndex = 20;
 				testRect->setAlpha(0.25);
@@ -521,9 +525,13 @@ namespace AW
 			}
 		}
 
-		switch (ao->renderPositionProcessing)
+		if (ao->renderTextureMode != RenderTextureMode::Default)
 		{
-		case RenderPositionProcessing::Floor:
+			textureModeStack.pop();
+		}
+
+		if (ao->renderPositionProcessing != RenderPositionProcessing::None)
+		{
 			renderProcessingStack.pop();
 		}
 
@@ -751,7 +759,7 @@ namespace AW
 
 		setColorModParam(renderPackage);
 
-		glBindTexture(GL_TEXTURE_2D, glTextureId);
+		bindGLTexture(glTextureId);
 
 		openGLDrawArrays(renderPackage);
 	}
@@ -789,10 +797,26 @@ namespace AW
 		mat4x4_identity(UVp);
 		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		bindGLTexture(0);
 
 		openGLDrawArraysStencil(renderPackage);
 
+	}
+
+	void Renderer::bindGLTexture(GLuint textureId)
+	{
+		glBindTexture(GL_TEXTURE_2D, textureId);
+
+		switch (textureModeStack.top())
+		{
+		case RenderTextureMode::Default:
+		default:
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			break;
+		}
 	}
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
@@ -851,7 +875,7 @@ namespace AW
 				glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
 				glUniform4f(inColorModLocation, particle->cModR / 255.0, particle->cModG / 255.0, particle->cModB / 255.0, (particle->alphaMod / 255.0) * renderPackage->alpha);
 
-				glBindTexture(GL_TEXTURE_2D, glTextureId);
+				bindGLTexture(glTextureId);
 
 				openGLDrawArrays(renderPackage);
 			}
@@ -927,7 +951,7 @@ namespace AW
 
 					setColorModParam(renderPackage);
 
-					glBindTexture(GL_TEXTURE_2D, glTextureId);
+					bindGLTexture(glTextureId);
 
 					openGLDrawArrays(renderPackage);
 				}

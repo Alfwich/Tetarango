@@ -62,7 +62,10 @@ namespace AW
 
 		thread->processWorkers();
 
-		reportSdlErrors();
+		if (gameConfig->getConfigBool(Config::Param::immediateDebugOutput))
+		{
+			reportSdlErrors();
+		}
 
 		auto result = std::list<std::shared_ptr<ApplicationEvent>>(events);
 		events.clear();
@@ -250,5 +253,10 @@ namespace AW
 			}
 
 		}
+	}
+
+	void Event::onCleanup()
+	{
+		reportSdlErrors();
 	}
 }

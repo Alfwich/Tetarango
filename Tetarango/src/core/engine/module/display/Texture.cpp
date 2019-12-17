@@ -152,9 +152,6 @@ namespace AW
 			Logger::instance()->logCritical("Texture::OpenGL::Failed to load raw image for path=" + path);
 		}
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 

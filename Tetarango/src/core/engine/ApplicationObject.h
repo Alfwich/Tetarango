@@ -16,7 +16,7 @@ namespace AW
 	class SystemModuleBundle;
 	class SceneTransitionBundle;
 
-	enum class AOTags {
+	enum class ATags {
 		IsRootElement = 1,
 		IsZone = 2,
 		IsDebugElement = 4
@@ -29,6 +29,8 @@ namespace AW
 
 	protected:
 		int id = 0;
+		bool loaded = false, rebuildOnLoad = false, layoutOnLoad = true;
+
 		std::bitset<16> tags;
 		std::weak_ptr<ApplicationObject> parent;
 		std::shared_ptr<Schematic> schematic;
@@ -66,17 +68,20 @@ namespace AW
 		void enableSerialization();
 
 		std::string name;
-		bool loaded = false, rebuildOnLoad = false, layoutOnLoad = true, visible = true;
+		bool visible = true, serializeEnabled = true;
 
 		void activate();
 		void deactivate();
 
 		bool isActive();
+		bool shouldRebuildOnLoad();
+		bool shouldLayoutOnLoad();
 
 		int zIndex = 0;
 		RenderType renderType = RenderType::None;
 		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
 		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
+		RenderTextureMode renderTextureMode = RenderTextureMode::Default;
 		RenderPositionMode getFirstNonUnspecifiedRenderPositionMode();
 
 		bool isAttached();
@@ -84,8 +89,8 @@ namespace AW
 		int getId();
 		int inputListenerObjectId() { return getId(); };
 
-		void setTag(AOTags flag, bool value);
-		bool getTag(AOTags flag);
+		void setTag(ATags flag, bool value);
+		bool getTag(ATags flag);
 
 		std::shared_ptr<SystemModuleBundle> modules;
 
@@ -133,6 +138,7 @@ namespace AW
 		virtual std::vector<std::shared_ptr<ISerializable>> getSerializableChildren();
 		virtual void childHydrated(std::shared_ptr<ISerializable> child);
 		virtual bool shouldSerializeChildren();
+		virtual bool shouldSerializeSelf();
 
 		virtual bool collisionEnabled();
 		virtual void addCollisionScope(CollisionScope scope);
@@ -151,7 +157,7 @@ namespace AW
 	{
 		auto parentPtr = parent.lock();
 
-		while (parentPtr != nullptr && !parentPtr->getTag(AOTags::IsRootElement))
+		while (parentPtr != nullptr && !parentPtr->getTag(ATags::IsRootElement))
 		{
 			const auto castedParent = std::dynamic_pointer_cast<T>(parentPtr);
 

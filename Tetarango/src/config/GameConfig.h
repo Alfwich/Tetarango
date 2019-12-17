@@ -26,7 +26,8 @@ namespace Config
 		visualizeClipRects,
 		useAssetPack,
 		assetPackName,
-		enableTestScenes
+		enableTestScenes,
+		immediateDebugOutput
 	};
 
 	class GameConfig : public BaseConfig<Param>
@@ -55,6 +56,7 @@ namespace Config
 					{ Param::useAssetPack, TRUE },
 					{ Param::assetPackName, "asset.pack" },
 					{ Param::enableTestScenes, FALSE },
+					{ Param::immediateDebugOutput, FALSE }
 			};
 
 			base[Param::storageLocation] = base[Param::gameName];
@@ -66,6 +68,7 @@ namespace Config
 				base[Param::useAssetPack] = FALSE;
 				base[Param::saveWholeSceneOnClose] = TRUE;
 				base[Param::launchToLastScene] = TRUE;
+				base[Param::immediateDebugOutput] = TRUE;
 				//base[Param::runTests] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;

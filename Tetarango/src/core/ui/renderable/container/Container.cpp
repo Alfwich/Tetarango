@@ -110,7 +110,7 @@ namespace AW
 		{
 			debugRect = std::make_shared<AW::Rectangle>();
 			debugRect->name = debugBgRectName;
-			debugRect->setTag(AW::AOTags::IsDebugElement, true);
+			debugRect->setTag(AW::ATags::IsDebugElement, true);
 			debugRect->setAlpha(0.25);
 			debugRect->setColor(AW::Color(0, AW::NumberHelper::randomInt(0, 255), AW::NumberHelper::randomInt(0, 255)));
 			debugRect->zIndex = 1;

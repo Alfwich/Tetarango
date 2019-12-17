@@ -22,17 +22,22 @@ namespace AW
 		Container
 	};
 
+	enum class RenderPositionProcessing
+	{
+		None,
+		Floor
+	};
+
+	enum class RenderTextureMode
+	{
+		Default
+	};
+
 	enum class RenderPositionMode
 	{
 		Unspecified,
 		Positioned,
 		Absolute
-	};
-
-	enum class RenderPositionProcessing
-	{
-		None,
-		Floor
 	};
 
 	class Renderable : public ISerializableDataSubscriber

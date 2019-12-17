@@ -229,6 +229,16 @@ namespace AWGame
 	{
 		switch (key)
 		{
+		case SDL_SCANCODE_0:
+		{
+			const auto cImage = std::make_shared<AW::CachedImage>();
+			cImage->setTag(AW::ATags::IsDebugElement, true);
+			cImage->captureWholeScreen();
+			cImage->toRightOf(scoreText);
+			add(cImage);
+		}
+		break;
+
 		case SDL_SCANCODE_LEFT:
 			isLeftDown = true;
 			break;

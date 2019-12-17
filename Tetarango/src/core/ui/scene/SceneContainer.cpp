@@ -207,11 +207,11 @@ namespace AW
 		{
 			currentScene->onDisplayProvisioned();
 
-			if (currentScene->rebuildOnLoad)
+			if (currentScene->shouldRebuildOnLoad())
 			{
 				currentScene->rebuild();
 			}
-			else if (currentScene->layoutOnLoad)
+			else if (currentScene->shouldLayoutOnLoad())
 			{
 				currentScene->layout();
 			}

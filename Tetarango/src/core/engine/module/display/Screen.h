@@ -75,6 +75,8 @@ namespace AW
 		void clearCamera();
 
 		void render(std::shared_ptr<ApplicationObject> obj);
+
+		void onCleanup();
 	};
 }
 

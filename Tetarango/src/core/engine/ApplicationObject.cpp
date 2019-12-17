@@ -25,7 +25,7 @@ namespace AW
 		return nextId++;
 	}
 
-	void ApplicationObject::setTag(AOTags flag, bool value)
+	void ApplicationObject::setTag(ATags flag, bool value)
 	{
 		tags[(unsigned int)flag] = value ? 1 : 0;
 	}
@@ -55,6 +55,16 @@ namespace AW
 		return active;
 	}
 
+	bool ApplicationObject::shouldRebuildOnLoad()
+	{
+		return rebuildOnLoad;
+	}
+
+	bool ApplicationObject::shouldLayoutOnLoad()
+	{
+		return layoutOnLoad;
+	}
+
 	RenderPositionMode ApplicationObject::getFirstNonUnspecifiedRenderPositionMode()
 	{
 		if (renderPositionMode == RenderPositionMode::Unspecified)
@@ -77,7 +87,7 @@ namespace AW
 			return parentPtr->isAttached();
 		}
 
-		return getTag(AOTags::IsRootElement);
+		return getTag(ATags::IsRootElement);
 	}
 
 	int ApplicationObject::getId()
@@ -85,7 +95,7 @@ namespace AW
 		return id;
 	}
 
-	bool ApplicationObject::getTag(AOTags flag)
+	bool ApplicationObject::getTag(ATags flag)
 	{
 		return tags[(unsigned int)flag] == 1;
 	}
@@ -400,17 +410,19 @@ namespace AW
 		visible = client->serializeBool("visible", visible);
 		timeScope = (TimeScope)client->serializeInt("timescope", (int)timeScope);
 		name = client->serializeString("name", name);
-		zIndex = client->serializeInt("zIndex", zIndex);
-		enterFrameActivated = client->serializeBool("efA", enterFrameActivated);
-		enterFramePriority = client->serializeInt("efP", enterFramePriority);
-		renderPositionMode = (RenderPositionMode)client->serializeInt("r-pm", (int)renderPositionMode);
-		hasCreatedChildren = client->serializeBool("hCC", hasCreatedChildren);
-		setInputMode((InputMode)client->serializeInt("in-m", (int)getInputMode()));
+		zIndex = client->serializeInt("z-index", zIndex);
+		enterFrameActivated = client->serializeBool("e-f-a", enterFrameActivated);
+		enterFramePriority = client->serializeInt("e-f-p", enterFramePriority);
+		renderPositionMode = (RenderPositionMode)client->serializeInt("r-p-m", (int)renderPositionMode);
+		renderPositionProcessing = (RenderPositionProcessing)client->serializeInt("r-p-p-m", (int)renderPositionProcessing);
+		renderTextureMode = (RenderTextureMode)client->serializeInt("r-t-m", (int)renderPositionProcessing);
+		hasCreatedChildren = client->serializeBool("h-c-c", hasCreatedChildren);
+		setInputMode((InputMode)client->serializeInt("i-n-m", (int)getInputMode()));
 
-		clipRect.x = client->serializeDouble("crX", clipRect.x);
-		clipRect.y = client->serializeDouble("crY", clipRect.y);
-		clipRect.w = client->serializeDouble("crW", clipRect.w);
-		clipRect.h = client->serializeDouble("crH", clipRect.h);
+		clipRect.x = client->serializeDouble("cr-x", clipRect.x);
+		clipRect.y = client->serializeDouble("cr-y", clipRect.y);
+		clipRect.w = client->serializeDouble("cr-w", clipRect.w);
+		clipRect.h = client->serializeDouble("cr-h", clipRect.h);
 		setClipRect(clipRect);
 
 		switch (hint)
@@ -457,6 +469,11 @@ namespace AW
 	bool ApplicationObject::shouldSerializeChildren()
 	{
 		return !rebuildOnLoad;
+	}
+
+	bool ApplicationObject::shouldSerializeSelf()
+	{
+		return serializeEnabled && !getTag(ATags::IsDebugElement);
 	}
 
 	bool ApplicationObject::collisionEnabled()

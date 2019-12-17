@@ -66,5 +66,7 @@ namespace AW
 
 		int registerTimeoutCallback(std::shared_ptr<EnterFrameListener> listener, double timeoutMS);
 		void unregisterTimeoutCallback(int id);
+
+		void onCleanup();
 	};
 }
