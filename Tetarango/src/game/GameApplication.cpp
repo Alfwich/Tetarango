@@ -45,6 +45,19 @@ namespace AWGame
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
+
+		if (storageClient->hasKey(masterVolParamKey))
+		{
+			modules->sound->setMasterVolume(storageClient->readDouble(masterVolParamKey));
+			modules->sound->setEffectVolume(storageClient->readDouble(generalVolParamKey));
+			modules->sound->setMusicVolume(storageClient->readDouble(musicVolParamKey));
+		}
+		else
+		{
+			modules->sound->setMasterVolume(1.0);
+			modules->sound->setEffectVolume(0.8);
+			modules->sound->setMusicVolume(0.6);
+		}
 	}
 
 	void GameApplication::onPrimeSerialization()
@@ -92,19 +105,6 @@ namespace AWGame
 			}
 
 			masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Splash));
-		}
-
-		if (storageClient->hasKey(masterVolParamKey))
-		{
-			modules->sound->setMasterVolume(storageClient->readDouble(masterVolParamKey));
-			modules->sound->setEffectVolume(storageClient->readDouble(generalVolParamKey));
-			modules->sound->setMusicVolume(storageClient->readDouble(musicVolParamKey));
-		}
-		else
-		{
-			modules->sound->setMasterVolume(1.0);
-			modules->sound->setEffectVolume(0.8);
-			modules->sound->setMusicVolume(0.6);
 		}
 	}
 

@@ -9,7 +9,6 @@ namespace AW
 	void Sound::onInit()
 	{
 		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-		setMasterVolume(0.0);
 	}
 
 	void Sound::bindAsset(std::shared_ptr<Asset> asset)

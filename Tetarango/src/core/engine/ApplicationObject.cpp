@@ -16,7 +16,6 @@ namespace AW
 		renderType = RenderType::None;
 		modules = SystemModuleBundle::getModuleBundle();
 
-		isSerializable = true;
 		enableSerialization<ApplicationObject>();
 	}
 

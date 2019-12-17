@@ -433,6 +433,7 @@ namespace AW
 		}
 
 		bool pushedColorStack = false;
+		std::shared_ptr<Rectangle> debugElement = nullptr;
 		switch (ao->renderType)
 		{
 		case RenderType::Element:
@@ -462,6 +463,7 @@ namespace AW
 			if (container != nullptr)
 			{
 				container->performAutoLayoutIfNeeded();
+
 				pushedColorStack = updateColorStack(container);
 				renderUpdateRect(container, &computed, &renderPackage);
 				ao->setWorldRect(&computed);
@@ -469,7 +471,15 @@ namespace AW
 
 				if (currentScreenConfig.visualizeContainers)
 				{
-					container->doUpdateDebugChildren();
+					debugElement = std::make_shared<Rectangle>();
+					debugElement->serializeEnabled = false;
+					debugElement->setTag(ATags::IsDebugElement, true);
+					debugElement->matchSize(container);
+					debugElement->topLeftAlignSelf();
+					debugElement->setAlpha(0.20);
+					debugElement->setColor(container->debugColor);
+					debugElement->zIndex = 1;
+					container->add(debugElement);
 				}
 			}
 
@@ -496,6 +506,12 @@ namespace AW
 			}
 		}
 
+		if (debugElement != nullptr)
+		{
+			debugElement->removeFromParent();
+			debugElement = nullptr;
+		}
+
 		if (pushedColorStack)
 		{
 			revertColorStack();
@@ -507,13 +523,13 @@ namespace AW
 			{
 				const auto testRect = std::make_shared<Rectangle>();
 				testRect->setTag(AW::ATags::IsDebugElement, true);
+				testRect->serializeEnabled = false;
 				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
 				testRect->zIndex = 20;
 				testRect->setAlpha(0.25);
 				testRect->onInitialAttach();
 				colorStack.push(AW::Color::red());
 				renderElement(testRect, &Rect(), &RenderPackage());
-				testRect->removeFromParent();
 				colorStack.pop();
 			}
 

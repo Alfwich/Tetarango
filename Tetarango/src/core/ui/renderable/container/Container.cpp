@@ -5,6 +5,7 @@
 namespace
 {
 	const auto debugBgRectName = "__debug__bg__";
+	const auto childBoundLimit = DBL_MAX;
 }
 
 namespace AW
@@ -12,6 +13,7 @@ namespace AW
 	Container::Container()
 	{
 		renderType = RenderType::Container;
+		debugColor = AW::Color(0, AW::NumberHelper::randomInt(0, 255), AW::NumberHelper::randomInt(0, 255));
 		enableSerialization<Container>();
 	}
 
@@ -32,12 +34,7 @@ namespace AW
 	{
 		isAutoLayingOut = true;
 
-		if (debugRect != nullptr)
-		{
-			debugRect->removeFromParent();
-		}
-
-		Rect childrenBounds{ 100000.0, 100000.0, 0.0, 0.0 };
+		Rect childrenBounds{ childBoundLimit, childBoundLimit, -childBoundLimit, -childBoundLimit };
 		for (const auto renderable : getChildrenOfType<Renderable>())
 		{
 			const auto r = getRect();
@@ -100,27 +97,5 @@ namespace AW
 			isAutoLayingOut = false;
 			shouldAutoLayout = false;
 		}
-	}
-
-	void Container::doUpdateDebugChildren()
-	{
-		Renderable::doUpdateDebugChildren();
-
-		if (debugRect == nullptr)
-		{
-			debugRect = std::make_shared<AW::Rectangle>();
-			debugRect->name = debugBgRectName;
-			debugRect->setTag(AW::ATags::IsDebugElement, true);
-			debugRect->setAlpha(0.25);
-			debugRect->setColor(AW::Color(0, AW::NumberHelper::randomInt(0, 255), AW::NumberHelper::randomInt(0, 255)));
-			debugRect->zIndex = 1;
-			add(debugRect);
-		}
-		else if (!debugRect->isAttached())
-		{
-			add(debugRect);
-		}
-
-		debugRect->matchSizeAndCenter(this);
 	}
 }

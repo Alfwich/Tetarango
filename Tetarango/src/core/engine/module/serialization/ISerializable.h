@@ -35,7 +35,6 @@ namespace AW
 		ISerializable() {
 			this->serializationClient = std::make_shared<SerializationClient>();
 		};
-		bool isSerializable;
 		virtual ~ISerializable() = 0 {};
 		std::shared_ptr<SerializationClient> serializationClient;
 

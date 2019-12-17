@@ -46,7 +46,7 @@ namespace AW
 
 	std::string Serializer::serializeRecursive(std::shared_ptr<ISerializable> ser)
 	{
-		if (!ser->isSerializable)
+		if (!ser->shouldSerializeSelf())
 		{
 			return std::string();
 		}

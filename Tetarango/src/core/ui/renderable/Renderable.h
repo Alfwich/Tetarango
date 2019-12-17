@@ -59,6 +59,7 @@ namespace AW
 		virtual void setColor(const Color& color);
 		virtual void setColor(const Color* color);
 		Color* getColor();
+		Color debugColor;
 
 		virtual Rect getRect();
 
@@ -182,8 +183,6 @@ namespace AW
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
-
-		virtual void doUpdateDebugChildren() { /* NO-OP */ }
 	};
 }
 

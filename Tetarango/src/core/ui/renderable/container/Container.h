@@ -10,7 +10,6 @@ namespace AW
 	class Container : public ApplicationObject, public Renderable
 	{
 		bool isAutoLayingOut = false, shouldAutoLayout = true;
-		std::shared_ptr<AW::Rectangle> debugRect;
 
 	public:
 		Container();
@@ -24,8 +23,6 @@ namespace AW
 
 		void setWidth(double newWidth);
 		void setHeight(double newHeight);
-
-		void doUpdateDebugChildren();
 	};
 
 }
