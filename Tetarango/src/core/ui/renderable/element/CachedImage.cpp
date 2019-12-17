@@ -93,7 +93,6 @@ namespace AW
 				dataCol++;
 			}
 
-			std::cout << imageDataRow << " : " << dataRow << std::endl;
 			imageDataRow++;
 			dataRow--;
 		}

@@ -47,7 +47,7 @@ namespace AW
 	void ScrollContainer::onLayoutChildren()
 	{
 		scrollContainer->resizeSelfToChildrenAndCenterChildren();
-		const auto scrollAmount = serializationClient->getDouble(scrollAmountParamName);
+		const auto scrollAmount = getScrollPosition();
 		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 50);
 		Rect target = scrollContainer->getRect();
 		target.y = -scrollContainer->getHeight() * scrollAmount;
@@ -97,13 +97,13 @@ namespace AW
 
 	void ScrollContainer::scroll(double amount)
 	{
-		const auto currentScrollPosition = serializationClient->getDouble(scrollAmountParamName);
+		const auto currentScrollPosition = getScrollPosition();
 		setScrollPosition(currentScrollPosition + amount);
 	}
 
 	double ScrollContainer::scrollPixels(int amount)
 	{
-		const auto currentScrollPosition = serializationClient->getDouble(scrollAmountParamName);
+		const auto currentScrollPosition = getScrollPosition();
 		const auto resultingPosition = currentScrollPosition + amount / getHeight();
 		setScrollPosition(resultingPosition);
 

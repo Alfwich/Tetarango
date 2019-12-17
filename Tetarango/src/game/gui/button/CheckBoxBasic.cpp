@@ -26,8 +26,11 @@ namespace AWGame
 {
 	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{
+		renderTextureMode = AW::RenderTextureMode::BilinearNoWrap;
 		enableSerialization<CheckBoxBasic>();
 	}
+
+	CheckBoxBasic::CheckBoxBasic() : CheckBoxBasic(GuiButton::CheckBoxBasic) {}
 
 	void CheckBoxBasic::onLoadResources()
 	{
@@ -63,8 +66,6 @@ namespace AWGame
 
 		modules->animation->addAnimationSet(animationSet, checkBoxBasicId);
 	}
-
-	CheckBoxBasic::CheckBoxBasic() : CheckBoxBasic(GuiButton::CheckBoxBasic) {}
 
 	void CheckBoxBasic::setText(std::string text)
 	{

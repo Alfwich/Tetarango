@@ -81,7 +81,7 @@ namespace AW
 		RenderType renderType = RenderType::None;
 		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
 		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
-		RenderTextureMode renderTextureMode = RenderTextureMode::Default;
+		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
 		RenderPositionMode getFirstNonUnspecifiedRenderPositionMode();
 
 		bool isAttached();
@@ -110,7 +110,8 @@ namespace AW
 
 		virtual void onLoadResources() { /* NO-OP */ };
 		virtual void onWillTransitioned() { /* NO-OP */ };
-		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { /* NO-OP */ };
+		virtual void onTransitionedTo() { /* NO-OP */ };
+		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { onTransitionedTo();  };
 		virtual void onInitialAttach() { /* NO-OP */ };
 		virtual void onCreateChildren() { /* NO-OP */ };
 		virtual void onLayoutChildren() { /* NO-OP */ };

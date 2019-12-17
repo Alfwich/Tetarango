@@ -195,25 +195,25 @@ namespace AWGame
 		centeringContainer->add(debugRenderingCheckbox);
 
 		masterVolScrollBar = std::make_shared<ScrollBarBasic>();
-		masterVolScrollBar->setSize(200.0, 20.0);
+		masterVolScrollBar->setSize(200.0, 30.0);
 		masterVolScrollBar->setHorizontal(true);
 		masterVolScrollBar->scrollListener = weak_from_this();
 		centeringContainer->add(masterVolScrollBar);
 
 		generalVolScrollBar = std::make_shared<ScrollBarBasic>();
-		generalVolScrollBar->setSize(200.0, 20.0);
+		generalVolScrollBar->setSize(200.0, 30.0);
 		generalVolScrollBar->setHorizontal(true);
 		generalVolScrollBar->scrollListener = weak_from_this();
 		centeringContainer->add(generalVolScrollBar);
 
 		musicVolScrollBar = std::make_shared<ScrollBarBasic>();
-		musicVolScrollBar->setSize(200.0, 20.0);
+		musicVolScrollBar->setSize(200.0, 30.0);
 		musicVolScrollBar->setHorizontal(true);
 		musicVolScrollBar->scrollListener = weak_from_this();
 		centeringContainer->add(musicVolScrollBar);
 
 		frameLimiterScrollBar = std::make_shared<ScrollBarBasic>();
-		frameLimiterScrollBar->setSize(200.0, 20.0);
+		frameLimiterScrollBar->setSize(200.0, 30.0);
 		frameLimiterScrollBar->setHorizontal(true);
 		frameLimiterScrollBar->clickListener = weak_from_this();
 		frameLimiterScrollBar->scrollListener = weak_from_this();
@@ -351,6 +351,10 @@ namespace AWGame
 		backButton->toLeftOf(applyButton, generalElementOffset, 0.0);
 
 		optionsMenuTitle->toTopOf(centeringContainer, 0.0, verticalScreenBorderOffset);
+	}
+
+	void SceneOptionsMenu::onTransitionedTo()
+	{
 	}
 
 	void SceneOptionsMenu::onTimeoutCalled(int id)

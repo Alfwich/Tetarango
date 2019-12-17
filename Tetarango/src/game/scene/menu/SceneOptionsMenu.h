@@ -79,6 +79,8 @@ namespace AWGame
 		void onCreateChildren();
 		void onLayoutChildren();
 
+		void onTransitionedTo();
+
 		void onTimeoutCalled(int id);
 		void onButtonClicked(int id);
 		void onKeyPressed(SDL_Scancode key);

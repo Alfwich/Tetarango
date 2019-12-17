@@ -30,7 +30,10 @@ namespace AW
 
 	enum class RenderTextureMode
 	{
-		Default
+		LinearNoWrap,
+		BilinearNoWrap,
+		LinearWrapping,
+		BilinearWrapping
 	};
 
 	enum class RenderPositionMode

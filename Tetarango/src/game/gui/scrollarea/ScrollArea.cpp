@@ -93,7 +93,7 @@ namespace AWGame
 				scroller->toRightTopOf(container);
 				scroller->setScrollerHeight(myHeight / containerHeight);
 				scroller->visible = getScrollerVisible();
-				scroller->setScrollPositionInstantly(container->getScrollPosition());
+				scroller->setScrollPositionInstantly(container->getScrollPosition() / getScrollMaxLimit());
 			}
 			else
 			{

@@ -154,6 +154,7 @@ namespace AW
 	void Text::onCreateChildren()
 	{
 		textPositioningElement = std::make_shared<Element>();
+		textPositioningElement->renderTextureMode = RenderTextureMode::BilinearNoWrap;
 		textPositioningElement->name = textPositioningElementName;
 		textPositioningElement->zIndex = 2;
 		if (cachedTextureText != nullptr)

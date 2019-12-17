@@ -17,6 +17,7 @@ namespace AWGame
 {
 	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
 	{
+		renderTextureMode = AW::RenderTextureMode::BilinearNoWrap;
 		enableSerialization<ScrollBarBasic>();
 	}
 
@@ -211,8 +212,8 @@ namespace AWGame
 			scroller->setHeight(scrollerHeight);
 			scroller->setWidth(getWidth());
 		}
-		scroller->topLeftAlignSelf();
-		updateScrollerPosition();
+
+		updateScrollerPosition(true);
 	}
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)

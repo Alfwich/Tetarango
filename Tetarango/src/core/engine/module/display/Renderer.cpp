@@ -71,7 +71,7 @@ namespace AW
 	{
 		renderPositionModeStack.push(RenderPositionMode::Positioned);
 		renderProcessingStack.push(RenderPositionProcessing::None);
-		textureModeStack.push(RenderTextureMode::Default);
+		textureModeStack.push(RenderTextureMode::LinearNoWrap);
 
 		if (oldRenderer != nullptr)
 		{
@@ -427,7 +427,7 @@ namespace AW
 			renderProcessingStack.push(ao->renderPositionProcessing);
 		}
 
-		if (ao->renderTextureMode != RenderTextureMode::Default)
+		if (ao->renderTextureMode != RenderTextureMode::LinearNoWrap)
 		{
 			textureModeStack.push(ao->renderTextureMode);
 		}
@@ -525,7 +525,7 @@ namespace AW
 			}
 		}
 
-		if (ao->renderTextureMode != RenderTextureMode::Default)
+		if (ao->renderTextureMode != RenderTextureMode::LinearNoWrap)
 		{
 			textureModeStack.pop();
 		}
@@ -809,7 +809,28 @@ namespace AW
 
 		switch (textureModeStack.top())
 		{
-		case RenderTextureMode::Default:
+		case RenderTextureMode::BilinearNoWrap:
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			break;
+
+		case RenderTextureMode::LinearWrapping:
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			break;
+
+		case RenderTextureMode::BilinearWrapping:
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			break;
+
+		case RenderTextureMode::LinearNoWrap:
 		default:
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

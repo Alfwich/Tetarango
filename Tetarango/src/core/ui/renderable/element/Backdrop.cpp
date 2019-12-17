@@ -11,6 +11,7 @@ namespace AW
 	Backdrop::Backdrop()
 	{
 		renderType = RenderType::Backdrop;
+		renderTextureMode = RenderTextureMode::LinearWrapping;
 		disableCulling = true;
 
 		enableSerialization<Backdrop>();
