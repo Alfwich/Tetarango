@@ -94,6 +94,7 @@ namespace AWGame
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
 			resolutionButton->setSize(180.0, 60.0);
+			resolutionButton->setFontSize(24.0);
 			if (config.mode == AW::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
 				resolutionButton->setEnabled(false);
@@ -225,7 +226,7 @@ namespace AWGame
 
 		msaaLabel = std::make_shared<AW::Text>();
 		msaaLabel->setFont("medium", headerFontSize);
-		msaaLabel->setText("MultiSample AA");
+		msaaLabel->setText("Multisample Anti-Aliasing");
 		centeringContainer->add(msaaLabel);
 
 		vsyncLabel = std::make_shared<AW::Text>();

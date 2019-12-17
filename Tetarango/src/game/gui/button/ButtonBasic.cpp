@@ -6,6 +6,7 @@ namespace
 	const auto buttonBasicId = "button-basic";
 	const auto mediumFontId = "medium";
 	const auto enabledParamName = "button-basic-is-enabled";
+	const auto fontSizeParamName = "button-basic-font-size";
 	const auto labelName = "button-basic-label";
 	const auto backgroundName = "button-basic-background";
 }
@@ -69,6 +70,21 @@ namespace AWGame
 		return text;
 	}
 
+	void ButtonBasic::setFontSize(int size)
+	{
+		serializationClient->setInt(fontSizeParamName, size);
+
+		if (label != nullptr)
+		{
+			label->setFontSize(size);
+		}
+	}
+
+	int ButtonBasic::getFontSize()
+	{
+		return serializationClient->getInt(fontSizeParamName, 30);
+	}
+
 	void ButtonBasic::setEnabled(bool flag)
 	{
 		serializationClient->setBool(enabledParamName, flag);
@@ -93,18 +109,22 @@ namespace AWGame
 		background = std::make_shared<AW::NineSlice>();
 		background->setTexture(buttonBasicId);
 		background->setAnimationSet(buttonBasicId);
-		background->matchSizeAndCenter(this);
 		background->setCornerSize(16);
 		background->name = backgroundName;
 		add(background);
 
 		label = std::make_shared<AW::Text>();
 		label->name = labelName;
-		label->setFont("medium", 30);
+		label->setFont("medium", getFontSize());
 		label->setTextColor(0, 0, 0);
 		label->setText(text);
-		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
 		add(label);
+	}
+
+	void ButtonBasic::onLayoutChildren()
+	{
+		background->matchSizeAndCenter(this);
+		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
 	}
 
 	void ButtonBasic::onChildrenHydrated()

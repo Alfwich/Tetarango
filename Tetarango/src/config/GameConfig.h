@@ -65,7 +65,7 @@ namespace Config
 				base[Param::storageLocation] += " " + base[Param::version] + " - Debug";
 				base[Param::useAssetPack] = FALSE;
 				base[Param::saveWholeSceneOnClose] = TRUE;
-				//base[Param::launchToLastScene] = TRUE;
+				base[Param::launchToLastScene] = TRUE;
 				//base[Param::runTests] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;

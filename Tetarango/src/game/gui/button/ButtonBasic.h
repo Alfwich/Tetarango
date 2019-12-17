@@ -22,6 +22,7 @@ namespace AWGame
 		void onLoadResources();
 
 		void onCreateChildren();
+		void onLayoutChildren();
 		void onChildrenHydrated();
 		void onInitialAttach();
 		void onDetach();
@@ -31,6 +32,9 @@ namespace AWGame
 
 		void setText(std::string text);
 		std::string getText();
+
+		void setFontSize(int size);
+		int getFontSize();
 
 		void setEnabled(bool flag);
 		bool getEnabled();
