@@ -305,7 +305,6 @@ namespace AW
 		return programs[key];
 	}
 
-
 	SDL_GLContext Renderer::getOpenGLContext()
 	{
 		return glContext;
@@ -414,7 +413,7 @@ namespace AW
 					debugElement = std::make_shared<Rectangle>();
 					debugElement->serializationEnabled = false;
 					debugElement->onBindShaders();
-					debugElement->setTag(ATags::IsDebugElement, true);
+					debugElement->setTag(GTags::IsDebugElement, true);
 					debugElement->matchSize(container);
 					debugElement->topLeftAlignSelf();
 					debugElement->setAlpha(0.20);
@@ -465,7 +464,7 @@ namespace AW
 			if (currentScreenConfig.visualizeClipRects)
 			{
 				const auto testRect = std::make_shared<Rectangle>();
-				testRect->setTag(AW::ATags::IsDebugElement, true);
+				testRect->setTag(AW::GTags::IsDebugElement, true);
 				testRect->onBindShaders();
 				testRect->serializationEnabled = false;
 				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);

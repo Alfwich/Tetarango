@@ -16,7 +16,7 @@ namespace AW
 	class SystemModuleBundle;
 	class SceneTransitionBundle;
 
-	enum class ATags {
+	enum class GTags {
 		IsRootElement = 1,
 		IsZone = 2,
 		IsDebugElement = 4
@@ -44,21 +44,10 @@ namespace AW
 		template <typename T>
 		std::shared_ptr<T> findChildWithName(std::string name, bool checkChildren = true);
 
-		Rect worldRect, screenRect, clipRect;
-
 	public:
 		GameObject();
 
 		static int getNextId();
-
-		RenderPositionMode getFirstNonUnspecifiedRenderPositionMode();
-
-		virtual void setWorldRect(Rect* r);
-		virtual void updateScreenRect(const RenderPackage* renderPackage);
-		virtual Rect* getWorldRect();
-		virtual Rect* getScreenRect();
-
-		virtual Rect* getCollisionRect();
 
 		template<typename T>
 		void registerSerialization();
@@ -79,8 +68,8 @@ namespace AW
 		int getId();
 		int inputListenerObjectId() { return getId(); };
 
-		void setTag(ATags flag, bool value);
-		bool getTag(ATags flag);
+		void setTag(GTags flag, bool value);
+		bool getTag(GTags flag);
 
 		std::shared_ptr<SystemModuleBundle> modules;
 
@@ -149,7 +138,7 @@ namespace AW
 	{
 		auto parentPtr = parent.lock();
 
-		while (parentPtr != nullptr && !parentPtr->getTag(ATags::IsRootElement))
+		while (parentPtr != nullptr && !parentPtr->getTag(GTags::IsRootElement))
 		{
 			const auto castedParent = std::dynamic_pointer_cast<T>(parentPtr);
 

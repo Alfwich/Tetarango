@@ -218,11 +218,18 @@ namespace AWGame
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)
 	{
-		const auto rect = getFirstNonUnspecifiedRenderPositionMode() == AW::RenderPositionMode::Unspecified ? background->getScreenRect() : background->getWorldRect();
+		auto rect = worldRect;
+		const auto cam = modules->screen->getCamera();
+
+		if (cam != nullptr)
+		{
+			worldRect.x += cam->getXOffset();
+			worldRect.y += cam->getYOffset();
+		}
 
 		isHovering =
-			x < rect->x + rect->w && x > rect->x &&
-			y < rect->y + rect->h && y > rect->y;
+			x < rect.x + rect.w && x > rect.x &&
+			y < rect.y + rect.h && y > rect.y;
 	}
 
 	void ScrollBarBasic::onMouseButton(AW::MouseButton button, bool pressed)

@@ -6,11 +6,10 @@
 #include "util/Rect.h"
 #include "util/Color.h"
 #include "engine/module/shader/Shader.h"
+#include "engine/module/display/RenderPackage.h"
 
 namespace AW
 {
-	class GameObject;
-
 	enum class RenderType
 	{
 		None,
@@ -62,9 +61,10 @@ namespace AW
 	{
 		double rot = 0.0, alpha = 1.0, scaleX = 1.0, scaleY = 1.0;
 		bool hasClipRect = false;
-		Rect rect, clipRect;
 
 	protected:
+		Rect rect, clipRect, worldRect, screenRect;
+
 		std::shared_ptr<Color> colorModulation = nullptr;
 		std::shared_ptr<Shader> vertexShader = nullptr, fragmentShader = nullptr, clipRectVertexShader = nullptr, clipRectFragmentShader = nullptr;
 
@@ -90,6 +90,13 @@ namespace AW
 		virtual GLuint getClipRectFragmentShaderId() { return clipRectFragmentShader != nullptr ? clipRectFragmentShader->getShaderId() : 0; }
 
 		virtual Rect getRect();
+
+		virtual void setWorldRect(Rect* r);
+		virtual void updateScreenRect(const RenderPackage* renderPackage);
+		virtual Rect* getWorldRect();
+		virtual Rect* getScreenRect();
+
+		virtual Rect* getCollisionRect();
 
 		bool getHasClipRect();
 		const Rect* getClipRect();
@@ -142,81 +149,79 @@ namespace AW
 
 		void topLeftAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
 
-		void centerWithin(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void centerWithin(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerWithin(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerWithin(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toLeftOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toLeftTopOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftTopOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftTopOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftTopOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toLeftBottomOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftBottomOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftBottomOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftBottomOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toRightOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toRightTopOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightTopOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightTopOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightTopOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toRightBottomOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightBottomOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightBottomOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightBottomOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toTopOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toTopLeftOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopLeftOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toTopRightOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopRightOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopRightOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopRightOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toBottomOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toBottomLeftOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomLeftOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toBottomRightOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomRightOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomRightOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomRightOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void matchSize(GameObject* other, double wOffset = 0.0, double hOffset = 0.0);
-		void matchSize(std::shared_ptr<GameObject> other, double wOffset = 0.0, double hOffset = 0.0);
+		void matchSize(Renderable* other, double wOffset = 0.0, double hOffset = 0.0);
+		void matchSize(std::shared_ptr<Renderable> other, double wOffset = 0.0, double hOffset = 0.0);
 
-		void matchSizeAndCenter(GameObject* other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
-		void matchSizeAndCenter(std::shared_ptr<GameObject> other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
+		void matchSizeAndCenter(Renderable* other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
+		void matchSizeAndCenter(std::shared_ptr<Renderable> other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
 
-		void leftAlign(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void leftAlign(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void leftAlign(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void leftAlign(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerLeftIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerLeftIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerLeftIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerLeftIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerRightIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerRightIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerRightIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerRightIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerTopIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerBottomIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerTopLeftIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopLeftIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopLeftIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopLeftIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerTopRightIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopRightIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopRightIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopRightIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerBottomLeftIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomLeftIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomLeftIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomLeftIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerBottomRightIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomRightIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomRightIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomRightIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
 	};
 }
-
-#include "engine/GameObject.h"

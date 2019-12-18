@@ -6,7 +6,7 @@ namespace AW
 	{
 		activate();
 		enableInput();
-		setTag(ATags::IsRootElement, true);
+		setTag(GTags::IsRootElement, true);
 		timeScope = TimeScope::Global;
 	}
 

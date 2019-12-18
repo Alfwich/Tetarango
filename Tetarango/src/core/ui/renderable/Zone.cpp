@@ -9,7 +9,7 @@ namespace AW
 	{
 		zIndex = 20;
 		setRequestReconciliation(true);
-		setTag(ATags::IsZone, true);
+		setTag(GTags::IsZone, true);
 		registerSerialization<Zone>();
 	}
 

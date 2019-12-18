@@ -23,7 +23,7 @@ namespace AW
 		return nextId++;
 	}
 
-	void GameObject::setTag(ATags flag, bool value)
+	void GameObject::setTag(GTags flag, bool value)
 	{
 		tags[(unsigned int)flag] = value ? 1 : 0;
 	}
@@ -72,7 +72,7 @@ namespace AW
 			return parentPtr->isAttached();
 		}
 
-		return getTag(ATags::IsRootElement);
+		return getTag(GTags::IsRootElement);
 	}
 
 	int GameObject::getId()
@@ -80,7 +80,7 @@ namespace AW
 		return id;
 	}
 
-	bool GameObject::getTag(ATags flag)
+	bool GameObject::getTag(GTags flag)
 	{
 		return tags[(unsigned int)flag] == 1;
 	}
@@ -172,64 +172,6 @@ namespace AW
 	{
 		children.sort(renderOrderLambda);
 		return children;
-	}
-
-	RenderPositionMode GameObject::getFirstNonUnspecifiedRenderPositionMode()
-	{
-		const auto renderablePtr = std::dynamic_pointer_cast<Renderable>(shared_from_this());
-		if (renderablePtr != nullptr && renderablePtr->renderPositionMode != RenderPositionMode::Unspecified)
-		{
-			return renderablePtr->renderPositionMode;
-		}
-
-		const auto parentPtr = parent.lock();
-		if (parentPtr != nullptr)
-		{
-			return parentPtr->getFirstNonUnspecifiedRenderPositionMode();
-		}
-
-		return RenderPositionMode::Unspecified;
-	}
-
-	void GameObject::setWorldRect(Rect* r)
-	{
-		worldRect.x = r->x;
-		worldRect.y = r->y;
-		worldRect.w = r->w;
-		worldRect.h = r->h;
-	}
-
-	void GameObject::updateScreenRect(const RenderPackage* renderPackage)
-	{
-		if (renderPackage != nullptr)
-		{
-			double zoom = renderPackage->zoom,
-				xOffset = renderPackage->xOffset,
-				yOffset = renderPackage->yOffset;
-
-			screenRect.w = worldRect.w * renderPackage->zoom;
-			screenRect.h = worldRect.h * renderPackage->zoom;
-			screenRect.x = worldRect.x * renderPackage->zoom;
-			screenRect.y = worldRect.y * renderPackage->zoom;
-
-			screenRect.x -= (renderPackage->cameraX * zoom) - (renderPackage->cameraX - xOffset) * zoom;
-			screenRect.y -= (renderPackage->cameraY * zoom) - (renderPackage->cameraY - yOffset) * zoom;
-		}
-	}
-
-	Rect* GameObject::getWorldRect()
-	{
-		return &worldRect;
-	}
-
-	Rect* GameObject::getScreenRect()
-	{
-		return &screenRect;
-	}
-
-	Rect* GameObject::getCollisionRect()
-	{
-		return &worldRect;
 	}
 
 	void GameObject::createChildren()
@@ -451,7 +393,7 @@ namespace AW
 
 	bool GameObject::shouldSerializeSelf()
 	{
-		return serializationEnabled && !getTag(ATags::IsDebugElement);
+		return serializationEnabled && !getTag(GTags::IsDebugElement);
 	}
 
 	bool GameObject::collisionEnabled()

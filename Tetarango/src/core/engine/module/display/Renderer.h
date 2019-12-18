@@ -71,6 +71,7 @@ namespace AW
 
 		void changeProgram(GLuint programId);
 		GLuint createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId);
+
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();
