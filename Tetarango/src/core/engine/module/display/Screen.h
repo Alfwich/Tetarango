@@ -61,7 +61,6 @@ namespace AW
 		int getWidth();
 		int getHeight();
 		void setClearColor(int r, int g, int b, int a = 0xff);
-		void setWindowColorMod(int r, int g, int b);
 
 		SDL_Window* getWindow();
 

@@ -68,10 +68,6 @@ namespace AW
 
 		root = std::make_shared<DisplayRoot>();
 
-		root->onBindShaders();
-		root->onInitialAttach();
-		root->createChildren();
-
 		return true;
 	}
 
@@ -111,6 +107,10 @@ namespace AW
 
 		running = true;
 
+		root->onInitialAttach();
+		root->onBindShaders();
+		root->createChildren();
+
 		modules->logger->log("Application::onReady");
 		onReady();
 
@@ -119,6 +119,8 @@ namespace AW
 
 	void Application::loadResources()
 	{
+		modules->shader->loadShader("res/game/shader/fragment/fragment-shader.glsl", "fragment");
+		modules->shader->loadShader("res/game/shader/vertex/vertex-shader.glsl", "vertex");
 	}
 
 	void Application::primeSerialization()

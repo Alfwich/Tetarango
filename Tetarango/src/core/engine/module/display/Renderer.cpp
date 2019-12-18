@@ -45,7 +45,6 @@ namespace AW
 		else
 		{
 			setClearColor(0xff, 0xff, 0xff, 0xff);
-			setGlobalColorMod(0xff, 0xff, 0xff);
 		}
 
 		currentScreenConfig = screenConfig;
@@ -110,7 +109,6 @@ namespace AW
 	void Renderer::harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous)
 	{
 		clearColor = previous->clearColor;
-		globalColorMod = previous->globalColorMod;
 	}
 
 	Renderer::~Renderer()
@@ -157,13 +155,6 @@ namespace AW
 		clearColor.g = g;
 		clearColor.b = b;
 		clearColor.a = a;
-	}
-
-	void Renderer::setGlobalColorMod(int r, int g, int b)
-	{
-		globalColorMod.r = r;
-		globalColorMod.g = g;
-		globalColorMod.b = b;
 	}
 
 	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen, std::shared_ptr<QuadMap> qm)

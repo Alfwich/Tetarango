@@ -145,14 +145,6 @@ namespace AW
 		}
 	}
 
-	void Screen::setWindowColorMod(int r, int g, int b)
-	{
-		if (renderer != nullptr)
-		{
-			renderer->setGlobalColorMod(r, g, b);
-		}
-	}
-
 	SDL_Window* Screen::getWindow()
 	{
 		return window;

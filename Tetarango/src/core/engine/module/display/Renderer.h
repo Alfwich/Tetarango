@@ -23,7 +23,7 @@ namespace AW
 		ScreenConfig currentScreenConfig;
 
 		SDL_GLContext glContext;
-		Color clearColor, globalColorMod;
+		Color clearColor;
 
 		mat4x4 mvp, p, pAbs, m, t, UVp, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgram = 0;
@@ -79,7 +79,6 @@ namespace AW
 		bool isOpenGLEnabled();
 
 		void setClearColor(int r, int g, int b, int a);
-		void setGlobalColorMod(int r, int g, int b);
 		void render(std::shared_ptr<Renderable> obj, Screen* screen, std::shared_ptr<QuadMap> qm);
 
 		SDL_GLContext getOpenGLContext();

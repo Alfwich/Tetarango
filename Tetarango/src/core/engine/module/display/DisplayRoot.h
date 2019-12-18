@@ -10,7 +10,6 @@ namespace AW
 		DisplayRoot();
 
 		void onInitialAttach();
-
 		void onLayoutChildren();
 	};
 }

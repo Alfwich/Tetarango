@@ -19,7 +19,6 @@ namespace AWGame
 	public:
 		void onInit();
 		void onPrimeSerialization();
-		void onLoadResources();
 		void onReady();
 		void onCleanup();
 
