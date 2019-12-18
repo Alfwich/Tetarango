@@ -48,7 +48,6 @@ namespace AW
 
 		bool renderShouldCull(Rect* r, RenderPackage* renderPackage);
 
-		void initOpenGL(SDL_Window* window, const ScreenConfig& screenConfig);
 		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
 		void releaseOpenGLObjects();
 
@@ -67,9 +66,10 @@ namespace AW
 		void openGLDrawArrays(RenderPackage* renderPackage);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 	public:
-		Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
+		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();
 
+		void initOpenGL(SDL_Window* window, std::shared_ptr<Asset> asset);
 		bool isOpenGLEnabled();
 
 		void setClearColor(int r, int g, int b, int a);

@@ -3,7 +3,7 @@ import os, sys, datetime, glob, shutil, io, subprocess
 from distutils.dir_util import copy_tree
 
 resource_folders = ["Tetarango/res"]
-resource_include_files = [".png", ".wav", ".ttf", ".mp3"]
+resource_include_files = [".png", ".wav", ".ttf", ".mp3", ".glsl"]
 
 output_file = "asset.pack"
 
@@ -18,7 +18,7 @@ def main():
     resourceFiles = []
     for root, dirs, files in os.walk(opDir + resource_folders[0]):
         for f in files:
-            if f[-4:] in resource_include_files:
+            if f[-4:] in resource_include_files or f[-5:] in resource_include_files:
                 resourceFiles.append((root + "/" + f).replace("\\", "/"))
 
     if os.path.exists(opDir + output_file):

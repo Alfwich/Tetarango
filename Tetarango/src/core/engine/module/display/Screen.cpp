@@ -20,6 +20,11 @@ namespace AW
 		this->collision = collision;
 	}
 
+	void Screen::bindAsset(std::shared_ptr<Asset> asset)
+	{
+		this->asset = asset;
+	}
+
 	bool Screen::init(const ScreenConfig& config, std::string name)
 	{
 		currentConfig = config;
@@ -92,7 +97,8 @@ namespace AW
 
 		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, currentConfig.width, currentConfig.height, windowFlags);
 
-		renderer = std::make_shared<Renderer>(window, currentConfig, renderer);
+		renderer = std::make_shared<Renderer>(currentConfig, renderer);
+		renderer->initOpenGL(window, asset);
 
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 

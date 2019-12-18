@@ -58,6 +58,7 @@ namespace AW
 
 		modules->logger->log("Application::onInit");
 		onInit();
+		modules->asset->onInit();
 		provisionScreen();
 
 		modules->logger->log("Application::Init modules");

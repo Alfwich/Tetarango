@@ -29,6 +29,7 @@ namespace AW
 		asset->bindStorage(storage);
 		font->bindAsset(asset);
 		sound->bindAsset(asset);
+		screen->bindAsset(asset);
 	}
 
 	SystemModuleBundle::SystemModuleBundle()

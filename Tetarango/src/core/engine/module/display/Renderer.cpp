@@ -8,44 +8,6 @@
 
 namespace
 {
-	const char* inlineDefaultVertexShader =
-		R"(
-			#version 330 core
-			layout(location = 0) in vec3 vp;
-			layout(location = 1) in vec2 vertexUV;
-			out vec2 UV;
-			out mat4 UVp;
-			out vec4 colorMod;
-			uniform mat4 mvp;
-			uniform mat4 UVproj;
-			uniform vec4 cMod;
-			void main(){
-				vec4 p = mvp * vec4(vp, 1);
-				gl_Position = p;
-				UV = vertexUV;
-				UVp = UVproj;
-				colorMod = cMod;
-			};
-		)";
-
-	const char* inlineDefaultFragmentShader =
-		R"(
-			#version 330 core
-			in vec2 UV;
-			in vec4 colorMod;
-			in mat4 UVp;
-			out vec4 color;
-			uniform sampler2D myTextureSampler;
-			void main() {
-			   vec4 c = texture(myTextureSampler, (UVp* vec4(UV, 1, 1)).xy).rgba;
-			   vec4 fC = c * colorMod;
-				if (fC.a == 0)
-					discard;
-
-				color = fC;
-			};
-		)";
-
 	const float inlineVerticies[] = {
 		-1, -1, 0,
 		-1, 1, 0,
@@ -67,7 +29,7 @@ namespace
 
 namespace AW
 {
-	Renderer::Renderer(SDL_Window* window, const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer)
+	Renderer::Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer)
 	{
 		renderPositionModeStack.push(RenderPositionMode::Positioned);
 		renderProcessingStack.push(RenderPositionProcessing::None);
@@ -87,11 +49,10 @@ namespace AW
 		}
 
 		currentScreenConfig = screenConfig;
-
-		initOpenGL(window, screenConfig);
 	}
 
-	void Renderer::initOpenGL(SDL_Window* window, const ScreenConfig& screenConfig)
+
+	void Renderer::initOpenGL(SDL_Window* window, std::shared_ptr<Asset> asset)
 	{
 		glContext = SDL_GL_CreateContext(window);
 		glewExperimental = GL_TRUE;
@@ -105,11 +66,11 @@ namespace AW
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
 
-		if (major != screenConfig.openGLMajorVersion || minor != screenConfig.openGLMinorVersion)
+		if (major != currentScreenConfig.openGLMajorVersion || minor != currentScreenConfig.openGLMinorVersion)
 		{
 			Logger::instance()->logCritical(
 				"Renderer::OpenGL::Did not get expected context "
-				+ std::to_string(screenConfig.openGLMajorVersion) + "." + std::to_string(screenConfig.openGLMinorVersion)
+				+ std::to_string(currentScreenConfig.openGLMajorVersion) + "." + std::to_string(currentScreenConfig.openGLMinorVersion)
 				+ ", got major=" + std::to_string(major) + ", minor=" + std::to_string(minor)
 			);
 		}
@@ -140,7 +101,10 @@ namespace AW
 		if (vertexShader == 0)
 		{
 			vertexShader = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(vertexShader, 1, &inlineDefaultVertexShader, NULL);
+			auto vertexShaderData = asset->getAssetBundle("res/game/shader/vertex-shader.glsl");
+			const auto data = vertexShaderData->data.get();
+			const GLint dataLength = vertexShaderData->size;
+			glShaderSource(vertexShader, 1, &data, &dataLength);
 			glCompileShader(vertexShader);
 
 			glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compileResult);
@@ -155,7 +119,10 @@ namespace AW
 		if (fragmentShader == 0)
 		{
 			fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(fragmentShader, 1, &inlineDefaultFragmentShader, NULL);
+			auto fragmentShaderData = asset->getAssetBundle("res/game/shader/fragment-shader.glsl");
+			const auto data = fragmentShaderData->data.get();
+			const GLint dataLength = fragmentShaderData->size;
+			glShaderSource(fragmentShader, 1, &data, &dataLength);
 			glCompileShader(fragmentShader);
 
 			glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compileResult);
@@ -185,7 +152,7 @@ namespace AW
 			}
 		}
 
-		if (screenConfig.openGlWireframeMode)
+		if (currentScreenConfig.openGlWireframeMode)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}

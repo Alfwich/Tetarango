@@ -158,14 +158,9 @@ namespace AW
 
 	void Asset::onInit()
 	{
-		if (gameConfig->getConfigBool(Config::Param::useAssetPack))
+		if (assetPack.empty())
 		{
 			decodeAssetPack(gameConfig->getConfigString(Config::Param::assetPackName));
-
-			if (assetPack.empty())
-			{
-				Logger::instance()->logFatal("Asset::Failed to load asset pack");
-			}
 		}
 	}
 
@@ -317,7 +312,7 @@ namespace AW
 		const unsigned int stride = width * bitDepth * channels / 8;
 
 		for (size_t i = 0; i < height; i++) {
-			png_uint_32 q = (png_uint_32)(i) * stride;
+			png_uint_32 q = (png_uint_32)(i)* stride;
 			rowPtrs[i] = (png_bytep)inBuff + q;
 		}
 

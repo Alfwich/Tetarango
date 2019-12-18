@@ -43,8 +43,10 @@ namespace AW
 
 	class Screen : public IBaseModule
 	{
-		SDL_Window* window;
 		std::shared_ptr<Collision> collision;
+		std::shared_ptr<Asset> asset;
+
+		SDL_Window* window;
 		std::shared_ptr<Renderer> renderer;
 		std::shared_ptr<Camera> camera;
 		ScreenConfig currentConfig;
@@ -54,6 +56,7 @@ namespace AW
 		virtual ~Screen();
 
 		void bindCollision(std::shared_ptr<Collision> collision);
+		void bindAsset(std::shared_ptr<Asset> asset);
 
 		bool init(const ScreenConfig& config, std::string name = "Window");
 		int getWidth();
