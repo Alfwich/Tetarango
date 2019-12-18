@@ -68,6 +68,12 @@ namespace AWGame
 		std::make_unique<Board>();
 	}
 
+	void GameApplication::onLoadResources()
+	{
+		modules->shader->loadShader("res/game/shader/fragment/fragment-shader.glsl", "fragment");
+		modules->shader->loadShader("res/game/shader/vertex/vertex-shader.glsl", "vertex");
+	}
+
 	void GameApplication::onReady()
 	{
 		modules->screen->setClearColor(0, 0, 0);

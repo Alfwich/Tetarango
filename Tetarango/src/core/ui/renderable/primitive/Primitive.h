@@ -14,6 +14,8 @@ namespace AW
 	public:
 		Primitive();
 
+		void onBindShaders();
+
 		virtual void preUpdateRender(Rect* renderRect, RenderPackage* renderPackage) { /* NO-OP */ };
 		virtual void preRender(Rect* renderRect, RenderPackage* renderPackage) { /* NO-OP */ };
 

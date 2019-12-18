@@ -8,7 +8,7 @@ namespace AW
 {
 	class SceneContainer;
 
-	class Scene : public ApplicationObject
+	class Scene : public ApplicationObject, public Renderable
 	{
 		std::string sceneName;
 

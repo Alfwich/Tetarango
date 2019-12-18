@@ -15,6 +15,7 @@ namespace AW
 	class Element;
 	class Primitive;
 	class Camera;
+	class ShaderContainer;
 
 	class DisplayModeInfo
 	{
@@ -44,7 +45,6 @@ namespace AW
 	class Screen : public IBaseModule
 	{
 		std::shared_ptr<Collision> collision;
-		std::shared_ptr<Asset> asset;
 
 		SDL_Window* window;
 		std::shared_ptr<Renderer> renderer;
@@ -56,7 +56,6 @@ namespace AW
 		virtual ~Screen();
 
 		void bindCollision(std::shared_ptr<Collision> collision);
-		void bindAsset(std::shared_ptr<Asset> asset);
 
 		bool init(const ScreenConfig& config, std::string name = "Window");
 		int getWidth();
@@ -77,7 +76,7 @@ namespace AW
 		void setCamera(std::shared_ptr<Camera> camera);
 		void clearCamera();
 
-		void render(std::shared_ptr<ApplicationObject> obj);
+		void render(std::shared_ptr<Renderable> obj);
 
 		void onCleanup();
 	};
@@ -90,3 +89,4 @@ namespace AW
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Primitive.h"
 #include "engine/module/collision/Collision.h"
+#include "engine/module/shader/ShaderContainer.h"

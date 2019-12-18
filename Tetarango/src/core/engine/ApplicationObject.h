@@ -24,8 +24,7 @@ namespace AW
 
 	class ApplicationObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<ApplicationObject>
 	{
-
-		bool currentActive = false, active = true, currentInputEnabled = true, didInitialAttach = false, hasCreatedChildren = false, hasHydratedChildren = false, hasClipRect = false;
+		bool currentActive = false, active = true, currentInputEnabled = true, didInitialAttach = false, hasCreatedChildren = false, hasHydratedChildren = false, hasClipRect = false, hasBoundShaders = false;
 
 	protected:
 		int id = 0;
@@ -52,10 +51,7 @@ namespace AW
 
 		static int getNextId();
 
-		bool getHasClipRect();
-		virtual const Rect* getClipRect();
-		virtual void setClipRect(const Rect& rect);
-		virtual void setClipRect(const Rect* rect);
+		RenderPositionMode getFirstNonUnspecifiedRenderPositionMode();
 
 		virtual void setWorldRect(Rect* r);
 		virtual void updateScreenRect(const RenderPackage* renderPackage);
@@ -68,7 +64,8 @@ namespace AW
 		void registerSerialization();
 
 		std::string name;
-		bool visible = true, serializationEnabled = true;
+		int zIndex = 0;
+		bool serializationEnabled = true;
 
 		void activate();
 		void deactivate();
@@ -76,15 +73,6 @@ namespace AW
 		bool isActive();
 		bool shouldRebuildOnLoad();
 		bool shouldLayoutOnLoad();
-
-		int zIndex = 0;
-		RenderType renderType = RenderType::None;
-		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
-		RenderDepthTest renderDepthTest = RenderDepthTest::Unspecified;
-		RenderMultiSampleMode renderMultiSampleMode = RenderMultiSampleMode::Unspecified;
-		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
-		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
-		RenderPositionMode getFirstNonUnspecifiedRenderPositionMode();
 
 		bool isAttached();
 
@@ -113,7 +101,8 @@ namespace AW
 		virtual void onLoadResources() { /* NO-OP */ };
 		virtual void onWillTransitioned() { /* NO-OP */ };
 		virtual void onTransitionedTo() { /* NO-OP */ };
-		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { onTransitionedTo();  };
+		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { onTransitionedTo(); };
+		virtual void onBindShaders() { /* NO-OP */ };
 		virtual void onInitialAttach() { /* NO-OP */ };
 		virtual void onCreateChildren() { /* NO-OP */ };
 		virtual void onLayoutChildren() { /* NO-OP */ };
@@ -229,7 +218,7 @@ namespace AW
 		{
 			for (const auto c1 : children)
 			{
-				for (const auto childResult: c1->getChildrenOfType<T>(checkChildren))
+				for (const auto childResult : c1->getChildrenOfType<T>(checkChildren))
 				{
 					result.push_back(childResult);
 				}

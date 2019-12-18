@@ -10,7 +10,7 @@
 namespace AW
 {
 
-	class SceneContainer : public ApplicationObject
+	class SceneContainer : public ApplicationObject, public Renderable
 	{
 		std::unordered_map<std::string, std::shared_ptr<Scene>> sceneMap;
 		std::shared_ptr<Scene> currentScene;

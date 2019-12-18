@@ -9,4 +9,14 @@ namespace AW
 		setTag(ATags::IsRootElement, true);
 		timeScope = TimeScope::Global;
 	}
+
+	void DisplayRoot::onInitialAttach()
+	{
+		setSize(modules->screen->getWidth(), modules->screen->getHeight());
+	}
+
+	void DisplayRoot::onLayoutChildren()
+	{
+		topLeftAlignSelf();
+	}
 }

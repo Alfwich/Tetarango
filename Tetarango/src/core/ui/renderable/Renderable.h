@@ -5,6 +5,7 @@
 #include "engine/module/serialization/ISerializable.h"
 #include "util/Rect.h"
 #include "util/Color.h"
+#include "engine/module/shader/Shader.h"
 
 namespace AW
 {
@@ -59,15 +60,23 @@ namespace AW
 
 	class Renderable : public ISerializableDataSubscriber
 	{
-		double rot = 0.0, alpha = 1.0;
-		double scaleX = 1.0, scaleY = 1.0;
-		Rect rect;
+		double rot = 0.0, alpha = 1.0, scaleX = 1.0, scaleY = 1.0;
+		bool hasClipRect = false;
+		Rect rect, clipRect;
 
 	protected:
-		std::shared_ptr<Color> colorModulation;
+		std::shared_ptr<Color> colorModulation = nullptr;
+		std::shared_ptr<Shader> vertexShader = nullptr, fragmentShader = nullptr, clipRectVertexShader = nullptr, clipRectFragmentShader = nullptr;
 
 	public:
-		bool rotateInParentSpace = true, disableCulling = false;
+		RenderType renderType = RenderType::None;
+		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
+		RenderDepthTest renderDepthTest = RenderDepthTest::Unspecified;
+		RenderMultiSampleMode renderMultiSampleMode = RenderMultiSampleMode::Unspecified;
+		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
+		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
+
+		bool visible = true, rotateInParentSpace = true, disableCulling = false;
 
 		virtual void setColor(int r, int g, int b, int a = 0xff);
 		virtual void setColor(const Color& color);
@@ -75,7 +84,17 @@ namespace AW
 		Color* getColor();
 		Color debugColor;
 
+		virtual GLuint getVertexShaderId() { return vertexShader != nullptr ? vertexShader->getShaderId() : 0; }
+		virtual GLuint getFragmentShaderId() { return fragmentShader != nullptr ? fragmentShader->getShaderId() : 0; }
+		virtual GLuint getClipRectVertexShaderId() { return clipRectVertexShader != nullptr ? clipRectVertexShader->getShaderId() : 0; }
+		virtual GLuint getClipRectFragmentShaderId() { return clipRectFragmentShader != nullptr ? clipRectFragmentShader->getShaderId() : 0; }
+
 		virtual Rect getRect();
+
+		bool getHasClipRect();
+		const Rect* getClipRect();
+		void setClipRect(const Rect* rect);
+		void setClipRect(const Rect& rect);
 
 		virtual double getX();
 		virtual void setX(double newX);

@@ -10,26 +10,26 @@ namespace AW
 
 	void SoundContainer::loadSoundClip(std::string path, std::string name)
 	{
-		if (soundClips.count(name) == 1)
+		if (shaders.count(name) == 1)
 		{
 			Logger::instance()->logCritical("Sound::Failed to load sound path=" + path + ", with name=" + name);
 			return;
 		}
 
 		auto clip = std::make_shared<SoundClip>(path, asset);
-		soundClips[name] = clip;
+		shaders[name] = clip;
 		Logger::instance()->log("Sound::Loaded sound name= " + name + ", path=" + path);
 	}
 
 	std::shared_ptr<SoundClip> SoundContainer::getSoundClip(std::string name)
 	{
-		if (soundClips.count(name) == 0)
+		if (shaders.count(name) == 0)
 		{
 			Logger::instance()->logCritical("Sound::Failed to get sound name=" + name);
 			return nullptr;
 		}
 
-		return soundClips[name];
+		return shaders[name];
 	}
 
 	void SoundContainer::loadMusic(std::string path, std::string name)
@@ -58,7 +58,7 @@ namespace AW
 
 	void SoundContainer::cleanup()
 	{
-		soundClips.clear();
+		shaders.clear();
 		musics.clear();
 	}
 }

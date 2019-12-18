@@ -8,6 +8,14 @@ namespace AW
 		renderType = RenderType::Primitive;
 	}
 
+	void Primitive::onBindShaders()
+	{
+		vertexShader = modules->shader->getShader("vertex");
+		fragmentShader = modules->shader->getShader("fragment");
+		clipRectVertexShader = modules->shader->getShader("vertex");
+		clipRectFragmentShader = modules->shader->getShader("fragment");
+	}
+
 	GLuint Primitive::getTextureId()
 	{
 		const auto tex = modules->texture->getTexture("__solid__");

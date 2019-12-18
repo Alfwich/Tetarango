@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <algorithm>
 #include <stack>
 #include <SDL.h>
@@ -25,7 +26,8 @@ namespace AW
 		Color clearColor, globalColorMod;
 
 		mat4x4 mvp, p, pAbs, m, t, UVp, tP;
-		GLuint vertexBuffer = 0, textureUVBuffer = 0, vertexShader = 0, fragmentShader = 0, program = 0, vao = 0;
+		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgram = 0;
+		std::map<std::pair<GLuint, GLuint>, GLuint> programs;
 		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0;
 
 		std::shared_ptr<Camera> camera;
@@ -39,7 +41,7 @@ namespace AW
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 
 		void prepareRender(Screen* screen);
-		void renderRecursive(std::shared_ptr<ApplicationObject> ao, Rect computed, RenderPackage parentRotation);
+		void renderRecursive(std::shared_ptr<Renderable> ao, Rect computed, RenderPackage parentRotation);
 		void renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
 
 		bool updateColorStack(std::shared_ptr<Renderable> rend);
@@ -51,11 +53,12 @@ namespace AW
 		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
 		void releaseOpenGLObjects();
 
-		void renderOpenGL(std::shared_ptr<ApplicationObject> obj, Rect rootRect, Screen* screen, RenderPackage* package);
+		void renderOpenGL(std::shared_ptr<Renderable> obj, Rect rootRect, Screen* screen, RenderPackage* package);
+
 		void renderElement(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
 		void renderPrimitive(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
 
-		void updateClipRectOpenGL(std::shared_ptr<ApplicationObject> ele, Rect* computed, RenderPackage* renderPackage);
+		void updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
 		void bindGLTexture(GLuint textureId);
 
 		void renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
@@ -65,16 +68,19 @@ namespace AW
 
 		void openGLDrawArrays(RenderPackage* renderPackage);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
+
+		void changeProgram(GLuint programId);
+		GLuint createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId);
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();
 
-		void initOpenGL(SDL_Window* window, std::shared_ptr<Asset> asset);
+		void initOpenGL(SDL_Window* window);
 		bool isOpenGLEnabled();
 
 		void setClearColor(int r, int g, int b, int a);
 		void setGlobalColorMod(int r, int g, int b);
-		void render(std::shared_ptr<ApplicationObject> obj, Screen* screen, std::shared_ptr<QuadMap> qm);
+		void render(std::shared_ptr<Renderable> obj, Screen* screen, std::shared_ptr<QuadMap> qm);
 
 		SDL_GLContext getOpenGLContext();
 

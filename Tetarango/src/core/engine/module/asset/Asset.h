@@ -6,22 +6,11 @@
 #include "engine/module/IBaseModule.h"
 #include "engine/module/filesystem/Filesystem.h"
 #include "engine/module/storage/Storage.h"
+#include "ResourceBundle.h"
 #include "ImageBundle.h"
 
 namespace AW
 {
-	class ResourceBundle
-	{
-	public:
-		ResourceBundle(std::unique_ptr<char[]> data, unsigned int size) : size(size), data(std::move(data)) {}
-		ResourceBundle(const std::string& data) : size((unsigned int)data.size()), data(std::make_unique<char[]>(data.size()))
-		{
-			for (unsigned int i = 0; i < size; ++i) this->data.get()[i] = data[i];
-		}
-		const unsigned int size;
-		const std::unique_ptr<char[]> data;
-	};
-
 	class Asset : public IBaseModule
 	{
 		std::shared_ptr<Storage> storage;
@@ -55,8 +44,8 @@ namespace AW
 
 		std::shared_ptr<ResourceBundle> getAssetBundle(std::string path);
 
-		void compressRawImageToPng(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);//size_t w, size_t h, const char *data);
-		void uncompressPngImageToRaw(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);//size_t w, size_t h, const char *data);
+		void compressRawImageToPng(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);
+		void uncompressPngImageToRaw(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);
 	};
 
 }

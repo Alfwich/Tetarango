@@ -13,7 +13,6 @@ namespace AW
 	ApplicationObject::ApplicationObject()
 	{
 		id = nextId++;
-		renderType = RenderType::None;
 		modules = SystemModuleBundle::getModuleBundle();
 
 		registerSerialization<ApplicationObject>();
@@ -64,19 +63,6 @@ namespace AW
 		return layoutOnLoad;
 	}
 
-	RenderPositionMode ApplicationObject::getFirstNonUnspecifiedRenderPositionMode()
-	{
-		if (renderPositionMode == RenderPositionMode::Unspecified)
-		{
-			const auto parentPtr = parent.lock();
-			if (parentPtr != nullptr)
-			{
-				return parentPtr->getFirstNonUnspecifiedRenderPositionMode();
-			}
-		}
-
-		return renderPositionMode;
-	}
 
 	bool ApplicationObject::isAttached()
 	{
@@ -188,25 +174,21 @@ namespace AW
 		return children;
 	}
 
-	bool ApplicationObject::getHasClipRect()
+	RenderPositionMode ApplicationObject::getFirstNonUnspecifiedRenderPositionMode()
 	{
-		return hasClipRect;
-	}
+		const auto renderablePtr = std::dynamic_pointer_cast<Renderable>(shared_from_this());
+		if (renderablePtr != nullptr && renderablePtr->renderPositionMode != RenderPositionMode::Unspecified)
+		{
+			return renderablePtr->renderPositionMode;
+		}
 
-	const Rect* ApplicationObject::getClipRect()
-	{
-		return &clipRect;
-	}
+		const auto parentPtr = parent.lock();
+		if (parentPtr != nullptr)
+		{
+			return parentPtr->getFirstNonUnspecifiedRenderPositionMode();
+		}
 
-	void ApplicationObject::setClipRect(const Rect* rect)
-	{
-		clipRect = *rect;
-		hasClipRect = (clipRect.x > 0.0 || clipRect.y > 0.0 || clipRect.w > 0.0 || clipRect.h > 0.0);
-	}
-
-	void ApplicationObject::setClipRect(const Rect& rect)
-	{
-		setClipRect(&rect);
+		return RenderPositionMode::Unspecified;
 	}
 
 	void ApplicationObject::setWorldRect(Rect* r)
@@ -292,6 +274,12 @@ namespace AW
 		if (parentPtr == nullptr)
 		{
 			return;
+		}
+
+		if (!hasBoundShaders)
+		{
+			onBindShaders();
+			hasBoundShaders = true;
 		}
 
 		currentActive = parentPtr->active && currentActive;
@@ -406,25 +394,14 @@ namespace AW
 		const auto client = serializationClient->getClient("__application_object__", hint);
 		tags = std::bitset<16>(client->serializeString("tags", tags.to_string()));
 		active = client->serializeBool("active", active);
-		visible = client->serializeBool("visible", visible);
 		timeScope = (TimeScope)client->serializeInt("timescope", (int)timeScope);
-		name = client->serializeString("name", name);
 		zIndex = client->serializeInt("z-index", zIndex);
+		name = client->serializeString("name", name);
+
 		enterFrameActivated = client->serializeBool("e-f-a", enterFrameActivated);
 		enterFramePriority = client->serializeInt("e-f-p", enterFramePriority);
-		renderPositionMode = (RenderPositionMode)client->serializeInt("r-p-m", (int)renderPositionMode);
-		renderPositionProcessing = (RenderPositionProcessing)client->serializeInt("r-p-p-m", (int)renderPositionProcessing);
-		renderTextureMode = (RenderTextureMode)client->serializeInt("r-t-m", (int)renderPositionProcessing);
-		renderDepthTest = (RenderDepthTest)client->serializeInt("r-d-t-e", (int)renderDepthTest);
-		renderMultiSampleMode = (RenderMultiSampleMode)client->serializeInt("r-m-s-m", (int)renderMultiSampleMode);
 		hasCreatedChildren = client->serializeBool("h-c-c", hasCreatedChildren);
 		setInputMode((InputMode)client->serializeInt("i-n-m", (int)getInputMode()));
-
-		clipRect.x = client->serializeDouble("cr-x", clipRect.x);
-		clipRect.y = client->serializeDouble("cr-y", clipRect.y);
-		clipRect.w = client->serializeDouble("cr-w", clipRect.w);
-		clipRect.h = client->serializeDouble("cr-h", clipRect.h);
-		setClipRect(clipRect);
 
 		switch (hint)
 		{

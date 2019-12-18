@@ -17,6 +17,12 @@ namespace AW
 		registerSerialization<Container>();
 	}
 
+	void Container::onBindShaders()
+	{
+		clipRectVertexShader = modules->shader->getShader("vertex");
+		clipRectFragmentShader = modules->shader->getShader("fragment");
+	}
+
 	void Container::setSizeToScreenSize()
 	{
 		setSize(modules->screen->getWidth(), modules->screen->getHeight());

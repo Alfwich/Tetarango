@@ -52,7 +52,7 @@ namespace AW
 	}
 
 
-	void Renderer::initOpenGL(SDL_Window* window, std::shared_ptr<Asset> asset)
+	void Renderer::initOpenGL(SDL_Window* window)
 	{
 		glContext = SDL_GL_CreateContext(window);
 		glewExperimental = GL_TRUE;
@@ -75,81 +75,24 @@ namespace AW
 			);
 		}
 
-		GLint compileResult = GL_FALSE;
-		int infoLength;
-
 		if (vao == 0)
 		{
 			glGenVertexArrays(1, &vao);
+			glBindVertexArray(vao);
 		}
-		glBindVertexArray(vao);
 
 		if (vertexBuffer == 0)
 		{
 			glGenBuffers(1, &vertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(inlineVerticies), inlineVerticies, GL_STATIC_DRAW);
 		}
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(inlineVerticies), inlineVerticies, GL_STATIC_DRAW);
 
 		if (textureUVBuffer == 0)
 		{
 			glGenBuffers(1, &textureUVBuffer);
-		}
-		glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(inlineUVCoords), inlineUVCoords, GL_STATIC_DRAW);
-
-		if (vertexShader == 0)
-		{
-			vertexShader = glCreateShader(GL_VERTEX_SHADER);
-			auto vertexShaderData = asset->getAssetBundle("res/game/shader/vertex-shader.glsl");
-			const auto data = vertexShaderData->data.get();
-			const GLint dataLength = vertexShaderData->size;
-			glShaderSource(vertexShader, 1, &data, &dataLength);
-			glCompileShader(vertexShader);
-
-			glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compileResult);
-			glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &infoLength);
-			if (compileResult == GL_FALSE && infoLength > 0) {
-				std::vector<char> infoText(infoLength + 1);
-				glGetShaderInfoLog(vertexShader, infoLength, NULL, &infoText[0]);
-				Logger::instance()->logFatal("Renderer::OpenGL::Failed to compile vertex shader: " + std::string(infoText.begin(), infoText.end()));
-			}
-		}
-
-		if (fragmentShader == 0)
-		{
-			fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-			auto fragmentShaderData = asset->getAssetBundle("res/game/shader/fragment-shader.glsl");
-			const auto data = fragmentShaderData->data.get();
-			const GLint dataLength = fragmentShaderData->size;
-			glShaderSource(fragmentShader, 1, &data, &dataLength);
-			glCompileShader(fragmentShader);
-
-			glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compileResult);
-			glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &infoLength);
-			if (compileResult == GL_FALSE && infoLength > 0) {
-				std::vector<char> infoText(infoLength + 1);
-				glGetShaderInfoLog(fragmentShader, infoLength, NULL, &infoText[0]);
-				Logger::instance()->logFatal("Renderer::OpenGL::Failed to compile fragment shader: " + std::string(infoText.begin(), infoText.end()));
-			}
-		}
-
-		if (program == 0)
-		{
-			program = glCreateProgram();
-			glAttachShader(program, vertexShader);
-			glAttachShader(program, fragmentShader);
-			glLinkProgram(program);
-
-			GLint programLinkSuccess = GL_TRUE;
-			glGetProgramiv(program, GL_LINK_STATUS, &programLinkSuccess);
-
-			if (programLinkSuccess != GL_TRUE)
-			{
-				std::vector<char> infoText(infoLength + 1);
-				glGetProgramInfoLog(program, infoLength, NULL, &infoText[0]);
-				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program: " + std::string(infoText.begin(), infoText.end()));
-			}
+			glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(inlineUVCoords), inlineUVCoords, GL_STATIC_DRAW);
 		}
 
 		if (currentScreenConfig.openGlWireframeMode)
@@ -201,23 +144,11 @@ namespace AW
 			textureUVBuffer = 0;
 		}
 
-		if (vertexShader != 0)
+		for (const auto programPairToProgramId : programs)
 		{
-			glDeleteShader(vertexShader);
-			vertexShader = 0;
+			glDeleteProgram(programPairToProgramId.second);
 		}
-
-		if (fragmentShader != 0)
-		{
-			glDeleteShader(fragmentShader);
-			fragmentShader = 0;
-		}
-
-		if (program != 0)
-		{
-			glDeleteProgram(program);
-			program = 0;
-		}
+		programs.clear();
 	}
 
 	void Renderer::setClearColor(int r, int g, int b, int a)
@@ -235,7 +166,7 @@ namespace AW
 		globalColorMod.b = b;
 	}
 
-	void Renderer::render(std::shared_ptr<ApplicationObject> root, Screen* screen, std::shared_ptr<QuadMap> qm)
+	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen, std::shared_ptr<QuadMap> qm)
 	{
 		prepareRender(screen);
 
@@ -248,16 +179,10 @@ namespace AW
 		renderPackage.yOffset = camera == nullptr ? 0.0 : camera->getYOffset();
 		renderPackage.quadMap = qm;
 
-		if (root->getTag(ATags::IsRootElement))
-		{
-			rootRect.w = screen->getWidth();
-			rootRect.h = screen->getHeight();
-		}
-
 		renderOpenGL(root, rootRect, screen, &renderPackage);
 	}
 
-	void Renderer::renderOpenGL(std::shared_ptr<ApplicationObject> root, Rect rootRect, Screen* screen, RenderPackage* renderPackage)
+	void Renderer::renderOpenGL(std::shared_ptr<Renderable> root, Rect rootRect, Screen* screen, RenderPackage* renderPackage)
 	{
 		glClearColor(clearColor.r / 255.0, clearColor.g / 255.0, clearColor.b / 255.0, clearColor.a / 255.0);
 
@@ -284,11 +209,6 @@ namespace AW
 
 		mat4x4_ortho(pAbs, 0, width, height, 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 
-		glUseProgram(program);
-
-		inMatrixLocation = glGetUniformLocation(program, "mvp");
-		inUVMatrixLocation = glGetUniformLocation(program, "UVproj");
-		inColorModLocation = glGetUniformLocation(program, "cMod");
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -360,6 +280,40 @@ namespace AW
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 
+	void Renderer::changeProgram(GLuint programId)
+	{
+		glUseProgram(programId);
+
+		inMatrixLocation = glGetUniformLocation(programId, "mvp");
+		inUVMatrixLocation = glGetUniformLocation(programId, "UVproj");
+		inColorModLocation = glGetUniformLocation(programId, "cMod");
+	}
+
+	GLuint Renderer::createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId)
+	{
+		const auto key = std::make_pair(vertexShaderId, fragmentShaderId);
+		if (programs.count(key) == 0)
+		{
+			const auto programId = glCreateProgram();
+			glAttachShader(programId, vertexShaderId);
+			glAttachShader(programId, fragmentShaderId);
+			glLinkProgram(programId);
+
+			GLint programLinkSuccess = GL_TRUE;
+			glGetProgramiv(programId, GL_LINK_STATUS, &programLinkSuccess);
+
+			if (programLinkSuccess != GL_TRUE)
+			{
+				reportOpenGLErrors();
+				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program");
+			}
+
+			programs[key] = programId;
+		}
+
+		return programs[key];
+	}
+
 
 	SDL_GLContext Renderer::getOpenGLContext()
 	{
@@ -387,16 +341,16 @@ namespace AW
 		camera = screen->getCamera();
 	}
 
-	void Renderer::renderRecursive(std::shared_ptr<ApplicationObject> ao, Rect computed, RenderPackage renderPackage)
+	void Renderer::renderRecursive(std::shared_ptr<Renderable> rend, Rect computed, RenderPackage renderPackage)
 	{
-		switch (ao->renderPositionMode)
+		switch (rend->renderPositionMode)
 		{
 		case RenderPositionMode::Absolute:
 		case RenderPositionMode::Positioned:
-			renderPositionModeStack.push(ao->renderPositionMode);
+			renderPositionModeStack.push(rend->renderPositionMode);
 		}
 
-		if (ao->getHasClipRect())
+		if (rend->getHasClipRect())
 		{
 			if (renderPackage.stencilDepth == 0)
 			{
@@ -407,35 +361,35 @@ namespace AW
 			renderPackage.stencilDepth++;
 		}
 
-		if (ao->renderPositionProcessing != RenderPositionProcessing::None)
+		if (rend->renderPositionProcessing != RenderPositionProcessing::None)
 		{
-			renderProcessingStack.push(ao->renderPositionProcessing);
+			renderProcessingStack.push(rend->renderPositionProcessing);
 		}
 
-		if (ao->renderTextureMode != RenderTextureMode::LinearNoWrap)
+		if (rend->renderTextureMode != RenderTextureMode::LinearNoWrap)
 		{
-			textureModeStack.push(ao->renderTextureMode);
+			textureModeStack.push(rend->renderTextureMode);
 		}
 
-		if (ao->renderDepthTest != RenderDepthTest::Unspecified)
+		if (rend->renderDepthTest != RenderDepthTest::Unspecified)
 		{
-			renderDepthStack.push(ao->renderDepthTest);
+			renderDepthStack.push(rend->renderDepthTest);
 		}
 
-		if (ao->renderMultiSampleMode != RenderMultiSampleMode::Unspecified)
+		if (rend->renderMultiSampleMode != RenderMultiSampleMode::Unspecified)
 		{
-			renderMultiSampleModeStack.push(ao->renderMultiSampleMode);
+			renderMultiSampleModeStack.push(rend->renderMultiSampleMode);
 		}
 
 		bool pushedColorStack = false;
 		std::shared_ptr<Rectangle> debugElement = nullptr;
-		switch (ao->renderType)
+		switch (rend->renderType)
 		{
 		case RenderType::Element:
 		case RenderType::Backdrop:
 		case RenderType::TileMap:
 		{
-			const auto ele = std::static_pointer_cast<Element>(ao);
+			const auto ele = std::static_pointer_cast<Element>(rend);
 
 			pushedColorStack = updateColorStack(ele);
 			renderElement(ele, &computed, &renderPackage);
@@ -445,7 +399,7 @@ namespace AW
 		case RenderType::Primitive:
 		case RenderType::ParticleSystem:
 		{
-			const auto prim = std::static_pointer_cast<Primitive>(ao);
+			const auto prim = std::static_pointer_cast<Primitive>(rend);
 
 			pushedColorStack = updateColorStack(prim);
 			renderPrimitive(prim, &computed, &renderPackage);
@@ -454,20 +408,21 @@ namespace AW
 
 		case RenderType::Container:
 		{
-			const auto container = std::dynamic_pointer_cast<Container>(ao);
+			const auto container = std::dynamic_pointer_cast<Container>(rend);
 			if (container != nullptr)
 			{
 				container->performAutoLayoutIfNeeded();
 
 				pushedColorStack = updateColorStack(container);
 				renderUpdateRect(container, &computed, &renderPackage);
-				ao->setWorldRect(&computed);
-				ao->updateScreenRect(&renderPackage);
+				container->setWorldRect(&computed);
+				container->updateScreenRect(&renderPackage);
 
 				if (currentScreenConfig.visualizeContainers)
 				{
 					debugElement = std::make_shared<Rectangle>();
 					debugElement->serializationEnabled = false;
+					debugElement->onBindShaders();
 					debugElement->setTag(ATags::IsDebugElement, true);
 					debugElement->matchSize(container);
 					debugElement->topLeftAlignSelf();
@@ -478,26 +433,28 @@ namespace AW
 				}
 			}
 
-			if (ao->getHasClipRect())
+			if (container->getHasClipRect())
 			{
-				updateClipRectOpenGL(ao, &computed, &renderPackage);
+				updateClipRectOpenGL(container, &computed, &renderPackage);
 			}
 		}
 		break;
 		}
 
-		if (ao->getTag(ATags::IsZone))
+		if (rend->visible && rend->renderType != RenderType::NoneAndBlockChildren)
 		{
-			const auto collidable = std::dynamic_pointer_cast<ICollidable>(ao);
-			renderPackage.quadMap->insert(collidable);
-		}
-
-		if (ao->visible && ao->renderType != RenderType::NoneAndBlockChildren)
-		{
-			renderPackage.depth += ao->zIndex;
-			for (const auto child : ao->getChildrenRenderOrder())
+			const auto aoPtr = std::dynamic_pointer_cast<ApplicationObject>(rend);
+			if (aoPtr != nullptr)
 			{
-				renderRecursive(child, computed, renderPackage);
+				renderPackage.depth += aoPtr->zIndex;
+				for (const auto child : aoPtr->getChildrenRenderOrder())
+				{
+					const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
+					if (renderableChildPtr!= nullptr)
+					{
+						renderRecursive(renderableChildPtr, computed, renderPackage);
+					}
+				}
 			}
 		}
 
@@ -512,12 +469,13 @@ namespace AW
 			revertColorStack();
 		}
 
-		if (ao->getHasClipRect())
+		if (rend->getHasClipRect())
 		{
 			if (currentScreenConfig.visualizeClipRects)
 			{
 				const auto testRect = std::make_shared<Rectangle>();
 				testRect->setTag(AW::ATags::IsDebugElement, true);
+				testRect->onBindShaders();
 				testRect->serializationEnabled = false;
 				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
 				testRect->zIndex = 20;
@@ -536,27 +494,27 @@ namespace AW
 			}
 		}
 
-		if (ao->renderMultiSampleMode != RenderMultiSampleMode::Unspecified)
+		if (rend->renderMultiSampleMode != RenderMultiSampleMode::Unspecified)
 		{
 			renderMultiSampleModeStack.pop();
 		}
 
-		if (ao->renderDepthTest != RenderDepthTest::Unspecified)
+		if (rend->renderDepthTest != RenderDepthTest::Unspecified)
 		{
 			renderDepthStack.pop();
 		}
 
-		if (ao->renderTextureMode != RenderTextureMode::LinearNoWrap)
+		if (rend->renderTextureMode != RenderTextureMode::LinearNoWrap)
 		{
 			textureModeStack.pop();
 		}
 
-		if (ao->renderPositionProcessing != RenderPositionProcessing::None)
+		if (rend->renderPositionProcessing != RenderPositionProcessing::None)
 		{
 			renderProcessingStack.pop();
 		}
 
-		switch (ao->renderPositionMode)
+		switch (rend->renderPositionMode)
 		{
 		case RenderPositionMode::Absolute:
 		case RenderPositionMode::Positioned:
@@ -731,6 +689,8 @@ namespace AW
 			return;
 		}
 
+		changeProgram(createAndLinkProgram(ele->getVertexShaderId(), ele->getFragmentShaderId()));
+
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
 		const auto cX = computed->x + cW;
@@ -785,9 +745,16 @@ namespace AW
 		openGLDrawArrays(renderPackage);
 	}
 
-	void Renderer::updateClipRectOpenGL(std::shared_ptr<ApplicationObject> ao, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
-		const auto clipRect = ao->getClipRect();
+		const auto clipRectVertexShaderId = rend->getClipRectVertexShaderId(), clipRectFragmentShaderId = rend->getClipRectFragmentShaderId();
+
+		if (clipRectVertexShaderId == 0 || clipRectFragmentShaderId == 0)
+		{
+			return;
+		}
+
+		const auto clipRect = rend->getClipRect();
 
 		const auto cW = clipRect->w / 2.0;
 		const auto cH = clipRect->h / 2.0;
@@ -812,6 +779,8 @@ namespace AW
 		}
 
 		mat4x4_mul(mvp, tP, m);
+
+		changeProgram(createAndLinkProgram(clipRectVertexShaderId, clipRectFragmentShaderId));
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
@@ -874,6 +843,8 @@ namespace AW
 			return;
 		}
 
+		changeProgram(createAndLinkProgram(prim->getVertexShaderId(), prim->getFragmentShaderId()));
+
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
 			mat4x4_dup(tP, pAbs);
@@ -931,6 +902,8 @@ namespace AW
 		{
 			return;
 		}
+
+		changeProgram(createAndLinkProgram(ele->getVertexShaderId(), ele->getFragmentShaderId()));
 
 		const auto width = screenWidth, height = screenHeight;
 		const auto zoom = renderPackage->zoom;

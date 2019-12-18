@@ -157,6 +157,7 @@ namespace AW
 			return getDisplayComponentForDisplayString(str, cmp);
 		}
 
+
 		int static inline getDisplayComponentForDisplayString(const std::string& inStr, int cmp)
 		{
 			auto str = std::string(inStr);
@@ -177,6 +178,11 @@ namespace AW
 			}
 
 			return 0;
+		}
+
+		bool static inline contains(const std::string& a, const std::string& b)
+		{
+			return a.find(b) != std::string::npos;
 		}
 
 	};

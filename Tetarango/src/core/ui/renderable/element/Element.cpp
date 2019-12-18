@@ -14,6 +14,14 @@ namespace AW
 		registerSerialization<Element>();
 	}
 
+	void Element::onBindShaders()
+	{
+		vertexShader = modules->shader->getShader("vertex");
+		fragmentShader = modules->shader->getShader("fragment");
+		clipRectVertexShader = modules->shader->getShader("vertex");
+		clipRectFragmentShader = modules->shader->getShader("fragment");
+	}
+
 	std::shared_ptr<Rect> Element::getTextureClipRect()
 	{
 		return nullptr;

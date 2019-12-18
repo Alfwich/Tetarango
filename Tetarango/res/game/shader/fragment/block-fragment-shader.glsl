@@ -3,10 +3,10 @@ in vec2 UV;
 in vec4 colorMod;
 in mat4 UVp;
 out vec4 color;
-uniform sampler2D myTextureSampler;
+uniform sampler2D textureSampler;
 
 void main() {
-	vec4 c = texture(myTextureSampler, (UVp* vec4(UV, 1, 1)).xy).rgba;
+	vec4 c = texture(textureSampler, (UVp * vec4(UV, 1, 1)).xy).rgba;
 	vec4 fC = c * colorMod;
 	if (fC.a == 0) discard;
 	color = fC;

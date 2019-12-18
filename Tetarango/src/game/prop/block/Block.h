@@ -14,6 +14,7 @@ namespace AWGame
 		bool hasSettled = false;
 
 		void onLoadResources();
+		void onBindShaders();
 		void onInitialAttach();
 		void onCreateChildren();
 		std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);

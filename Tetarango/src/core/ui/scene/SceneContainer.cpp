@@ -171,6 +171,8 @@ namespace AW
 		const auto client = serializationClient->getClient("__scene_container__", hint);
 		currentSceneName = client->serializeString("cs", currentSceneName);
 
+		Renderable::doManualSerialize(hint, client);
+
 		return ApplicationObject::doSerialize(hint);
 	}
 

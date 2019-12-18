@@ -65,7 +65,12 @@ namespace AW
 		modules->onInit();
 
 		frameTimer = modules->time->createTimer(AW::TimeScope::ApplicationFrameTimer, true);
+
 		root = std::make_shared<DisplayRoot>();
+
+		root->onBindShaders();
+		root->onInitialAttach();
+		root->createChildren();
 
 		return true;
 	}
@@ -237,11 +242,17 @@ namespace AW
 		Logger::instance()->log("Application::Provisioning screen width=" + std::to_string(screenConfig.width) + ", height= " + std::to_string(screenConfig.height) + ", fullscreen=" + std::to_string(isFullscreen));
 		if (modules->screen->init(screenConfig, gameConfig->getConfigString(Config::Param::gameName)))
 		{
+			modules->shader->rebindAllShaders();
 			modules->texture->rebindAllTextures();
 
 			if (screenConfig.frameLimiter > 0)
 			{
 				targetFrameTime = (1000.0 / screenConfig.frameLimiter);
+			}
+
+			if (root != nullptr)
+			{
+				root->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 			}
 
 			onProvisionedScreen();

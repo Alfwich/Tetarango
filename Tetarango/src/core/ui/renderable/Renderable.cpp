@@ -48,6 +48,27 @@ namespace AW
 
 
 
+	bool Renderable::getHasClipRect()
+	{
+		return hasClipRect;
+	}
+
+	const Rect * Renderable::getClipRect()
+	{
+		return &clipRect;
+	}
+
+	void Renderable::setClipRect(const Rect * rect)
+	{
+		clipRect = *rect;
+		hasClipRect = (clipRect.x > 0.0 || clipRect.y > 0.0 || clipRect.w > 0.0 || clipRect.h > 0.0);
+	}
+
+	void Renderable::setClipRect(const Rect & rect)
+	{
+		setClipRect(&rect);
+	}
+
 	double Renderable::getX()
 	{
 		return rect.x;
@@ -688,6 +709,19 @@ namespace AW
 		setAlpha(client->serializeDouble("al", Renderable::getAlpha()));
 		setScaleX(client->serializeDouble("sX", getScaleX()));
 		setScaleY(client->serializeDouble("sY", getScaleY()));
+
+		visible = client->serializeBool("visible", visible);
+		renderPositionMode = (RenderPositionMode)client->serializeInt("r-p-m", (int)renderPositionMode);
+		renderPositionProcessing = (RenderPositionProcessing)client->serializeInt("r-p-p-m", (int)renderPositionProcessing);
+		renderTextureMode = (RenderTextureMode)client->serializeInt("r-t-m", (int)renderPositionProcessing);
+		renderDepthTest = (RenderDepthTest)client->serializeInt("r-d-t-e", (int)renderDepthTest);
+		renderMultiSampleMode = (RenderMultiSampleMode)client->serializeInt("r-m-s-m", (int)renderMultiSampleMode);
+
+		clipRect.x = client->serializeDouble("cr-x", clipRect.x);
+		clipRect.y = client->serializeDouble("cr-y", clipRect.y);
+		clipRect.w = client->serializeDouble("cr-w", clipRect.w);
+		clipRect.h = client->serializeDouble("cr-h", clipRect.h);
+		setClipRect(clipRect);
 
 		if (colorModulation == nullptr && client->getInt("cm.r", -1) != -1)
 		{

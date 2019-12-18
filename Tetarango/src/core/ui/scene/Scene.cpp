@@ -33,6 +33,8 @@ namespace AW
 		const auto client = serializationClient->getClient("__scene__", hint);
 		sceneName = client->serializeString("sn", sceneName);
 
+		Renderable::doManualSerialize(hint, client);
+
 		return ApplicationObject::doSerialize(hint);
 	}
 }

@@ -24,6 +24,8 @@ namespace AW
 	public:
 		Element();
 
+		void onBindShaders();
+
 		virtual void setTexture(std::string key);
 		virtual void setTexture(std::shared_ptr<Texture> texture);
 		virtual std::shared_ptr<Rect> getTextureClipRect();

@@ -161,6 +161,8 @@
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\engine\module\shader\Shader.cpp" />
+    <ClCompile Include="src\core\engine\module\shader\ShaderContainer.cpp" />
     <ClCompile Include="src\core\engine\module\sound\Music.cpp" />
     <ClCompile Include="src\core\ui\renderable\container\ScrollContainer.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
@@ -267,6 +269,9 @@
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
+    <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
+    <ClInclude Include="src\core\engine\module\shader\Shader.h" />
+    <ClInclude Include="src\core\engine\module\shader\ShaderContainer.h" />
     <ClInclude Include="src\core\engine\module\sound\Music.h" />
     <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />

@@ -14,6 +14,7 @@
 #include "sound/Sound.h"
 #include "thread/Thread.h"
 #include "asset/Asset.h"
+#include "shader/ShaderContainer.h"
 
 namespace AW
 {
@@ -62,6 +63,7 @@ namespace AW
 		std::shared_ptr<Collision> collision;
 		std::shared_ptr<Thread> thread;
 		std::shared_ptr<Asset> asset;
+		std::shared_ptr<ShaderContainer> shader;
 
 		void onAssignConfig(std::shared_ptr<Config::GameConfig> config);
 		void onInit();

@@ -29,7 +29,7 @@ namespace AW
 		asset->bindStorage(storage);
 		font->bindAsset(asset);
 		sound->bindAsset(asset);
-		screen->bindAsset(asset);
+		shader->bindAsset(asset);
 	}
 
 	SystemModuleBundle::SystemModuleBundle()
@@ -51,6 +51,7 @@ namespace AW
 		collision = createModule<Collision>();
 		logger = createModule<Logger>();
 		asset = createModule<Asset>();
+		shader = createModule<ShaderContainer>();
 
 		bindModules();
 	}

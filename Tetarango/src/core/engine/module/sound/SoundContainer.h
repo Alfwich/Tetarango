@@ -17,7 +17,7 @@ namespace AW
 	class SoundContainer
 	{
 		std::shared_ptr<Asset> asset;
-		std::unordered_map<std::string, std::shared_ptr<SoundClip>> soundClips;
+		std::unordered_map<std::string, std::shared_ptr<SoundClip>> shaders;
 		std::unordered_map<std::string, std::shared_ptr<Music>> musics;
 
 	public:

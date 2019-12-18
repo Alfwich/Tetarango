@@ -14,6 +14,8 @@ namespace AW
 	public:
 		Container();
 
+		void onBindShaders();
+
 		void setSizeToScreenSize();
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
