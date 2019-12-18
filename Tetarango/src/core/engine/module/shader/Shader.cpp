@@ -24,7 +24,7 @@ namespace AW
 			if (compileResult == GL_FALSE && infoLength > 0) {
 				std::vector<char> infoText(infoLength + 1);
 				glGetShaderInfoLog(shaderId, infoLength, NULL, &infoText[0]);
-				Logger::instance()->logCritical("Renderer::OpenGL::Failed to compile vertex shader: " + std::string(infoText.begin(), infoText.end()));
+				Logger::instance()->logCritical("Shader::Failed to compile shader: " + std::string(infoText.begin(), infoText.end()));
 				return false;
 			}
 		}

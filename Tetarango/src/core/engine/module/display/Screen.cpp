@@ -20,12 +20,24 @@ namespace AW
 		this->collision = collision;
 	}
 
+	void Screen::bindTexture(std::shared_ptr<TextureContainer> texture)
+	{
+		this->texture = texture;
+	}
+
+	void Screen::bindShader(std::shared_ptr<ShaderContainer> shader)
+	{
+		this->shader = shader;
+	}
+
 	bool Screen::init(const ScreenConfig& config, std::string name)
 	{
 		currentConfig = config;
 
 		if (window != nullptr)
 		{
+			shader->releaseAllShaders();
+			texture->releaseAllTextures();
 			SDL_DestroyWindow(window);
 		}
 
@@ -94,6 +106,9 @@ namespace AW
 
 		renderer = std::make_shared<Renderer>(currentConfig, renderer);
 		renderer->initOpenGL(window);
+
+		texture->rebindAllTextures();
+		shader->rebindAllShaders();
 
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 

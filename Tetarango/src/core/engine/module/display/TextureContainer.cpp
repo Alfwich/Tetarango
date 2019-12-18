@@ -77,23 +77,23 @@ namespace AW
 		}
 	}
 
+	void TextureContainer::releaseAllTextures()
+	{
+		Logger::instance()->log("TextureContainer::Releasing " + std::to_string(textureCache.size()) + " textures");
+
+		for (const auto textureNameToTexture : textureCache)
+		{
+			textureNameToTexture.second->releaseTexture();
+		}
+	}
+
 	void TextureContainer::rebindAllTextures()
 	{
-		if (textureCache.empty())
-		{
-			return;
-		}
-
 		Logger::instance()->log("TextureContainer::Rebinding " + std::to_string(textureCache.size()) + " textures");
 
-		for (auto texture : textureCache)
+		for (const auto textureNameToTexture : textureCache)
 		{
-			texture.second->releaseTexture();
-		}
-
-		for (auto texture : textureCache)
-		{
-			texture.second->rebind();
+			textureNameToTexture.second->rebind();
 		}
 	}
 }

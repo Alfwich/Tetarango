@@ -23,7 +23,7 @@ namespace AW
 	{
 		if (shaders.count(name) == 1)
 		{
-			Logger::instance()->logCritical("Shader::Failed to load shader path=" + path + ", with name=" + name + " as it already exists");
+			Logger::instance()->logCritical("ShaderContainer::Failed to load shader path=" + path + ", with name=" + name + " as it already exists");
 			return;
 		}
 
@@ -33,11 +33,11 @@ namespace AW
 		if (shader != nullptr && shader->compileShader())
 		{
 			shaders[name] = shader;
-			Logger::instance()->log("Shader::Loaded shader with name= " + name + ", path=" + path);
+			Logger::instance()->log("ShaderContainer::Loaded shader with name= " + name + ", path=" + path);
 		}
 		else
 		{
-			Logger::instance()->logCritical("Shader::Failed to load shader path=" + path + ", with name=" + name + " as it already exists");
+			Logger::instance()->logCritical("ShaderContainer::Failed to load shader path=" + path + ", with name=" + name + " as it already exists");
 		}
 	}
 
@@ -45,20 +45,25 @@ namespace AW
 	{
 		if (shaders.count(name) == 0)
 		{
-			Logger::instance()->logCritical("Shader::Failed to get shader with name=" + name);
+			Logger::instance()->logCritical("ShaderContainer::Failed to get shader with name=" + name);
 			return nullptr;
 		}
 
 		return shaders[name];
 	}
 
-	void ShaderContainer::rebindAllShaders()
+	void ShaderContainer::releaseAllShaders()
 	{
+		Logger::instance()->log("ShaderContainer::Releasing " + std::to_string(shaders.size()) + " shaders");
 		for (const auto nameToShader : shaders)
 		{
 			nameToShader.second->releaseShader();
 		}
+	}
 
+	void ShaderContainer::rebindAllShaders()
+	{
+		Logger::instance()->log("ShaderContainer::Rebinding " + std::to_string(shaders.size()) + " shaders");
 		for (const auto nameToShader : shaders)
 		{
 			nameToShader.second->compileShader();

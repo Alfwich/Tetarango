@@ -29,6 +29,8 @@ namespace AW
 		std::shared_ptr<Texture> getTexture(std::string key);
 		std::shared_ptr<Texture> getEmptyTextureForKey(std::string key);
 		std::shared_ptr<Texture> getEmptyTextureTextForKey(std::string key);
+
+		void releaseAllTextures();
 		void rebindAllTextures();
 	};
 

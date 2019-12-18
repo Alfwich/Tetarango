@@ -30,6 +30,8 @@ namespace AW
 		font->bindAsset(asset);
 		sound->bindAsset(asset);
 		shader->bindAsset(asset);
+		screen->bindShader(shader);
+		screen->bindTexture(texture);
 	}
 
 	SystemModuleBundle::SystemModuleBundle()

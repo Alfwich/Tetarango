@@ -24,6 +24,7 @@ namespace AW
 		void loadShader(std::string path, std::string name);
 		std::shared_ptr<Shader> getShader(std::string name);
 
+		void releaseAllShaders();
 		void rebindAllShaders();
 	};
 

@@ -70,7 +70,6 @@ namespace AWGame
 
 	void GameApplication::onReady()
 	{
-		root->setColor(AW::Color(255, 128, 128));
 		modules->screen->setClearColor(0, 0, 0);
 
 		modules->time->createTimeScope(AW::TimeScope::Game, 0.0);
