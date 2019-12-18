@@ -265,6 +265,7 @@
     <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\engine\module\sound\Music.h" />
     <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
@@ -401,6 +402,7 @@
     <ClInclude Include="src\game\scene\test\TestScene2.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="favicon.ico" />
     <Image Include="res\core\img\solid.png" />
     <Image Include="res\game\img\actor\pawn\humanoid\pawn-humanoid-damage.png" />
     <Image Include="res\game\img\actor\pawn\humanoid\pawn-humanoid-hair.png" />
@@ -414,6 +416,7 @@
     <Image Include="res\game\img\prop\particle\particle-hit-soft.png" />
     <Image Include="res\game\img\prop\particle\test-particle.png" />
     <Image Include="res\game\img\prop\projectile\projectile-basic.png" />
+    <Image Include="res\game\img\splash\aw-games-logo.png" />
     <Image Include="res\game\img\tile\grass.png" />
     <Image Include="res\game\img\prop\weapon\base-weapons.png">
       <DeploymentContent>false</DeploymentContent>
@@ -445,6 +448,9 @@
     <Font Include="res\game\font\RobotoCondensed-Light.ttf" />
     <Font Include="res\game\font\RobotoCondensed-LightItalic.ttf" />
     <Font Include="res\game\font\RobotoCondensed-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Tetarango.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
