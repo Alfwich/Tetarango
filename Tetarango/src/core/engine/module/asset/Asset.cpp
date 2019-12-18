@@ -158,28 +158,39 @@ namespace AW
 
 	void Asset::onInit()
 	{
-		if (assetPack.empty())
+		if (gameConfig->getConfigBool(Config::Param::useAssetPack))
 		{
 			decodeAssetPack(gameConfig->getConfigString(Config::Param::assetPackName));
+
+			if (assetPack.empty())
+			{
+				Logger::instance()->logFatal("Asset::Failed to load asset pack");
+			}
 		}
 	}
 
 	std::shared_ptr<ResourceBundle> Asset::getAssetBundle(std::string path)
 	{
-		if (assetPack.empty())
-		{
-			return nullptr;
-		}
-
 		const auto name = assetNameFromPath(path);
 
-		if (assetPack.count(name) == 0)
+		if (assetPack.count(name) != 0)
 		{
-			Logger::instance()->logFatal("Asset::Attempted to pull asset for name= " + name + ", this does not exist in asset pack");
-			return false;
+			return assetPack.at(name);
+
+		}
+		else
+		{
+			// TODO: Load resource from disk if available
+			const auto data = filesystem->readContentsFromFile(path, true);
+			if (!data.empty())
+			{
+				assetPack[name] = std::make_shared<ResourceBundle>(data);
+				return assetPack[name];
+			}
 		}
 
-		return assetPack.at(name);
+		Logger::instance()->logFatal("Asset::Attempted to pull asset for name= " + name + ", this does not exist in asset pack");
+		return nullptr;
 	}
 
 	//encode and write PNG to memory (std::vector) with libpng on C++
