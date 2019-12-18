@@ -9,7 +9,7 @@
 
 namespace AW
 {
-	class ApplicationObject;
+	class GameObject;
 
 	enum class RenderType
 	{
@@ -142,81 +142,81 @@ namespace AW
 
 		void topLeftAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
 
-		void centerWithin(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void centerWithin(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerWithin(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerWithin(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toLeftOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toLeftTopOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftTopOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftTopOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftTopOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toLeftBottomOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftBottomOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftBottomOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftBottomOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toRightOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toRightTopOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightTopOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightTopOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightTopOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toRightBottomOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightBottomOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightBottomOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightBottomOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toTopOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toTopLeftOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopLeftOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopLeftOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopLeftOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toTopRightOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopRightOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopRightOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopRightOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toBottomOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toBottomLeftOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomLeftOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomLeftOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomLeftOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void toBottomRightOf(ApplicationObject* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomRightOf(std::shared_ptr<ApplicationObject> other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomRightOf(GameObject* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomRightOf(std::shared_ptr<GameObject> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void matchSize(ApplicationObject* other, double wOffset = 0.0, double hOffset = 0.0);
-		void matchSize(std::shared_ptr<ApplicationObject> other, double wOffset = 0.0, double hOffset = 0.0);
+		void matchSize(GameObject* other, double wOffset = 0.0, double hOffset = 0.0);
+		void matchSize(std::shared_ptr<GameObject> other, double wOffset = 0.0, double hOffset = 0.0);
 
-		void matchSizeAndCenter(ApplicationObject* other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
-		void matchSizeAndCenter(std::shared_ptr<ApplicationObject> other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
+		void matchSizeAndCenter(GameObject* other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
+		void matchSizeAndCenter(std::shared_ptr<GameObject> other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
 
-		void leftAlign(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void leftAlign(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void leftAlign(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void leftAlign(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerLeftIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerLeftIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerLeftIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerLeftIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerRightIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerRightIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerRightIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerRightIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerTopIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerBottomIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerTopLeftIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopLeftIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopLeftIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopLeftIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerTopRightIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopRightIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopRightIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopRightIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerBottomLeftIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomLeftIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomLeftIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomLeftIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void toInnerBottomRightIn(ApplicationObject* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomRightIn(std::shared_ptr<ApplicationObject> other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomRightIn(GameObject* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomRightIn(std::shared_ptr<GameObject> other, double xOffset = 0.0, double yOffset = 0.0);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
 	};
 }
 
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"

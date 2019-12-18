@@ -4,7 +4,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <SDL.h>
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 #include "ui/renderable/Renderable.h"
 #include "engine/module/display/Texture.h"
 #include "engine/module/display/TextureText.h"
@@ -13,9 +13,9 @@
 
 namespace AW
 {
-	class ApplicationObject;
+	class GameObject;
 
-	class Element : public ApplicationObject, public Renderable
+	class Element : public GameObject, public Renderable
 	{
 	protected:
 		std::shared_ptr<Texture> texture;

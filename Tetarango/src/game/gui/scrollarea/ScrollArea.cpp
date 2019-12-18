@@ -110,7 +110,7 @@ namespace AWGame
 		}
 	}
 
-	void ScrollArea::add(std::shared_ptr<ApplicationObject> ao)
+	void ScrollArea::add(std::shared_ptr<GameObject> ao)
 	{
 		if (ao->name == containerId || ao->name == scrollerId)
 		{
@@ -124,7 +124,7 @@ namespace AWGame
 		}
 	}
 
-	void ScrollArea::remove(std::shared_ptr<ApplicationObject> ao)
+	void ScrollArea::remove(std::shared_ptr<GameObject> ao)
 	{
 		if (ao->name == containerId || ao->name == scrollerId)
 		{

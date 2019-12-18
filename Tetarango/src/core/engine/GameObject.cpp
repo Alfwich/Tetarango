@@ -1,34 +1,34 @@
-#include "ApplicationObject.h"
+#include "GameObject.h"
 
 #include "util/VectorHelper.h"
 
 namespace
 {
 	int nextId = 100;
-	const auto renderOrderLambda = [](const std::shared_ptr<AW::ApplicationObject>& a, const std::shared_ptr<AW::ApplicationObject>& b) {return a->zIndex < b->zIndex;};
+	const auto renderOrderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) {return a->zIndex < b->zIndex;};
 }
 
 namespace AW
 {
-	ApplicationObject::ApplicationObject()
+	GameObject::GameObject()
 	{
 		id = nextId++;
 		modules = SystemModuleBundle::getModuleBundle();
 
-		registerSerialization<ApplicationObject>();
+		registerSerialization<GameObject>();
 	}
 
-	int ApplicationObject::getNextId()
+	int GameObject::getNextId()
 	{
 		return nextId++;
 	}
 
-	void ApplicationObject::setTag(ATags flag, bool value)
+	void GameObject::setTag(ATags flag, bool value)
 	{
 		tags[(unsigned int)flag] = value ? 1 : 0;
 	}
 
-	void ApplicationObject::commandChildren(void(*cmd)(std::shared_ptr<ApplicationObject>))
+	void GameObject::commandChildren(void(*cmd)(std::shared_ptr<GameObject>))
 	{
 		for (const auto child : children)
 		{
@@ -36,35 +36,35 @@ namespace AW
 		}
 	}
 
-	void ApplicationObject::activate()
+	void GameObject::activate()
 	{
 		active = true;
 		currentActive = true;
 	}
 
-	void ApplicationObject::deactivate()
+	void GameObject::deactivate()
 	{
 		active = false;
 		currentActive = false;
 	}
 
-	bool ApplicationObject::isActive()
+	bool GameObject::isActive()
 	{
 		return active;
 	}
 
-	bool ApplicationObject::shouldRebuildOnLoad()
+	bool GameObject::shouldRebuildOnLoad()
 	{
 		return rebuildOnLoad;
 	}
 
-	bool ApplicationObject::shouldLayoutOnLoad()
+	bool GameObject::shouldLayoutOnLoad()
 	{
 		return layoutOnLoad;
 	}
 
 
-	bool ApplicationObject::isAttached()
+	bool GameObject::isAttached()
 	{
 		const auto parentPtr = parent.lock();
 		if (parentPtr != nullptr)
@@ -75,17 +75,17 @@ namespace AW
 		return getTag(ATags::IsRootElement);
 	}
 
-	int ApplicationObject::getId()
+	int GameObject::getId()
 	{
 		return id;
 	}
 
-	bool ApplicationObject::getTag(ATags flag)
+	bool GameObject::getTag(ATags flag)
 	{
 		return tags[(unsigned int)flag] == 1;
 	}
 
-	void ApplicationObject::setTimeScope(TimeScope newScope)
+	void GameObject::setTimeScope(TimeScope newScope)
 	{
 		if (timeScope == newScope)
 		{
@@ -96,7 +96,7 @@ namespace AW
 		onTimeScopeChanged();
 	}
 
-	TimeScope ApplicationObject::getTimeScope()
+	TimeScope GameObject::getTimeScope()
 	{
 		if (timeScope != TimeScope::None)
 		{
@@ -112,13 +112,13 @@ namespace AW
 		return TimeScope::Global;
 	}
 
-	void ApplicationObject::clearTimeScope()
+	void GameObject::clearTimeScope()
 	{
 		timeScope = TimeScope::None;
 		onTimeScopeChanged();
 	}
 
-	void ApplicationObject::add(std::shared_ptr<ApplicationObject> ao)
+	void GameObject::add(std::shared_ptr<GameObject> ao)
 	{
 		if (ao == nullptr)
 		{
@@ -131,7 +131,7 @@ namespace AW
 		ao->attach();
 	}
 
-	void ApplicationObject::remove(std::shared_ptr<ApplicationObject> ao)
+	void GameObject::remove(std::shared_ptr<GameObject> ao)
 	{
 		if (ao == nullptr)
 		{
@@ -143,11 +143,11 @@ namespace AW
 		{
 			children.erase(eleItr);
 			ao->detach();
-			ao->parent = std::weak_ptr<ApplicationObject>();
+			ao->parent = std::weak_ptr<GameObject>();
 		}
 	}
 
-	void ApplicationObject::removeFromParent()
+	void GameObject::removeFromParent()
 	{
 		auto parentPointer = parent.lock();
 		if (parentPointer == nullptr)
@@ -158,23 +158,23 @@ namespace AW
 		parentPointer->remove(shared_from_this());
 	}
 
-	std::weak_ptr<ApplicationObject> ApplicationObject::getParent()
+	std::weak_ptr<GameObject> GameObject::getParent()
 	{
 		return parent;
 	}
 
-	const std::list<std::shared_ptr<ApplicationObject>>& ApplicationObject::getChildren()
+	const std::list<std::shared_ptr<GameObject>>& GameObject::getChildren()
 	{
 		return children;
 	}
 
-	const std::list<std::shared_ptr<ApplicationObject>>& ApplicationObject::getChildrenRenderOrder()
+	const std::list<std::shared_ptr<GameObject>>& GameObject::getChildrenRenderOrder()
 	{
 		children.sort(renderOrderLambda);
 		return children;
 	}
 
-	RenderPositionMode ApplicationObject::getFirstNonUnspecifiedRenderPositionMode()
+	RenderPositionMode GameObject::getFirstNonUnspecifiedRenderPositionMode()
 	{
 		const auto renderablePtr = std::dynamic_pointer_cast<Renderable>(shared_from_this());
 		if (renderablePtr != nullptr && renderablePtr->renderPositionMode != RenderPositionMode::Unspecified)
@@ -191,7 +191,7 @@ namespace AW
 		return RenderPositionMode::Unspecified;
 	}
 
-	void ApplicationObject::setWorldRect(Rect* r)
+	void GameObject::setWorldRect(Rect* r)
 	{
 		worldRect.x = r->x;
 		worldRect.y = r->y;
@@ -199,7 +199,7 @@ namespace AW
 		worldRect.h = r->h;
 	}
 
-	void ApplicationObject::updateScreenRect(const RenderPackage* renderPackage)
+	void GameObject::updateScreenRect(const RenderPackage* renderPackage)
 	{
 		if (renderPackage != nullptr)
 		{
@@ -217,22 +217,22 @@ namespace AW
 		}
 	}
 
-	Rect* ApplicationObject::getWorldRect()
+	Rect* GameObject::getWorldRect()
 	{
 		return &worldRect;
 	}
 
-	Rect* ApplicationObject::getScreenRect()
+	Rect* GameObject::getScreenRect()
 	{
 		return &screenRect;
 	}
 
-	Rect* ApplicationObject::getCollisionRect()
+	Rect* GameObject::getCollisionRect()
 	{
 		return &worldRect;
 	}
 
-	void ApplicationObject::createChildren()
+	void GameObject::createChildren()
 	{
 		if (rebuildOnLoad || !hasCreatedChildren)
 		{
@@ -242,7 +242,7 @@ namespace AW
 		}
 	}
 
-	void ApplicationObject::destroyChildren()
+	void GameObject::destroyChildren()
 	{
 		onDestroyChildren();
 		this->children.clear();
@@ -250,14 +250,14 @@ namespace AW
 		hasCreatedChildren = false;
 	}
 
-	void ApplicationObject::rebuild()
+	void GameObject::rebuild()
 	{
 		destroyChildren();
 		createChildren();
 		layout();
 	}
 
-	void ApplicationObject::enterFrame(double frameTime)
+	void GameObject::enterFrame(double frameTime)
 	{
 		const auto timeScope = getTimeScope();
 		if (modules->time->getComputedTimeFactor(timeScope) == 0.0)
@@ -268,7 +268,7 @@ namespace AW
 		EnterFrameListener::enterFrame(frameTime * modules->time->getTimeFactorForScope(timeScope));
 	}
 
-	void ApplicationObject::attach()
+	void GameObject::attach()
 	{
 		const auto parentPtr = parent.lock();
 		if (parentPtr == nullptr)
@@ -311,7 +311,7 @@ namespace AW
 			{
 				for (const auto child : softAddedChildren)
 				{
-					const auto ao = std::static_pointer_cast<ApplicationObject>(child);
+					const auto ao = std::static_pointer_cast<GameObject>(child);
 					if (ao != nullptr)
 					{
 						add(ao);
@@ -337,11 +337,11 @@ namespace AW
 			modules->event->registerOnEnterFrame(shared_from_this(), enterFramePriority);
 		}
 
-		commandChildren([](std::shared_ptr<ApplicationObject> ao) { ao->attach(); });
+		commandChildren([](std::shared_ptr<GameObject> ao) { ao->attach(); });
 		onAttach();
 	}
 
-	void ApplicationObject::layout()
+	void GameObject::layout()
 	{
 		if (hasCreatedChildren && hasHydratedChildren)
 		{
@@ -349,7 +349,7 @@ namespace AW
 		}
 	}
 
-	void ApplicationObject::detach()
+	void GameObject::detach()
 	{
 		currentActive = false;
 		if (getInputMode() != InputMode::Disabled)
@@ -366,22 +366,22 @@ namespace AW
 			return;
 		}
 
-		commandChildren([](std::shared_ptr<ApplicationObject> ao) { ao->detach(); });
+		commandChildren([](std::shared_ptr<GameObject> ao) { ao->detach(); });
 		onDetach();
 	}
 
-	std::shared_ptr<Schematic> ApplicationObject::getSchematic()
+	std::shared_ptr<Schematic> GameObject::getSchematic()
 	{
 		return schematic;
 	}
 
-	std::shared_ptr<SerializationClient> ApplicationObject::doSerialize(SerializationHint hint)
+	std::shared_ptr<SerializationClient> GameObject::doSerialize(SerializationHint hint)
 	{
 		if (!softAddedChildren.empty())
 		{
 			for (const auto child : softAddedChildren)
 			{
-				const auto ao = std::static_pointer_cast<ApplicationObject>(child);
+				const auto ao = std::static_pointer_cast<GameObject>(child);
 				if (ao != nullptr)
 				{
 					children.push_back(ao);
@@ -427,7 +427,7 @@ namespace AW
 		return serializationClient;
 	}
 
-	std::vector<std::shared_ptr<ISerializable>> ApplicationObject::getSerializableChildren()
+	std::vector<std::shared_ptr<ISerializable>> GameObject::getSerializableChildren()
 	{
 		std::vector<std::shared_ptr<ISerializable>> serializableChildren;
 
@@ -439,43 +439,43 @@ namespace AW
 		return serializableChildren;
 	}
 
-	void ApplicationObject::childHydrated(std::shared_ptr<ISerializable> child)
+	void GameObject::childHydrated(std::shared_ptr<ISerializable> child)
 	{
 		softAddedChildren.push_back(child);
 	}
 
-	bool ApplicationObject::shouldSerializeChildren()
+	bool GameObject::shouldSerializeChildren()
 	{
 		return !rebuildOnLoad;
 	}
 
-	bool ApplicationObject::shouldSerializeSelf()
+	bool GameObject::shouldSerializeSelf()
 	{
 		return serializationEnabled && !getTag(ATags::IsDebugElement);
 	}
 
-	bool ApplicationObject::collisionEnabled()
+	bool GameObject::collisionEnabled()
 	{
 		return currentActive;
 	}
 
-	void ApplicationObject::addCollisionScope(CollisionScope scope)
+	void GameObject::addCollisionScope(CollisionScope scope)
 	{
 		collisionScopes.insert(scope);
 		modules->collision->registerObjectForCollisionScope(scope, shared_from_this());
 	}
 
-	void ApplicationObject::removeCollisionScope(CollisionScope scope)
+	void GameObject::removeCollisionScope(CollisionScope scope)
 	{
 		collisionScopes.erase(scope);
 	}
 
-	int ApplicationObject::getObjectIdEnterFrame()
+	int GameObject::getObjectIdEnterFrame()
 	{
 		return id;
 	}
 
-	void ApplicationObject::enableEnterFrame(int priority)
+	void GameObject::enableEnterFrame(int priority)
 	{
 		if (isActive() && !enterFrameActivated)
 		{
@@ -484,7 +484,7 @@ namespace AW
 		}
 	}
 
-	void ApplicationObject::disableEnterFrame()
+	void GameObject::disableEnterFrame()
 	{
 		if (enterFrameActivated)
 		{
@@ -494,12 +494,12 @@ namespace AW
 		}
 	}
 
-	int ApplicationObject::setTimeout(double timeoutMS)
+	int GameObject::setTimeout(double timeoutMS)
 	{
 		return modules->event->registerTimeoutCallback(shared_from_this(), timeoutMS);
 	}
 
-	void ApplicationObject::setTimeout(double timeoutMS, int* timeoutIdLocation)
+	void GameObject::setTimeout(double timeoutMS, int* timeoutIdLocation)
 	{
 		if (timeoutIdLocation != 0)
 		{

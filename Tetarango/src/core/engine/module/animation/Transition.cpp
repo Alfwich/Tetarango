@@ -5,7 +5,7 @@ namespace AW
 {
 	Transition::Transition(std::shared_ptr<Time> time, TimeScope scopeName)
 	{
-		id = ApplicationObject::getNextId();
+		id = GameObject::getNextId();
 		this->scopeName = scopeName;
 		this->time = time;
 	}
@@ -50,7 +50,7 @@ namespace AW
 				endAlpha = targetAlpha;
 			}
 			this->target = target;
-			targetAO = std::dynamic_pointer_cast<ApplicationObject>(target);
+			targetAO = std::dynamic_pointer_cast<GameObject>(target);
 		}
 
 		paused = false;

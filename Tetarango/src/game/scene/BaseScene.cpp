@@ -103,8 +103,8 @@ namespace AWGame
 		}
 	}
 
-	std::weak_ptr<AW::ApplicationObject> BaseScene::baseSceneWeakThisRef()
+	std::weak_ptr<AW::GameObject> BaseScene::baseSceneWeakThisRef()
 	{
-		return std::dynamic_pointer_cast<ApplicationObject>(shared_from_this());
+		return std::dynamic_pointer_cast<GameObject>(shared_from_this());
 	}
 }

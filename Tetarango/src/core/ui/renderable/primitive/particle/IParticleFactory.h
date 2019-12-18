@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "Particle.h"
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 
 namespace AW
 {
@@ -21,7 +21,7 @@ namespace AW
 		double xVelocity, yVelocity, rotation, alpha;
 	};
 
-	class IParticleFactory : public AW::ApplicationObject
+	class IParticleFactory : public AW::GameObject
 	{
 	public:
 		virtual std::shared_ptr<Particle> makeParticle(ParticleCreationBundle& bundle) = 0;

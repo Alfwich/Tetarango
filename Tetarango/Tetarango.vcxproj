@@ -231,7 +231,7 @@
     <ClCompile Include="src\core\ui\renderable\element\Rectangle.cpp" />
     <ClCompile Include="src\core\ui\renderable\Renderable.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\Primitive.cpp" />
-    <ClCompile Include="src\core\engine\ApplicationObject.cpp" />
+    <ClCompile Include="src\core\engine\GameObject.cpp" />
     <ClCompile Include="src\game\gui\camera\GameCamera.cpp" />
     <ClCompile Include="src\core\UI\Camera.cpp" />
     <ClCompile Include="src\core\engine\module\animation\AnimationContainer.cpp" />
@@ -362,7 +362,7 @@
     <ClInclude Include="src\core\ui\renderable\element\Rectangle.h" />
     <ClInclude Include="src\core\ui\renderable\Renderable.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\Primitive.h" />
-    <ClInclude Include="src\core\engine\ApplicationObject.h" />
+    <ClInclude Include="src\core\engine\GameObject.h" />
     <ClInclude Include="src\game\gui\camera\GameCamera.h" />
     <ClInclude Include="src\core\UI\Camera.h" />
     <ClInclude Include="src\core\engine\module\event\EnterFrameListener.h" />

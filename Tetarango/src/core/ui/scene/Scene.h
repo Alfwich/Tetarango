@@ -1,14 +1,14 @@
 #pragma once
 
 #include <string>
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 #include "engine/module/thread/INotifyOnCompletion.h"
 
 namespace AW
 {
 	class SceneContainer;
 
-	class Scene : public ApplicationObject, public Renderable
+	class Scene : public GameObject, public Renderable
 	{
 		std::string sceneName;
 

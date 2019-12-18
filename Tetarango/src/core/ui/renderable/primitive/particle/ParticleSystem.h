@@ -31,7 +31,7 @@ namespace AW
 
 		bool findGlobalEmitter();
 		std::shared_ptr<ParticleSystem> findClosestGlobalSystem();
-		bool checkCandidateAO(std::shared_ptr<ApplicationObject> candiate);
+		bool checkCandidateAO(std::shared_ptr<GameObject> candiate);
 		void acceptParticleFromLocalSystem(std::shared_ptr<Particle> particle);
 
 	public:
@@ -60,7 +60,7 @@ namespace AW
 		void emitImmediatelyWithFactory(int numberOfParticles, const std::shared_ptr<IParticleFactory>& factory);
 		void stop();
 
-		virtual void add(std::shared_ptr<ApplicationObject> ao);
+		virtual void add(std::shared_ptr<GameObject> ao);
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 	};
 

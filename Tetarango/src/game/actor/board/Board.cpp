@@ -131,7 +131,7 @@ namespace AWGame
 		}
 	}
 
-	void Board::add(std::shared_ptr<ApplicationObject> ao)
+	void Board::add(std::shared_ptr<GameObject> ao)
 	{
 		const auto blockPtr = std::dynamic_pointer_cast<Block>(ao);
 		if (blockPtr != nullptr)

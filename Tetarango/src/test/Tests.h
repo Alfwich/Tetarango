@@ -198,11 +198,11 @@ namespace MTTest
 			for (int i = 0; i < 5; ++i)
 			{
 				auto o = serialization->hydrate(t);
-				auto ao = std::static_pointer_cast<AW::ApplicationObject>(o);
+				auto ao = std::static_pointer_cast<AW::GameObject>(o);
 
 				if (ao == nullptr)
 				{
-					Tests::throwException("SERILIZATION", "Serialized did not produce an subclass of ApplicationObject.");
+					Tests::throwException("SERILIZATION", "Serialized did not produce an subclass of GameObject.");
 				}
 
 				ao->attach();

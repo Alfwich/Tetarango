@@ -5,7 +5,7 @@
 #include <stack>
 #include <SDL.h>
 #include "GL/glew.h"
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 #include "ui/Camera.h"
 #include "util/Rect.h"
 #include "ui/renderable/element/Element.h"

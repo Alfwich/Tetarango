@@ -10,7 +10,7 @@
 namespace AW
 {
 	class Renderable;
-	class ApplicationObject;
+	class GameObject;
 
 	class Transition : public EnterFrameListener
 	{
@@ -27,7 +27,7 @@ namespace AW
 		double endAlpha = 0.0;
 
 		std::shared_ptr<Renderable> target = nullptr;
-		std::shared_ptr<ApplicationObject> targetAO = nullptr;
+		std::shared_ptr<GameObject> targetAO = nullptr;
 
 		void performTargetedFrameUpdate(double frameTime);
 		void performTargetlessFrameUpdate(double frameTime);
@@ -40,7 +40,7 @@ namespace AW
 		int getObjectIdEnterFrame();
 		int getId();
 
-		std::weak_ptr<ApplicationObject> listener;
+		std::weak_ptr<GameObject> listener;
 
 		void startTransition(std::shared_ptr<Renderable> target, double durationMS, Rect targetRect, double targetAlpha = -1.0);
 		void startTargetlessTransition(double durationMS);
@@ -60,4 +60,4 @@ namespace AW
 }
 
 #include "ui/renderable/Renderable.h"
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"

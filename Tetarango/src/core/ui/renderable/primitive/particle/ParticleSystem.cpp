@@ -199,7 +199,7 @@ namespace AW
 		return nullptr;
 	}
 
-	bool ParticleSystem::checkCandidateAO(std::shared_ptr<ApplicationObject> candiate)
+	bool ParticleSystem::checkCandidateAO(std::shared_ptr<GameObject> candiate)
 	{
 		if (candiate->getId() == getId())
 		{
@@ -320,7 +320,7 @@ namespace AW
 		started = false;
 	}
 
-	void ParticleSystem::add(std::shared_ptr<ApplicationObject> ao)
+	void ParticleSystem::add(std::shared_ptr<GameObject> ao)
 	{
 		const auto particleFactory = std::static_pointer_cast<IParticleFactory>(ao);
 
@@ -336,7 +336,7 @@ namespace AW
 		}
 
 		this->particleFactory = particleFactory;
-		ApplicationObject::add(ao);
+		GameObject::add(ao);
 	}
 
 	std::shared_ptr<SerializationClient> ParticleSystem::doSerialize(SerializationHint hint)

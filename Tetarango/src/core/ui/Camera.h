@@ -2,12 +2,12 @@
 
 #include <algorithm>
 #include <SDL.h>
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 
 namespace AW
 {
 
-	class Camera : public ApplicationObject
+	class Camera : public GameObject
 	{
 		double xPosition = 0.0, yPosition = 0.0, zoom = 1.0, centerX = 0.0, centerY = 0.0, maxZoomIn = 5.0, maxZoomOut = 0.2;
 		double defaultZoom = 1.0, defaultX = 0.0, defaultY = 0.0;

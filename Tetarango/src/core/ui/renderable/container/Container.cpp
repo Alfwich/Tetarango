@@ -33,7 +33,7 @@ namespace AW
 		const auto client = serializationClient->getClient("__container__", hint);
 		Renderable::doManualSerialize(hint, client);
 
-		return ApplicationObject::doSerialize(hint);
+		return GameObject::doSerialize(hint);
 	}
 
 	void Container::resizeSelfToChildrenAndCenterChildren()

@@ -46,7 +46,7 @@ namespace AWGame
 		std::vector<std::shared_ptr<Block>> getEliminatedPieces();
 		void resetBoard();
 
-		void add(std::shared_ptr<ApplicationObject> ao);
+		void add(std::shared_ptr<GameObject> ao);
 		void onInitialAttach();
 		void onCreateChildren();
 		void onChildrenHydrated();

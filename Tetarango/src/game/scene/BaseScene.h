@@ -34,7 +34,7 @@ namespace AWGame
 		virtual void transitionToSceneWithBundle(SceneGame scene, AW::SceneTransitionBundle& bundle);
 		virtual void transitionToSceneWithBundle(std::string sceneName, AW::SceneTransitionBundle& bundle);
 
-		std::weak_ptr<ApplicationObject> baseSceneWeakThisRef();
+		std::weak_ptr<GameObject> baseSceneWeakThisRef();
 
 		virtual void onButtonClicked(int id) { /* NO-OP */ };
 		virtual void onAboutToSave() {};

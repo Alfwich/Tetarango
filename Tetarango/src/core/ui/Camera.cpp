@@ -101,6 +101,6 @@ namespace AW
 		defaultX = client->serializeDouble("dX", defaultX);
 		defaultY = client->serializeDouble("dY", defaultY);
 
-		return ApplicationObject::doSerialize(hint);
+		return GameObject::doSerialize(hint);
 	}
 }

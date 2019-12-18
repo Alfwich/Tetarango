@@ -3,14 +3,14 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 #include "Scene.h"
 #include "SceneTransitionBundle.h"
 
 namespace AW
 {
 
-	class SceneContainer : public ApplicationObject, public Renderable
+	class SceneContainer : public GameObject, public Renderable
 	{
 		std::unordered_map<std::string, std::shared_ptr<Scene>> sceneMap;
 		std::shared_ptr<Scene> currentScene;
@@ -20,10 +20,10 @@ namespace AW
 		SceneContainer();
 		SceneContainer(std::vector<std::shared_ptr<Scene>> scenes);
 
-		std::weak_ptr<ApplicationObject> notifyOnTransition;
+		std::weak_ptr<GameObject> notifyOnTransition;
 
-		void add(std::shared_ptr<ApplicationObject> ao);
-		void remove(std::shared_ptr<ApplicationObject> ao);
+		void add(std::shared_ptr<GameObject> ao);
+		void remove(std::shared_ptr<GameObject> ao);
 
 		bool transitionToScene(std::string name);
 		bool transitionToSceneWithBundle(std::string sceneName, SceneTransitionBundle& bundle);

@@ -50,7 +50,7 @@ namespace AW
 		for (auto it = colliders.begin(); it != colliders.end();)
 		{
 			const auto colliderPtr = (*it)->ptr.lock();
-			const auto ao = std::dynamic_pointer_cast<ApplicationObject>(colliderPtr);
+			const auto ao = std::dynamic_pointer_cast<GameObject>(colliderPtr);
 
 			if (colliderPtr != nullptr)
 			{
@@ -138,7 +138,7 @@ namespace AW
 		scopeConsiderations[a].erase(b);
 	}
 
-	void Collision::registerObjectForCollisionScope(CollisionScope scope, std::shared_ptr<ApplicationObject> obj)
+	void Collision::registerObjectForCollisionScope(CollisionScope scope, std::shared_ptr<GameObject> obj)
 	{
 		if (consideredObjectIds.count(obj->getId()) == 1)
 		{
@@ -158,7 +158,7 @@ namespace AW
 		consideredObjectIds.insert(colliderBundle->id);
 	}
 
-	void Collision::unregisterObject(std::shared_ptr<ApplicationObject> obj)
+	void Collision::unregisterObject(std::shared_ptr<GameObject> obj)
 	{
 		if (consideredObjectIds.count(obj->getId()) == 0)
 		{

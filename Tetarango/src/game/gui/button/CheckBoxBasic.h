@@ -31,7 +31,7 @@ namespace AWGame
 		void onMouseButton(AW::MouseButton button, bool pressed);
 		void onEnterFrame(double frameTime);
 
-		std::weak_ptr<ApplicationObject> clickListener;
+		std::weak_ptr<GameObject> clickListener;
 
 		void setText(std::string text);
 		std::string getText();

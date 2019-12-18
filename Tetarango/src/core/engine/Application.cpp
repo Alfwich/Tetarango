@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 #include "ui/Camera.h"
 #include "ui/scene/Scene.h"
 #include "ui/scene/SceneContainer.h"
@@ -125,7 +125,7 @@ namespace AW
 
 	void Application::primeSerialization()
 	{
-		std::make_unique<ApplicationObject>();
+		std::make_unique<GameObject>();
 		std::make_unique<Rectangle>();
 		std::make_unique<Scene>();
 		std::make_unique<SceneContainer>();

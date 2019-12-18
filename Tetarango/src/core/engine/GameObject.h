@@ -22,7 +22,7 @@ namespace AW
 		IsDebugElement = 4
 	};
 
-	class ApplicationObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<ApplicationObject>
+	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<GameObject>
 	{
 		bool currentActive = false, active = true, currentInputEnabled = true, didInitialAttach = false, hasCreatedChildren = false, hasHydratedChildren = false, hasClipRect = false, hasBoundShaders = false;
 
@@ -31,11 +31,11 @@ namespace AW
 		bool loaded = false, rebuildOnLoad = false, layoutOnLoad = true;
 
 		std::bitset<16> tags;
-		std::weak_ptr<ApplicationObject> parent;
+		std::weak_ptr<GameObject> parent;
 		std::shared_ptr<Schematic> schematic;
-		std::list<std::shared_ptr<ApplicationObject>> children;
+		std::list<std::shared_ptr<GameObject>> children;
 		std::list<std::shared_ptr<ISerializable>> softAddedChildren;
-		void commandChildren(void(*cmd)(std::shared_ptr<ApplicationObject>));
+		void commandChildren(void(*cmd)(std::shared_ptr<GameObject>));
 		TimeScope timeScope = TimeScope::None;
 
 		template <typename T>
@@ -47,7 +47,7 @@ namespace AW
 		Rect worldRect, screenRect, clipRect;
 
 	public:
-		ApplicationObject();
+		GameObject();
 
 		static int getNextId();
 
@@ -115,12 +115,12 @@ namespace AW
 		virtual void onWorkError(WORKER_ID workerId, WorkerTaskCode code) { /* NO-OP */ };
 		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AsyncResultBundle> result) { /* NO-OP */ };
 
-		virtual void add(std::shared_ptr<ApplicationObject> obj);
-		virtual void remove(std::shared_ptr<ApplicationObject> obj);
+		virtual void add(std::shared_ptr<GameObject> obj);
+		virtual void remove(std::shared_ptr<GameObject> obj);
 		void removeFromParent();
-		std::weak_ptr<ApplicationObject> getParent();
-		const std::list<std::shared_ptr<ApplicationObject>>& getChildren();
-		const std::list<std::shared_ptr<ApplicationObject>>& getChildrenRenderOrder();
+		std::weak_ptr<GameObject> getParent();
+		const std::list<std::shared_ptr<GameObject>>& getChildren();
+		const std::list<std::shared_ptr<GameObject>>& getChildrenRenderOrder();
 
 		template <typename T>
 		const std::list<std::shared_ptr<T>> getChildrenOfType(bool checkChildren = false);
@@ -145,7 +145,7 @@ namespace AW
 	};
 
 	template<typename T>
-	inline std::shared_ptr<T> ApplicationObject::findFirstInParentChain()
+	inline std::shared_ptr<T> GameObject::findFirstInParentChain()
 	{
 		auto parentPtr = parent.lock();
 
@@ -165,7 +165,7 @@ namespace AW
 	}
 
 	template<typename T>
-	inline std::shared_ptr<T> ApplicationObject::findChildWithName(std::string name, bool checkChildren)
+	inline std::shared_ptr<T> GameObject::findChildWithName(std::string name, bool checkChildren)
 	{
 		// Check immediate children
 		for (const auto child : children)
@@ -200,7 +200,7 @@ namespace AW
 	}
 
 	template<typename T>
-	inline const std::list<std::shared_ptr<T>> ApplicationObject::getChildrenOfType(bool checkChildren)
+	inline const std::list<std::shared_ptr<T>> GameObject::getChildrenOfType(bool checkChildren)
 	{
 		std::list<std::shared_ptr<T>> result;
 
@@ -229,7 +229,7 @@ namespace AW
 	}
 
 	template<typename T>
-	inline void ApplicationObject::registerSerialization()
+	inline void GameObject::registerSerialization()
 	{
 		this->typeName = std::string(typeid(T).name());
 		if (this->modules->serialization->hasSchematic(this->typeName))
@@ -240,7 +240,7 @@ namespace AW
 
 		if (this->modules->status == ModuleBundleStatus::READY || this->modules->status == ModuleBundleStatus::CLEANED_UP)
 		{
-			this->modules->logger->logFatal("ApplicationObject::Added type=" + this->typeName + " after the application was started. Add this object to it's respective serialization list.");
+			this->modules->logger->logFatal("GameObject::Added type=" + this->typeName + " after the application was started. Add this object to it's respective serialization list.");
 		}
 
 		this->schematic = std::make_shared<Schematic>(this->typeName, []() -> std::shared_ptr<ISerializable> { return std::make_shared<T>(); });

@@ -117,7 +117,7 @@ namespace AW
 			updateFrame(frameTime);
 		}
 
-		ApplicationObject::enterFrame(frameTime);
+		GameObject::enterFrame(frameTime);
 	}
 
 	void Animated::onInitialAttach()

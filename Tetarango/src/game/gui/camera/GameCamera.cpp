@@ -26,7 +26,7 @@ namespace AWGame
 
 	void GameCamera::onAttach()
 	{
-		ApplicationObject::onAttach();
+		GameObject::onAttach();
 
 		if (isAttached())
 		{

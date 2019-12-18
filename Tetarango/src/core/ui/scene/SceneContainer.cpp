@@ -16,7 +16,7 @@ namespace AW
 		}
 	}
 
-	void SceneContainer::add(std::shared_ptr<ApplicationObject> ao)
+	void SceneContainer::add(std::shared_ptr<GameObject> ao)
 	{
 		std::shared_ptr<Scene> scene = std::static_pointer_cast<Scene>(ao);
 
@@ -36,7 +36,7 @@ namespace AW
 		Logger::instance()->log("SceneContainer::Added scene name=" + scene->getSceneName());
 	}
 
-	void SceneContainer::remove(std::shared_ptr<ApplicationObject> ao)
+	void SceneContainer::remove(std::shared_ptr<GameObject> ao)
 	{
 		std::shared_ptr<Scene> scene = std::static_pointer_cast<Scene>(ao);
 
@@ -85,7 +85,7 @@ namespace AW
 
 		currentScene = sceneMap[sceneName];
 		currentSceneName = sceneName;
-		ApplicationObject::add(currentScene);
+		GameObject::add(currentScene);
 		Logger::instance()->log("SceneContainer::Transitioned to scene sceneName=" + sceneName);
 
 		return true;
@@ -116,7 +116,7 @@ namespace AW
 		currentScene = sceneMap[sceneName];
 		currentSceneName = sceneName;
 		sceneMap[sceneName]->onTransitionedTo(bundle);
-		ApplicationObject::add(currentScene);
+		GameObject::add(currentScene);
 		Logger::instance()->log("SceneContainer::Transitioned to scene sceneName=" + sceneName);
 
 		return true;
@@ -149,7 +149,7 @@ namespace AW
 			return;
 		}
 
-		ApplicationObject::remove(currentScene);
+		GameObject::remove(currentScene);
 		currentScene = nullptr;
 		currentSceneName = std::string();
 	}
@@ -173,7 +173,7 @@ namespace AW
 
 		Renderable::doManualSerialize(hint, client);
 
-		return ApplicationObject::doSerialize(hint);
+		return GameObject::doSerialize(hint);
 	}
 
 	std::vector<std::shared_ptr<ISerializable>> SceneContainer::getSerializableChildren()
@@ -203,7 +203,7 @@ namespace AW
 
 	void SceneContainer::onDisplayProvisioned()
 	{
-		ApplicationObject::onDisplayProvisioned();
+		GameObject::onDisplayProvisioned();
 
 		if (currentScene != nullptr)
 		{

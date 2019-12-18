@@ -1,13 +1,13 @@
 #pragma once
 
-#include "engine/ApplicationObject.h"
+#include "engine/GameObject.h"
 #include "ui/renderable/Renderable.h"
 #include "ui/renderable/element/Rectangle.h"
 
 namespace AW
 {
 
-	class Container : public ApplicationObject, public Renderable
+	class Container : public GameObject, public Renderable
 	{
 		bool isAutoLayingOut = false, shouldAutoLayout = true;
 

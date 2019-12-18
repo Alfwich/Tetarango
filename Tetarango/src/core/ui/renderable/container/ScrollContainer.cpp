@@ -54,7 +54,7 @@ namespace AW
 		scrollTransition->startTransition(scrollContainer, scrollSpeedMs, target);
 	}
 
-	void ScrollContainer::add(std::shared_ptr<ApplicationObject> ao)
+	void ScrollContainer::add(std::shared_ptr<GameObject> ao)
 	{
 		if (ao->name == scrollContainerName)
 		{
@@ -67,7 +67,7 @@ namespace AW
 		}
 	}
 
-	void ScrollContainer::remove(std::shared_ptr<ApplicationObject> ao)
+	void ScrollContainer::remove(std::shared_ptr<GameObject> ao)
 	{
 		if (ao->name == scrollContainerName)
 		{

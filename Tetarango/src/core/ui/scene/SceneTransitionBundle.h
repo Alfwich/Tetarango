@@ -5,17 +5,17 @@
 
 namespace AW
 {
-	class ApplicationObject;
+	class GameObject;
 
 	class SceneTransitionBundle
 	{
-		std::unordered_map<std::string, std::shared_ptr<ApplicationObject>> objects;
+		std::unordered_map<std::string, std::shared_ptr<GameObject>> objects;
 	public:
 
 		std::string data;
 		std::string entranceZoneName;
 
-		void putObject(std::shared_ptr<ApplicationObject> ao)
+		void putObject(std::shared_ptr<GameObject> ao)
 		{
 			if (ao == nullptr)
 			{
@@ -26,7 +26,7 @@ namespace AW
 			ao->removeFromParent();
 		}
 
-		void putObject(std::string name, std::shared_ptr<ApplicationObject> ao)
+		void putObject(std::string name, std::shared_ptr<GameObject> ao)
 		{
 			if (ao == nullptr && objects.count(name) == 0)
 			{
@@ -37,7 +37,7 @@ namespace AW
 			ao->removeFromParent();
 		}
 
-		void putObjects(std::string name, std::vector<std::shared_ptr<ApplicationObject>> aos)
+		void putObjects(std::string name, std::vector<std::shared_ptr<GameObject>> aos)
 		{
 			for (const auto ao : aos)
 			{
@@ -70,4 +70,4 @@ namespace AW
 
 }
 
-#include <engine/ApplicationObject.h>
+#include "engine/GameObject.h"

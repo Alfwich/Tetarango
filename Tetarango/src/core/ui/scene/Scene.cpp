@@ -35,6 +35,6 @@ namespace AW
 
 		Renderable::doManualSerialize(hint, client);
 
-		return ApplicationObject::doSerialize(hint);
+		return GameObject::doSerialize(hint);
 	}
 }

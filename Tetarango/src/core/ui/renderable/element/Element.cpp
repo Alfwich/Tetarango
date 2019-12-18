@@ -93,6 +93,6 @@ namespace AW
 			setTexture(currentTextureName);
 		}
 
-		return ApplicationObject::doSerialize(hint);
+		return GameObject::doSerialize(hint);
 	}
 }

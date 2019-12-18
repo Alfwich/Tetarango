@@ -17,8 +17,8 @@ namespace AW
 		void onChildrenHydrated();
 		void onLayoutChildren();
 
-		void add(std::shared_ptr<ApplicationObject> ao);
-		void remove(std::shared_ptr<ApplicationObject> ao);
+		void add(std::shared_ptr<GameObject> ao);
+		void remove(std::shared_ptr<GameObject> ao);
 
 		Rect* getScreenRect();
 		double getWidth();

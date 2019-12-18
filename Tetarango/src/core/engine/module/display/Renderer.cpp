@@ -434,7 +434,7 @@ namespace AW
 
 		if (rend->visible && rend->renderType != RenderType::NoneAndBlockChildren)
 		{
-			const auto aoPtr = std::dynamic_pointer_cast<ApplicationObject>(rend);
+			const auto aoPtr = std::dynamic_pointer_cast<GameObject>(rend);
 			if (aoPtr != nullptr)
 			{
 				renderPackage.depth += aoPtr->zIndex;

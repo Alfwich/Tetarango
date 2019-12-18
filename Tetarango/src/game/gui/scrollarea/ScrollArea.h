@@ -28,8 +28,8 @@ namespace AWGame
 		void onLayoutChildren();
 		void onEnterFrame(double frameTime);
 
-		void add(std::shared_ptr<ApplicationObject> ao);
-		void remove(std::shared_ptr<ApplicationObject> ao);
+		void add(std::shared_ptr<GameObject> ao);
+		void remove(std::shared_ptr<GameObject> ao);
 
 		void setEnabled(bool flag);
 

@@ -236,7 +236,7 @@ namespace AW
 		setPosition(this->getHalfWidth() + xOffset, this->getHalfHeight() + yOffset);
 	}
 
-	void Renderable::centerWithin(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::centerWithin(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -246,7 +246,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toLeftOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -256,7 +256,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftTopOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toLeftTopOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -266,7 +266,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftBottomOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toLeftBottomOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -276,7 +276,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toRightOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -286,7 +286,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightTopOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toRightTopOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -296,7 +296,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightBottomOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toRightBottomOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -306,7 +306,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toTopOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -316,7 +316,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopLeftOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toTopLeftOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -326,7 +326,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopRightOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toTopRightOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -336,7 +336,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toBottomOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -346,7 +346,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomRightOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toBottomRightOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -356,7 +356,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomLeftOf(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toBottomLeftOf(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -366,7 +366,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSize(ApplicationObject* other, double wOffset, double hOffset)
+	void Renderable::matchSize(GameObject* other, double wOffset, double hOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -376,7 +376,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSizeAndCenter(ApplicationObject* other, double wOffset, double hOffset, double xOffset, double yOffset)
+	void Renderable::matchSizeAndCenter(GameObject* other, double wOffset, double hOffset, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -386,7 +386,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::centerWithin(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::centerWithin(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -395,7 +395,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toLeftOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -404,7 +404,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftTopOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toLeftTopOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -413,7 +413,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftBottomOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toLeftBottomOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -422,7 +422,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toRightOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -431,7 +431,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightTopOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toRightTopOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -440,7 +440,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightBottomOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toRightBottomOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -449,7 +449,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toTopOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -458,7 +458,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopLeftOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toTopLeftOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -467,7 +467,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopRightOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toTopRightOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -476,7 +476,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toBottomOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -485,7 +485,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomLeftOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toBottomLeftOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -494,7 +494,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomRightOf(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toBottomRightOf(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -503,7 +503,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSize(std::shared_ptr<ApplicationObject> other, double wOffset, double hOffset)
+	void Renderable::matchSize(std::shared_ptr<GameObject> other, double wOffset, double hOffset)
 	{
 		if (other != nullptr)
 		{
@@ -512,7 +512,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSizeAndCenter(std::shared_ptr<ApplicationObject> other, double wOffset, double hOffset, double xOffset, double yOffset)
+	void Renderable::matchSizeAndCenter(std::shared_ptr<GameObject> other, double wOffset, double hOffset, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -521,7 +521,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::leftAlign(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::leftAlign(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -531,7 +531,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::leftAlign(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::leftAlign(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -540,7 +540,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerLeftIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerLeftIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -550,7 +550,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerLeftIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerLeftIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -559,7 +559,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerRightIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerRightIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -569,7 +569,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerRightIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerRightIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -578,7 +578,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerTopIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -588,7 +588,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerTopIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -597,7 +597,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -607,7 +607,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -616,7 +616,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopLeftIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerTopLeftIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -626,7 +626,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopLeftIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerTopLeftIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -635,7 +635,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopRightIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerTopRightIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -645,7 +645,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopRightIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerTopRightIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -654,7 +654,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomLeftIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomLeftIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -664,7 +664,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomLeftIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomLeftIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -673,7 +673,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomRightIn(ApplicationObject* other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomRightIn(GameObject* other, double xOffset, double yOffset)
 	{
 		const auto otherR = dynamic_cast<Renderable*>(other);
 
@@ -683,7 +683,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomRightIn(std::shared_ptr<ApplicationObject> other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomRightIn(std::shared_ptr<GameObject> other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
