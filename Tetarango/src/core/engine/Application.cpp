@@ -119,10 +119,10 @@ namespace AW
 
 	void Application::loadResources()
 	{
-		modules->shader->loadShader("res/game/shader/vertex/vertex-shader.glsl", "vertex");
-		modules->shader->loadShader("res/game/shader/fragment/fragment-shader.glsl", "fragment");
-		modules->shader->loadShader("res/game/shader/fragment/fragment-shader-cliprect.glsl", "fragment-cliprect");
-		modules->shader->loadShader("res/game/shader/fragment/fragment-shader-blur.glsl", "fragment-blur");
+		modules->shader->loadShader("res/game/shader/vertex/default.glsl", "vertex-default");
+		modules->shader->loadShader("res/game/shader/fragment/texture.glsl", "fragment-texture");
+		modules->shader->loadShader("res/game/shader/fragment/cliprect.glsl", "fragment-cliprect");
+		modules->shader->loadShader("res/game/shader/fragment/blur.glsl", "fragment-blur");
 	}
 
 	void Application::primeSerialization()
