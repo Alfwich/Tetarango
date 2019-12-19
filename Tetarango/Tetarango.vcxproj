@@ -229,7 +229,7 @@
     <ClCompile Include="src\core\engine\module\input\Input.cpp" />
     <ClCompile Include="src\core\engine\module\display\DisplayRoot.cpp" />
     <ClCompile Include="src\core\engine\module\display\Renderer.cpp" />
-    <ClCompile Include="src\core\ui\renderable\element\Rectangle.cpp" />
+    <ClCompile Include="src\core\ui\renderable\primitive\Rectangle.cpp" />
     <ClCompile Include="src\core\ui\renderable\Renderable.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\Primitive.cpp" />
     <ClCompile Include="src\core\engine\GameObject.cpp" />
@@ -361,7 +361,7 @@
     <ClInclude Include="src\core\engine\module\input\Input.h" />
     <ClInclude Include="src\core\engine\module\display\DisplayRoot.h" />
     <ClInclude Include="src\core\engine\module\display\Renderer.h" />
-    <ClInclude Include="src\core\ui\renderable\element\Rectangle.h" />
+    <ClInclude Include="src\core\ui\renderable\primitive\Rectangle.h" />
     <ClInclude Include="src\core\ui\renderable\Renderable.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\Primitive.h" />
     <ClInclude Include="src\core\engine\GameObject.h" />

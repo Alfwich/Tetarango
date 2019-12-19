@@ -5,7 +5,7 @@
 #include "ui/scene/Scene.h"
 #include "ui/scene/SceneContainer.h"
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/element/Backdrop.h"
 #include "ui/renderable/element/tilemap/TileMap.h"
 #include "ui/renderable/element/Text.h"

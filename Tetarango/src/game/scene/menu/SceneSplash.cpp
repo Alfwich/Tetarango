@@ -1,7 +1,7 @@
 #include "SceneSplash.h"
 #include <iostream>
 
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 #include "generator/block/GeneratorBlock.h"
 
 namespace

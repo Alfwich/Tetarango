@@ -1,6 +1,6 @@
 #include "CheckBoxBasic.h"
 #include "gui/Guis.h"
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 
 namespace
 {

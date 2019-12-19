@@ -4,7 +4,7 @@
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
 #include "ui/renderable/element/tilemap/TileMap.h"
 #include "ui/renderable/primitive/trace/Trace.h"
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 
 namespace
 {

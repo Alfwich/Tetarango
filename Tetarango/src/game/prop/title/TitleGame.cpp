@@ -1,6 +1,6 @@
 #include "TitleGame.h"
 
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 
 namespace
 {

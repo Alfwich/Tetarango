@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "GameImports.h"
 #include "GameConfig.h"
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 #include "engine/module/display/DisplayRoot.h"
 #include "engine/Application.h"
 

@@ -2,7 +2,7 @@
 
 #include "engine/GameObject.h"
 #include "ui/renderable/Renderable.h"
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 
 namespace AW
 {

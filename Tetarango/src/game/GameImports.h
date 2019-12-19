@@ -2,7 +2,7 @@
 
 // AW
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/element/Text.h"
 #include "ui/scene/Scene.h"
 #include "ui/scene/SceneContainer.h"

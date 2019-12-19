@@ -3,7 +3,7 @@
 #include <memory>
 #include "gui/BaseGui.h"
 #include "ui/renderable/container/Container.h"
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 #include "engine/module/animation/Animation.h"
 #include "engine/module/animation/INotifyOnTransition.h"
 #include "INotifyOnFade.h"

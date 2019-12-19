@@ -1,6 +1,6 @@
 #include "GameMainMenu.h"
 
-#include "ui/renderable/element/Rectangle.h"
+#include "ui/renderable/primitive/Rectangle.h"
 #include "ui/scene/SceneContainer.h"
 #include "scene/BaseScene.h"
 #include "scene/game/SceneMainGame.h"
