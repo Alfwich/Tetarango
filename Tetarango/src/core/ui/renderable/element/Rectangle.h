@@ -1,17 +1,14 @@
 #pragma once
 
-#include "Element.h"
+#include "ui/renderable/primitive/Primitive.h"
 
 namespace AW
 {
 
-	class Rectangle : public Element
+	class Rectangle : public Primitive
 	{
 	public:
 		Rectangle();
-
-		void onLoadResources();
-		void onInitialAttach();
 	};
 
 }

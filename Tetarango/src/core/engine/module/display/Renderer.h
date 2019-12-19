@@ -26,7 +26,7 @@ namespace AW
 		Color clearColor;
 
 		mat4x4 mvp, p, pAbs, m, t, UVp, tP;
-		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgram = 0;
+		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
 		std::map<std::pair<GLuint, GLuint>, GLuint> programs;
 		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0;
 

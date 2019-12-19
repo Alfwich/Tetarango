@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include "util/Rect.h"
 #include "engine/module/display/Texture.h"
+#include "engine/module/shader/ShaderReference.h"
 
 namespace AW
 {
@@ -11,6 +12,7 @@ namespace AW
 	{
 	protected:
 		std::shared_ptr<Texture> particleTexture;
+		std::shared_ptr<ShaderReference> fragmentShader, vertexShader;
 
 	public:
 		Rect clip;
@@ -27,7 +29,11 @@ namespace AW
 			alphaMod = 255.0;
 
 
-		std::shared_ptr<Texture> getTexture();
+		const std::shared_ptr<Texture>& getTexture();
+		void setVertexShader(std::shared_ptr<ShaderReference> shader);
+		void setFragmentShader(std::shared_ptr<ShaderReference> shader);
+		const std::shared_ptr<ShaderReference>& getVertexShader();
+		const std::shared_ptr<ShaderReference>& getFragmentShader();
 
 		virtual void onEnterFrame(double frameTime);
 	};

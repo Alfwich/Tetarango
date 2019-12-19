@@ -17,7 +17,7 @@ namespace AW
 
 		if (fragmentShader == nullptr)
 		{
-			fragmentShader = modules->shader->getShader("fragment-texture");
+			fragmentShader = modules->shader->getShader("fragment-solid");
 		}
 
 		if (clipRectVertexShader == nullptr)
@@ -30,18 +30,6 @@ namespace AW
 			clipRectFragmentShader = modules->shader->getShader("fragment-cliprect");
 		}
 
-	}
-
-	GLuint Primitive::getTextureId()
-	{
-		const auto tex = modules->texture->getTexture("__solid__");
-
-		if (tex != nullptr)
-		{
-			return tex->openGlTextureId();
-		}
-
-		return 0;
 	}
 
 	std::shared_ptr<SerializationClient> Primitive::doSerialize(SerializationHint hint)

@@ -221,6 +221,7 @@ namespace AW
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		glUseProgram(0);
+		currentProgramId = 0;
 	}
 
 	void Renderer::openGLDrawArrays(RenderPackage* renderPackage)
@@ -273,13 +274,15 @@ namespace AW
 
 	void Renderer::changeProgram(GLuint programId)
 	{
-		glUseProgram(programId);
+		if (currentProgramId != programId)
+		{
+			glUseProgram(programId);
+			currentProgramId = programId;
 
-		currentProgram = programId;
-
-		inMatrixLocation = glGetUniformLocation(programId, "mvp");
-		inUVMatrixLocation = glGetUniformLocation(programId, "UVproj");
-		inColorModLocation = glGetUniformLocation(programId, "cMod");
+			inMatrixLocation = glGetUniformLocation(programId, "mvp");
+			inUVMatrixLocation = glGetUniformLocation(programId, "UVproj");
+			inColorModLocation = glGetUniformLocation(programId, "cMod");
+		}
 	}
 
 	GLuint Renderer::createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId)
@@ -299,9 +302,12 @@ namespace AW
 			{
 				reportOpenGLErrors();
 				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program");
+				programs[key] = 0;
 			}
-
-			programs[key] = programId;
+			else
+			{
+				programs[key] = programId;
+			}
 		}
 
 		return programs[key];
@@ -322,7 +328,7 @@ namespace AW
 
 		for (const auto paramNameToValue : shader->getFloatIUParams())
 		{
-			const auto position = glGetUniformLocation(currentProgram, paramNameToValue.first.c_str());
+			const auto position = glGetUniformLocation(currentProgramId, paramNameToValue.first.c_str());
 			if (position != -1)
 			{
 				glUniform1f(position, paramNameToValue.second);
@@ -497,7 +503,7 @@ namespace AW
 				testRect->setAlpha(0.25);
 				testRect->onInitialAttach();
 				colorStack.push(AW::Color::red());
-				renderElement(testRect, &Rect(), &RenderPackage());
+				renderPrimitive(testRect, &Rect(), &RenderPackage());
 				colorStack.pop();
 			}
 
@@ -852,7 +858,45 @@ namespace AW
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
 	{
-		// TODO - If needed; Right now Primitives either render through a special render method (ParticleSystem) or composition (Trace)
+		changeProgram(createAndLinkProgram(prim->getVertexShaderId(), prim->getFragmentShaderId()));
+
+		const auto cW = computed->w / 2.0;
+		const auto cH = computed->h / 2.0;
+		const auto cX = computed->x + cW;
+		const auto cY = computed->y + cH;
+
+		mat4x4_identity(m);
+
+		if (renderPackage->rotation != 0.0)
+		{
+			mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+		}
+		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+		mat4x4_translate(t, cX, cY, cY + (prim->zIndex + renderPackage->depth) * layerFactor);
+
+		mat4x4_mul(m, t, m);
+
+		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
+		{
+			mat4x4_dup(tP, pAbs);
+		}
+		else
+		{
+			mat4x4_dup(tP, p);
+		}
+
+		mat4x4_mul(mvp, tP, m);
+
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+
+		mat4x4_identity(UVp);
+
+		setColorModParam(renderPackage);
+
+		applyUserSpecificShaderUniformsForRenderable(prim);
+
+		openGLDrawArrays(renderPackage);
+
 	}
 
 	void Renderer::renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
@@ -862,8 +906,6 @@ namespace AW
 		{
 			return;
 		}
-
-		changeProgram(createAndLinkProgram(prim->getVertexShaderId(), prim->getFragmentShaderId()));
 
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
@@ -876,47 +918,69 @@ namespace AW
 
 		for (const auto particle : particleSystem->getParticles())
 		{
-			const auto glTextureId = particle->getTexture()->openGlTextureId();
+			const auto particleTexture = particle->getTexture();
+			const auto glTextureId = particleTexture != nullptr ? particleTexture->openGlTextureId() : 0;
+			const auto cW = particle->w / 2.0;
+			const auto cH = particle->h / 2.0;
+			const auto cX = computed->x + particle->x + cW;
+			const auto cY = computed->y + particle->y + cH;
+			const auto rotation = (renderPackage->rotation + particle->r) * AW::NumberHelper::degToRad;
+
+			mat4x4_identity(m);
+
+			if (rotation != 0.0)
+			{
+				mat4x4_rotate_Z(m, m, rotation);
+			}
+			mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+			mat4x4_translate(t, cX, cY, cY + (particleSystem->zIndex + particle->zIndex + renderPackage->depth) * layerFactor);
+			mat4x4_mul(m, t, m);
+			mat4x4_mul(mvp, tP, m);
+
+			mat4x4_identity(UVp);
+
+			const auto clipRect = particle->clip;
+			double scaleX, scaleY, xOffset, yOffset;
 			if (glTextureId != 0)
 			{
-				const auto cW = particle->w / 2.0;
-				const auto cH = particle->h / 2.0;
-				const auto cX = computed->x + particle->x + cW;
-				const auto cY = computed->y + particle->y + cH;
-				const auto rotation = (renderPackage->rotation + particle->r) * AW::NumberHelper::degToRad;
-
-				mat4x4_identity(m);
-
-				if (rotation != 0.0)
-				{
-					mat4x4_rotate_Z(m, m, rotation);
-				}
-				mat4x4_scale_aniso(m, m, cW, cH, 1.0);
-				mat4x4_translate(t, cX, cY, cY + (particleSystem->zIndex + particle->zIndex + renderPackage->depth) * layerFactor);
-				mat4x4_mul(m, t, m);
-				mat4x4_mul(mvp, tP, m);
-
-				mat4x4_identity(UVp);
-
-				const auto clipRect = particle->clip;
-				double scaleX = clipRect.w / particle->getTexture()->getWidth();
-				double scaleY = clipRect.h / particle->getTexture()->getHeight();
-				double xOffset = clipRect.x / particle->getTexture()->getWidth();
-				double yOffset = clipRect.y / particle->getTexture()->getHeight();
-
-				mat4x4_translate_in_place(UVp, xOffset, yOffset, 0.0);
-				mat4x4_scale_aniso(UVp, UVp, scaleX, scaleY, 1.0);
-
-				glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
-				glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
-				glUniform4f(inColorModLocation, particle->cModR / 255.0, particle->cModG / 255.0, particle->cModB / 255.0, (particle->alphaMod / 255.0) * renderPackage->alpha);
-
-				bindGLTexture(glTextureId);
-
-				applyUserSpecificShaderUniformsForRenderable(prim);
-
-				openGLDrawArrays(renderPackage);
+				scaleX = clipRect.w / particle->getTexture()->getWidth();
+				scaleY = clipRect.h / particle->getTexture()->getHeight();
+				xOffset = clipRect.x / particle->getTexture()->getWidth();
+				yOffset = clipRect.y / particle->getTexture()->getHeight();
 			}
+			else
+			{
+				scaleX = clipRect.w / particle->w;
+				scaleY = clipRect.h / particle->h;
+				xOffset = clipRect.x / particle->w;
+				yOffset = clipRect.y / particle->h;
+			}
+
+			mat4x4_translate_in_place(UVp, xOffset, yOffset, 0.0);
+			mat4x4_scale_aniso(UVp, UVp, scaleX, scaleY, 1.0);
+
+			const auto pVertexShader = particle->getVertexShader();
+			const auto pFragmentShader = particle->getFragmentShader();
+
+			if (pVertexShader != nullptr && pFragmentShader != nullptr)
+			{
+				changeProgram(createAndLinkProgram(pVertexShader->getShaderId(), pFragmentShader->getShaderId()));
+				applyShaderUniforms(pVertexShader);
+				applyShaderUniforms(pFragmentShader);
+			}
+			else
+			{
+				changeProgram(createAndLinkProgram(prim->getVertexShaderId(), prim->getFragmentShaderId()));
+				applyUserSpecificShaderUniformsForRenderable(prim);
+			}
+
+			glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+			glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
+			glUniform4f(inColorModLocation, particle->cModR / 255.0, particle->cModG / 255.0, particle->cModB / 255.0, (particle->alphaMod / 255.0) * renderPackage->alpha);
+
+			bindGLTexture(glTextureId);
+
+			openGLDrawArrays(renderPackage);
 		}
 	}
 

@@ -3,9 +3,29 @@
 
 namespace AW
 {
-	std::shared_ptr<Texture> Particle::getTexture()
+	const std::shared_ptr<Texture>& Particle::getTexture()
 	{
 		return particleTexture;
+	}
+
+	void Particle::setVertexShader(std::shared_ptr<ShaderReference> shader)
+	{
+		vertexShader = shader;
+	}
+
+	void Particle::setFragmentShader(std::shared_ptr<ShaderReference> shader)
+	{
+		fragmentShader = shader;
+	}
+
+	const std::shared_ptr<ShaderReference>& Particle::getVertexShader()
+	{
+		return vertexShader;
+	}
+
+	const std::shared_ptr<ShaderReference>& Particle::getFragmentShader()
+	{
+		return fragmentShader;
 	}
 
 	void Particle::onEnterFrame(double frameTime)

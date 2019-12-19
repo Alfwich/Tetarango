@@ -3,12 +3,6 @@
 
 namespace AWGame
 {
-
-	ParticleBulletTrail::ParticleBulletTrail(std::shared_ptr<AW::TextureContainer> textureContainer)
-	{
-		particleTexture = textureContainer->getTexture("__solid__");
-	}
-
 	void ParticleBulletTrail::onEnterFrame(double deltaTime)
 	{
 		const auto p = (timeLeft / totalLife);

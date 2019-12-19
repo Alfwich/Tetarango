@@ -121,6 +121,7 @@ namespace AW
 	{
 		modules->shader->loadShader("res/game/shader/vertex/default.glsl", "vertex-default");
 		modules->shader->loadShader("res/game/shader/fragment/texture.glsl", "fragment-texture");
+		modules->shader->loadShader("res/game/shader/fragment/solid.glsl", "fragment-solid");
 		modules->shader->loadShader("res/game/shader/fragment/cliprect.glsl", "fragment-cliprect");
 		modules->shader->loadShader("res/game/shader/fragment/blur.glsl", "fragment-blur");
 	}

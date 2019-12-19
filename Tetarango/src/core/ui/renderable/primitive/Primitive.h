@@ -19,8 +19,6 @@ namespace AW
 		virtual void preUpdateRender(Rect* renderRect, RenderPackage* renderPackage) { /* NO-OP */ };
 		virtual void preRender(Rect* renderRect, RenderPackage* renderPackage) { /* NO-OP */ };
 
-		virtual GLuint getTextureId();
-
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual double getAlpha();
 	};

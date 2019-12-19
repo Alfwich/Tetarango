@@ -18,7 +18,6 @@ namespace AWGame
 	class BlockParticle : public AW::Particle
 	{
 	public:
-		BlockParticle(std::shared_ptr<AW::TextureContainer> textureContainer);
 		void onEnterFrame(double deltaTime);
 	};
 }

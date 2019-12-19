@@ -9,7 +9,7 @@ namespace AWGame
 
 	std::shared_ptr<AW::Particle> ParticleBulletTrailParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)
 	{
-		const auto particle = std::make_shared<ParticleBulletTrail>(modules->texture);
+		const auto particle = std::make_shared<ParticleBulletTrail>();
 		particle->w = bundle.rect.w;
 		particle->h = bundle.rect.h;
 		particle->ogW = particle->w;

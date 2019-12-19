@@ -3,12 +3,6 @@
 
 namespace AWGame
 {
-
-	ParticleSpaceBackground::ParticleSpaceBackground(std::shared_ptr<AW::TextureContainer> textureContainer)
-	{
-		particleTexture = textureContainer->getTexture("__solid__");
-	}
-
 	void ParticleSpaceBackground::onEnterFrame(double deltaTime)
 	{
 		if (alphaMod < 255.0)

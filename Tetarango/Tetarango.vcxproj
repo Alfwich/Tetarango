@@ -410,7 +410,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="favicon.ico" />
-    <Image Include="res\core\img\solid.png" />
     <Image Include="res\game\img\actor\pawn\humanoid\pawn-humanoid-damage.png" />
     <Image Include="res\game\img\actor\pawn\humanoid\pawn-humanoid-hair.png" />
     <Image Include="res\game\img\actor\pawn\humanoid\pawn-humanoid.png" />

@@ -4,11 +4,6 @@
 
 namespace AWGame
 {
-	BlockParticle::BlockParticle(std::shared_ptr<AW::TextureContainer> textureContainer)
-	{
-		particleTexture = textureContainer->getTexture("__solid__");
-	}
-
 	void BlockParticle::onEnterFrame(double deltaTime)
 	{
 		w = ogW * timeLeft / totalLife;
@@ -38,7 +33,9 @@ namespace AWGame
 
 	std::shared_ptr<AW::Particle> BlockParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)
 	{
-		const auto particle = std::make_shared<BlockParticle>(modules->texture);
+		const auto particle = std::make_shared<BlockParticle>();
+		particle->setFragmentShader(modules->shader->getShader("fragment-solid"));
+		particle->setVertexShader(modules->shader->getShader("vertex-default"));
 		particle->zIndex = -1;
 		particle->cModR = modColor.r;
 		particle->cModG = modColor.g;
