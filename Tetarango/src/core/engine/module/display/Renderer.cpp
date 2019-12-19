@@ -231,24 +231,26 @@ namespace AW
 			glStencilFunc(GL_EQUAL, 1, 0xFF);
 		}
 
-		const auto depthIsEnabled = glIsEnabled(GL_DEPTH_TEST);
-		if (renderDepthStack.top() == RenderDepthTest::Enabled && !depthIsEnabled)
+		if (!depthEnabled && renderDepthStack.top() == RenderDepthTest::Enabled)
 		{
 			glEnable(GL_DEPTH_TEST);
+			depthEnabled = true;
 		}
-		else if (depthIsEnabled)
+		else if (depthEnabled)
 		{
 			glDisable(GL_DEPTH_TEST);
+			depthEnabled = false;
 		}
 
-		const auto msaaIsEnabled = glIsEnabled(GL_MULTISAMPLE);
-		if (renderMultiSampleModeStack.top() == RenderMultiSampleMode::Enabled && !msaaIsEnabled)
+		if (!msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Enabled)
 		{
 			glEnable(GL_MULTISAMPLE);
+			msaaEnabled = true;
 		}
-		else if (msaaIsEnabled)
+		else if (msaaEnabled)
 		{
 			glDisable(GL_MULTISAMPLE);
+			msaaEnabled = false;
 		}
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -279,10 +281,21 @@ namespace AW
 			glUseProgram(programId);
 			currentProgramId = programId;
 
-			inMatrixLocation = glGetUniformLocation(programId, "mvp");
-			inUVMatrixLocation = glGetUniformLocation(programId, "UVproj");
-			inColorModLocation = glGetUniformLocation(programId, "cMod");
+			inMatrixLocation = getUniformLocationForCurrentProgram("mvp", programId);
+			inUVMatrixLocation = getUniformLocationForCurrentProgram("UVproj", programId);
+			inColorModLocation = getUniformLocationForCurrentProgram("cMod", programId);
 		}
+	}
+
+	GLuint Renderer::getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId)
+	{
+		const auto key = std::make_pair(programId, paramName);
+		if (programIdAndParamNameToUniformLocation.count(key) == 0)
+		{
+			programIdAndParamNameToUniformLocation[key] = glGetUniformLocation(programId, paramName.c_str());
+		}
+
+		return programIdAndParamNameToUniformLocation[key];
 	}
 
 	GLuint Renderer::createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId)
@@ -328,7 +341,8 @@ namespace AW
 
 		for (const auto paramNameToValue : shader->getFloatIUParams())
 		{
-			const auto position = glGetUniformLocation(currentProgramId, paramNameToValue.first.c_str());
+			const auto position = getUniformLocationForCurrentProgram(paramNameToValue.first, currentProgramId);
+
 			if (position != -1)
 			{
 				glUniform1f(position, paramNameToValue.second);

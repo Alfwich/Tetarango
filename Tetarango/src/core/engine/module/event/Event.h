@@ -22,18 +22,18 @@ namespace AW
 		{
 		public:
 			EnterFrameListenerBundle(std::shared_ptr<EnterFrameListener> ptr) : id(ptr->getObjectIdEnterFrame()), ptr(ptr) { }
-
-			int id;
-			std::weak_ptr<EnterFrameListener> ptr;
+			const int id;
+			const std::weak_ptr<EnterFrameListener> ptr;
 		};
 
 		class TimeoutBundle
 		{
 		public:
 			TimeoutBundle(int id, std::shared_ptr<EnterFrameListener> ptr, double time) : ptr(ptr), time(time), id(id) {}
-			int id = 0;
+			const int id = 0;
+			const std::weak_ptr<EnterFrameListener> ptr;
+
 			double time = 0.0;
-			std::weak_ptr<EnterFrameListener> ptr;
 		};
 
 		std::shared_ptr<Input> input;

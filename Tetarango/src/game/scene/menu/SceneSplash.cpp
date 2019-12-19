@@ -47,8 +47,8 @@ namespace AWGame
 	void SceneSplash::onCreateChildren()
 	{
 		blockContainer = std::make_shared<AW::Container>();
-		blockContainer->setColor(88, 88, 88);
-		blockContainer->zIndex = -10;
+		blockContainer->setColor(225, 225, 225);
+		blockContainer->zIndex = -1;
 		add(blockContainer);
 
 		splashImage = std::make_shared<AW::Element>();
