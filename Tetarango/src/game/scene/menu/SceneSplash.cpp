@@ -22,7 +22,7 @@ namespace
 	const auto numBlocksToMake = 200;
 	const auto blockHeightGenerationLimit = -6000.0;
 	const auto titleBackgroundMovement = 9.0;
-	const auto blurAmount = 50.0;
+	const auto blurAmount = 1.0;
 
 	AWGame::GeneratorBlock blockColorGenerator;
 }
