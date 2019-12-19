@@ -51,6 +51,9 @@ namespace AW
 		void onChildrenHydrated();
 		void onLayoutChildren();
 
+		virtual void setVertexShader(std::shared_ptr<ShaderReference> shader);
+		virtual void setFragmentShader(std::shared_ptr<ShaderReference> shader);
+
 		void setClipRect(AW::Rect rect);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);

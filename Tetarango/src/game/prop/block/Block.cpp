@@ -76,10 +76,10 @@ namespace AWGame
 		setAnimationSet(blockAnimationName);
 		setCurrentAnimation("default");
 
-		blockTransition = modules->animation->createGameTransition();
+		blockTransition = modules->animation->createTransition();
 		blockTransition->listener = shared_from_this();
 		blockTransition->setLooping(true);
-		blockTransition->startTargetlessTransition(1750.0);
+		blockTransition->startTargetlessTransition(AW::NumberHelper::random(1000.0, 1750.0));
 	}
 
 	void Block::onCreateChildren()

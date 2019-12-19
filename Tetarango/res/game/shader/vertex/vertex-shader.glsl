@@ -8,7 +8,8 @@ uniform mat4 mvp;
 uniform mat4 UVproj;
 uniform vec4 cMod;
 
-void main(){
+void main()
+{
 	vec4 p = mvp * vec4(vp, 1);
 	gl_Position = p;
 	UV = vertexUV;

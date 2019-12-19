@@ -19,8 +19,25 @@ namespace AW
 
 	void Container::onBindShaders()
 	{
-		clipRectVertexShader = modules->shader->getShader("vertex");
-		clipRectFragmentShader = modules->shader->getShader("fragment-cliprect");
+		if (vertexShader == nullptr)
+		{
+			vertexShader = modules->shader->getShader("vertex");
+		}
+
+		if (fragmentShader == nullptr)
+		{
+			fragmentShader = modules->shader->getShader("fragment");
+		}
+
+		if (clipRectVertexShader == nullptr)
+		{
+			clipRectVertexShader = modules->shader->getShader("vertex");
+		}
+
+		if (clipRectFragmentShader == nullptr)
+		{
+			clipRectFragmentShader = modules->shader->getShader("fragment-cliprect");
+		}
 	}
 
 	void Container::setSizeToScreenSize()

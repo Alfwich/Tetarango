@@ -122,6 +122,7 @@ namespace AW
 		modules->shader->loadShader("res/game/shader/vertex/vertex-shader.glsl", "vertex");
 		modules->shader->loadShader("res/game/shader/fragment/fragment-shader.glsl", "fragment");
 		modules->shader->loadShader("res/game/shader/fragment/fragment-shader-cliprect.glsl", "fragment-cliprect");
+		modules->shader->loadShader("res/game/shader/fragment/fragment-shader-blur.glsl", "fragment-blur");
 	}
 
 	void Application::primeSerialization()

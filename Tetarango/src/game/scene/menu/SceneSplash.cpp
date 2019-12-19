@@ -22,6 +22,7 @@ namespace
 	const auto numBlocksToMake = 200;
 	const auto blockHeightGenerationLimit = -6000.0;
 	const auto titleBackgroundMovement = 9.0;
+	const auto blurAmount = 50.0;
 
 	AWGame::GeneratorBlock blockColorGenerator;
 }
@@ -47,19 +48,22 @@ namespace AWGame
 	{
 		blockContainer = std::make_shared<AW::Container>();
 		blockContainer->setColor(88, 88, 88);
-		//blockContainer->setMatchSizeToChildren(false);
 		blockContainer->zIndex = -10;
 		add(blockContainer);
 
-		splashText = std::make_shared<AW::Text>();
-		splashText->setFont("medium", titleFontSizeBig);
-		splashText->setText("built with");
-		add(splashText);
-
 		splashImage = std::make_shared<AW::Element>();
+		splashImage->setFragmentShader(modules->shader->getShader("fragment-blur"));
+		splashImage->getFragmentShader()->setFloatIUParam("blurAmount", 20.0);
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
+
+		splashText = std::make_shared<AW::Text>();
+		splashText->setFragmentShader(modules->shader->getShader("fragment-blur"));
+		splashText->getFragmentShader()->setFloatIUParam("blurAmount", 20.0);
+		splashText->setFont("medium", titleFontSizeBig);
+		splashText->setText("built with");
+		add(splashText);
 
 		titleGame = std::make_shared<TitleGame>();
 		titleGame->setFontSize(150);
@@ -109,16 +113,19 @@ namespace AWGame
 		if (state == 0)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
-			splashText->toTopOf(splashImage);
-
-			splashText->setAlpha(scaledMainPositionIn);
+			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
 			splashImage->setAlpha(scaledMainPositionIn);
+
+			splashText->toTopOf(splashImage);
+			splashText->setAlpha(scaledMainPositionIn);
+			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
 
 			tryToGotoNextState(position, 2.0);
 		}
 		else if (state == 1)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
+			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
@@ -129,6 +136,7 @@ namespace AWGame
 		else if (state == 2)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
+			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
 			splashImage->setAlpha(scaledMainPositionIn);
 
 			tryToGotoNextState(position, 2.0);
@@ -136,9 +144,12 @@ namespace AWGame
 		else if (state == 3)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
+			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
+
 			splashText->toTopOf(splashImage);
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
+			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
 			{
@@ -155,7 +166,10 @@ namespace AWGame
 		else if (state == 4)
 		{
 			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
+			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
 			splashText->setAlpha(scaledMainPositionIn);
+
+			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
 			splashImage->toTopOf(splashText);
 			splashImage->setAlpha(scaledMainPositionIn);
 
@@ -163,20 +177,24 @@ namespace AWGame
 		}
 		else if (state == 5)
 		{
-			splashText->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
+			splashText->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
+			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
+
 			splashImage->toTopOf(splashText);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
+			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
 			{
+				splashText->getFragmentShader()->setFloatIUParam("blurAmount", 0.0);
+				splashImage->getFragmentShader()->setFloatIUParam("blurAmount", 0.0);
 				for (auto i = 0; i < numBlocksToMake; ++i)
 				{
 					for (auto block : blockColorGenerator.getTetromino())
 					{
 						const auto randomX = AW::NumberHelper::random(blockHeightGenerationLimit, -100);
 						const auto randomY = AW::NumberHelper::random(blockHeightGenerationLimit, -100);
-						block->setScale(AW::NumberHelper::random(0.25, 0.75));
 						block->setX(randomX);
 						block->setY(randomY);
 						blocks.push_back(block);

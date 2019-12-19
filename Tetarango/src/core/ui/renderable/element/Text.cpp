@@ -154,6 +154,8 @@ namespace AW
 	void Text::onCreateChildren()
 	{
 		textPositioningElement = std::make_shared<Element>();
+		textPositioningElement->setVertexShader(vertexShader);
+		textPositioningElement->setFragmentShader(fragmentShader);
 		textPositioningElement->renderTextureMode = RenderTextureMode::BilinearNoWrap;
 		textPositioningElement->name = textPositioningElementName;
 		textPositioningElement->zIndex = 2;
@@ -194,6 +196,26 @@ namespace AW
 	void Text::onLayoutChildren()
 	{
 		textPositioningElement->setPosition(getHalfWidth(), getHalfHeight());
+	}
+
+	void Text::setVertexShader(std::shared_ptr<ShaderReference> shader)
+	{
+		Container::setVertexShader(shader);
+
+		if (textPositioningElement != nullptr)
+		{
+			textPositioningElement->setVertexShader(shader);
+		}
+	}
+
+	void Text::setFragmentShader(std::shared_ptr<ShaderReference> shader)
+	{
+		Container::setFragmentShader(shader);
+
+		if (textPositioningElement != nullptr)
+		{
+			textPositioningElement->setFragmentShader(shader);
+		}
 	}
 
 	void Text::setClipRect(AW::Rect rect)

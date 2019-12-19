@@ -64,8 +64,8 @@ namespace AW
 
 	protected:
 		Rect rect, clipRect, worldRect, screenRect;
-
 		std::shared_ptr<Color> colorModulation = nullptr;
+
 		std::shared_ptr<ShaderReference> vertexShader = nullptr, fragmentShader = nullptr, clipRectVertexShader = nullptr, clipRectFragmentShader = nullptr;
 
 	public:
@@ -80,6 +80,11 @@ namespace AW
 		const std::shared_ptr<ShaderReference>& getFragmentShader();
 		const std::shared_ptr<ShaderReference>& getClipRectVertexShader();
 		const std::shared_ptr<ShaderReference>& getClipRectFragmentShader();
+
+		virtual void setVertexShader(std::shared_ptr<ShaderReference> shader);
+		virtual void setFragmentShader(std::shared_ptr<ShaderReference> shader);
+		virtual void setClipRectVertexShader(std::shared_ptr<ShaderReference> shader);
+		virtual void setClipRectFragmentShader(std::shared_ptr<ShaderReference> shader);
 
 		bool visible = true, rotateInParentSpace = true, disableCulling = false;
 

@@ -10,10 +10,26 @@ namespace AW
 
 	void Primitive::onBindShaders()
 	{
-		vertexShader = modules->shader->getShader("vertex");
-		fragmentShader = modules->shader->getShader("fragment");
-		clipRectVertexShader = modules->shader->getShader("vertex");
-		clipRectFragmentShader = modules->shader->getShader("fragment");
+		if (vertexShader == nullptr)
+		{
+			vertexShader = modules->shader->getShader("vertex");
+		}
+
+		if (fragmentShader == nullptr)
+		{
+			fragmentShader = modules->shader->getShader("fragment");
+		}
+
+		if (clipRectVertexShader == nullptr)
+		{
+			clipRectVertexShader = modules->shader->getShader("vertex");
+		}
+
+		if (clipRectFragmentShader == nullptr)
+		{
+			clipRectFragmentShader = modules->shader->getShader("fragment-cliprect");
+		}
+
 	}
 
 	GLuint Primitive::getTextureId()

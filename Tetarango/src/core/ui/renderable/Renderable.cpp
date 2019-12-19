@@ -37,6 +37,26 @@ namespace AW
 		return clipRectFragmentShader;
 	}
 
+	void Renderable::setVertexShader(std::shared_ptr<ShaderReference> shader)
+	{
+		vertexShader = shader;
+	}
+
+	void Renderable::setFragmentShader(std::shared_ptr<ShaderReference> shader)
+	{
+		fragmentShader = shader;
+	}
+
+	void Renderable::setClipRectVertexShader(std::shared_ptr<ShaderReference> shader)
+	{
+		clipRectVertexShader = shader;
+	}
+
+	void Renderable::setClipRectFragmentShader(std::shared_ptr<ShaderReference> shader)
+	{
+		clipRectFragmentShader = shader;
+	}
+
 	void Renderable::setColor(int r, int g, int b, int a)
 	{
 		if (colorModulation == nullptr) {
