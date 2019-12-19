@@ -202,13 +202,22 @@ namespace AW
 	void GameObject::enterFrame(const double& frameTime)
 	{
 		const auto timeScope = getTimeScope();
-		if (modules->time->getComputedTimeFactor(timeScope) == 0.0)
+		const auto timeFactor = modules->time->getTimeFactorForScope(timeScope);
+		if (timeFactor * modules->time->getGlobalTimeFactor() == 0.0)
 		{
 			return;
 		}
 
-		auto timeFactorFrameTime = frameTime * modules->time->getTimeFactorForScope(timeScope);
-		EnterFrameListener::enterFrame(timeFactorFrameTime);
+		if (timeFactor != 1.0)
+		{
+			const auto timeFactoredFrameTime = frameTime * timeFactor;
+			EnterFrameListener::enterFrame(timeFactoredFrameTime);
+		}
+		else
+		{
+
+			EnterFrameListener::enterFrame(frameTime);
+		}
 	}
 
 	void GameObject::attach()
