@@ -807,11 +807,6 @@ namespace AW
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
-		mat4x4_identity(UVp);
-		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
-
-		bindGLTexture(0);
-
 		applyShaderUniforms(rend->getClipRectVertexShader());
 		applyShaderUniforms(rend->getClipRectFragmentShader());
 
