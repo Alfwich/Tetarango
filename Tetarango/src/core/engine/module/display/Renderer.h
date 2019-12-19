@@ -87,7 +87,7 @@ namespace AW
 		bool isOpenGLEnabled();
 
 		void setClearColor(int r, int g, int b, int a);
-		void render(std::shared_ptr<Renderable> obj, Screen* screen, std::shared_ptr<QuadMap> qm);
+		void render(std::shared_ptr<Renderable> obj, Screen* screen);
 
 		SDL_GLContext getOpenGLContext();
 

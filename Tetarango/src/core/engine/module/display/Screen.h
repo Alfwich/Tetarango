@@ -44,7 +44,6 @@ namespace AW
 
 	class Screen : public IBaseModule
 	{
-		std::shared_ptr<Collision> collision;
 		std::shared_ptr<TextureContainer> texture;
 		std::shared_ptr<ShaderContainer> shader;
 
@@ -57,7 +56,6 @@ namespace AW
 	public:
 		virtual ~Screen();
 
-		void bindCollision(std::shared_ptr<Collision> collision);
 		void bindTexture(std::shared_ptr<TextureContainer> texture);
 		void bindShader(std::shared_ptr<ShaderContainer> shader);
 

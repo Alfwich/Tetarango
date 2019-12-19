@@ -157,7 +157,7 @@ namespace AW
 		clearColor.a = a;
 	}
 
-	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen, std::shared_ptr<QuadMap> qm)
+	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen)
 	{
 		prepareRender(screen);
 
@@ -168,7 +168,6 @@ namespace AW
 		renderPackage.cameraY = camera == nullptr ? 0.0 : camera->getY() - screenHeight / 2;
 		renderPackage.xOffset = camera == nullptr ? 0.0 : camera->getXOffset();
 		renderPackage.yOffset = camera == nullptr ? 0.0 : camera->getYOffset();
-		renderPackage.quadMap = qm;
 
 		renderOpenGL(root, rootRect, screen, &renderPackage);
 	}

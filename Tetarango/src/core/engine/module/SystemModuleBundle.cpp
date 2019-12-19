@@ -24,7 +24,6 @@ namespace AW
 		serialization->bindThread(thread);
 		filesystem->bindThread(thread);
 		storage->bindThread(thread);
-		screen->bindCollision(collision);
 		asset->bindFilesystem(filesystem);
 		asset->bindStorage(storage);
 		font->bindAsset(asset);

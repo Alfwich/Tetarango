@@ -15,11 +15,6 @@ namespace AW
 		SDL_DestroyWindow(window);
 	}
 
-	void Screen::bindCollision(std::shared_ptr<Collision> collision)
-	{
-		this->collision = collision;
-	}
-
 	void Screen::bindTexture(std::shared_ptr<TextureContainer> texture)
 	{
 		this->texture = texture;
@@ -251,8 +246,7 @@ namespace AW
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 		if (root != nullptr)
 		{
-			collision->collisionQuadMap->clear();
-			renderer->render(root, this, collision->collisionQuadMap);
+			renderer->render(root, this);
 
 			if (gameConfig->getConfigBool(Config::Param::immediateDebugOutput))
 			{
