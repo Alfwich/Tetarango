@@ -275,6 +275,8 @@ namespace AW
 	{
 		glUseProgram(programId);
 
+		currentProgram = programId;
+
 		inMatrixLocation = glGetUniformLocation(programId, "mvp");
 		inUVMatrixLocation = glGetUniformLocation(programId, "UVproj");
 		inColorModLocation = glGetUniformLocation(programId, "cMod");
@@ -303,6 +305,29 @@ namespace AW
 		}
 
 		return programs[key];
+	}
+
+	void Renderer::applyUserSpecificShaderUniformsForRenderable(const std::shared_ptr<Renderable>& renderable)
+	{
+		applyShaderUniforms(renderable->getVertexShader());
+		applyShaderUniforms(renderable->getFragmentShader());
+	}
+
+	void Renderer::applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader)
+	{
+		if (shader == nullptr || !shader->hasCustomParams())
+		{
+			return;
+		}
+
+		for (const auto paramNameToValue : shader->getFloatIUParams())
+		{
+			const auto position = glGetUniformLocation(currentProgram, paramNameToValue.first.c_str());
+			if (position != -1)
+			{
+				glUniform1f(position, paramNameToValue.second);
+			}
+		}
 	}
 
 	SDL_GLContext Renderer::getOpenGLContext()
@@ -440,7 +465,7 @@ namespace AW
 				for (const auto child : aoPtr->getChildrenRenderOrder())
 				{
 					const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
-					if (renderableChildPtr!= nullptr)
+					if (renderableChildPtr != nullptr)
 					{
 						renderRecursive(renderableChildPtr, computed, renderPackage);
 					}
@@ -688,7 +713,10 @@ namespace AW
 
 		mat4x4_identity(m);
 
-		mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+		if (renderPackage->rotation != 0.0)
+		{
+			mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+		}
 		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
 		mat4x4_translate(t, cX, cY, cY + (ele->zIndex + renderPackage->depth) * layerFactor);
 
@@ -732,6 +760,8 @@ namespace AW
 
 		bindGLTexture(glTextureId);
 
+		applyUserSpecificShaderUniformsForRenderable(ele);
+
 		openGLDrawArrays(renderPackage);
 	}
 
@@ -753,7 +783,10 @@ namespace AW
 
 		mat4x4_identity(m);
 
-		mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+		if (renderPackage->rotation != 0.0)
+		{
+			mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+		}
 		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
 		mat4x4_translate(t, cX, cY, cY + (20 + renderPackage->depth) * layerFactor);
 
@@ -778,6 +811,9 @@ namespace AW
 		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
 
 		bindGLTexture(0);
+
+		applyShaderUniforms(rend->getClipRectVertexShader());
+		applyShaderUniforms(rend->getClipRectFragmentShader());
 
 		openGLDrawArraysStencil(renderPackage);
 
@@ -857,7 +893,10 @@ namespace AW
 
 				mat4x4_identity(m);
 
-				mat4x4_rotate_Z(m, m, rotation);
+				if (rotation != 0.0)
+				{
+					mat4x4_rotate_Z(m, m, rotation);
+				}
 				mat4x4_scale_aniso(m, m, cW, cH, 1.0);
 				mat4x4_translate(t, cX, cY, cY + (particleSystem->zIndex + particle->zIndex + renderPackage->depth) * layerFactor);
 				mat4x4_mul(m, t, m);
@@ -879,6 +918,8 @@ namespace AW
 				glUniform4f(inColorModLocation, particle->cModR / 255.0, particle->cModG / 255.0, particle->cModB / 255.0, (particle->alphaMod / 255.0) * renderPackage->alpha);
 
 				bindGLTexture(glTextureId);
+
+				applyUserSpecificShaderUniformsForRenderable(prim);
 
 				openGLDrawArrays(renderPackage);
 			}
@@ -957,6 +998,8 @@ namespace AW
 					setColorModParam(renderPackage);
 
 					bindGLTexture(glTextureId);
+
+					applyUserSpecificShaderUniformsForRenderable(ele);
 
 					openGLDrawArrays(renderPackage);
 				}

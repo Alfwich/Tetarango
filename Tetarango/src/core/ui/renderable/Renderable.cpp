@@ -17,6 +17,26 @@ namespace AW
 		}
 	}
 
+	const std::shared_ptr<ShaderReference>& Renderable::getVertexShader()
+	{
+		return vertexShader;
+	}
+
+	const std::shared_ptr<ShaderReference>& Renderable::getFragmentShader()
+	{
+		return fragmentShader;
+	}
+
+	const std::shared_ptr<ShaderReference>& Renderable::getClipRectVertexShader()
+	{
+		return clipRectVertexShader;
+	}
+
+	const std::shared_ptr<ShaderReference>& Renderable::getClipRectFragmentShader()
+	{
+		return clipRectFragmentShader;
+	}
+
 	void Renderable::setColor(int r, int g, int b, int a)
 	{
 		if (colorModulation == nullptr) {
@@ -277,151 +297,123 @@ namespace AW
 
 	void Renderable::centerWithin(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getHalfWidth() + xOffset, otherR->getHalfHeight() + yOffset);
+			setPosition(other->getHalfWidth() + xOffset, other->getHalfHeight() + yOffset);
 		}
 	}
 
 	void Renderable::toLeftOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() - getHalfWidth() - xOffset, otherR->getY() + yOffset);
+			setPosition(other->getLeft() - getHalfWidth() - xOffset, other->getY() + yOffset);
 		}
 	}
 
 	void Renderable::toLeftTopOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() - getHalfWidth() - xOffset, otherR->getTop() + getHalfHeight() + yOffset);
+			setPosition(other->getLeft() - getHalfWidth() - xOffset, other->getTop() + getHalfHeight() + yOffset);
 		}
 	}
 
 	void Renderable::toLeftBottomOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() - getHalfWidth() - xOffset, otherR->getBottom() - getHalfHeight() - yOffset);
+			setPosition(other->getLeft() - getHalfWidth() - xOffset, other->getBottom() - getHalfHeight() - yOffset);
 		}
 	}
 
 	void Renderable::toRightOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() + getHalfWidth() + xOffset, otherR->getY() + yOffset);
+			setPosition(other->getRight() + getHalfWidth() + xOffset, other->getY() + yOffset);
 		}
 	}
 
 	void Renderable::toRightTopOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() + getHalfWidth() + xOffset, otherR->getTop() + getHalfHeight() + yOffset);
+			setPosition(other->getRight() + getHalfWidth() + xOffset, other->getTop() + getHalfHeight() + yOffset);
 		}
 	}
 
 	void Renderable::toRightBottomOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() + getHalfWidth() + xOffset, otherR->getBottom() - getHalfHeight() - yOffset);
+			setPosition(other->getRight() + getHalfWidth() + xOffset, other->getBottom() - getHalfHeight() - yOffset);
 		}
 	}
 
 	void Renderable::toTopOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getX() + xOffset, otherR->getTop() - getHalfHeight() - yOffset);
+			setPosition(other->getX() + xOffset, other->getTop() - getHalfHeight() - yOffset);
 		}
 	}
 
 	void Renderable::toTopLeftOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() + getHalfWidth() + xOffset, otherR->getTop() - getHalfHeight() - yOffset);
+			setPosition(other->getLeft() + getHalfWidth() + xOffset, other->getTop() - getHalfHeight() - yOffset);
 		}
 	}
 
 	void Renderable::toTopRightOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
 
-		if (otherR != nullptr)
+
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() - getHalfWidth() - xOffset, otherR->getTop() - getHalfHeight() - yOffset);
+			setPosition(other->getRight() - getHalfWidth() - xOffset, other->getTop() - getHalfHeight() - yOffset);
 		}
 	}
 
 	void Renderable::toBottomOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getX() + xOffset, otherR->getBottom() + getHalfHeight() + yOffset);
+			setPosition(other->getX() + xOffset, other->getBottom() + getHalfHeight() + yOffset);
 		}
 	}
 
 	void Renderable::toBottomRightOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() - getHalfWidth() - xOffset, otherR->getBottom() + getHalfHeight() + yOffset);
+			setPosition(other->getRight() - getHalfWidth() - xOffset, other->getBottom() + getHalfHeight() + yOffset);
 		}
 	}
 
 	void Renderable::toBottomLeftOf(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() + getHalfWidth() + xOffset, otherR->getBottom() + getHalfHeight() + yOffset);
+			setPosition(other->getLeft() + getHalfWidth() + xOffset, other->getBottom() + getHalfHeight() + yOffset);
 		}
 	}
 
 	void Renderable::matchSize(Renderable* other, double wOffset, double hOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setSize(otherR->getWidth() - wOffset, otherR->getHeight() + hOffset);
+			setSize(other->getWidth() - wOffset, other->getHeight() + hOffset);
 		}
 	}
 
 	void Renderable::matchSizeAndCenter(Renderable* other, double wOffset, double hOffset, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setSizeAndPosition(otherR->getHalfWidth() + xOffset, otherR->getHalfHeight() + yOffset, otherR->getWidth() + wOffset * 2.0, otherR->getHeight() + hOffset * 2.0);
+			setSizeAndPosition(other->getHalfWidth() + xOffset, other->getHalfHeight() + yOffset, other->getWidth() + wOffset * 2.0, other->getHeight() + hOffset * 2.0);
 		}
 	}
 
@@ -562,11 +554,9 @@ namespace AW
 
 	void Renderable::leftAlign(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() + getHalfWidth() + xOffset, otherR->getY() + yOffset);
+			setPosition(other->getLeft() + getHalfWidth() + xOffset, other->getY() + yOffset);
 		}
 	}
 
@@ -581,11 +571,9 @@ namespace AW
 
 	void Renderable::toInnerLeftIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() + getHalfWidth() + xOffset, otherR->getY() + yOffset);
+			setPosition(other->getLeft() + getHalfWidth() + xOffset, other->getY() + yOffset);
 		}
 	}
 
@@ -600,11 +588,9 @@ namespace AW
 
 	void Renderable::toInnerRightIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() - getHalfWidth() - xOffset, otherR->getY() + yOffset);
+			setPosition(other->getRight() - getHalfWidth() - xOffset, other->getY() + yOffset);
 		}
 	}
 
@@ -619,11 +605,9 @@ namespace AW
 
 	void Renderable::toInnerTopIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getX() + xOffset, otherR->getTop() + getHalfHeight() + yOffset);
+			setPosition(other->getX() + xOffset, other->getTop() + getHalfHeight() + yOffset);
 		}
 	}
 
@@ -638,11 +622,9 @@ namespace AW
 
 	void Renderable::toInnerBottomIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getX() + xOffset, otherR->getBottom() - getHalfHeight() - yOffset);
+			setPosition(other->getX() + xOffset, other->getBottom() - getHalfHeight() - yOffset);
 		}
 	}
 
@@ -657,11 +639,9 @@ namespace AW
 
 	void Renderable::toInnerTopLeftIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() + getHalfWidth() + xOffset, otherR->getTop() + getHalfHeight() + yOffset);
+			setPosition(other->getLeft() + getHalfWidth() + xOffset, other->getTop() + getHalfHeight() + yOffset);
 		}
 	}
 
@@ -676,11 +656,9 @@ namespace AW
 
 	void Renderable::toInnerTopRightIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() - getHalfWidth() - xOffset, otherR->getTop() + getHalfHeight() + yOffset);
+			setPosition(other->getRight() - getHalfWidth() - xOffset, other->getTop() + getHalfHeight() + yOffset);
 		}
 	}
 
@@ -695,11 +673,9 @@ namespace AW
 
 	void Renderable::toInnerBottomLeftIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getLeft() + getHalfWidth() + xOffset, otherR->getBottom() - getHalfHeight() - yOffset);
+			setPosition(other->getLeft() + getHalfWidth() + xOffset, other->getBottom() - getHalfHeight() - yOffset);
 		}
 	}
 
@@ -714,11 +690,9 @@ namespace AW
 
 	void Renderable::toInnerBottomRightIn(Renderable* other, double xOffset, double yOffset)
 	{
-		const auto otherR = dynamic_cast<Renderable*>(other);
-
-		if (otherR != nullptr)
+		if (other != nullptr)
 		{
-			setPosition(otherR->getRight() - getHalfWidth() - xOffset, otherR->getBottom() - getHalfHeight() - yOffset);
+			setPosition(other->getRight() - getHalfWidth() - xOffset, other->getBottom() - getHalfHeight() - yOffset);
 		}
 	}
 

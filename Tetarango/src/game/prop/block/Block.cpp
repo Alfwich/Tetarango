@@ -4,6 +4,8 @@ namespace
 {
 	const std::string blockTextureName = "prop-blocks";
 	const std::string blockAnimationName = "block-animations";
+	const auto blockEffectIntensity = 10.0;
+	const auto blockEffectShift = -5.0;
 }
 
 namespace AWGame
@@ -12,6 +14,26 @@ namespace AWGame
 	{
 		setSize(32, 32);
 		registerSerialization<Block>();
+	}
+
+	void Block::onTransitionAnimationFrame(double position)
+	{
+		if (position < 0.75)
+		{
+			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift);
+		}
+		else if (position < 0.875)
+		{
+			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift + ((position - 0.75) * 8.0) * blockEffectIntensity);
+		}
+		else if (position < 1.0)
+		{
+			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift + blockEffectIntensity - (blockEffectIntensity * ((position - 0.875) * 8.0)));
+		}
+		else
+		{
+			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift);
+		}
 	}
 
 	void Block::onLoadResources()
@@ -49,9 +71,15 @@ namespace AWGame
 	void Block::onInitialAttach()
 	{
 		AW::Animated::onInitialAttach();
+
 		setTexture(blockTextureName);
 		setAnimationSet(blockAnimationName);
 		setCurrentAnimation("default");
+
+		blockTransition = modules->animation->createGameTransition();
+		blockTransition->listener = shared_from_this();
+		blockTransition->setLooping(true);
+		blockTransition->startTargetlessTransition(1750.0);
 	}
 
 	void Block::onCreateChildren()

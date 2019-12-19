@@ -5,7 +5,7 @@
 #include "engine/module/serialization/ISerializable.h"
 #include "util/Rect.h"
 #include "util/Color.h"
-#include "engine/module/shader/Shader.h"
+#include "engine/module/shader/ShaderReference.h"
 #include "engine/module/display/RenderPackage.h"
 
 namespace AW
@@ -66,7 +66,7 @@ namespace AW
 		Rect rect, clipRect, worldRect, screenRect;
 
 		std::shared_ptr<Color> colorModulation = nullptr;
-		std::shared_ptr<Shader> vertexShader = nullptr, fragmentShader = nullptr, clipRectVertexShader = nullptr, clipRectFragmentShader = nullptr;
+		std::shared_ptr<ShaderReference> vertexShader = nullptr, fragmentShader = nullptr, clipRectVertexShader = nullptr, clipRectFragmentShader = nullptr;
 
 	public:
 		RenderType renderType = RenderType::None;
@@ -75,6 +75,11 @@ namespace AW
 		RenderMultiSampleMode renderMultiSampleMode = RenderMultiSampleMode::Unspecified;
 		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
 		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
+
+		const std::shared_ptr<ShaderReference>& getVertexShader();
+		const std::shared_ptr<ShaderReference>& getFragmentShader();
+		const std::shared_ptr<ShaderReference>& getClipRectVertexShader();
+		const std::shared_ptr<ShaderReference>& getClipRectFragmentShader();
 
 		bool visible = true, rotateInParentSpace = true, disableCulling = false;
 

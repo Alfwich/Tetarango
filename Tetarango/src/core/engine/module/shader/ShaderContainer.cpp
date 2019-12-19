@@ -41,7 +41,7 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<Shader> ShaderContainer::getShader(std::string name)
+	std::shared_ptr<ShaderReference> ShaderContainer::getShader(std::string name)
 	{
 		if (shaders.count(name) == 0)
 		{
@@ -49,7 +49,7 @@ namespace AW
 			return nullptr;
 		}
 
-		return shaders[name];
+		return std::make_shared<ShaderReference>(shaders[name]);
 	}
 
 	void ShaderContainer::releaseAllShaders()

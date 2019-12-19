@@ -7,6 +7,7 @@
 #include "engine/module/logger/Logger.h"
 #include "engine/module/asset/Asset.h"
 #include "engine/module/IBaseModule.h"
+#include "ShaderReference.h"
 
 namespace AW
 {
@@ -22,7 +23,7 @@ namespace AW
 		void bindAsset(std::shared_ptr<Asset> asset);
 
 		void loadShader(std::string path, std::string name);
-		std::shared_ptr<Shader> getShader(std::string name);
+		std::shared_ptr<ShaderReference> getShader(std::string name);
 
 		void releaseAllShaders();
 		void rebindAllShaders();

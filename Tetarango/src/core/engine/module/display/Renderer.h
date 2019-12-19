@@ -72,6 +72,9 @@ namespace AW
 		void changeProgram(GLuint programId);
 		GLuint createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId);
 
+		void applyUserSpecificShaderUniformsForRenderable(const std::shared_ptr<Renderable>& renderable);
+		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader);
+
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();
