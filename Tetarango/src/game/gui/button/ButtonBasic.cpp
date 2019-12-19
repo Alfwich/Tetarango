@@ -21,8 +21,8 @@ namespace AWGame
 
 	void ButtonBasic::onLoadResources()
 	{
-		modules->font->loadFont("res/game/font/Roboto-Medium.ttf", mediumFontId);
-		modules->texture->loadTexture("res/game/img/ui/button/proto_button.png", buttonBasicId);
+		modules->font->loadFont("res/font/Roboto-Medium.ttf", mediumFontId);
+		modules->texture->loadTexture("res/img/ui/button/proto_button.png", buttonBasicId);
 
 		auto animationSet = std::make_shared<AW::AnimationSet>();
 		{

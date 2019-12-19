@@ -23,7 +23,7 @@ namespace AWGame
 
 	void ScrollBarBasic::onLoadResources()
 	{
-		modules->texture->loadTexture("res/game/img/ui/scrollbar/scrollbar_basic.png", scrollbarBasicTextureId);
+		modules->texture->loadTexture("res/img/ui/scrollbar/scrollbar_basic.png", scrollbarBasicTextureId);
 
 		{
 			auto animationSet = std::make_shared<AW::AnimationSet>();
