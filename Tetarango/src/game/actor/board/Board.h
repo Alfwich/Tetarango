@@ -51,7 +51,7 @@ namespace AWGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 		virtual std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
-		void onEnterFrame(double deltaTime);
+		void onEnterFrame(const double& deltaTime);
 	};
 
 }

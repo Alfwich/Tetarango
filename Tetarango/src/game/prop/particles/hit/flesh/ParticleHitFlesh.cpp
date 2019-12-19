@@ -8,7 +8,7 @@ namespace AWGame
 		particleTexture = textureContainer->getTexture("particle-hit-flesh");
 	}
 
-	void ParticleHitFlesh::onEnterFrame(double frameTime)
+	void ParticleHitFlesh::onEnterFrame(const double& frameTime)
 	{
 		switch (state)
 		{

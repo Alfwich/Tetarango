@@ -102,7 +102,7 @@ namespace AWGame
 		}
 	}
 
-	void ScrollArea::onEnterFrame(double frameTime)
+	void ScrollArea::onEnterFrame(const double& frameTime)
 	{
 		if (scroller->visible)
 		{

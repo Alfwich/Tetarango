@@ -4,7 +4,7 @@
 
 namespace AWGame
 {
-	void BlockParticle::onEnterFrame(double deltaTime)
+	void BlockParticle::onEnterFrame(const double& deltaTime)
 	{
 		w = ogW * timeLeft / totalLife;
 		h = ogH * timeLeft / totalLife;

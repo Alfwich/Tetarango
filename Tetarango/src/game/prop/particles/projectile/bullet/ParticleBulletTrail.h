@@ -8,7 +8,7 @@ namespace AWGame
 	class ParticleBulletTrail : public AW::Particle
 	{
 	public:
-		void onEnterFrame(double deltaTime);
+		void onEnterFrame(const double& deltaTime);
 	};
 
 }

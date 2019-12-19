@@ -109,7 +109,7 @@ namespace AW
 		}
 	}
 
-	void Event::processEnterFrames(double frameTime)
+	void Event::processEnterFrames(const double& frameTime)
 	{
 		processingOnEnterFrames = true;
 		for (auto& priorityToCallbacks : onEnterFrameCallbacks)

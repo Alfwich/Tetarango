@@ -3,7 +3,7 @@
 
 namespace AWGame
 {
-	void ParticleBulletTrail::onEnterFrame(double deltaTime)
+	void ParticleBulletTrail::onEnterFrame(const double& deltaTime)
 	{
 		const auto p = (timeLeft / totalLife);
 		alphaMod = p * 155.0;

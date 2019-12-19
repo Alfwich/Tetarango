@@ -39,7 +39,7 @@ namespace AWGame
 		modules->screen->clearCamera();
 	}
 
-	void GameCamera::onEnterFrame(double frameTime)
+	void GameCamera::onEnterFrame(const double& frameTime)
 	{
 		if (xAxis || yAxis)
 		{

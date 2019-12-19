@@ -38,7 +38,7 @@ namespace AWGame
 
 		virtual std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 
-		void onEnterFrame(double deltaTime);
+		void onEnterFrame(const double& deltaTime);
 		void onTimeoutCalled(int id);
 		void onKeyPressed(SDL_Scancode key);
 		void onKeyReleased(SDL_Scancode key);

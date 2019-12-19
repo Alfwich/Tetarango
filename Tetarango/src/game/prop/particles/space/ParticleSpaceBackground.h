@@ -8,7 +8,7 @@ namespace AWGame
 	class ParticleSpaceBackground : public AW::Particle
 	{
 	public:
-		void onEnterFrame(double deltaTime);
+		void onEnterFrame(const double& deltaTime);
 	};
 
 }

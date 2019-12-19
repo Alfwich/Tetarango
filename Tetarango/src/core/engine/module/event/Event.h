@@ -59,7 +59,7 @@ namespace AW
 		void pushEvent(std::shared_ptr<ApplicationEvent> event);
 		std::list<std::shared_ptr<ApplicationEvent>> processEvents();
 
-		void processEnterFrames(double frameTime);
+		void processEnterFrames(const double& frameTime);
 
 		void registerOnEnterFrame(std::shared_ptr<EnterFrameListener> listener, int priority = 0);
 		void unregisterOnEnterFrame(std::shared_ptr<EnterFrameListener> listener);

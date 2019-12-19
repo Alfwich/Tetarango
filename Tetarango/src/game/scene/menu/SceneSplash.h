@@ -35,7 +35,7 @@ namespace AWGame
 		void onInitialAttach();
 		void onAttach();
 
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 
 		void onTransitionAnimationFrame(double position);
 		void onTransitionCompleted();

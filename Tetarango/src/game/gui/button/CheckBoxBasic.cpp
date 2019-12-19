@@ -196,7 +196,7 @@ namespace AWGame
 		}
 	}
 
-	void CheckBoxBasic::onEnterFrame(double frameTime)
+	void CheckBoxBasic::onEnterFrame(const double& frameTime)
 	{
 		checkIsHovering(modules->input->mouse->X(), modules->input->mouse->Y());
 

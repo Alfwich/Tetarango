@@ -46,7 +46,7 @@ namespace AW
 		void setGlobalReceiver(bool value);
 		void disableGlobalInteractions();
 
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 		void onInitialAttach();
 		void onAttach();
 		void onDetach();

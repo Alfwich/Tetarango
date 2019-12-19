@@ -85,7 +85,7 @@ namespace AW
 		void layout();
 		void detach();
 
-		virtual void enterFrame(double frameTime);
+		virtual void enterFrame(const double& frameTime);
 
 		virtual void onLoadResources() { /* NO-OP */ };
 		virtual void onWillTransitioned() { /* NO-OP */ };

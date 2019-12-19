@@ -8,7 +8,7 @@ namespace AWGame
 		particleTexture = textureContainer->getTexture("particle-firing");
 	}
 
-	void ParticleFiring::onEnterFrame(double frameTime)
+	void ParticleFiring::onEnterFrame(const double& frameTime)
 	{
 		double position = timeLeft / totalLife;
 		w = ogW * position;

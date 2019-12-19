@@ -35,7 +35,7 @@ namespace AW
 		const std::shared_ptr<ShaderReference>& getVertexShader();
 		const std::shared_ptr<ShaderReference>& getFragmentShader();
 
-		virtual void onEnterFrame(double frameTime);
+		virtual void onEnterFrame(const double& frameTime);
 	};
 }
 

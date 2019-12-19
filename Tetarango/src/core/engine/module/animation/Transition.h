@@ -54,7 +54,7 @@ namespace AW
 
 		void setLooping(bool looping);
 
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 	};
 
 }

@@ -18,6 +18,6 @@ namespace AWGame
 	class BlockParticle : public AW::Particle
 	{
 	public:
-		void onEnterFrame(double deltaTime);
+		void onEnterFrame(const double& deltaTime);
 	};
 }

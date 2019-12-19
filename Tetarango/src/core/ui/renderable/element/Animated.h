@@ -44,7 +44,7 @@ namespace AW
 		void setAnimationPrefix(std::string prefix);
 
 		std::shared_ptr<Rect> getTextureClipRect();
-		virtual void enterFrame(double frameTime);
+		virtual void enterFrame(const double& frameTime);
 
 		virtual void onInitialAttach();
 		virtual void onAttach();

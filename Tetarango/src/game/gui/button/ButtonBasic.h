@@ -28,7 +28,7 @@ namespace AWGame
 		void onDetach();
 		void checkIsHovering(int x, int y);
 		void onMouseButton(AW::MouseButton button, bool pressed);
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 
 		void setText(std::string text);
 		std::string getText();

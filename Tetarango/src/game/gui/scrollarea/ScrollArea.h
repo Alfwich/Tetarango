@@ -26,7 +26,7 @@ namespace AWGame
 		void onChildrenHydrated();
 		void onInitialAttach();
 		void onLayoutChildren();
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 
 		void add(std::shared_ptr<GameObject> ao);
 		void remove(std::shared_ptr<GameObject> ao);

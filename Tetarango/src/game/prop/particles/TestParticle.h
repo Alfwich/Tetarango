@@ -9,7 +9,7 @@ namespace AWGame
 	{
 	public:
 		TestParticle(std::shared_ptr<AW::TextureContainer> textureContainer);
-		void onEnterFrame(double deltaTime);
+		void onEnterFrame(const double& deltaTime);
 	};
 
 }

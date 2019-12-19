@@ -8,7 +8,7 @@ namespace AWGame
 		particleTexture = textureContainer->getTexture("particle-hit-soft");
 	}
 
-	void ParticleHitSoft::onEnterFrame(double frameTime)
+	void ParticleHitSoft::onEnterFrame(const double& frameTime)
 	{
 		x += xV * frameTime;
 		y += yV * frameTime;

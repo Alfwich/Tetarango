@@ -9,7 +9,7 @@ namespace AWGame
 	{
 	public:
 		ParticleHitSoft(std::shared_ptr<AW::TextureContainer> textureContainer);
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 	};
 
 }

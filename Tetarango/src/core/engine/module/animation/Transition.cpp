@@ -127,7 +127,7 @@ namespace AW
 		this->looping = looping;
 	}
 
-	void Transition::onEnterFrame(double frameTime)
+	void Transition::onEnterFrame(const double& frameTime)
 	{
 		if (playing)
 		{

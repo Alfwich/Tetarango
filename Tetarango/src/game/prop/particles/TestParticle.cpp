@@ -9,7 +9,7 @@ namespace AWGame
 		particleTexture = textureContainer->getTexture("test-particle");
 	}
 
-	void TestParticle::onEnterFrame(double deltaTime)
+	void TestParticle::onEnterFrame(const double& deltaTime)
 	{
 		AW::Particle::onEnterFrame(deltaTime);
 	}

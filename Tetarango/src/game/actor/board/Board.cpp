@@ -342,7 +342,7 @@ namespace AWGame
 		return AW::Element::doSerialize(hint);
 	}
 
-	void Board::onEnterFrame(double deltaTime)
+	void Board::onEnterFrame(const double& deltaTime)
 	{
 		if (isFallingEnabled && !hasFailedToPlacePiece && actionTimer->isAboveThresholdAndRestart(isFastFalling ? 25 : 750))
 		{

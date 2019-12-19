@@ -20,7 +20,7 @@ namespace AWGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 		void onAttach();
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 
 		void onKeyPressed(SDL_Scancode key);
 	};

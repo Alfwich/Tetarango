@@ -42,7 +42,7 @@ namespace AWGame
 		void onLayoutChildren();
 		void checkIsHovering(int x, int y);
 		void onMouseButton(AW::MouseButton button, bool pressed);
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 
 		void setEnabled(bool flag);
 	};

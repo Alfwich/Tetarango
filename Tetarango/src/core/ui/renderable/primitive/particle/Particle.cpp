@@ -28,7 +28,7 @@ namespace AW
 		return fragmentShader;
 	}
 
-	void Particle::onEnterFrame(double frameTime)
+	void Particle::onEnterFrame(const double& frameTime)
 	{
 		x += xV * frameTime;
 		y += yV * frameTime;

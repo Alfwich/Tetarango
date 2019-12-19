@@ -8,7 +8,7 @@ namespace AWGame
 		particleTexture = textureContainer->getTexture("particle-hit-hard");
 	}
 
-	void ParticleHitHard::onEnterFrame(double frameTime)
+	void ParticleHitHard::onEnterFrame(const double& frameTime)
 	{
 		x += xV * frameTime;
 		y += yV * frameTime;

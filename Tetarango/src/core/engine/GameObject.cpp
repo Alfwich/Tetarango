@@ -199,7 +199,7 @@ namespace AW
 		layout();
 	}
 
-	void GameObject::enterFrame(double frameTime)
+	void GameObject::enterFrame(const double& frameTime)
 	{
 		const auto timeScope = getTimeScope();
 		if (modules->time->getComputedTimeFactor(timeScope) == 0.0)
@@ -207,7 +207,8 @@ namespace AW
 			return;
 		}
 
-		EnterFrameListener::enterFrame(frameTime * modules->time->getTimeFactorForScope(timeScope));
+		auto timeFactorFrameTime = frameTime * modules->time->getTimeFactorForScope(timeScope);
+		EnterFrameListener::enterFrame(timeFactorFrameTime);
 	}
 
 	void GameObject::attach()

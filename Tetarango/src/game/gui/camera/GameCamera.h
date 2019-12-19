@@ -17,7 +17,7 @@ namespace AWGame
 		void onInitialAttach();
 		void onAttach();
 		void onDetach();
-		void onEnterFrame(double frameTime);
+		void onEnterFrame(const double& frameTime);
 		void onKey(SDL_Scancode code, bool pressed);
 		void onGamepadAxisChanged(int gamepadIndex, AW::GamepadAxisMapping axis, double value);
 	};

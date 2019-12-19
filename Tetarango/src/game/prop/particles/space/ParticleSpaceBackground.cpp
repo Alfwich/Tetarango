@@ -3,7 +3,7 @@
 
 namespace AWGame
 {
-	void ParticleSpaceBackground::onEnterFrame(double deltaTime)
+	void ParticleSpaceBackground::onEnterFrame(const double& deltaTime)
 	{
 		if (alphaMod < 255.0)
 		{

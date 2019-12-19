@@ -186,7 +186,7 @@ namespace AWGame
 		}
 	}
 
-	void ButtonBasic::onEnterFrame(double frameTime)
+	void ButtonBasic::onEnterFrame(const double& frameTime)
 	{
 		checkIsHovering(modules->input->mouse->X(), modules->input->mouse->Y());
 

@@ -110,7 +110,7 @@ namespace AW
 		return currentAnimation != nullptr ? currentAnimation->getFrameRect(frame) : NULL;
 	}
 
-	void Animated::enterFrame(double frameTime)
+	void Animated::enterFrame(const double& frameTime)
 	{
 		if (currentAnimation != nullptr && frameTimer != nullptr)
 		{

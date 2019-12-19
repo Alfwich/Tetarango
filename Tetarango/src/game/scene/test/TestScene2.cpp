@@ -63,7 +63,7 @@ namespace AWGame
 		globalSystem->emitImmediatelyWithFactory(3000, std::make_shared<ParticleSpaceBackgroundParticleFactory>());
 	}
 
-	void TestSpace2::onEnterFrame(double frameTime)
+	void TestSpace2::onEnterFrame(const double& frameTime)
 	{
 	}
 

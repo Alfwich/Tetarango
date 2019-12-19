@@ -271,7 +271,7 @@ namespace AWGame
 		}
 	}
 
-	void ScrollBarBasic::onEnterFrame(double frameTime)
+	void ScrollBarBasic::onEnterFrame(const double& frameTime)
 	{
 		const auto mouseY = modules->input->mouse->Y();
 		const auto mouseX = modules->input->mouse->X();

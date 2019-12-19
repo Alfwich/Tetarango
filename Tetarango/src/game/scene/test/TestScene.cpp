@@ -130,7 +130,7 @@ namespace AWGame
 		camera = findChildWithName<GameCamera>("camera");
 	}
 
-	void TestScene::onEnterFrame(double deltaTime) { }
+	void TestScene::onEnterFrame(const double& deltaTime) { }
 
 	void TestScene::onKeyPressed(SDL_Scancode key)
 	{

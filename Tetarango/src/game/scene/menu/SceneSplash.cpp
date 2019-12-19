@@ -220,7 +220,7 @@ namespace AWGame
 		}
 	}
 
-	void SceneSplash::onEnterFrame(double frameTime)
+	void SceneSplash::onEnterFrame(const double& frameTime)
 	{
 		for (const auto block : blocks)
 		{

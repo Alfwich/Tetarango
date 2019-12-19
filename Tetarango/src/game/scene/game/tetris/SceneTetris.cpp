@@ -139,7 +139,7 @@ namespace AWGame
 		return BaseScene::doSerialize(hint);
 	}
 
-	void SceneTetris::onEnterFrame(double deltaTime)
+	void SceneTetris::onEnterFrame(const double& deltaTime)
 	{
 		if ((isLeftDown || isRightDown) && keyRepeatTimer->isAboveThresholdAndRestart(120))
 		{

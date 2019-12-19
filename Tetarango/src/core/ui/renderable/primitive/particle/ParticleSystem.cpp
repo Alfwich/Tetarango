@@ -86,7 +86,7 @@ namespace AW
 		isGloballyReceiving = false;
 	}
 
-	void ParticleSystem::onEnterFrame(double frameTime)
+	void ParticleSystem::onEnterFrame(const double& frameTime)
 	{
 		double deltaTime = frameTime / 1000.0;
 		for (auto it = particles.begin(); it != particles.end();)

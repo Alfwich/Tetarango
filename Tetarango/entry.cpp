@@ -2,6 +2,6 @@
 
 int main(int argc, char* args[]) 
 {
-	std::make_shared<AWGame::GameApplication>()->run(argc, args);
+	std::make_unique<AWGame::GameApplication>()->run(argc, args);
 	return 0;
 }

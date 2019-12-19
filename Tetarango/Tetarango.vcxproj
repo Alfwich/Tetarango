@@ -161,6 +161,7 @@
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
     <ClCompile Include="src\core\engine\module\shader\Shader.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderContainer.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderReference.cpp" />
@@ -269,6 +270,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\core\debug\monitor\DebugMonitor.h" />
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
     <ClInclude Include="src\core\engine\module\shader\Shader.h" />
