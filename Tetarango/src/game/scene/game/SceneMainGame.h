@@ -39,8 +39,8 @@ namespace AWGame
 		void onDisplayProvisioned();
 		void onChildrenHydrated();
 		void onKeyPressed(SDL_Scancode key);
-		void onWorkError(AW::WORKER_ID workerId, WorkerTaskCode code);
-		void onWorkDone(AW::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AW::AsyncResultBundle> result);
+		void onWorkError(AW::WORKER_ID workerId, AW::WorkerTaskCode code);
+		void onWorkDone(AW::WORKER_ID workerId, AW::WorkerTaskCode code, std::shared_ptr<AW::AsyncResultBundle> result);
 		void onFadeOut();
 		void onFadeIn();
 

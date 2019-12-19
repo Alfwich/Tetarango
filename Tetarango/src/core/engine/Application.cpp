@@ -98,7 +98,7 @@ namespace AW
 		if (gameConfig->getConfigBool(Config::Param::runTests))
 		{
 			AW::Logger::instance()->logCritical("Tests::Running tests");
-			MTTest::Tests::run(modules);
+			AWTest::Tests::run(modules);
 			AW::Logger::instance()->logCritical("Tests::Done.");
 		}
 

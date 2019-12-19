@@ -7,7 +7,7 @@
 #include "util/StringHelper.h"
 #include "util/RandomGenerator.h"
 
-namespace MTTest
+namespace AWTest
 {
 
 

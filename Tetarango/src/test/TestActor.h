@@ -2,14 +2,12 @@
 
 #include "ui/renderable/element/Animated.h"
 
-namespace MTTest
+namespace AWTest
 {
 	class TestActor : public AW::Animated
 	{
 	public:
-		TestActor() {
-			this->registerSerialization<TestActor>();
-		}
+		TestActor() { this->registerSerialization<TestActor>(); }
 	};
 
 }

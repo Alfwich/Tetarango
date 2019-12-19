@@ -154,16 +154,16 @@ namespace AWGame
 		hud = findChildWithName<BaseHud>(hudId);
 	}
 
-	void SceneMainGame::onWorkError(AW::WORKER_ID workerId, WorkerTaskCode code)
+	void SceneMainGame::onWorkError(AW::WORKER_ID workerId, AW::WorkerTaskCode code)
 	{
 		// TODO
 	}
 
-	void SceneMainGame::onWorkDone(AW::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AW::AsyncResultBundle> result)
+	void SceneMainGame::onWorkDone(AW::WORKER_ID workerId, AW::WorkerTaskCode code, std::shared_ptr<AW::AsyncResultBundle> result)
 	{
 		switch (code)
 		{
-		case WorkerTaskCode::SERIALIZATION:
+		case AW::WorkerTaskCode::SERIALIZATION:
 		{
 			const auto scope = getSaveSlotFilePath();
 			const auto storageClient = modules->storage->getClient(scope);
@@ -184,7 +184,7 @@ namespace AWGame
 		}
 		break;
 
-		case WorkerTaskCode::STORE_SAVE_SCOPE:
+		case AW::WorkerTaskCode::STORE_SAVE_SCOPE:
 			isSavingData = false;
 			break;
 		}

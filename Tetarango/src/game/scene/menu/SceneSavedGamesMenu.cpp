@@ -205,16 +205,16 @@ namespace AWGame
 		}
 	}
 
-	void SceneSavedGamesMenu::onWorkError(AW::WORKER_ID workerId, WorkerTaskCode code)
+	void SceneSavedGamesMenu::onWorkError(AW::WORKER_ID workerId, AW::WorkerTaskCode code)
 	{
 		enableButtons();
 	}
 
-	void SceneSavedGamesMenu::onWorkDone(AW::WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AW::AsyncResultBundle> result)
+	void SceneSavedGamesMenu::onWorkDone(AW::WORKER_ID workerId, AW::WorkerTaskCode code, std::shared_ptr<AW::AsyncResultBundle> result)
 	{
 		switch (code)
 		{
-		case WorkerTaskCode::STORE_LOAD_DATA:
+		case AW::WorkerTaskCode::STORE_LOAD_DATA:
 			const auto gameData = modules->storage->getClient(dataScopeToLoad)->readSring(storagePath(StorePaths::GameData));
 
 			// New Game
