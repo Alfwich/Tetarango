@@ -119,8 +119,9 @@ namespace AW
 
 	void Application::loadResources()
 	{
-		modules->shader->loadShader("res/game/shader/fragment/fragment-shader.glsl", "fragment");
 		modules->shader->loadShader("res/game/shader/vertex/vertex-shader.glsl", "vertex");
+		modules->shader->loadShader("res/game/shader/fragment/fragment-shader.glsl", "fragment");
+		modules->shader->loadShader("res/game/shader/fragment/fragment-shader-debug.glsl", "fragment-debug");
 	}
 
 	void Application::primeSerialization()

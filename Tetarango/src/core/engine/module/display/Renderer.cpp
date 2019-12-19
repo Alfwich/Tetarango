@@ -816,7 +816,6 @@ namespace AW
 		applyShaderUniforms(rend->getClipRectFragmentShader());
 
 		openGLDrawArraysStencil(renderPackage);
-
 	}
 
 	void Renderer::bindGLTexture(GLuint textureId)
