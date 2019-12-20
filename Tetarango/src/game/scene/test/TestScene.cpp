@@ -14,7 +14,7 @@ namespace AWGame
 
 	TestScene::TestScene() : AW::Scene("test_scene")
 	{
-		rebuildOnLoad = true;
+		setShouldRebuildOnLoad();
 		registerSerialization<TestScene>();
 	}
 

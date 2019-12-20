@@ -15,6 +15,9 @@ namespace AW
 		id = nextId++;
 		modules = SystemModuleBundle::getModuleBundle();
 
+		setTag(GTags::IsActive, true);
+		setTag(GTags::LayoutOnLoad, true);
+
 		registerSerialization<GameObject>();
 	}
 
@@ -23,9 +26,14 @@ namespace AW
 		return nextId++;
 	}
 
-	void GameObject::setTag(GTags flag, bool value)
+	void GameObject::setTag(GTags tag, bool value)
 	{
-		tags[(unsigned int)flag] = value ? 1 : 0;
+		tags[(unsigned int)tag] = value ? 1 : 0;
+	}
+
+	bool GameObject::getTag(GTags tag)
+	{
+		return tags[(unsigned int)tag] == 1;
 	}
 
 	void GameObject::commandChildren(void(*cmd)(std::shared_ptr<GameObject>))
@@ -38,31 +46,40 @@ namespace AW
 
 	void GameObject::activate()
 	{
-		active = true;
-		currentActive = true;
+		setTag(GTags::IsActive, true);
+		setTag(GTags::IsCurrentActive, true);
 	}
 
 	void GameObject::deactivate()
 	{
-		active = false;
-		currentActive = false;
+		setTag(GTags::IsActive, false);
+		setTag(GTags::IsCurrentActive, false);
 	}
 
 	bool GameObject::isActive()
 	{
-		return active;
+		return getTag(GTags::IsActive);
+	}
+
+	void GameObject::setShouldRebuildOnLoad(bool flag)
+	{
+		setTag(GTags::RebuildOnLoad, flag);
 	}
 
 	bool GameObject::shouldRebuildOnLoad()
 	{
-		return rebuildOnLoad;
+		return getTag(GTags::RebuildOnLoad);
+	}
+
+	void GameObject::setShouldLayoutOnLoad(bool flag)
+	{
+		setTag(GTags::LayoutOnLoad, flag);
 	}
 
 	bool GameObject::shouldLayoutOnLoad()
 	{
-		return layoutOnLoad;
+		return getTag(GTags::LayoutOnLoad);
 	}
-
 
 	bool GameObject::isAttached()
 	{
@@ -75,19 +92,44 @@ namespace AW
 		return getTag(GTags::IsRootElement);
 	}
 
+	bool GameObject::isRootElement()
+	{
+		return getTag(GTags::IsRootElement);
+	}
+
+	void GameObject::setIsRootElement()
+	{
+		setTag(GTags::IsRootElement, true);
+	}
+
+	void GameObject::markIsDebugElement()
+	{
+		setTag(GTags::IsDebugElement, true);
+	}
+
+	bool GameObject::getIsDebugElement()
+	{
+		return getTag(GTags::IsDebugElement);
+	}
+
+	void GameObject::markIsZone()
+	{
+		setTag(GTags::IsZone, true);
+	}
+
+	bool GameObject::getIsZone()
+	{
+		return getTag(GTags::IsZone);
+	}
+
 	bool GameObject::getHasBoundShaders()
 	{
-		return hasBoundShaders;
+		return getTag(GTags::HasBoundShaders);
 	}
 
 	int GameObject::getId()
 	{
 		return id;
-	}
-
-	bool GameObject::getTag(GTags flag)
-	{
-		return tags[(unsigned int)flag] == 1;
 	}
 
 	void GameObject::setTimeScope(TimeScope newScope)
@@ -181,11 +223,11 @@ namespace AW
 
 	void GameObject::createChildren()
 	{
-		if (rebuildOnLoad || !hasCreatedChildren)
+		if (getTag(GTags::RebuildOnLoad) || !getTag(GTags::HasCreatedChildren))
 		{
 			onCreateChildren();
-			hasCreatedChildren = true;
-			hasHydratedChildren = true;
+			setTag(GTags::HasCreatedChildren, true);
+			setTag(GTags::HasHydratedChildren, true);
 		}
 	}
 
@@ -193,7 +235,7 @@ namespace AW
 	{
 		onDestroyChildren();
 		this->children.clear();
-		hasCreatedChildren = false;
+		setTag(GTags::HasCreatedChildren, false);
 	}
 
 	void GameObject::rebuild()
@@ -232,23 +274,23 @@ namespace AW
 			return;
 		}
 
-		if (!hasBoundShaders)
+		if (!getTag(GTags::HasBoundShaders))
 		{
 			onBindShaders();
-			hasBoundShaders = true;
+			setTag(GTags::HasBoundShaders, true);
 		}
 
-		currentActive = parentPtr->active && currentActive;
+		setTag(GTags::IsCurrentActive, parentPtr->getTag(GTags::IsCurrentActive) && getTag(GTags::IsCurrentActive));
 		if (parentPtr->getInputEnabled() && getInputMode() != InputMode::Disabled) {
 			setInputMode(InputMode::ParentEnabled);
 		}
 
-		if (!loaded || rebuildOnLoad) {
+		if (!getTag(GTags::Loaded) || getTag(GTags::RebuildOnLoad)) {
 
-			if (!didInitialAttach)
+			if (!getTag(GTags::DidInitialAttach))
 			{
 				onInitialAttach();
-				didInitialAttach = true;
+				setTag(GTags::DidInitialAttach, true);
 			}
 			else
 			{
@@ -258,7 +300,7 @@ namespace AW
 				}
 			}
 
-			if (rebuildOnLoad || (softAddedChildren.empty() && !hasCreatedChildren))
+			if (getTag(GTags::RebuildOnLoad) || (softAddedChildren.empty() && !getTag(GTags::HasCreatedChildren)))
 			{
 				createChildren();
 				layout();
@@ -275,12 +317,12 @@ namespace AW
 				}
 
 				onChildrenHydrated();
-				hasHydratedChildren = true;
+				setTag(GTags::HasHydratedChildren, true);
 				layout();
 			}
 
 			softAddedChildren.clear();
-			loaded = true;
+			setTag(GTags::Loaded, true);
 		}
 
 		for (const auto collisionScope : collisionScopes)
@@ -299,7 +341,7 @@ namespace AW
 
 	void GameObject::layout()
 	{
-		if (hasCreatedChildren && hasHydratedChildren)
+		if (getTag(GTags::HasCreatedChildren) && getTag(GTags::HasHydratedChildren))
 		{
 			onLayoutChildren();
 		}
@@ -307,7 +349,7 @@ namespace AW
 
 	void GameObject::detach()
 	{
-		currentActive = false;
+		setTag(GTags::IsCurrentActive, false);
 		if (getInputMode() != InputMode::Disabled)
 		{
 			setInputMode(InputMode::Unspecified);
@@ -348,15 +390,13 @@ namespace AW
 		}
 
 		const auto client = serializationClient->getClient("__application_object__", hint);
-		tags = std::bitset<16>(client->serializeString("tags", tags.to_string()));
-		active = client->serializeBool("active", active);
+		tags = std::bitset<20>(client->serializeString("tags", tags.to_string()));
 		timeScope = (TimeScope)client->serializeInt("timescope", (int)timeScope);
 		zIndex = client->serializeInt("z-index", zIndex);
 		name = client->serializeString("name", name);
 
 		enterFrameActivated = client->serializeBool("e-f-a", enterFrameActivated);
 		enterFramePriority = client->serializeInt("e-f-p", enterFramePriority);
-		hasCreatedChildren = client->serializeBool("h-c-c", hasCreatedChildren);
 		setInputMode((InputMode)client->serializeInt("i-n-m", (int)getInputMode()));
 
 		switch (hint)
@@ -376,6 +416,12 @@ namespace AW
 			{
 				addCollisionScope((CollisionScope)scope);
 			}
+
+			setTag(GTags::IsCurrentActive, false);
+			setTag(GTags::DidInitialAttach, false);
+			setTag(GTags::HasHydratedChildren, false);
+			setTag(GTags::HasBoundShaders, false);
+			setTag(GTags::Loaded, false);
 		}
 		break;
 		}
@@ -402,7 +448,7 @@ namespace AW
 
 	bool GameObject::shouldSerializeChildren()
 	{
-		return !rebuildOnLoad;
+		return !getTag(GTags::RebuildOnLoad);
 	}
 
 	bool GameObject::shouldSerializeSelf()
@@ -412,7 +458,7 @@ namespace AW
 
 	bool GameObject::collisionEnabled()
 	{
-		return currentActive;
+		return getTag(GTags::IsCurrentActive);
 	}
 
 	void GameObject::addCollisionScope(CollisionScope scope)

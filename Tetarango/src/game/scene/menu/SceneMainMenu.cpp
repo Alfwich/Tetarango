@@ -11,7 +11,7 @@ namespace AWGame
 
 	SceneMainMenu::SceneMainMenu() : BaseScene(SceneGame::MainMenu)
 	{
-		rebuildOnLoad = true;
+		setShouldRebuildOnLoad();
 		registerSerialization<SceneMainMenu>();
 	}
 

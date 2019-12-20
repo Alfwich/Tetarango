@@ -16,7 +16,7 @@ namespace AWGame
 {
 	TitleGame::TitleGame()
 	{
-		rebuildOnLoad = true;
+		setShouldRebuildOnLoad();
 		registerSerialization<TitleGame>();
 	}
 

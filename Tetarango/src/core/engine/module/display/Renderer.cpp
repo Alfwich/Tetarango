@@ -425,7 +425,7 @@ namespace AW
 		}
 
 		bool pushedColorStack = false;
-		std::shared_ptr<Rectangle> debugElement = nullptr;
+		std::shared_ptr<Rectangle> debugObject = nullptr;
 		switch (rend->renderType)
 		{
 		case RenderType::Element:
@@ -463,16 +463,16 @@ namespace AW
 
 				if (currentScreenConfig.visualizeContainers)
 				{
-					debugElement = std::make_shared<Rectangle>();
-					debugElement->serializationEnabled = false;
-					debugElement->onBindShaders();
-					debugElement->setTag(GTags::IsDebugElement, true);
-					debugElement->matchSize(container);
-					debugElement->topLeftAlignSelf();
-					debugElement->setAlpha(0.20);
-					debugElement->setColor(container->debugColor);
-					debugElement->zIndex = 1;
-					container->add(debugElement);
+					debugObject = std::make_shared<Rectangle>();
+					debugObject->serializationEnabled = false;
+					debugObject->onBindShaders();
+					debugObject->markIsDebugElement();
+					debugObject->matchSize(container);
+					debugObject->topLeftAlignSelf();
+					debugObject->setAlpha(0.20);
+					debugObject->setColor(container->debugColor);
+					debugObject->zIndex = 1;
+					container->add(debugObject);
 				}
 			}
 
@@ -501,10 +501,10 @@ namespace AW
 			}
 		}
 
-		if (debugElement != nullptr)
+		if (debugObject != nullptr)
 		{
-			debugElement->removeFromParent();
-			debugElement = nullptr;
+			debugObject->removeFromParent();
+			debugObject = nullptr;
 		}
 
 		if (pushedColorStack)
@@ -516,16 +516,16 @@ namespace AW
 		{
 			if (currentScreenConfig.visualizeClipRects)
 			{
-				const auto testRect = std::make_shared<Rectangle>();
-				testRect->setTag(AW::GTags::IsDebugElement, true);
-				testRect->onBindShaders();
-				testRect->serializationEnabled = false;
-				testRect->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
-				testRect->zIndex = 20;
-				testRect->setAlpha(0.25);
-				testRect->onInitialAttach();
+				const auto debugObject = std::make_shared<Rectangle>();
+				debugObject->markIsDebugElement();
+				debugObject->onBindShaders();
+				debugObject->serializationEnabled = false;
+				debugObject->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
+				debugObject->zIndex = 20;
+				debugObject->setAlpha(0.25);
+				debugObject->onInitialAttach();
 				colorStack.push(AW::Color::red());
-				renderPrimitive(testRect, &Rect(), &RenderPackage());
+				renderPrimitive(debugObject, &Rect(), &RenderPackage());
 				colorStack.pop();
 			}
 

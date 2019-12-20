@@ -134,7 +134,7 @@ namespace AWGame
 		const auto notifyPtr = std::dynamic_pointer_cast<IGuiListener>(scrollListener.lock());
 		if (isPressed && notifyPtr != nullptr)
 		{
-			notifyPtr->onScrollBarScroll(id, value);
+			notifyPtr->onScrollBarScroll(getId(), value);
 		}
 	}
 
@@ -148,7 +148,7 @@ namespace AWGame
 		const auto notifyPtr = std::dynamic_pointer_cast<IGuiListener>(scrollListener.lock());
 		if (isPressed && notifyPtr != nullptr)
 		{
-			notifyPtr->onScrollBarScroll(id, value);
+			notifyPtr->onScrollBarScroll(getId(), value);
 		}
 	}
 

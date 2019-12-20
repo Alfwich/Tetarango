@@ -237,7 +237,7 @@ namespace AWGame
 		case SDL_SCANCODE_0:
 		{
 			const auto cImage = std::make_shared<AW::CachedImage>();
-			cImage->setTag(AW::GTags::IsDebugElement, true);
+			cImage->markIsDebugElement();
 			cImage->captureWholeScreen();
 			cImage->toRightOf(scoreText);
 			add(cImage);

@@ -6,7 +6,7 @@ namespace AW
 	{
 		activate();
 		enableInput();
-		setTag(GTags::IsRootElement, true);
+		setIsRootElement();
 		timeScope = TimeScope::Global;
 		registerSerialization<DisplayRoot>();
 	}

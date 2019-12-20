@@ -17,21 +17,32 @@ namespace AW
 	class SceneTransitionBundle;
 
 	enum class GTags {
-		IsRootElement = 1,
-		IsZone = 2,
-		IsDebugElement = 4
+		IsRootElement,
+		IsZone,
+		IsDebugElement,
+
+		Loaded,
+		RebuildOnLoad,
+		LayoutOnLoad,
+
+		IsActive,
+		IsCurrentActive,
+		DidInitialAttach,
+		HasCreatedChildren,
+		HasHydratedChildren,
+		HasClipRect,
+		HasBoundShaders
 	};
 
 	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<GameObject>
 	{
-		// TODO: Roll these into tags
-		bool currentActive = false, active = true, currentInputEnabled = true, didInitialAttach = false, hasCreatedChildren = false, hasHydratedChildren = false, hasClipRect = false, hasBoundShaders = false;
+		int id = 0;
+
+		bool getTag(GTags tag);
+		void setTag(GTags tag, bool value);
 
 	protected:
-		int id = 0;
-		bool loaded = false, rebuildOnLoad = false, layoutOnLoad = true;
-
-		std::bitset<16> tags;
+		std::bitset<20> tags;
 		std::weak_ptr<GameObject> parent;
 		std::shared_ptr<Schematic> schematic;
 		std::list<std::shared_ptr<GameObject>> children;
@@ -62,15 +73,26 @@ namespace AW
 
 		bool isActive();
 		bool getHasBoundShaders();
+
+		void setShouldRebuildOnLoad(bool flag = true);
 		bool shouldRebuildOnLoad();
+
+		void setShouldLayoutOnLoad(bool flag = true);
 		bool shouldLayoutOnLoad();
+
 		bool isAttached();
+		bool isRootElement();
+		void setIsRootElement();
+
+		void markIsDebugElement();
+		bool getIsDebugElement();
+
+		void markIsZone();
+		bool getIsZone();
+
 
 		int getId();
 		int inputListenerObjectId() { return getId(); };
-
-		void setTag(GTags flag, bool value);
-		bool getTag(GTags flag);
 
 		std::shared_ptr<SystemModuleBundle> modules;
 
@@ -132,6 +154,7 @@ namespace AW
 
 		int setTimeout(double timeoutMS);
 		void setTimeout(double timeoutMS, int* timeoutIdLocation);
+
 	};
 
 	template<typename T>

@@ -192,6 +192,7 @@ namespace AWGame
 		storageClient->writeBool(displayDebugClipRectsParamKey, screenConfig.visualizeClipRects);
 		storageClient->writeBool(displayDebugContainersParamKey, screenConfig.visualizeContainers);
 		storageClient->writeBool(displayDebugOverlayParamKey, screenConfig.debugOverlayEnabled);
+		storageClient->writeBool(displayDoubleBufferParamKey, screenConfig.useDoubleBuffer);
 
 		if (masterSceneContainer != nullptr)
 		{

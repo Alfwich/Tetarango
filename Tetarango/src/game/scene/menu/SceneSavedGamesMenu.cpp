@@ -13,7 +13,7 @@ namespace AWGame
 
 	SceneSavedGamesMenu::SceneSavedGamesMenu() : BaseScene(SceneGame::SavedGamesMenu)
 	{
-		rebuildOnLoad = true;
+		setShouldRebuildOnLoad();
 		registerSerialization<SceneSavedGamesMenu>();
 	}
 

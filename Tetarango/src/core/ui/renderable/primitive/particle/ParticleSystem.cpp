@@ -188,7 +188,7 @@ namespace AW
 				}
 			}
 
-			if (currentTarget->getTag(GTags::IsRootElement))
+			if (currentTarget->isRootElement())
 			{
 				return nullptr;
 			}
