@@ -450,7 +450,7 @@ namespace AW
 				pushedColorStack = updateColorStack(container);
 				renderUpdateRect(container, &computed, &renderPackage);
 				container->setWorldRect(&computed);
-				container->updateScreenRect(&renderPackage);
+				container->updateScreenRect(&renderPackage, renderPositionModeStack.top());
 
 				if (currentScreenConfig.visualizeContainers)
 				{
@@ -653,7 +653,7 @@ namespace AW
 		renderUpdateRect(ele, computed, renderPackage);
 
 		ele->setWorldRect(computed);
-		ele->updateScreenRect(renderPackage);
+		ele->updateScreenRect(renderPackage, renderPositionModeStack.top());
 
 		const auto shouldCull = !ele->disableCulling && renderShouldCull(ele->getScreenRect(), renderPackage) && renderPositionModeStack.top() != RenderPositionMode::Absolute;
 		if (shouldCull || !ele->visible || !ele->hasTexture())
@@ -689,7 +689,7 @@ namespace AW
 
 		prim->preUpdateRender(computed, renderPackage);
 		prim->setWorldRect(computed);
-		prim->updateScreenRect(renderPackage);
+		prim->updateScreenRect(renderPackage, renderPositionModeStack.top());
 		prim->preRender(computed, renderPackage);
 
 		if (prim->getHasClipRect())

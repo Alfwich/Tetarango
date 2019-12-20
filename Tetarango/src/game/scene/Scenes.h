@@ -21,7 +21,8 @@ namespace AWGame
 	class Scenes
 	{
 	public:
-		const std::map<SceneGame, std::string> game{
+		const std::map<SceneGame, std::string> game 
+		{
 			{ SceneGame::Splash, "menu-splash" },
 			{ SceneGame::MainMenu, "menu-main" },
 			{ SceneGame::OptionsMenu, "menu-options" },

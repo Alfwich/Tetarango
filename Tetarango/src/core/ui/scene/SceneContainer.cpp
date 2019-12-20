@@ -61,6 +61,14 @@ namespace AW
 		Logger::instance()->log("SceneContainer::Removed scene name=" + scene->getSceneName());
 	}
 
+	void SceneContainer::removeScene(std::string name)
+	{
+		if (sceneMap.count(name) == 1)
+		{
+			remove(sceneMap[name]);
+		}
+	}
+
 	bool SceneContainer::transitionToScene(std::string sceneName)
 	{
 		if (currentScene != nullptr && currentScene->getSceneName() == sceneName)
@@ -144,12 +152,13 @@ namespace AW
 
 	void SceneContainer::disableCurrentScene()
 	{
-		if (!currentScene)
+		if (currentScene == nullptr)
 		{
 			return;
 		}
 
 		GameObject::remove(currentScene);
+
 		currentScene = nullptr;
 		currentSceneName = std::string();
 	}
@@ -164,6 +173,12 @@ namespace AW
 		}
 
 		return keys;
+	}
+
+	bool SceneContainer::hasScene(std::string name)
+	{
+		const auto sceneNames = getAvailableScenes();
+		return std::find(sceneNames.begin(), sceneNames.end(), name) != sceneNames.end();
 	}
 
 	std::shared_ptr<SerializationClient> SceneContainer::doSerialize(SerializationHint hint)

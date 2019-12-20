@@ -218,14 +218,7 @@ namespace AWGame
 
 	void ScrollBarBasic::checkIsHovering(int x, int y)
 	{
-		auto rect = worldRect;
-		const auto cam = modules->screen->getCamera();
-
-		if (cam != nullptr)
-		{
-			worldRect.x += cam->getXOffset();
-			worldRect.y += cam->getYOffset();
-		}
+		auto rect = screenRect;
 
 		isHovering =
 			x < rect.x + rect.w && x > rect.x &&

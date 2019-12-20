@@ -24,6 +24,7 @@ namespace AW
 
 		void add(std::shared_ptr<GameObject> ao);
 		void remove(std::shared_ptr<GameObject> ao);
+		void removeScene(std::string name);
 
 		bool transitionToScene(std::string name);
 		bool transitionToSceneWithBundle(std::string sceneName, SceneTransitionBundle& bundle);
@@ -33,6 +34,7 @@ namespace AW
 		std::shared_ptr<Scene> getCurrentScene();
 		void disableCurrentScene();
 		std::vector<std::string> getAvailableScenes();
+		bool hasScene(std::string name);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual std::vector<std::shared_ptr<ISerializable>> getSerializableChildren();

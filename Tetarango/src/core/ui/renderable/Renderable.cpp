@@ -94,7 +94,7 @@ namespace AW
 		worldRect.h = r->h;
 	}
 
-	void Renderable::updateScreenRect(const RenderPackage* renderPackage)
+	void Renderable::updateScreenRect(const RenderPackage* renderPackage, RenderPositionMode mode)
 	{
 		if (renderPackage != nullptr)
 		{
@@ -107,8 +107,11 @@ namespace AW
 			screenRect.x = worldRect.x * renderPackage->zoom;
 			screenRect.y = worldRect.y * renderPackage->zoom;
 
-			screenRect.x -= (renderPackage->cameraX * zoom) - (renderPackage->cameraX - xOffset) * zoom;
-			screenRect.y -= (renderPackage->cameraY * zoom) - (renderPackage->cameraY - yOffset) * zoom;
+			if (mode != RenderPositionMode::Absolute)
+			{
+				screenRect.x -= (renderPackage->cameraX * zoom) - (renderPackage->cameraX - xOffset) * zoom;
+				screenRect.y -= (renderPackage->cameraY * zoom) - (renderPackage->cameraY - yOffset) * zoom;
+			}
 		}
 	}
 

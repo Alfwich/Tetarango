@@ -19,6 +19,8 @@ namespace
 	const auto masterVolParamKey = "vol-master";
 	const auto generalVolParamKey = "vol-general";
 	const auto musicVolParamKey = "vol-music";
+
+	const auto scenes = AWGame::Scenes();
 }
 
 namespace AWGame
@@ -94,6 +96,11 @@ namespace AWGame
 			if (!gameConfig->getConfigBool(Config::Param::launchToLastScene))
 			{
 				masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Splash));
+
+				if (masterSceneContainer->hasScene(scenes.game.at(SceneGame::MainGame)))
+				{
+					masterSceneContainer->removeScene(scenes.game.at(SceneGame::MainGame));
+				}
 			}
 		}
 		else

@@ -102,7 +102,7 @@ namespace AW
 		virtual Rect getRect();
 
 		virtual void setWorldRect(Rect* r);
-		virtual void updateScreenRect(const RenderPackage* renderPackage);
+		virtual void updateScreenRect(const RenderPackage* renderPackage, RenderPositionMode mode);
 		virtual Rect* getWorldRect();
 		virtual Rect* getScreenRect();
 

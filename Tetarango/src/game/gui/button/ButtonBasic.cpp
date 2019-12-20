@@ -147,14 +147,7 @@ namespace AWGame
 
 	void ButtonBasic::checkIsHovering(int x, int y)
 	{
-		auto r = worldRect;
-		const auto cam = modules->screen->getCamera();
-
-		if (cam != nullptr)
-		{
-			worldRect.x += cam->getXOffset();
-			worldRect.y += cam->getYOffset();
-		}
+		auto r = screenRect;
 
 		isHovering =
 			x < r.x + r.w && x > r.x &&
