@@ -123,6 +123,18 @@ namespace AW
 			return str;
 		}
 
+		std::string static inline repeat(const char c, const size_t num)
+		{
+			auto str = std::string();
+			while (str.size() < num)
+			{
+				str = str + c;
+			}
+
+			return str;
+		}
+
+
 		std::string static inline keyToDisplayName(std::string const& value)
 		{
 			auto result = std::string();

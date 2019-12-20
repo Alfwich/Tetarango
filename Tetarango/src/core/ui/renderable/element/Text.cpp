@@ -19,6 +19,7 @@ namespace AW
 		setTextColor(0xff, 0xff, 0xff);
 		setBackgroundColor(0x00, 0x00, 0x00);
 		renderType = RenderType::Container;
+		renderTextureMode = RenderTextureMode::BilinearNoWrap;
 		registerSerialization<Text>();
 	}
 
@@ -156,7 +157,7 @@ namespace AW
 		textPositioningElement = std::make_shared<Element>();
 		textPositioningElement->setVertexShader(vertexShader);
 		textPositioningElement->setFragmentShader(fragmentShader);
-		textPositioningElement->renderTextureMode = RenderTextureMode::BilinearNoWrap;
+		textPositioningElement->renderTextureMode = renderTextureMode;
 		textPositioningElement->name = textPositioningElementName;
 		textPositioningElement->zIndex = 2;
 		if (cachedTextureText != nullptr)

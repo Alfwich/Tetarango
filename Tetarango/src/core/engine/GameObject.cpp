@@ -188,7 +188,6 @@ namespace AW
 	{
 		onDestroyChildren();
 		this->children.clear();
-
 		hasCreatedChildren = false;
 	}
 

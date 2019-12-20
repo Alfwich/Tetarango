@@ -692,12 +692,6 @@ namespace AW
 		prim->updateScreenRect(renderPackage);
 		prim->preRender(computed, renderPackage);
 
-		const auto shouldCull = !prim->disableCulling && renderShouldCull(prim->getScreenRect(), renderPackage);
-		if (shouldCull || prim == nullptr || !prim->visible)
-		{
-			return;
-		}
-
 		if (prim->getHasClipRect())
 		{
 			updateClipRectOpenGL(prim, computed, renderPackage);

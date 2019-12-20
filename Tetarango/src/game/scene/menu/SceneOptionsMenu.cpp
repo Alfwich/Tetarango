@@ -194,6 +194,12 @@ namespace AWGame
 		debugRenderingCheckbox->clickListener = weak_from_this();
 		centeringContainer->add(debugRenderingCheckbox);
 
+		debugOverlayCheckbox = std::make_shared<CheckBoxBasic>();
+		debugOverlayCheckbox->setText("Debug Overlay");
+		debugOverlayCheckbox->setChecked(config.debugOverlayEnabled);
+		debugOverlayCheckbox->clickListener = weak_from_this();
+		centeringContainer->add(debugOverlayCheckbox);
+
 		masterVolScrollBar = std::make_shared<ScrollBarBasic>();
 		masterVolScrollBar->setSize(200.0, 30.0);
 		masterVolScrollBar->setHorizontal(true);
@@ -333,8 +339,9 @@ namespace AWGame
 		openGlCompatibilityModeCheckbox->toBottomLeftOf(miscLabel, 0.0, checkboxYOffset);
 		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
 		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
+		debugOverlayCheckbox->toBottomLeftOf(debugRenderingCheckbox, 0.0, checkboxYOffset);
 
-		soundLabel->toBottomLeftOf(debugRenderingCheckbox, 0.0, checkboxYGroupOffset);
+		soundLabel->toBottomLeftOf(debugOverlayCheckbox, 0.0, checkboxYGroupOffset);
 		masterVolLabel->toBottomLeftOf(soundLabel, 0.0, checkboxYOffset);
 		masterVolScrollBar->toBottomLeftOf(masterVolLabel, 0.0, checkboxYOffset);
 
@@ -464,6 +471,13 @@ namespace AWGame
 			config.visualizeClipRects = !(config.visualizeClipRects || config.visualizeContainers);
 			config.visualizeContainers = config.visualizeClipRects;
 			debugRenderingCheckbox->setChecked(config.visualizeClipRects);
+			shouldEnableApply = true;
+		}
+
+		if (id == debugOverlayCheckbox->getId())
+		{
+			config.debugOverlayEnabled = !config.debugOverlayEnabled;
+			debugOverlayCheckbox->setChecked(config.debugOverlayEnabled);
 			shouldEnableApply = true;
 		}
 

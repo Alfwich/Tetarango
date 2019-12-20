@@ -162,6 +162,9 @@ namespace AW
 		void centerWithin(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
 		void centerWithin(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
+		void centerAlignWithin(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerAlignWithin(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
+
 		void toLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
 		void toLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 

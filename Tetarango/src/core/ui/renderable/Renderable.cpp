@@ -4,19 +4,6 @@
 
 namespace AW
 {
-	void Renderable::setColor(const Color& color)
-	{
-		setColor(color.r, color.g, color.b, color.a);
-	}
-
-	void Renderable::setColor(const Color * color)
-	{
-		if (color != nullptr)
-		{
-			setColor(color->r, color->g, color->g, color->a);
-		}
-	}
-
 	const std::shared_ptr<ShaderReference>& Renderable::getVertexShader()
 	{
 		return vertexShader;
@@ -68,6 +55,19 @@ namespace AW
 			colorModulation->g = g;
 			colorModulation->b = b;
 			colorModulation->a = a;
+		}
+	}
+
+	void Renderable::setColor(const Color& color)
+	{
+		setColor(color.r, color.g, color.b, color.a);
+	}
+
+	void Renderable::setColor(const Color* color)
+	{
+		if (color != nullptr)
+		{
+			setColor(color->r, color->g, color->b, color->a);
 		}
 	}
 
@@ -319,9 +319,18 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
+			setPosition(other->getX() + xOffset, other->getY() + yOffset);
+		}
+	}
+
+	void Renderable::centerAlignWithin(Renderable* other, double xOffset, double yOffset)
+	{
+		if (other != nullptr)
+		{
 			setPosition(other->getHalfWidth() + xOffset, other->getHalfHeight() + yOffset);
 		}
 	}
+
 
 	void Renderable::toLeftOf(Renderable* other, double xOffset, double yOffset)
 	{
@@ -445,6 +454,16 @@ namespace AW
 			centerWithin(otherPtr, xOffset, yOffset);
 		}
 	}
+
+	void Renderable::centerAlignWithin(std::shared_ptr<Renderable> other, double xOffset, double yOffset)
+	{
+		if (other != nullptr)
+		{
+			const auto otherPtr = other.get();
+			centerAlignWithin(otherPtr, xOffset, yOffset);
+		}
+	}
+
 
 	void Renderable::toLeftOf(std::shared_ptr<Renderable> other, double xOffset, double yOffset)
 	{

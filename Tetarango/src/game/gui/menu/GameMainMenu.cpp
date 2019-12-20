@@ -72,7 +72,7 @@ namespace AWGame
 		backgroundFade->matchSizeAndCenter(this);
 
 		const auto centeringContainer = findChildWithName<AW::Container>("center-c");
-		centeringContainer->centerWithin(this);
+		centeringContainer->centerAlignWithin(this);
 	}
 
 	void GameMainMenu::onButtonClicked(int id)

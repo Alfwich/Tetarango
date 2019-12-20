@@ -31,7 +31,7 @@ namespace AWGame
 		add(rootContainer);
 
 		const auto centerContainer = std::make_shared<AW::Container>();
-		centerContainer->centerWithin(rootContainer);
+		centerContainer->centerAlignWithin(rootContainer);
 		rootContainer->add(centerContainer);
 
 		gameTitle = std::make_shared<TitleGame>();

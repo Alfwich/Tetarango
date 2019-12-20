@@ -8,6 +8,7 @@ namespace AW
 		enableInput();
 		setTag(GTags::IsRootElement, true);
 		timeScope = TimeScope::Global;
+		registerSerialization<DisplayRoot>();
 	}
 
 	void DisplayRoot::onInitialAttach()

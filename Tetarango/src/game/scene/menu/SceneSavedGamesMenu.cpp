@@ -33,7 +33,7 @@ namespace AWGame
 		const auto client = modules->storage->getClient();
 		const auto buttonOffset = modules->screen->getHeight() * buttonVerticalPaddingFactor;
 		const auto centerContainer = std::make_shared<AW::Container>();
-		centerContainer->centerWithin(rootContainer, 0, savedGamesMenuTitle->getBottom() / 2.0);
+		centerContainer->centerAlignWithin(rootContainer, 0, savedGamesMenuTitle->getBottom() / 2.0);
 		rootContainer->add(centerContainer);
 
 		saveSlot1 = std::make_shared<ButtonBasic>();

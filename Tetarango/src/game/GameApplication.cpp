@@ -14,6 +14,7 @@ namespace
 	const auto displayFrameLimiterParamKey = "display-frame-limiter";
 	const auto displayDebugClipRectsParamKey = "display-debug-clip-rects-buffer";
 	const auto displayDebugContainersParamKey = "display-debug-containers-limiter";
+	const auto displayDebugOverlayParamKey = "display-debug-overlay-enabled";
 
 	const auto masterVolParamKey = "vol-master";
 	const auto generalVolParamKey = "vol-general";
@@ -42,6 +43,7 @@ namespace AWGame
 			screenConfig.frameLimiter = storageClient->readInt(displayFrameLimiterParamKey);
 			screenConfig.visualizeClipRects = storageClient->readBool(displayDebugClipRectsParamKey);
 			screenConfig.visualizeContainers = storageClient->readBool(displayDebugContainersParamKey);
+			screenConfig.debugOverlayEnabled = storageClient->readBool(displayDebugOverlayParamKey);
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
@@ -66,6 +68,12 @@ namespace AWGame
 		BaseScene::primeScenes();
 		BaseProp::primeProps();
 		std::make_unique<Board>();
+	}
+
+	void GameApplication::onLoadResources()
+	{
+		modules->font->loadFont("res/font/Roboto-Medium.ttf", "medium");
+		modules->font->loadFont("res/font/fixedsys.ttf", "console");
 	}
 
 	void GameApplication::onReady()
@@ -106,6 +114,16 @@ namespace AWGame
 
 			masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Splash));
 		}
+
+		debugMonitor = std::make_shared<AW::DebugMonitor>();
+		debugMonitor->zIndex = 1;
+		debugMonitor->setPosition(5.0, 5.0);
+		if (!screenConfig.debugOverlayEnabled)
+		{
+			debugMonitor->visible = false;
+			debugMonitor->enterFrameActivated = false;
+		}
+		root->add(debugMonitor);
 	}
 
 	void GameApplication::onCleanup()
@@ -166,10 +184,26 @@ namespace AWGame
 		storageClient->writeBool(displayWireframeModeParamKey, screenConfig.openGlWireframeMode);
 		storageClient->writeBool(displayDebugClipRectsParamKey, screenConfig.visualizeClipRects);
 		storageClient->writeBool(displayDebugContainersParamKey, screenConfig.visualizeContainers);
+		storageClient->writeBool(displayDebugOverlayParamKey, screenConfig.debugOverlayEnabled);
 
 		if (masterSceneContainer != nullptr)
 		{
 			masterSceneContainer->onDisplayProvisioned();
+		}
+
+		if (debugMonitor != nullptr)
+		{
+			if (screenConfig.debugOverlayEnabled)
+			{
+				debugMonitor->clear();
+				debugMonitor->visible = true;
+				debugMonitor->enterFrameActivated = true;
+			}
+			else
+			{
+				debugMonitor->visible = false;
+				debugMonitor->enterFrameActivated = false;
+			}
 		}
 	}
 }

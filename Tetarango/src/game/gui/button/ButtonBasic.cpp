@@ -21,7 +21,6 @@ namespace AWGame
 
 	void ButtonBasic::onLoadResources()
 	{
-		modules->font->loadFont("res/font/Roboto-Medium.ttf", mediumFontId);
 		modules->texture->loadTexture("res/img/ui/button/proto_button.png", buttonBasicId);
 
 		auto animationSet = std::make_shared<AW::AnimationSet>();
@@ -148,7 +147,7 @@ namespace AWGame
 
 	void ButtonBasic::checkIsHovering(int x, int y)
 	{
-		auto rect = worldRect;
+		auto r = worldRect;
 		const auto cam = modules->screen->getCamera();
 
 		if (cam != nullptr)
@@ -158,8 +157,8 @@ namespace AWGame
 		}
 
 		isHovering =
-			x < rect.x + rect.w && x > rect.x &&
-			y < rect.y + rect.h && y > rect.y;
+			x < r.x + r.w && x > r.x &&
+			y < r.y + r.h && y > r.y;
 	}
 
 	void ButtonBasic::onMouseButton(AW::MouseButton button, bool pressed)

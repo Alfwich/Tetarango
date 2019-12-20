@@ -9,16 +9,20 @@
 #include "engine/module/display/DisplayRoot.h"
 #include "engine/Application.h"
 
+#include "debug/monitor/DebugMonitor.h"
+
 namespace AWGame
 {
 
 	class GameApplication : public AW::Application
 	{
+		std::shared_ptr<AW::DebugMonitor> debugMonitor;
 		std::shared_ptr<AW::SceneContainer> masterSceneContainer;
 
 	public:
 		void onInit();
 		void onPrimeSerialization();
+		void onLoadResources();
 		void onReady();
 		void onCleanup();
 
