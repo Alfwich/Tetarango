@@ -38,10 +38,10 @@ namespace AWGame
 
 	void SceneSplash::onLoadResources()
 	{
-		modules->texture->loadTexture("res/img/splash/sdl-logo.png", sdlLogoTextureName);
-		modules->texture->loadTexture("res/img/splash/opengl-logo.png", openGLLogoTextureName);
-		modules->texture->loadTexture("res/img/splash/loading-pattern.png", loadingPattenTextureName);
-		modules->texture->loadTexture("res/img/splash/aw-games-logo.png", awGamesLogoTextureName);
+		modules->texture->loadTexture("res/image/splash/sdl-logo.png", sdlLogoTextureName);
+		modules->texture->loadTexture("res/image/splash/opengl-logo.png", openGLLogoTextureName);
+		modules->texture->loadTexture("res/image/splash/loading-pattern.png", loadingPattenTextureName);
+		modules->texture->loadTexture("res/image/splash/aw-games-logo.png", awGamesLogoTextureName);
 	}
 
 	void SceneSplash::onCreateChildren()

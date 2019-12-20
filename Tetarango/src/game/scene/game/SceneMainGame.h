@@ -21,7 +21,6 @@ namespace AWGame
 		std::shared_ptr<TransitionFade> globalTransition;
 		std::shared_ptr<AW::ParticleSystem> globalParticleSystem;
 		std::shared_ptr<AW::SceneContainer> masterSceneContainer;
-		std::shared_ptr<AW::Text> gameLabel;
 		std::shared_ptr<GameMainMenu> gameMainMenu;
 
 		std::shared_ptr<BaseHud> hud;

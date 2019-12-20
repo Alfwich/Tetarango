@@ -17,6 +17,7 @@ namespace AW
 
 		setTag(GTags::IsActive, true);
 		setTag(GTags::LayoutOnLoad, true);
+		setTag(GTags::SerializationEnabled, true);
 
 		registerSerialization<GameObject>();
 	}
@@ -453,7 +454,12 @@ namespace AW
 
 	bool GameObject::shouldSerializeSelf()
 	{
-		return serializationEnabled && !getTag(GTags::IsDebugElement);
+		return getTag(GTags::SerializationEnabled) && !getTag(GTags::IsDebugElement);
+	}
+
+	void GameObject::setSerializationEnabled(bool flag)
+	{
+		setTag(GTags::SerializationEnabled, flag);
 	}
 
 	bool GameObject::collisionEnabled()

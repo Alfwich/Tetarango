@@ -464,7 +464,6 @@ namespace AW
 				if (currentScreenConfig.visualizeContainers)
 				{
 					debugObject = std::make_shared<Rectangle>();
-					debugObject->serializationEnabled = false;
 					debugObject->onBindShaders();
 					debugObject->markIsDebugElement();
 					debugObject->matchSize(container);
@@ -519,7 +518,6 @@ namespace AW
 				const auto debugObject = std::make_shared<Rectangle>();
 				debugObject->markIsDebugElement();
 				debugObject->onBindShaders();
-				debugObject->serializationEnabled = false;
 				debugObject->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
 				debugObject->zIndex = 20;
 				debugObject->setAlpha(0.25);

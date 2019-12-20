@@ -22,11 +22,11 @@ namespace AWGame
 
 	void SceneTetris::onLoadResources()
 	{
-		modules->sound->loadMusic("res/snd/tetris.mp3", musicName);
+		modules->sound->loadMusic("res/sound/tetris.mp3", musicName);
 
-		modules->sound->loadSoundClip("res/snd/clear-row.wav", clearRowSoundName);
-		modules->sound->loadSoundClip("res/snd/game-over.wav", gameOverSoundName);
-		modules->sound->loadSoundClip("res/snd/tetarango.wav", tetarangoSoundName);
+		modules->sound->loadSoundClip("res/sound/clear-row.wav", clearRowSoundName);
+		modules->sound->loadSoundClip("res/sound/game-over.wav", gameOverSoundName);
+		modules->sound->loadSoundClip("res/sound/tetarango.wav", tetarangoSoundName);
 	}
 
 	void SceneTetris::updateScoreText()

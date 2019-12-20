@@ -21,7 +21,7 @@ namespace AWGame
 
 	void ButtonBasic::onLoadResources()
 	{
-		modules->texture->loadTexture("res/img/ui/button/proto_button.png", buttonBasicId);
+		modules->texture->loadTexture("res/image/ui/button/proto_button.png", buttonBasicId);
 
 		auto animationSet = std::make_shared<AW::AnimationSet>();
 		{

@@ -31,7 +31,7 @@ namespace AWGame
 
 	void Block::onLoadResources()
 	{
-		modules->texture->loadTexture("res/img/prop/block/blocks.png", blockTextureName);
+		modules->texture->loadTexture("res/image/prop/block/blocks.png", blockTextureName);
 		modules->shader->loadShader("res/shader/fragment/block.glsl", "fragment-block");
 
 		auto animationSet = std::make_shared<AW::AnimationSet>();

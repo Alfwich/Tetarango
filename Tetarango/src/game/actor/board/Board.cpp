@@ -53,8 +53,8 @@ namespace AWGame
 
 	void Board::onLoadResources()
 	{
-		modules->texture->loadTexture("res/img/actor/board/board-background.png", "board-background");
-		modules->sound->loadSoundClip("res/snd/piece-land.wav", pieceLandSoundName);
+		modules->texture->loadTexture("res/image/actor/board/board-background.png", "board-background");
+		modules->sound->loadSoundClip("res/sound/piece-land.wav", pieceLandSoundName);
 	}
 
 	void Board::setCellSize(unsigned int width, unsigned int height)

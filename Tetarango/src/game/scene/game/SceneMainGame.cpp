@@ -100,15 +100,6 @@ namespace AWGame
 		globalTransition->renderPositionMode = AW::RenderPositionMode::Absolute;
 		add(globalTransition);
 
-		gameLabel = std::make_shared<AW::Text>();
-		gameLabel->setTextRenderMode(AW::TextRenderMode::Fast);
-		gameLabel->setFont("medium", 80);
-		int i = serializationClient->getInt(storagePath(StorePaths::SlotId));
-		gameLabel->setTextColor(0, 0, 0xff);
-		gameLabel->setText(std::to_string(i));
-		gameLabel->setPosition(gameLabel->getWidth(), gameLabel->getHeight());
-		add(gameLabel);
-
 		masterSceneContainer = std::make_shared<AW::SceneContainer>();
 		masterSceneContainer->name = masterSceneContainerId;
 		masterSceneContainer->notifyOnTransition = weak_from_this();

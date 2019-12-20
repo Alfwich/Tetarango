@@ -19,7 +19,7 @@ namespace
 		"checkbox",
 		"radio"
 	};
-	const auto checkboxTexturePath = "res/img/ui/button/checkbox_basic.png";
+	const auto checkboxTexturePath = "res/image/ui/button/checkbox_basic.png";
 }
 
 namespace AWGame

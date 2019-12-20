@@ -24,6 +24,7 @@ namespace AW
 		Loaded,
 		RebuildOnLoad,
 		LayoutOnLoad,
+		SerializationEnabled,
 
 		IsActive,
 		IsCurrentActive,
@@ -38,11 +39,12 @@ namespace AW
 	{
 		int id = 0;
 
+		std::bitset<20> tags;
+
 		bool getTag(GTags tag);
 		void setTag(GTags tag, bool value);
 
 	protected:
-		std::bitset<20> tags;
 		std::weak_ptr<GameObject> parent;
 		std::shared_ptr<Schematic> schematic;
 		std::list<std::shared_ptr<GameObject>> children;
@@ -66,7 +68,6 @@ namespace AW
 
 		std::string name;
 		int zIndex = 0;
-		bool serializationEnabled = true;
 
 		void activate();
 		void deactivate();
@@ -143,6 +144,7 @@ namespace AW
 		virtual void childHydrated(std::shared_ptr<ISerializable> child);
 		virtual bool shouldSerializeChildren();
 		virtual bool shouldSerializeSelf();
+		void setSerializationEnabled(bool flag = true);
 
 		virtual bool collisionEnabled();
 		virtual void addCollisionScope(CollisionScope scope);
