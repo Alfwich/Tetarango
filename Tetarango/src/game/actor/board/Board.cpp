@@ -486,6 +486,7 @@ namespace AWGame
 						(*it)->hasSettled = true;
 						blocksToDrop.erase(it);
 					}
+					currentBlock->addEnergy(-currentBlock->getEnergy());
 				}
 				currentBlocks.clear();
 				modules->sound->playSoundClip(pieceLandSoundName);

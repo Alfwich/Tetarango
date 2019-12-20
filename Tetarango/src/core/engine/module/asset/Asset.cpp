@@ -180,7 +180,6 @@ namespace AW
 		}
 		else
 		{
-			// TODO: Load resource from disk if available
 			const auto data = filesystem->readContentsFromFile(path, true);
 			if (!data.empty())
 			{

@@ -51,15 +51,15 @@ namespace AW
 		std::list<std::shared_ptr<ApplicationEvent>> events;
 
 		void reportSdlErrors();
+		void processEnterFrames(const double& frameTime);
+		void processEvents();
 
 	public:
 		void bindInput(std::shared_ptr<Input> input);
 		void bindThread(std::shared_ptr<Thread> thread);
 
 		void pushEvent(std::shared_ptr<ApplicationEvent> event);
-		std::list<std::shared_ptr<ApplicationEvent>> processEvents();
-
-		void processEnterFrames(const double& frameTime);
+		const std::list<std::shared_ptr<ApplicationEvent>>& getEvents();
 
 		void registerOnEnterFrame(std::shared_ptr<EnterFrameListener> listener, int priority = 0);
 		void unregisterOnEnterFrame(std::shared_ptr<EnterFrameListener> listener);
@@ -68,5 +68,6 @@ namespace AW
 		void unregisterTimeoutCallback(int id);
 
 		void onCleanup();
+		void onEnterFrame(const double& frameTime);
 	};
 }

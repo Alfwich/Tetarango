@@ -156,7 +156,12 @@ namespace AWGame
 		if (!board->getHasFailedToPlacePiece() && !board->hasAnActivePiece() && previewBoard->hasAnActivePiece())
 		{
 			board->addTetromino(previewBoard->getCurrentBlock());
-			previewBoard->addTetromino(blockColorGenerator.getTetromino());
+			const auto newPiece = blockColorGenerator.getTetromino();
+			for (const auto p : newPiece)
+			{
+				p->addEnergy(10.0);
+			}
+			previewBoard->addTetromino(newPiece);
 		}
 
 		if (board->getHasFailedToPlacePiece() && !hasPlayedGameOverSound)

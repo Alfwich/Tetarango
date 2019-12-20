@@ -19,8 +19,14 @@ namespace AW
 		events.push_back(event);
 	}
 
-	std::list<std::shared_ptr<ApplicationEvent>> Event::processEvents()
+	const std::list<std::shared_ptr<ApplicationEvent>>& Event::getEvents()
 	{
+		return events;
+	}
+
+	void Event::processEvents()
+	{
+		events.clear();
 		input->keyboard->purgeWeakRefs();
 		input->mouse->purgeWeakRefs();
 		input->gamepad->purgeWeakRefs();
@@ -66,11 +72,6 @@ namespace AW
 		{
 			reportSdlErrors();
 		}
-
-		auto result = std::list<std::shared_ptr<ApplicationEvent>>(events);
-		events.clear();
-
-		return result;
 	}
 
 	void Event::reportSdlErrors()
@@ -258,5 +259,11 @@ namespace AW
 	void Event::onCleanup()
 	{
 		reportSdlErrors();
+	}
+
+	void Event::onEnterFrame(const double& frameTime)
+	{
+		processEvents();
+		processEnterFrames(frameTime);
 	}
 }

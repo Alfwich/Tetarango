@@ -19,6 +19,11 @@ namespace AW
 		this->asset = asset;
 	}
 
+	void ShaderContainer::bindTime(std::shared_ptr<Time> time)
+	{
+		this->time = time;
+	}
+
 	void ShaderContainer::loadShader(std::string path, std::string name)
 	{
 		if (shaders.count(name) == 1)
@@ -41,7 +46,7 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<ShaderReference> ShaderContainer::getShader(std::string name)
+	std::shared_ptr<ShaderReference> ShaderContainer::getShader(std::string name, bool assignDefaultParams)
 	{
 		if (shaders.count(name) == 0)
 		{
@@ -49,7 +54,15 @@ namespace AW
 			return nullptr;
 		}
 
-		return std::make_shared<ShaderReference>(shaders[name]);
+		const auto shader = std::make_shared<ShaderReference>(shaders[name]);
+
+		if (assignDefaultParams)
+		{
+			shader->setFloatIUParam("frameStartTime", (GLfloat)time->getFrameStartTime());
+			shader->setFloatIUParam("frameTime", -1.f);
+		}
+
+		return shader;
 	}
 
 	void ShaderContainer::releaseAllShaders()

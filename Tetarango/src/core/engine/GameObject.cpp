@@ -75,6 +75,11 @@ namespace AW
 		return getTag(GTags::IsRootElement);
 	}
 
+	bool GameObject::getHasBoundShaders()
+	{
+		return hasBoundShaders;
+	}
+
 	int GameObject::getId()
 	{
 		return id;

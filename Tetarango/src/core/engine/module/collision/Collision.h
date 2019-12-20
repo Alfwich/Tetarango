@@ -33,11 +33,10 @@ namespace AW
 
 		bool checkForCollision(const std::shared_ptr<ICollidable>& a, const std::shared_ptr<ICollidable>& b);
 		void getGlobalColliders(std::vector<std::shared_ptr<ICollidable>>& targets);
+		void processCollisions();
 
 	public:
 		std::shared_ptr<QuadMap> collisionQuadMap;
-
-		void processCollisions();
 
 		void registerScopeConsideration(CollisionScope consideringScope, CollisionScope targetScope);
 		void unregisterScopeConsideration(CollisionScope consideringScope, CollisionScope targetScope);
@@ -46,6 +45,7 @@ namespace AW
 		void unregisterObject(std::shared_ptr<GameObject> obj);
 
 		void onInit();
+		void onEnterFrame();
 		void onCleanup();
 	};
 

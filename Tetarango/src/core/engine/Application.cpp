@@ -155,10 +155,9 @@ namespace AW
 		while (running)
 		{
 			updateFrameTime();
-			processApplicationEvents();
 			processEnterFrames();
+			processApplicationEvents();
 			render();
-			processCollisions();
 			doFrameLimitIfNeeded();
 		}
 		cleanup();
@@ -188,12 +187,12 @@ namespace AW
 
 	void Application::processEnterFrames()
 	{
-		modules->event->processEnterFrames(frameTime);
+		modules->onEnterFrame(frameTime);
 	}
 
 	void Application::processApplicationEvents()
 	{
-		for (auto e : modules->event->processEvents())
+		for (auto e : modules->event->getEvents())
 		{
 			switch (e->code)
 			{
@@ -226,11 +225,6 @@ namespace AW
 			// Spinlock the rest of the time
 			modules->time->spinlock(startFrameTime, targetFrameTime);
 		}
-	}
-
-	void Application::processCollisions()
-	{
-		modules->collision->processCollisions();
 	}
 
 	void Application::exit()

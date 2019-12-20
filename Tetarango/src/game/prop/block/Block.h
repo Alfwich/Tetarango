@@ -10,13 +10,14 @@ namespace AWGame
 {
 	class Block : public AW::Animated, public BaseProp, public AW::INotifyOnTransition
 	{
-		std::shared_ptr<AW::Transition> blockTransition;
+		double energy = 0.0;
 	public:
 		Block();
 		int blockX = 0, blockY = 0;
 		bool hasSettled = false;
 
-		void onTransitionAnimationFrame(double position);
+		void addEnergy(double amount);
+		double getEnergy();
 
 		void onLoadResources();
 		void onBindShaders();

@@ -157,9 +157,9 @@ namespace AW
 		clearColor.a = a;
 	}
 
-	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen)
+	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen, double frameTimestamp)
 	{
-		prepareRender(screen);
+		prepareRender(screen, frameTimestamp);
 
 		Rect rootRect;
 		RenderPackage renderPackage;
@@ -283,6 +283,7 @@ namespace AW
 			inMatrixLocation = getUniformLocationForCurrentProgram("mvp", programId);
 			inUVMatrixLocation = getUniformLocationForCurrentProgram("UVproj", programId);
 			inColorModLocation = getUniformLocationForCurrentProgram("cMod", programId);
+			inFrameTimeLocation = getUniformLocationForCurrentProgram("frameTime", programId);
 		}
 	}
 
@@ -344,7 +345,14 @@ namespace AW
 
 			if (position != -1)
 			{
-				glUniform1f(position, paramNameToValue.second);
+				if (paramNameToValue.first == "frameTime" && paramNameToValue.second == -1.f)
+				{
+					glUniform1f(position, currentFrameTimestamp);
+				}
+				else
+				{
+					glUniform1f(position, paramNameToValue.second);
+				}
 			}
 		}
 	}
@@ -368,8 +376,9 @@ namespace AW
 		return glContext != NULL;
 	}
 
-	void Renderer::prepareRender(Screen* screen)
+	void Renderer::prepareRender(Screen* screen, double frameTimestamp)
 	{
+		currentFrameTimestamp = frameTimestamp;
 		screenWidth = screen->getWidth();
 		screenHeight = screen->getHeight();
 		camera = screen->getCamera();

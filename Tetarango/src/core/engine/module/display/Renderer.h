@@ -29,7 +29,7 @@ namespace AW
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
 		std::map<std::pair<GLuint, GLuint>, GLuint> programs;
 		std::map<std::pair<GLuint, std::string>, GLuint> programIdAndParamNameToUniformLocation;
-		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0;
+		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0, inFrameTimeLocation = 0;
 
 		std::shared_ptr<Camera> camera;
 		std::stack<RenderPositionMode> renderPositionModeStack;
@@ -41,8 +41,9 @@ namespace AW
 
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 		bool depthEnabled = false, msaaEnabled = false;
+		double currentFrameTimestamp = 0.0;
 
-		void prepareRender(Screen* screen);
+		void prepareRender(Screen* screen, double renderTimestamp);
 		void renderRecursive(std::shared_ptr<Renderable> ao, Rect computed, RenderPackage parentRotation);
 		void renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
 
@@ -87,7 +88,7 @@ namespace AW
 		bool isOpenGLEnabled();
 
 		void setClearColor(int r, int g, int b, int a);
-		void render(std::shared_ptr<Renderable> obj, Screen* screen);
+		void render(std::shared_ptr<Renderable> obj, Screen* screen, double frameTimestamp);
 
 		SDL_GLContext getOpenGLContext();
 

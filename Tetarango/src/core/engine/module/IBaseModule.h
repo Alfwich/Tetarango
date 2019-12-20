@@ -15,6 +15,8 @@ namespace AW
 
 		virtual void onInit() { /* NO-OP */ };
 		virtual void onReady() { /* NO-OP */ };
+		virtual void onEnterFrame(const double& frameTime) { onEnterFrame(); };
+		virtual void onEnterFrame() { /* NO-OP */ };
 		virtual void onCleanup() { /* NO-OP */ };
 		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode type, std::shared_ptr<AsyncResultBundle> result) { /* NO-OP */ };
 		virtual void onWorkError(WORKER_ID workerId, WorkerTaskCode type) { /* NO-OP */ };

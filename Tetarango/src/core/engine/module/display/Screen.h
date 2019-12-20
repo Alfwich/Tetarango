@@ -46,6 +46,7 @@ namespace AW
 	{
 		std::shared_ptr<TextureContainer> texture;
 		std::shared_ptr<ShaderContainer> shader;
+		std::shared_ptr<Time> time;
 
 		SDL_Window* window;
 		std::shared_ptr<Renderer> renderer;
@@ -58,6 +59,7 @@ namespace AW
 
 		void bindTexture(std::shared_ptr<TextureContainer> texture);
 		void bindShader(std::shared_ptr<ShaderContainer> shader);
+		void bindTime(std::shared_ptr<Time> time);
 
 		bool init(const ScreenConfig& config, std::string name = "Window");
 		int getWidth();

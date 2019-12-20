@@ -24,6 +24,7 @@ namespace AW
 
 	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<GameObject>
 	{
+		// TODO: Roll these into tags
 		bool currentActive = false, active = true, currentInputEnabled = true, didInitialAttach = false, hasCreatedChildren = false, hasHydratedChildren = false, hasClipRect = false, hasBoundShaders = false;
 
 	protected:
@@ -60,9 +61,9 @@ namespace AW
 		void deactivate();
 
 		bool isActive();
+		bool getHasBoundShaders();
 		bool shouldRebuildOnLoad();
 		bool shouldLayoutOnLoad();
-
 		bool isAttached();
 
 		int getId();

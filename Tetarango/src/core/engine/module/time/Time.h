@@ -22,6 +22,7 @@ namespace AW
 	{
 		std::unordered_map<TimeScope, std::shared_ptr<TimeScopeBundle>> timeScopes;
 		Uint64 startHighPerformancePosition = 0;
+		double frameStartTime = 0.0;
 
 	public:
 		void createTimeScope(TimeScope scopeName, double timeFactor);
@@ -33,7 +34,9 @@ namespace AW
 		bool hasTimeScope(TimeScope scopeName);
 
 		Uint32 getTicks();
+		double getFrameStartTime();
 		double getHighResolutionTicks();
+
 		void delay(Uint32 ms);
 		void spinlock(double startHighResolutionTicks, double targetTime);
 
@@ -42,6 +45,7 @@ namespace AW
 		std::shared_ptr<Timer> createPureTimer();
 
 		void onInit();
+		void onEnterFrame();
 	};
 
 }

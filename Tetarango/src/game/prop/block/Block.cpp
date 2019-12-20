@@ -4,8 +4,6 @@ namespace
 {
 	const std::string blockTextureName = "prop-blocks";
 	const std::string blockAnimationName = "block-animations";
-	const auto blockEffectIntensity = 10.0;
-	const auto blockEffectShift = -5.0;
 }
 
 namespace AWGame
@@ -16,24 +14,19 @@ namespace AWGame
 		registerSerialization<Block>();
 	}
 
-	void Block::onTransitionAnimationFrame(double position)
+	void Block::addEnergy(double amount)
 	{
-		if (position < 0.75)
+		energy += amount;
+
+		if (fragmentShader != nullptr)
 		{
-			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift);
+			fragmentShader->setFloatIUParam("effectAmount", energy);
 		}
-		else if (position < 0.875)
-		{
-			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift + ((position - 0.75) * 8.0) * blockEffectIntensity);
-		}
-		else if (position < 1.0)
-		{
-			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift + blockEffectIntensity - (blockEffectIntensity * ((position - 0.875) * 8.0)));
-		}
-		else
-		{
-			fragmentShader->setFloatIUParam("effectAmount", blockEffectShift);
-		}
+	}
+
+	double Block::getEnergy()
+	{
+		return energy;
 	}
 
 	void Block::onLoadResources()
@@ -65,7 +58,7 @@ namespace AWGame
 	{
 		Animated::onBindShaders();
 
-		fragmentShader = modules->shader->getShader("fragment-block");
+		fragmentShader = modules->shader->getShader("fragment-block", true);
 	}
 
 	void Block::onInitialAttach()
@@ -76,10 +69,7 @@ namespace AWGame
 		setAnimationSet(blockAnimationName);
 		setCurrentAnimation("default");
 
-		blockTransition = modules->animation->createTransition();
-		blockTransition->listener = shared_from_this();
-		blockTransition->setLooping(true);
-		blockTransition->startTargetlessTransition(AW::NumberHelper::random(1000.0, 1750.0));
+		fragmentShader->setFloatIUParam("effectAmount", energy);
 	}
 
 	void Block::onCreateChildren()

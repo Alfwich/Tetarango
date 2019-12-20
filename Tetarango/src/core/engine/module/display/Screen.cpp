@@ -25,6 +25,11 @@ namespace AW
 		this->shader = shader;
 	}
 
+	void Screen::bindTime(std::shared_ptr<Time> time)
+	{
+		this->time = time;
+	}
+
 	bool Screen::init(const ScreenConfig& config, std::string name)
 	{
 		currentConfig = config;
@@ -246,7 +251,7 @@ namespace AW
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 		if (root != nullptr)
 		{
-			renderer->render(root, this);
+			renderer->render(root, this, time->getHighResolutionTicks() / 1000.0);
 
 			if (gameConfig->getConfigBool(Config::Param::immediateDebugOutput))
 			{

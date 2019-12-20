@@ -18,6 +18,8 @@ namespace AW
 		logger->bindThread(thread);
 		storage->bindFilesystem(filesystem);
 		animation->bindTime(time);
+		screen->bindTime(time);
+		shader->bindTime(time);
 		animation->bindEvent(event);
 		event->bindInput(input);
 		event->bindThread(thread);
@@ -92,6 +94,16 @@ namespace AW
 
 		status = ModuleBundleStatus::READY;
 		ready = true;
+	}
+
+	void SystemModuleBundle::onEnterFrame(const double& frameTime)
+	{
+		if (!ready) return;
+
+		for (const auto module : modules)
+		{
+			module->onEnterFrame(frameTime);
+		}
 	}
 
 	void SystemModuleBundle::onCleanup()

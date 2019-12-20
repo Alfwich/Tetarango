@@ -223,6 +223,11 @@ namespace AW
 		collisionQuadMap = std::make_shared<QuadMap>(-100000, -100000, 500000, 500000);
 	}
 
+	void Collision::onEnterFrame()
+	{
+		processCollisions();
+	}
+
 	void Collision::onCleanup()
 	{
 		collisionQuadMap->clear();

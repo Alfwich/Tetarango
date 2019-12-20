@@ -26,7 +26,6 @@ namespace AW
 		void updateFrameTime();
 		void processEnterFrames();
 		void processApplicationEvents();
-		void processCollisions();
 		void doFrameLimitIfNeeded();
 
 	protected:
