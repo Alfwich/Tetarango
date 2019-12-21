@@ -159,7 +159,7 @@ namespace AWGame
 			const auto newPiece = blockColorGenerator.getTetromino();
 			for (const auto p : newPiece)
 			{
-				p->addEnergy(10.0);
+				p->addEnergy(0.1);
 			}
 			previewBoard->addTetromino(newPiece);
 		}

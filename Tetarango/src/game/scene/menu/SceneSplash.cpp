@@ -52,7 +52,7 @@ namespace AWGame
 		add(blockContainer);
 
 		splashImage = std::make_shared<AW::Element>();
-		splashImage->setFragmentShader(modules->shader->getShader({ "fragment-blur", "fragment-color" }));
+		splashImage->setFragmentShader(modules->shader->getShader({ "f-texture", "f-blur", "f-color" }));
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);

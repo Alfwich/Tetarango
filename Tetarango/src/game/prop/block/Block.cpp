@@ -20,7 +20,6 @@ namespace AWGame
 
 		if (fragmentShader != nullptr)
 		{
-			fragmentShader->setFloatIUParam("effectAmount", energy);
 		}
 	}
 
@@ -32,7 +31,8 @@ namespace AWGame
 	void Block::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/block/blocks.png", blockTextureName);
-		modules->shader->loadShader("res/shader/fragment/block.glsl", "fragment-block");
+
+		modules->shader->registerShaderComposition({ "f-texture", "f-blur", "f-pulsate", "f-color", "f-alpha" }, "block");
 
 		auto animationSet = std::make_shared<AW::AnimationSet>();
 		{
@@ -58,7 +58,10 @@ namespace AWGame
 	{
 		Animated::onBindShaders();
 
-		fragmentShader = modules->shader->getShader({ "fragment-color", "fragment-texture", "fragment-block" }, true);
+		fragmentShader = modules->shader->getShader({ "block" }, true);
+		fragmentShader->setFloatIUParam("pulsateAmount", AW::NumberHelper::random(0.0, 0.3));
+		fragmentShader->setFloatIUParam("blurAmount", AW::NumberHelper::random());
+		fragmentShader->setFloatIUParam("alpha", 1.0);
 	}
 
 	void Block::onInitialAttach()
@@ -68,8 +71,6 @@ namespace AWGame
 		setTexture(blockTextureName);
 		setAnimationSet(blockAnimationName);
 		setCurrentAnimation("default");
-
-		fragmentShader->setFloatIUParam("effectAmount", energy);
 	}
 
 	void Block::onCreateChildren()

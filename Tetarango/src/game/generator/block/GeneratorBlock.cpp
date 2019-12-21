@@ -19,7 +19,7 @@ namespace AWGame
 		defaultColorGenerator.registerCase(BlockColor::Yellow);
 		defaultColorGenerator.registerCase(BlockColor::Green);
 		defaultColorGenerator.registerCase(BlockColor::Orange);
-		defaultColorGenerator.registerCase(BlockColor::Cyan, 1000000);
+		defaultColorGenerator.registerCase(BlockColor::Cyan);
 	}
 
 	GeneratorBlock::GeneratorBlock()
