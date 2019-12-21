@@ -57,7 +57,7 @@ namespace AW
 			const auto mainPos = AW::StringHelper::distanceToLeft(&programData, replaceToken);
 			if (mainPos < programData.size())
 			{
-				programData[mainPos + 5] = std::to_string(loc)[0];
+				programData = programData.substr(0, mainPos + 5) + std::to_string(loc) + programData.substr(mainPos + 6);
 			}
 			break;
 		}
@@ -82,9 +82,8 @@ namespace AW
 				{
 					for (auto i = 1; i < loc + 1; ++i)
 					{
-						auto lineC = std::string(line);
-						const auto tokenPos = AW::StringHelper::distanceToLeft(&lineC, replaceToken);
-						lineC[tokenPos + 5] = std::to_string(i)[0];
+						const auto tokenPos = AW::StringHelper::distanceToLeft(&line, replaceToken);
+						auto lineC = line.substr(0, tokenPos + 5) + std::to_string(i) + line.substr(tokenPos + 6);
 						processedData += lineC + "\n";
 					}
 					lineStartPos = dataPos + 4;

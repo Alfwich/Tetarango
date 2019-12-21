@@ -354,7 +354,7 @@ namespace AW
 				int len;
 				glGetProgramInfoLog(programId, sizeof(logBuf), &len, logBuf);
 				reportOpenGLErrors();
-				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program");
+				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program: " + std::string(logBuf, len));
 				programs[key] = 0;
 			}
 			else

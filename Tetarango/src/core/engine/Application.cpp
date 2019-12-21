@@ -129,6 +129,10 @@ namespace AW
 		modules->shader->loadShader("res/shader/fragment/color.glsl", "fragment-color");
 		modules->shader->loadShader("res/shader/fragment/cliprect.glsl", "fragment-cliprect");
 		modules->shader->loadShader("res/shader/fragment/blur.glsl", "fragment-blur");
+		modules->shader->loadShader("res/shader/fragment/negate.glsl", "fragment-negate");
+
+		modules->shader->registerShaderComposition({ "fragment-color", "fragment-texture" }, "comp-element");
+		modules->shader->registerShaderComposition({ "fragment-color" }, "comp-primitive");
 	}
 
 	void Application::primeSerialization()

@@ -23,7 +23,7 @@ namespace AW
 
 		if (fragmentShader == nullptr)
 		{
-			fragmentShader = modules->shader->getShader({ "fragment-color", "fragment-texture" });
+			fragmentShader = modules->shader->getShader({ "comp-element" });
 		}
 
 		if (clipRectVertexShader == nullptr)

@@ -93,7 +93,6 @@ namespace AW
 
 	std::shared_ptr<ShaderReference> ShaderContainer::getShader(std::vector<std::string> names, std::string loaderName, bool assignDefaultParams)
 	{
-		auto hasSeenShader = std::map<std::string, bool>();
 		auto shadersToPack = std::vector<std::weak_ptr<Shader>>();
 
 		for (const auto name : names)
@@ -102,17 +101,15 @@ namespace AW
 			{
 				for (const auto compName : shaderComps.at(name))
 				{
-					if (shaders.count(compName) == 1 && hasSeenShader.count(compName) == 0)
+					if (shaders.count(compName) == 1)
 					{
 						shadersToPack.push_back(shaders.at(compName));
-						hasSeenShader[compName] = true;
 					}
 				}
 			}
-			else if (shaders.count(name) == 1 && hasSeenShader.count(name) == 0)
+			else if (shaders.count(name) == 1)
 			{
 				shadersToPack.push_back(shaders.at(name));
-				hasSeenShader[name] = true;
 			}
 		}
 
