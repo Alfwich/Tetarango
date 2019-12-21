@@ -12,8 +12,8 @@ namespace AWGame
 	std::shared_ptr<AW::Particle> ParticleSpaceBackgroundParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)
 	{
 		const auto particle = std::make_shared<ParticleSpaceBackground>();
-		particle->setFragmentShader(modules->shader->getShader("fragment-solid"));
-		particle->setVertexShader(modules->shader->getShader("vertex-default"));
+		particle->setFragmentShader(modules->shader->getShader({ "fragment-solid" }));
+		particle->setVertexShader(modules->shader->getShader({ "vertex-default" }));
 		particle->zIndex = -1;
 		const auto r = AW::NumberHelper::random(0, AW::NumberHelper::PI * 2.0);
 		const auto rV = AW::NumberHelper::random(10, 45);

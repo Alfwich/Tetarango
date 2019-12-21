@@ -82,6 +82,7 @@ namespace AW
 		void render(std::shared_ptr<Renderable> obj);
 
 		void onCleanup();
+		void onEnterFrame();
 	};
 }
 

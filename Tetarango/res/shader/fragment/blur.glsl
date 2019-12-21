@@ -1,8 +1,7 @@
 ﻿#version 330 core
+
 in vec2 UV;
-in vec4 colorMod;
 in mat4 UVp;
-out vec4 color;
 uniform sampler2D textureSampler;
 uniform float blurAmount;
 
@@ -24,26 +23,21 @@ vec4 blur(sampler2D image, vec2 uv, vec2 resolution, vec2 direction)
 	return color;
 }
 
-void main() 
+vec4 _mainN(vec4 c) 
 {
-	vec4 loc = UVp * vec4(UV, 1, 1);
+ 	vec4 loc = UVp * vec4(UV, 1, 1);
 	ivec2 size = textureSize(textureSampler, 0);
-	vec4 c = texture(textureSampler, loc.xy).rgba;
-	vec4 fC;
+	vec4 tC = texture(textureSampler, loc.xy).rgba;
 	if (blurAmount > 0.0)
 	{
 		float p = clamp(blurAmount, 0.0, 1.0);
 		vec4 blured = blur(textureSampler, loc.xy, size, vec2(5, 5));
-		fC = (blured * p + c * (1.0 - p)) * colorMod;
+		c *= blured * p + tC * (1.0 - p);
 	}
 	else
 	{
-		fC = c * colorMod;
+		c *= tC;
 	}
 
-	if (fC.a == 0) discard;
-
-	color = fC;
+	return c;
 };
-
-

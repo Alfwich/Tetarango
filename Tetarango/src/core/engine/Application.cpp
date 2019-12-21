@@ -121,8 +121,12 @@ namespace AW
 	void Application::loadResources()
 	{
 		modules->shader->loadShader("res/shader/vertex/default.glsl", "vertex-default");
+
+		modules->shader->loadShaderLoader("res/shader/fragment/loader/loader-default.glsl", "default");
+
 		modules->shader->loadShader("res/shader/fragment/texture.glsl", "fragment-texture");
 		modules->shader->loadShader("res/shader/fragment/solid.glsl", "fragment-solid");
+		modules->shader->loadShader("res/shader/fragment/color.glsl", "fragment-color");
 		modules->shader->loadShader("res/shader/fragment/cliprect.glsl", "fragment-cliprect");
 		modules->shader->loadShader("res/shader/fragment/blur.glsl", "fragment-blur");
 	}
@@ -258,7 +262,7 @@ namespace AW
 		else if (onFailedToProvisionScreen())
 		{
 			Logger::instance()->logCritical("Application::Provisioning screen failed. Falling back to current display resolution or safe fallback");
-			provisionScreen();
+			//provisionScreen();
 		}
 	}
 }

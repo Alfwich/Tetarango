@@ -298,14 +298,18 @@ namespace AW
 		return programIdAndParamNameToUniformLocation[key];
 	}
 
-	GLuint Renderer::createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId)
+	GLuint Renderer::createAndLinkProgram(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId)
 	{
-		const auto key = std::make_pair(vertexShaderId, fragmentShaderId);
+		const auto key = getKeyForShaders(vertexShaderIds, fragmentShaderIds);
 		if (programs.count(key) == 0)
 		{
 			const auto programId = glCreateProgram();
-			glAttachShader(programId, vertexShaderId);
-			glAttachShader(programId, fragmentShaderId);
+			glAttachShader(programId, vertexShaderIds[0]);
+			for (const auto fragmentShaderId : fragmentShaderIds)
+			{
+				glAttachShader(programId, fragmentShaderId);
+			}
+			glAttachShader(programId, loaderShaderId);
 			glLinkProgram(programId);
 
 			GLint programLinkSuccess = GL_TRUE;
@@ -313,6 +317,9 @@ namespace AW
 
 			if (programLinkSuccess != GL_TRUE)
 			{
+				char logBuf[1024];
+				int len;
+				glGetProgramInfoLog(programId, sizeof(logBuf), &len, logBuf);
 				reportOpenGLErrors();
 				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program");
 				programs[key] = 0;
@@ -323,7 +330,26 @@ namespace AW
 			}
 		}
 
-		return programs[key];
+		return programs.at(key);
+	}
+
+	unsigned int Renderer::getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds)
+	{
+		unsigned int result = 0;
+		unsigned int pos = 1;
+		for (const auto vertexShaderId : vertexShaderIds)
+		{
+			result += vertexShaderId * pos;
+			pos += 10;
+		}
+
+		for (const auto fragmentShaderId : fragmentShaderIds)
+		{
+			result += fragmentShaderId * pos;
+			pos += 10;
+		}
+
+		return result;
 	}
 
 	void Renderer::applyUserSpecificShaderUniformsForRenderable(const std::shared_ptr<Renderable>& renderable)
@@ -724,7 +750,15 @@ namespace AW
 			return;
 		}
 
-		changeProgram(createAndLinkProgram(ele->getVertexShaderId(), ele->getFragmentShaderId()));
+		const auto vShader = ele->getVertexShader();
+		const auto fShader = ele->getFragmentShader();
+
+		if (vShader == nullptr || fShader == nullptr)
+		{
+			return;
+		}
+
+		changeProgram(createAndLinkProgram(vShader->getShaderIds(), fShader->getShaderIds(), fShader->getLoaderId()));
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -787,9 +821,9 @@ namespace AW
 
 	void Renderer::updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
-		const auto clipRectVertexShaderId = rend->getClipRectVertexShaderId(), clipRectFragmentShaderId = rend->getClipRectFragmentShaderId();
+		const auto clipRectVertexShader = rend->getClipRectVertexShader(), clipRectFragmentShader = rend->getClipRectFragmentShader();
 
-		if (clipRectVertexShaderId == 0 || clipRectFragmentShaderId == 0)
+		if (clipRectVertexShader == nullptr || clipRectFragmentShader == nullptr)
 		{
 			return;
 		}
@@ -823,7 +857,7 @@ namespace AW
 
 		mat4x4_mul(mvp, tP, m);
 
-		changeProgram(createAndLinkProgram(clipRectVertexShaderId, clipRectFragmentShaderId));
+		changeProgram(createAndLinkProgram(clipRectVertexShader->getShaderIds(), clipRectFragmentShader->getShaderIds(), clipRectFragmentShader->getLoaderId()));
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
@@ -872,7 +906,15 @@ namespace AW
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
 	{
-		changeProgram(createAndLinkProgram(prim->getVertexShaderId(), prim->getFragmentShaderId()));
+		const auto vShader = prim->getVertexShader();
+		const auto fShader = prim->getFragmentShader();
+
+		if (vShader == nullptr || fShader == nullptr)
+		{
+			return;
+		}
+
+		changeProgram(createAndLinkProgram(vShader->getShaderIds(), fShader->getShaderIds(), fShader->getLoaderId()));
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -917,6 +959,14 @@ namespace AW
 	{
 		const auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(prim);
 		if (particleSystem == nullptr)
+		{
+			return;
+		}
+
+		const auto systemVShader = prim->getVertexShader();
+		const auto systemFShader = prim->getFragmentShader();
+
+		if (systemVShader == nullptr || systemFShader == nullptr)
 		{
 			return;
 		}
@@ -973,18 +1023,18 @@ namespace AW
 			mat4x4_translate_in_place(UVp, xOffset, yOffset, 0.0);
 			mat4x4_scale_aniso(UVp, UVp, scaleX, scaleY, 1.0);
 
-			const auto pVertexShader = particle->getVertexShader();
-			const auto pFragmentShader = particle->getFragmentShader();
+			const auto pVShader = particle->getVertexShader();
+			const auto pFShader = particle->getFragmentShader();
 
-			if (pVertexShader != nullptr && pFragmentShader != nullptr)
+			if (pVShader != nullptr && pFShader != nullptr)
 			{
-				changeProgram(createAndLinkProgram(pVertexShader->getShaderId(), pFragmentShader->getShaderId()));
-				applyShaderUniforms(pVertexShader);
-				applyShaderUniforms(pFragmentShader);
+				changeProgram(createAndLinkProgram(pVShader->getShaderIds(), pFShader->getShaderIds(), pFShader->getLoaderId()));
+				applyShaderUniforms(pVShader);
+				applyShaderUniforms(pFShader);
 			}
 			else
 			{
-				changeProgram(createAndLinkProgram(prim->getVertexShaderId(), prim->getFragmentShaderId()));
+				changeProgram(createAndLinkProgram(systemVShader->getShaderIds(), systemFShader->getShaderIds(), systemFShader->getLoaderId()));
 				applyUserSpecificShaderUniformsForRenderable(prim);
 			}
 
@@ -1006,7 +1056,15 @@ namespace AW
 			return;
 		}
 
-		changeProgram(createAndLinkProgram(ele->getVertexShaderId(), ele->getFragmentShaderId()));
+		const auto vShader = ele->getVertexShader();
+		const auto fShader = ele->getFragmentShader();
+
+		if (vShader == nullptr || fShader == nullptr)
+		{
+			return;
+		}
+
+		changeProgram(createAndLinkProgram(vShader->getShaderIds(), fShader->getShaderIds(), fShader->getLoaderId()));
 
 		const auto width = screenWidth, height = screenHeight;
 		const auto zoom = renderPackage->zoom;

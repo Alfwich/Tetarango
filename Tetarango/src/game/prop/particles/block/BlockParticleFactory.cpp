@@ -34,8 +34,8 @@ namespace AWGame
 	std::shared_ptr<AW::Particle> BlockParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)
 	{
 		const auto particle = std::make_shared<BlockParticle>();
-		particle->setFragmentShader(modules->shader->getShader("fragment-solid"));
-		particle->setVertexShader(modules->shader->getShader("vertex-default"));
+		particle->setFragmentShader(modules->shader->getShader({ "fragment-color" }));
+		particle->setVertexShader(modules->shader->getShader({ "vertex-default" }));
 		particle->zIndex = -1;
 		particle->cModR = modColor.r;
 		particle->cModG = modColor.g;

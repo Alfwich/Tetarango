@@ -94,11 +94,6 @@ namespace AW
 		Color* getColor();
 		Color debugColor;
 
-		virtual GLuint getVertexShaderId() { return vertexShader != nullptr ? vertexShader->getShaderId() : 0; }
-		virtual GLuint getFragmentShaderId() { return fragmentShader != nullptr ? fragmentShader->getShaderId() : 0; }
-		virtual GLuint getClipRectVertexShaderId() { return clipRectVertexShader != nullptr ? clipRectVertexShader->getShaderId() : 0; }
-		virtual GLuint getClipRectFragmentShaderId() { return clipRectFragmentShader != nullptr ? clipRectFragmentShader->getShaderId() : 0; }
-
 		virtual Rect getRect();
 
 		virtual void setWorldRect(Rect* r);

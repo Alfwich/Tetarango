@@ -54,7 +54,7 @@ namespace AW
 
 		if (!isSupportedDisplayResolution)
 		{
-			return false;
+			Logger::instance()->logCritical("Screen::Attempting to set unsupported display resolution width=" + std::to_string(currentConfig.width) + ", height=" + std::to_string(currentConfig.height));
 		}
 
 		int windowFlags = windowFlags = SDL_WINDOW_OPENGL;
@@ -263,5 +263,13 @@ namespace AW
 	void Screen::onCleanup()
 	{
 		renderer->reportOpenGLErrors();
+	}
+
+	void Screen::onEnterFrame()
+	{
+		if (currentConfig.visualizeClipRects || currentConfig.visualizeContainers)
+		{
+			shader->purgeWeakRefs();
+		}
 	}
 }

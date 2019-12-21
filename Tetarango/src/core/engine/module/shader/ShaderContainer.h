@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <list>
 #include <memory>
 #include "Shader.h"
 #include "engine/module/logger/Logger.h"
@@ -18,18 +19,30 @@ namespace AW
 		std::shared_ptr<Time> time;
 
 		std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
+		std::string defaultShaderLoaderName;
+		std::unordered_map<std::string, std::shared_ptr<Shader>> loaderShaders;
 
-		int getShaderTypeFromPath(const std::string& path);
+		std::list<std::weak_ptr<ShaderReference>> shaderReferences;
+		std::unordered_map<std::string, std::vector<std::string>> shaderComps;
+
+		ShaderType getShaderTypeFromPath(const std::string& path);
 
 	public:
 		void bindAsset(std::shared_ptr<Asset> asset);
 		void bindTime(std::shared_ptr<Time> time);
 
+		void loadShaderLoader(std::string path, std::string name);
 		void loadShader(std::string path, std::string name);
-		std::shared_ptr<ShaderReference> getShader(std::string name, bool assignDefaultParams = false);
+
+		void registerShaderComposition(std::vector<std::string> shaderNames, std::string name);
+
+		std::shared_ptr<ShaderReference> getShader(std::vector<std::string> names, bool assignDefaultParams = false);
+		std::shared_ptr<ShaderReference> getShader(std::vector<std::string> names, std::string loaderName, bool assignDefaultParams = false);
 
 		void releaseAllShaders();
 		void rebindAllShaders();
+
+		void purgeWeakRefs();
 	};
 
 }

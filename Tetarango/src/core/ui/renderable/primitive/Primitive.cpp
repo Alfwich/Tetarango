@@ -12,22 +12,22 @@ namespace AW
 	{
 		if (vertexShader == nullptr)
 		{
-			vertexShader = modules->shader->getShader("vertex-default");
+			vertexShader = modules->shader->getShader({ "vertex-default" });
 		}
 
 		if (fragmentShader == nullptr)
 		{
-			fragmentShader = modules->shader->getShader("fragment-solid");
+			fragmentShader = modules->shader->getShader({ "fragment-color" });
 		}
 
 		if (clipRectVertexShader == nullptr)
 		{
-			clipRectVertexShader = modules->shader->getShader("vertex-default");
+			clipRectVertexShader = modules->shader->getShader({ "vertex-default" });
 		}
 
 		if (clipRectFragmentShader == nullptr)
 		{
-			clipRectFragmentShader = modules->shader->getShader("fragment-cliprect");
+			clipRectFragmentShader = modules->shader->getShader({ "fragment-cliprect" });
 		}
 
 	}

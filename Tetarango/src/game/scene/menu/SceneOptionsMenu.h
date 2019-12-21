@@ -38,7 +38,6 @@ namespace AWGame
 		std::shared_ptr<CheckBoxBasic> vsyncOnCheckbox;
 		std::shared_ptr<CheckBoxBasic> vsyncAdaptiveCheckbox;
 
-		std::shared_ptr<CheckBoxBasic> openGlCompatibilityModeCheckbox;
 		std::shared_ptr<CheckBoxBasic> wireframeModeCheckbox;
 		std::shared_ptr<CheckBoxBasic> debugRenderingCheckbox;
 		std::shared_ptr<CheckBoxBasic> debugOverlayCheckbox;

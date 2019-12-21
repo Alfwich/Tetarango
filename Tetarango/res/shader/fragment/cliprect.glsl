@@ -1,7 +1,6 @@
 ﻿#version 330 core
-out vec4 color;
 
-void main() 
+vec4 _mainN(vec4 c) 
 {
-	color = vec4(1.0, 1.0, 1.0, 1.0);
+	return vec4(1.0, 1.0, 1.0, 1.0);
 };

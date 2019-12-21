@@ -187,12 +187,10 @@ namespace AWGame
 		storageClient->writeInt(displayVsyncModeParamKey, (int)screenConfig.vMode);
 		storageClient->writeInt(displayMSAAParamKey, screenConfig.msaaSamples);
 		storageClient->writeInt(displayFrameLimiterParamKey, screenConfig.frameLimiter);
-		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
 		storageClient->writeBool(displayWireframeModeParamKey, screenConfig.openGlWireframeMode);
 		storageClient->writeBool(displayDebugClipRectsParamKey, screenConfig.visualizeClipRects);
 		storageClient->writeBool(displayDebugContainersParamKey, screenConfig.visualizeContainers);
 		storageClient->writeBool(displayDebugOverlayParamKey, screenConfig.debugOverlayEnabled);
-		storageClient->writeBool(displayDoubleBufferParamKey, screenConfig.useDoubleBuffer);
 
 		if (masterSceneContainer != nullptr)
 		{

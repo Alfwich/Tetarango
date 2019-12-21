@@ -176,12 +176,6 @@ namespace AWGame
 		vsyncAdaptiveCheckbox->clickListener = weak_from_this();
 		centeringContainer->add(vsyncAdaptiveCheckbox);
 
-		openGlCompatibilityModeCheckbox = std::make_shared<CheckBoxBasic>();
-		openGlCompatibilityModeCheckbox->setText("OpenGL Compatibility Mode");
-		openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
-		openGlCompatibilityModeCheckbox->clickListener = weak_from_this();
-		centeringContainer->add(openGlCompatibilityModeCheckbox);
-
 		wireframeModeCheckbox = std::make_shared<CheckBoxBasic>();
 		wireframeModeCheckbox->setText("Wireframe Mode");
 		wireframeModeCheckbox->setChecked(config.openGlWireframeMode);
@@ -292,7 +286,7 @@ namespace AWGame
 		const auto checkboxYOffset = 8.0;
 		const auto checkboxYGroupOffset = 32.0;
 		const auto numResolutionButtonsToShow = 7.0;
-		const auto horScreenPadding = openGlCompatibilityModeCheckbox->getHalfWidth() + 50.0;
+		const auto horScreenPadding = fullscreenDesktopCheckbox->getHalfWidth() + 50.0;
 
 		resolutionsLabel->setPosition(0.0, 0.0);
 		if (!resolutionButtons.empty())
@@ -336,8 +330,7 @@ namespace AWGame
 		frameLimiterScrollBar->toBottomLeftOf(frameLimiterLabelPrefix, 0.0, checkboxYOffset);
 
 		miscLabel->toRightOf(displayModeLabel, std::floor(optionsXOffset + (msaa16xCheckbox->getRight() - msaaOffCheckbox->getLeft()) - displayModeLabel->getWidth()), 0.0);
-		openGlCompatibilityModeCheckbox->toBottomLeftOf(miscLabel, 0.0, checkboxYOffset);
-		wireframeModeCheckbox->toBottomLeftOf(openGlCompatibilityModeCheckbox, 0.0, checkboxYOffset);
+		wireframeModeCheckbox->toBottomLeftOf(miscLabel, 0.0, checkboxYOffset);
 		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
 		debugOverlayCheckbox->toBottomLeftOf(debugRenderingCheckbox, 0.0, checkboxYOffset);
 
@@ -450,13 +443,6 @@ namespace AWGame
 		if (id == vsyncAdaptiveCheckbox->getId())
 		{
 			shouldEnableApply = setVsyncMode(AW::VsyncModes::Adaptive);
-		}
-
-		if (id == openGlCompatibilityModeCheckbox->getId())
-		{
-			config.openGLCompatibilityMode = !config.openGLCompatibilityMode;
-			openGlCompatibilityModeCheckbox->setChecked(config.openGLCompatibilityMode);
-			shouldEnableApply = true;
 		}
 
 		if (id == wireframeModeCheckbox->getId())

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 #include "GL/glew.h"
 #include "engine/module/asset/ResourceBundle.h"
 #include "Shader.h"
@@ -10,18 +11,25 @@ namespace AW
 {
 	class ShaderReference
 	{
-		std::weak_ptr<Shader> shader;
+		const std::vector<std::weak_ptr<Shader>> shaders;
+		const std::weak_ptr<Shader> loader;
+
+		std::vector<GLuint> ids;
+		GLuint loaderId = 0;
+
 		std::map<std::string, GLfloat> floatIUParams;
 		bool hasSetParams = false;
 	public:
-		ShaderReference(std::weak_ptr<Shader> shader);
+		ShaderReference(std::vector<std::weak_ptr<Shader>> shaders, std::weak_ptr<Shader> loader);
 
-		GLuint getShaderId();
-		bool shaderIsCompiled();
+		const std::vector<GLuint>& getShaderIds();
+		GLuint getLoaderId();
 
 		bool hasCustomParams();
 		void setFloatIUParam(std::string name, GLfloat val);
 		const std::map<std::string, GLfloat>& getFloatIUParams();
+
+		void resetCache();
 	};
 }
 

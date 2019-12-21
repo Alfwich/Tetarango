@@ -29,6 +29,29 @@ namespace AW
 			return true;
 		}
 
+		bool static inline startsWith(const char* source, const std::string& val)
+		{
+			if (source == nullptr)
+			{
+				return false;
+			}
+
+			if (!val.empty())
+			{
+				int i = 0;
+				for (const auto c : val)
+				{
+					if (source[i++] != c)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+
 		bool static inline startsWith_Offset(std::string* source, int sourceOffset, std::string val)
 		{
 			if (source->size() < val.size())

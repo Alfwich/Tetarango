@@ -2,21 +2,39 @@
 
 namespace AW
 {
-	ShaderReference::ShaderReference(std::weak_ptr<Shader> shader)
+	ShaderReference::ShaderReference(std::vector<std::weak_ptr<Shader>> shaders, std::weak_ptr<Shader> loader) : shaders(shaders), loader(loader) {};
+
+	const std::vector<GLuint>& ShaderReference::getShaderIds()
 	{
-		this->shader = shader;
+		if (ids.empty())
+		{
+			ids.clear();
+			int i = 1;
+			for (const auto shaderWeakPtr : shaders)
+			{
+				const auto ptr = shaderWeakPtr.lock();
+				if (ptr != nullptr)
+				{
+					ids.push_back(ptr->getShaderId(i++));
+				}
+			}
+		}
+
+		return ids;
 	}
 
-	GLuint ShaderReference::getShaderId()
+	GLuint ShaderReference::getLoaderId()
 	{
-		const auto shaderPtr = shader.lock();
-		return shaderPtr != nullptr ? shaderPtr->getShaderId() : 0;
-	}
+		if (loaderId == 0)
+		{
+			const auto shaderPtr = loader.lock();
+			if (shaderPtr != nullptr)
+			{
+				return shaderPtr->getShaderId((unsigned int)shaders.size());
+			}
+		}
 
-	bool ShaderReference::shaderIsCompiled()
-	{
-		const auto shaderPtr = shader.lock();
-		return shaderPtr != nullptr ? shaderPtr->shaderIsCompiled() : false;
+		return loaderId;
 	}
 
 	bool ShaderReference::hasCustomParams()
@@ -33,5 +51,11 @@ namespace AW
 	const std::map<std::string, GLfloat>& ShaderReference::getFloatIUParams()
 	{
 		return floatIUParams;
+	}
+
+	void ShaderReference::resetCache()
+	{
+		ids.clear();
+		loaderId = 0;
 	}
 }

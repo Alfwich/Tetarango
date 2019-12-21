@@ -58,7 +58,7 @@ namespace AWGame
 	{
 		Animated::onBindShaders();
 
-		fragmentShader = modules->shader->getShader("fragment-block", true);
+		fragmentShader = modules->shader->getShader({ "fragment-color", "fragment-texture", "fragment-block" }, true);
 	}
 
 	void Block::onInitialAttach()

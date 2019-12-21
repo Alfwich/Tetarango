@@ -27,7 +27,7 @@ namespace AW
 
 		mat4x4 mvp, p, pAbs, m, t, UVp, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
-		std::map<std::pair<GLuint, GLuint>, GLuint> programs;
+		std::map<unsigned int, GLuint> programs;
 		std::map<std::pair<GLuint, std::string>, GLuint> programIdAndParamNameToUniformLocation;
 		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0, inFrameTimeLocation = 0;
 
@@ -73,7 +73,8 @@ namespace AW
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
 		void changeProgram(GLuint programId);
-		GLuint createAndLinkProgram(GLuint vertexShaderId, GLuint fragmentShaderId);
+		GLuint createAndLinkProgram(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId);
+		unsigned int getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds);
 
 		void applyUserSpecificShaderUniformsForRenderable(const std::shared_ptr<Renderable>& renderable);
 		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader);

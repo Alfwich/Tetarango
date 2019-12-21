@@ -150,7 +150,7 @@ namespace AW
 		{
 			if (purgeCacheTimer->getTicks() > msBetweenLogFilePurges)
 			{
-				purgeToLogFile();
+				purgeToLogFile(true);
 			}
 		}
 	}

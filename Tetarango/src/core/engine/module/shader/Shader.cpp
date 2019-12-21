@@ -1,53 +1,134 @@
 #include "Shader.h"
 
 #include <vector>
+#include "util/StringHelper.h"
+#include "util/NumberHelper.h"
 #include "engine/module/logger/Logger.h"
+
+namespace
+{
+	const auto replaceToken = "_main";
+	const auto repeatToken = "//#RE";
+}
 
 namespace AW
 {
 	bool Shader::compileShader()
 	{
-		if (!shaderIsCompiled())
-		{
-			GLint compileResult = GL_FALSE;
-			int infoLength;
+		const auto shader1 = getShaderId(1);
 
-			shaderId = glCreateShader(shaderType);
-			const auto source = data->data.get();
-			const GLint dataLength = data->size;
-			glShaderSource(shaderId, 1, &source, &dataLength);
-			glCompileShader(shaderId);
+		return shader1 != 0;
+	}
 
-			glGetShaderiv(shaderId, GL_COMPILE_STATUS, &compileResult);
-			glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLength);
+	void Shader::genShaderForLoc(int locId)
+	{
+		GLint compileResult = GL_FALSE;
+		int infoLength;
 
-			if (compileResult == GL_FALSE && infoLength > 0) {
-				std::vector<char> infoText(infoLength + 1);
-				glGetShaderInfoLog(shaderId, infoLength, NULL, &infoText[0]);
-				Logger::instance()->logCritical("Shader::Failed to compile shader: " + std::string(infoText.begin(), infoText.end()));
-				return false;
-			}
+		const auto glShaderTypeForShaderType = shaderType == ShaderType::Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
+		const auto shaderId = glCreateShader(glShaderTypeForShaderType);
+		auto source = getUpdatedShaderProgramForLoc(data->data.get(), data->size, locId);
+		const auto programStartOffset = AW::StringHelper::distanceToLeft(&source, "#");
+		const GLint dataLength = (GLint)source.size() - programStartOffset;
+		const auto sourceLoc = &source[programStartOffset];
+		glShaderSource(shaderId, 1, &sourceLoc, &dataLength);
+		glCompileShader(shaderId);
+
+		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &compileResult);
+		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLength);
+
+		if (compileResult == GL_FALSE && infoLength > 0) {
+			std::vector<char> infoText(infoLength + 1);
+			glGetShaderInfoLog(shaderId, infoLength, NULL, &infoText[0]);
+			Logger::instance()->logCritical("Shader::Failed to compile shader: " + std::string(infoText.begin(), infoText.end()));
 		}
 
-		return true;
+		locToShaderIds[locId] = shaderId;
+	}
+
+	std::string Shader::getUpdatedShaderProgramForLoc(char* data, int dataSize, int loc)
+	{
+		auto programData = std::string(data, dataSize);
+
+		switch (shaderType)
+		{
+		case ShaderType::Fragment:
+		{
+			const auto mainPos = AW::StringHelper::distanceToLeft(&programData, replaceToken);
+			if (mainPos < programData.size())
+			{
+				programData[mainPos + 5] = std::to_string(loc)[0];
+			}
+			break;
+		}
+
+		case ShaderType::Loader:
+		{
+			std::string processedData = std::string(), line = std::string();
+			int dataPos = 0, lineStartPos = 0;
+			while (dataPos < programData.size())
+			{
+				const auto c = programData[dataPos];
+				if (c == '\n' || c == '\r')
+				{
+					lineStartPos = dataPos;
+					if (!line.empty())
+					{
+						processedData += line + "\n";
+						line = std::string();
+					}
+				}
+				else if (dataPos + 3 < programData.size() && AW::StringHelper::startsWith(&programData.at(dataPos), repeatToken))
+				{
+					for (auto i = 1; i < loc + 1; ++i)
+					{
+						auto lineC = std::string(line);
+						const auto tokenPos = AW::StringHelper::distanceToLeft(&lineC, replaceToken);
+						lineC[tokenPos + 5] = std::to_string(i)[0];
+						processedData += lineC + "\n";
+					}
+					lineStartPos = dataPos + 4;
+					dataPos += 4;
+					line = std::string();
+				}
+				else
+				{
+					line += c;
+				}
+
+				++dataPos;
+			}
+
+			programData = processedData;
+		}
+		break;
+		}
+
+		return programData;
 	}
 
 	void Shader::releaseShader()
 	{
-		if (shaderId != 0)
+		for (const auto locToShaderIds : locToShaderIds)
 		{
-			glDeleteShader(shaderId);
-			shaderId = 0;
+			glDeleteShader(locToShaderIds.second);
 		}
+		locToShaderIds.clear();
 	}
 
-	GLuint Shader::getShaderId()
+	GLuint Shader::getShaderId(unsigned int location)
 	{
-		return shaderId;
+		const auto locationId = AW::NumberHelper::clamp<unsigned int>(location, 1, INT_MAX);
+		if (locToShaderIds.count(locationId) == 0)
+		{
+			genShaderForLoc(locationId);
+		}
+
+		return locToShaderIds[locationId];
 	}
 
 	bool Shader::shaderIsCompiled()
 	{
-		return shaderId != 0;
+		return !locToShaderIds.empty();
 	}
 }
