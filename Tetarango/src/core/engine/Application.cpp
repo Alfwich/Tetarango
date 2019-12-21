@@ -262,7 +262,7 @@ namespace AW
 		else if (onFailedToProvisionScreen())
 		{
 			Logger::instance()->logCritical("Application::Provisioning screen failed. Falling back to current display resolution or safe fallback");
-			//provisionScreen();
+			provisionScreen();
 		}
 	}
 }

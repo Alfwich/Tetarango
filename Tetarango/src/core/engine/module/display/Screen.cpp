@@ -34,13 +34,6 @@ namespace AW
 	{
 		currentConfig = config;
 
-		if (window != nullptr)
-		{
-			shader->releaseAllShaders();
-			texture->releaseAllTextures();
-			SDL_DestroyWindow(window);
-		}
-
 		bool isSupportedDisplayResolution = false;
 		for (const auto displayMode : getAllSupportedDisplayModes().modes)
 		{
@@ -57,7 +50,6 @@ namespace AW
 			Logger::instance()->logCritical("Screen::Attempting to set unsupported display resolution width=" + std::to_string(currentConfig.width) + ", height=" + std::to_string(currentConfig.height));
 		}
 
-		int windowFlags = windowFlags = SDL_WINDOW_OPENGL;
 		if (!currentConfig.openGLCompatibilityMode)
 		{
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
@@ -76,7 +68,6 @@ namespace AW
 		{
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, currentConfig.msaaSamples);
-
 		}
 		else
 		{
@@ -84,33 +75,79 @@ namespace AW
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
 		}
 
-		switch (currentConfig.mode)
+		if (window == nullptr)
 		{
-		case ScreenModes::Fullscreen:
-			windowFlags = (windowFlags | SDL_WINDOW_FULLSCREEN);
-			break;
+			int windowFlags = windowFlags = SDL_WINDOW_OPENGL;
 
-		case ScreenModes::FullscreenDesktop:
-			windowFlags = (windowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
-			break;
+			switch (currentConfig.mode)
+			{
+			case ScreenModes::Fullscreen:
+				windowFlags = (windowFlags | SDL_WINDOW_FULLSCREEN);
+				break;
 
-		case ScreenModes::Windowed:
-		default:
-			break;
+			case ScreenModes::FullscreenDesktop:
+				windowFlags = (windowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
+				break;
+
+			case ScreenModes::Windowed:
+			default:
+				break;
+			}
+
+			currentConfig.visualizeContainers = currentConfig.visualizeContainers || gameConfig->getConfigBool(Config::Param::visualizeContainers);
+			currentConfig.visualizeClipRects = currentConfig.visualizeClipRects || gameConfig->getConfigBool(Config::Param::visualizeClipRects);
+
+			window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, currentConfig.width, currentConfig.height, windowFlags);
+		}
+		else
+		{
+			SDL_DisplayMode currentMode;
+			SDL_GetWindowDisplayMode(window, &currentMode);
+
+			currentMode.w = currentConfig.width;
+			currentMode.h = currentConfig.height;
+
+			switch (currentConfig.mode)
+			{
+			case ScreenModes::Fullscreen:
+				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+				SDL_SetWindowBordered(window, SDL_FALSE);
+				break;
+
+			case ScreenModes::FullscreenDesktop:
+				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+				SDL_SetWindowBordered(window, SDL_FALSE);
+				break;
+
+			case ScreenModes::Windowed:
+			default:
+				SDL_SetWindowFullscreen(window, 0);
+				SDL_SetWindowBordered(window, SDL_TRUE);
+				break;
+			}
+
+			SDL_SetWindowDisplayMode(window, &currentMode);
+			SDL_SetWindowSize(window, currentConfig.width, currentConfig.height);
+			SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			SDL_GL_SwapWindow(window);
 		}
 
-		currentConfig.visualizeContainers = currentConfig.visualizeContainers || gameConfig->getConfigBool(Config::Param::visualizeContainers);
-		currentConfig.visualizeClipRects = currentConfig.visualizeClipRects || gameConfig->getConfigBool(Config::Param::visualizeClipRects);
+		if (window == nullptr)
+		{
+			Logger::instance()->logCritical("Screen::Failed to create SDL window");
+			return false;
+		}
 
-		window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, currentConfig.width, currentConfig.height, windowFlags);
-
-		renderer = std::make_shared<Renderer>(currentConfig, renderer);
-		renderer->initOpenGL(window);
-
-		texture->rebindAllTextures();
-		shader->rebindAllShaders();
+		if (renderer == nullptr)
+		{
+			renderer = std::make_shared<Renderer>(currentConfig, renderer);
+			renderer->initOpenGL(window);
+		}
 
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+		glViewport(0, 0, windowWidth, windowHeight);
 
 		switch (currentConfig.vMode)
 		{

@@ -7,6 +7,7 @@ namespace AW
 		if (textureId != 0)
 		{
 			glDeleteTextures(1, &textureId);
+			textureId = 0;
 		}
 	}
 
