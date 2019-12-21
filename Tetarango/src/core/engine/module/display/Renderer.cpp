@@ -273,6 +273,31 @@ namespace AW
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 
+
+	GLuint Renderer::getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId)
+	{
+		if (programIdToProgramUniformMapId[programId].count(paramName) == 0)
+		{
+			programIdToProgramUniformMapId[programId][paramName] = glGetUniformLocation(programId, paramName.c_str());
+		}
+
+		return programIdToProgramUniformMapId[programId][paramName];
+	}
+
+	void Renderer::changeProgram(const std::shared_ptr<ShaderReference>& vertexShader, const std::shared_ptr<ShaderReference>& fragmentShader)
+	{
+		if (vertexShader->getCachedProgramId() != 0)
+		{
+			changeProgram(vertexShader->getCachedProgramId());
+		}
+		else
+		{
+			const auto programId = createAndLinkProgramIfNeeded(vertexShader->getShaderIds(), fragmentShader->getShaderIds(), fragmentShader->getLoaderId());
+			vertexShader->setCachedProgramId(programId);
+			changeProgram(programId);
+		}
+	}
+
 	void Renderer::changeProgram(GLuint programId)
 	{
 		if (currentProgramId != programId)
@@ -287,18 +312,26 @@ namespace AW
 		}
 	}
 
-	GLuint Renderer::getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId)
+	std::string Renderer::getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds)
 	{
-		const auto key = std::make_pair(programId, paramName);
-		if (programIdAndParamNameToUniformLocation.count(key) == 0)
+		auto result = std::string();
+
+		for (const auto vertexShaderId : vertexShaderIds)
 		{
-			programIdAndParamNameToUniformLocation[key] = glGetUniformLocation(programId, paramName.c_str());
+			result += 'v' + std::to_string(vertexShaderId);
 		}
 
-		return programIdAndParamNameToUniformLocation[key];
+		result += '_';
+
+		for (const auto fragmentShaderId : fragmentShaderIds)
+		{
+			result += 'f' + std::to_string(fragmentShaderId);
+		}
+
+		return result;
 	}
 
-	GLuint Renderer::createAndLinkProgram(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId)
+	GLuint Renderer::createAndLinkProgramIfNeeded(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId)
 	{
 		const auto key = getKeyForShaders(vertexShaderIds, fragmentShaderIds);
 		if (programs.count(key) == 0)
@@ -333,24 +366,7 @@ namespace AW
 		return programs.at(key);
 	}
 
-	unsigned int Renderer::getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds)
-	{
-		unsigned int result = 0;
-		unsigned int pos = 1;
-		for (const auto vertexShaderId : vertexShaderIds)
-		{
-			result += vertexShaderId * pos;
-			pos += 10;
-		}
 
-		for (const auto fragmentShaderId : fragmentShaderIds)
-		{
-			result += fragmentShaderId * pos;
-			pos += 10;
-		}
-
-		return result;
-	}
 
 	void Renderer::applyUserSpecificShaderUniformsForRenderable(const std::shared_ptr<Renderable>& renderable)
 	{
@@ -758,7 +774,7 @@ namespace AW
 			return;
 		}
 
-		changeProgram(createAndLinkProgram(vShader->getShaderIds(), fShader->getShaderIds(), fShader->getLoaderId()));
+		changeProgram(vShader, fShader);
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -821,9 +837,9 @@ namespace AW
 
 	void Renderer::updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
-		const auto clipRectVertexShader = rend->getClipRectVertexShader(), clipRectFragmentShader = rend->getClipRectFragmentShader();
+		const auto clipRectVShader = rend->getClipRectVertexShader(), clipRectFShader = rend->getClipRectFragmentShader();
 
-		if (clipRectVertexShader == nullptr || clipRectFragmentShader == nullptr)
+		if (clipRectVShader == nullptr || clipRectFShader == nullptr)
 		{
 			return;
 		}
@@ -857,7 +873,7 @@ namespace AW
 
 		mat4x4_mul(mvp, tP, m);
 
-		changeProgram(createAndLinkProgram(clipRectVertexShader->getShaderIds(), clipRectFragmentShader->getShaderIds(), clipRectFragmentShader->getLoaderId()));
+		changeProgram(clipRectVShader, clipRectFShader);
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
@@ -914,7 +930,7 @@ namespace AW
 			return;
 		}
 
-		changeProgram(createAndLinkProgram(vShader->getShaderIds(), fShader->getShaderIds(), fShader->getLoaderId()));
+		changeProgram(vShader, fShader);
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -1028,13 +1044,13 @@ namespace AW
 
 			if (pVShader != nullptr && pFShader != nullptr)
 			{
-				changeProgram(createAndLinkProgram(pVShader->getShaderIds(), pFShader->getShaderIds(), pFShader->getLoaderId()));
+				changeProgram(pVShader, pFShader);
 				applyShaderUniforms(pVShader);
 				applyShaderUniforms(pFShader);
 			}
 			else
 			{
-				changeProgram(createAndLinkProgram(systemVShader->getShaderIds(), systemFShader->getShaderIds(), systemFShader->getLoaderId()));
+				changeProgram(systemVShader, systemFShader);
 				applyUserSpecificShaderUniformsForRenderable(prim);
 			}
 
@@ -1064,7 +1080,7 @@ namespace AW
 			return;
 		}
 
-		changeProgram(createAndLinkProgram(vShader->getShaderIds(), fShader->getShaderIds(), fShader->getLoaderId()));
+		changeProgram(vShader, fShader);
 
 		const auto width = screenWidth, height = screenHeight;
 		const auto zoom = renderPackage->zoom;

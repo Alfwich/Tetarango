@@ -4,19 +4,16 @@ namespace AW
 {
 	ShaderReference::ShaderReference(std::vector<std::weak_ptr<Shader>> shaders, std::weak_ptr<Shader> loader) : shaders(shaders), loader(loader) {};
 
-	const std::vector<GLuint>& ShaderReference::getShaderIds()
+	std::vector<GLuint> ShaderReference::getShaderIds()
 	{
-		if (ids.empty())
+		auto ids = std::vector<GLuint>();
+		int i = 1;
+		for (const auto shaderWeakPtr : shaders)
 		{
-			ids.clear();
-			int i = 1;
-			for (const auto shaderWeakPtr : shaders)
+			const auto ptr = shaderWeakPtr.lock();
+			if (ptr != nullptr)
 			{
-				const auto ptr = shaderWeakPtr.lock();
-				if (ptr != nullptr)
-				{
-					ids.push_back(ptr->getShaderId(i++));
-				}
+				ids.push_back(ptr->getShaderId(i++));
 			}
 		}
 
@@ -53,9 +50,19 @@ namespace AW
 		return floatIUParams;
 	}
 
+	void ShaderReference::setCachedProgramId(GLuint programId)
+	{
+		cachedProgramId = programId;
+	}
+
+	GLuint ShaderReference::getCachedProgramId()
+	{
+		return cachedProgramId;
+	}
+
 	void ShaderReference::resetCache()
 	{
-		ids.clear();
 		loaderId = 0;
+		cachedProgramId = 0;
 	}
 }
