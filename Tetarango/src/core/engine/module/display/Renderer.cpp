@@ -335,7 +335,6 @@ namespace AW
 			currentProgramId = programId;
 
 			inMatrixLocation = getUniformLocationForCurrentProgram("mvp", programId);
-			inUVMatrixLocation = getUniformLocationForCurrentProgram("UVproj", programId);
 			inColorModLocation = getUniformLocationForCurrentProgram("cMod", programId);
 		}
 	}
@@ -817,27 +816,6 @@ namespace AW
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
-		mat4x4_identity(UVp);
-
-		if (ele->renderType == RenderType::Backdrop)
-		{
-			mat4x4_scale_aniso(UVp, UVp, ele->getWidth() / ele->getTexture()->getWidth(), ele->getHeight() / ele->getTexture()->getHeight(), 1.0);
-		}
-
-		const auto textureClipRect = ele->getTextureClipRect();
-		if (textureClipRect != nullptr)
-		{
-			double scaleX = textureClipRect->w / ele->getTexture()->getWidth();
-			double scaleY = textureClipRect->h / ele->getTexture()->getHeight();
-			double xOffset = textureClipRect->x / ele->getTexture()->getWidth();
-			double yOffset = textureClipRect->y / ele->getTexture()->getHeight();
-
-			mat4x4_translate_in_place(UVp, xOffset, yOffset, 0.0);
-			mat4x4_scale_aniso(UVp, UVp, scaleX, scaleY, 1.0);
-		}
-
-		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
-
 		setColorModParam(renderPackage);
 
 		bindGLTexture(glTextureId);
@@ -972,8 +950,6 @@ namespace AW
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
-		mat4x4_identity(UVp);
-
 		setColorModParam(renderPackage);
 
 		openGLDrawArrays(renderPackage);
@@ -1018,8 +994,6 @@ namespace AW
 			mat4x4_mul(m, t, m);
 			mat4x4_mul(mvp, tP, m);
 
-			mat4x4_identity(UVp);
-
 			const auto clipRect = particle->clip;
 			double scaleX, scaleY, xOffset, yOffset;
 			if (glTextureId != 0)
@@ -1037,9 +1011,6 @@ namespace AW
 				yOffset = clipRect.y / particle->h;
 			}
 
-			mat4x4_translate_in_place(UVp, xOffset, yOffset, 0.0);
-			mat4x4_scale_aniso(UVp, UVp, scaleX, scaleY, 1.0);
-
 			const auto pVShader = particle->getVertexShader();
 			const auto pFShader = particle->getFragmentShader();
 
@@ -1055,7 +1026,6 @@ namespace AW
 			}
 
 			glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
-			glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
 			glUniform4f(inColorModLocation, particle->cModR / 255.0, particle->cModG / 255.0, particle->cModB / 255.0, (particle->alphaMod / 255.0) * renderPackage->alpha);
 
 			bindGLTexture(glTextureId);
@@ -1091,9 +1061,6 @@ namespace AW
 			tileW,
 			tileH
 		};
-
-		mat4x4_identity(UVp);
-		glUniformMatrix4fv(inUVMatrixLocation, 1, GL_FALSE, (const GLfloat*)UVp);
 
 		int rows = std::ceil(computed->w / tileSize.w) + 1;
 		int cols = std::ceil(computed->h / tileSize.h) + 1;

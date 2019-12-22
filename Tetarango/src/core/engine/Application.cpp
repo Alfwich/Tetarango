@@ -134,7 +134,7 @@ namespace AW
 		modules->shader->loadShader("res/shader/fragment/pulsate.glsl", "f-pulsate");
 		modules->shader->loadShader("res/shader/fragment/clip.glsl", "f-clip");
 
-		modules->shader->registerShaderComposition({ "f-color", "f-texture" }, "element");
+		modules->shader->registerShaderComposition({ "f-texture", "f-color" }, "element");
 
 		modules->screen->bindDefaultShaders();
 	}

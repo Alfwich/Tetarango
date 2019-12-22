@@ -25,13 +25,13 @@ namespace AW
 		SDL_GLContext glContext;
 		Color clearColor;
 
-		mat4x4 mvp, p, pAbs, m, t, UVp, tP;
+		mat4x4 mvp, p, pAbs, m, t, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
 
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
 		std::unordered_map<std::string, GLuint> programs;
 		std::unordered_map<GLuint, std::unordered_map<std::string, GLuint>> programIdToProgramUniformMapId;
-		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0;
+		GLuint inMatrixLocation = 0, inColorModLocation = 0;
 
 		std::shared_ptr<Camera> camera;
 		std::stack<RenderPositionMode> renderPositionModeStack;

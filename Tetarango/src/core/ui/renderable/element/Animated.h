@@ -26,8 +26,8 @@ namespace AW
 
 	public:
 		bool sizeToAnimation = true;
-
 		Animated();
+
 		virtual void play(std::string animationName = "");
 		void pause();
 		void stop();
@@ -45,6 +45,8 @@ namespace AW
 
 		std::shared_ptr<Rect> getTextureClipRect();
 		virtual void enterFrame(const double& frameTime);
+
+		void onBindShaders();
 
 		virtual void onInitialAttach();
 		virtual void onAttach();

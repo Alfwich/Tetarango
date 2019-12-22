@@ -93,9 +93,17 @@ namespace AW
 		currentAnimation = animationSet->getAnimation(animationPrefix + animationName);
 		prefixHasChanged = false;
 
+		const auto clipRect = getTextureClipRect();
+		if (fragmentShader != nullptr)
+		{
+			fragmentShader->setFloatIUParam("clipX", clipRect->x);
+			fragmentShader->setFloatIUParam("clipY", clipRect->y);
+			fragmentShader->setFloatIUParam("clipWidth", clipRect->w);
+			fragmentShader->setFloatIUParam("clipHeight", clipRect->h);
+		}
+
 		if (sizeToAnimation && currentAnimation != nullptr)
 		{
-			const auto clipRect = getTextureClipRect();
 			setSize(clipRect->w, clipRect->h);
 		}
 	}
@@ -118,6 +126,11 @@ namespace AW
 		}
 
 		GameObject::enterFrame(frameTime);
+	}
+
+	void Animated::onBindShaders()
+	{
+		fragmentShader = modules->shader->getShader({ "f-clip", "element" });
 	}
 
 	void Animated::onInitialAttach()
