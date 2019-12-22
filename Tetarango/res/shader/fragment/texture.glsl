@@ -1,10 +1,12 @@
 ﻿#version 330 core
 
+
 uniform sampler2D textureSampler;
 
+vec4 pColor;
 vec4 texLoc;
 
-vec4 _mainN(vec4 c) 
+void main() 
 {
-	return c * texture(textureSampler, texLoc.xy).rgba;
+	pColor *= texture(textureSampler, texLoc.xy).rgba;
 };

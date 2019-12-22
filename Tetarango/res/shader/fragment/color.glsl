@@ -2,8 +2,10 @@
 
 in vec4 colorMod;
 
-vec4 _mainN(vec4 c) 
+vec4 pColor;
+
+void main() 
 {
-	return c * colorMod;
+	pColor *= colorMod;
 };
 

@@ -2,7 +2,9 @@
 
 uniform float alpha;
 
-vec4 _mainN(vec4 c) 
+vec4 pColor;
+
+void main() 
 {
-	return vec4(alpha * c.xyz, alpha);
+	pColor = vec4(alpha * pColor.xyz, alpha);
 };

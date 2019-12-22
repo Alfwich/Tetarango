@@ -1,6 +1,8 @@
 ﻿#version 330 core
 
-vec4 _mainN(vec4 c) 
+vec4 pColor;
+
+void main() 
 {
-	return vec4(1 - c.r, 1 - c.g, 1 - c.b, c.a);
+	pColor = vec4(1 - pColor.r, 1 - pColor.g, 1 - pColor.b, pColor.a);
 };

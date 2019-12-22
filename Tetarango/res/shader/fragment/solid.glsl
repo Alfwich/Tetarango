@@ -1,7 +1,6 @@
 ﻿#version 330 core
 
-vec4 _mainN(vec4 c) 
+void main() 
 {
-	return c;
 };
 

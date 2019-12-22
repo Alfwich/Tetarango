@@ -7,7 +7,8 @@
 
 namespace
 {
-	const auto replaceToken = "_main";
+	const auto loaderReplaceToken = "mainN()";
+	const auto fragmentReplaceToken = "void main()";
 	const auto repeatToken = std::string("//#REPEAT");
 }
 
@@ -54,10 +55,10 @@ namespace AW
 		{
 		case ShaderType::Fragment:
 		{
-			const auto mainPos = AW::StringHelper::distanceToLeft(&programData, replaceToken);
+			const auto mainPos = AW::StringHelper::distanceToLeft(&programData, fragmentReplaceToken);
 			if (mainPos < programData.size())
 			{
-				programData = programData.substr(0, mainPos + 5) + std::to_string(loc) + programData.substr(mainPos + 6);
+				programData = programData.substr(0, mainPos + 9) + std::to_string(loc) + programData.substr(mainPos + 9);
 			}
 			break;
 		}
@@ -82,8 +83,8 @@ namespace AW
 				{
 					for (auto i = 1; i < loc + 1; ++i)
 					{
-						const auto tokenPos = AW::StringHelper::distanceToLeft(&line, replaceToken);
-						auto lineC = line.substr(0, tokenPos + 5) + std::to_string(i) + line.substr(tokenPos + 6);
+						const auto tokenPos = AW::StringHelper::distanceToLeft(&line, loaderReplaceToken);
+						auto lineC = line.substr(0, tokenPos + 4) + std::to_string(i) + line.substr(tokenPos + 5);
 						processedData += lineC + "\n";
 					}
 					lineStartPos = dataPos + (unsigned int)repeatToken.size();

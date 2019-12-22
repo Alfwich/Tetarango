@@ -7,7 +7,7 @@ uniform float targetHeight;
 vec4 texLoc;
 ivec2 texSize;
 
-vec4 _mainN(vec4 c) 
+void main() 
 {
 	float widthR = cornerSize * (1.0 / targetWidth);
 	float heightR = cornerSize * (1.0 / targetHeight);
@@ -40,6 +40,4 @@ vec4 _mainN(vec4 c)
 	{
 		texLoc.y = (1.0 / texSize.y) * (texSize.y / 2.0);
 	}
-
-	return c;
 };

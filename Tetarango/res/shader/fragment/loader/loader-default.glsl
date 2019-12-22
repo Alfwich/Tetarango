@@ -5,21 +5,21 @@ in vec2 UV;
 
 uniform sampler2D textureSampler;
 
-vec4 _mainN(vec4 c); //#REPEAT
+void mainN(); //#REPEAT
 
+vec4 pColor;
 vec4 texLoc;
 ivec2 texSize;
 
 void main() 
 {
+	pColor = vec4(1.0);
 	texLoc = vec4(UV, 1, 1);
 	texSize = textureSize(textureSampler, 0);
 
-	vec4 c = vec4(1.0);
+	mainN(); //#REPEAT
 
-	c = _mainN(c); //#REPEAT
+	if (pColor.a == 0) discard;
 
-	if (c.a == 0) discard;
-
-	color = c;
+	color = pColor;
 };

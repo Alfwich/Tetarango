@@ -3,13 +3,14 @@
 uniform sampler2D textureSampler;
 uniform float blurAmount;
 
+vec4 pColor;
 vec4 texLoc;
 ivec2 texSize;
 
 const float PI = 3.1415926535897932384626433832795;
 const float PI_2 = PI * 2.0;
 
-vec4 _mainN(vec4 c) 
+void main() 
 {
 	vec4 blurred = vec4(0);
 	int samplePasses = 10;
@@ -28,7 +29,5 @@ vec4 _mainN(vec4 c)
 
 	blurred /= (4 * samplePasses);
 
-	c = c * (1 - blurAmount) + blurred * blurAmount;
-
-	return c;
+	pColor = pColor * (1 - blurAmount) + blurred * blurAmount;
 };

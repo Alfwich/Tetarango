@@ -10,10 +10,9 @@ uniform float clipHeight;
 vec4 texLoc;
 ivec2 texSize;
 
-vec4 _mainN(vec4 c) 
+void main() 
 {
 	texLoc = vec4(UV.x * (clipWidth / texSize.x), UV.y * (clipHeight / texSize.y), 1, 1);
 	texLoc = vec4(texLoc.x + clipX * (1.0 / texSize.x), texLoc.y + clipY * (1.0 / texSize.y), 1, 1);
 	texSize = ivec2(clipWidth, clipHeight);
-	return c;
 };

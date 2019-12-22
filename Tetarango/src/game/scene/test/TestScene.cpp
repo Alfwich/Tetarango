@@ -149,7 +149,7 @@ namespace AWGame
 			testEle->setTexture("button-basic");
 			testEle->setSize(800.0, 600.0);
 			add(testEle);
-			testEle->setFragmentShader(modules->shader->getShader({ "f-clip", "f-9slice", "f-texture", "f-color", "f-negate" }));
+			testEle->setFragmentShader(modules->shader->getShader({ "f-color" }));
 			testEle->getFragmentShader()->setFloatIUParam("cornerSize", 16);
 			testEle->getFragmentShader()->setFloatIUParam("clipWidth", 64);
 			testEle->getFragmentShader()->setFloatIUParam("clipHeight", 64);
