@@ -145,6 +145,10 @@ namespace AW
 			renderer = std::make_shared<Renderer>(currentConfig, renderer);
 			renderer->initOpenGL(window);
 		}
+		else
+		{
+			renderer->updateScreenConfig(currentConfig);
+		}
 
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 		glViewport(0, 0, windowWidth, windowHeight);

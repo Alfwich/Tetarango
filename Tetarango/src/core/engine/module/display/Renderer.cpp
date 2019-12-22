@@ -437,6 +437,11 @@ namespace AW
 		return glContext != NULL;
 	}
 
+	void Renderer::updateScreenConfig(const ScreenConfig & config)
+	{
+		currentScreenConfig = config;
+	}
+
 	void Renderer::prepareRender(Screen* screen, double frameTimestamp)
 	{
 		currentFrameTimestamp = frameTimestamp;
@@ -525,7 +530,6 @@ namespace AW
 				if (currentScreenConfig.visualizeContainers)
 				{
 					debugObject = std::make_shared<Rectangle>();
-					debugObject->onBindShaders();
 					debugObject->markIsDebugElement();
 					debugObject->matchSize(container);
 					debugObject->topLeftAlignSelf();
@@ -578,7 +582,6 @@ namespace AW
 			{
 				const auto debugObject = std::make_shared<Rectangle>();
 				debugObject->markIsDebugElement();
-				debugObject->onBindShaders();
 				debugObject->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
 				debugObject->zIndex = 20;
 				debugObject->setAlpha(0.25);

@@ -18,6 +18,8 @@ namespace AWGame
 	public:
 		TestScene();
 
+		void onLoadResources();
+
 		void onInitialAttach();
 		void onAttach();
 		void onCreateChildren();

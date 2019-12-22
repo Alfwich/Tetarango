@@ -18,6 +18,11 @@ namespace AWGame
 		registerSerialization<TestScene>();
 	}
 
+	void TestScene::onLoadResources()
+	{
+		modules->texture->loadTexture("res/image/ui/9slice-black.png", "nine-slice-black");
+	}
+
 	void TestScene::onInitialAttach()
 	{
 		enableEnterFrame();
@@ -41,11 +46,6 @@ namespace AWGame
 		mainGameMenu->visible = false;
 		add(mainGameMenu);
 
-		const auto backdrop = std::make_shared<AW::Backdrop>();
-		backdrop->setTexture("test-scene-background");
-		backdrop->setSizeToEffectiveInfinity();
-		add(backdrop);
-
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
 		camera->setZoomLimits(4.0, 1.0);
@@ -53,6 +53,14 @@ namespace AWGame
 		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		camera->setTimeScope(AW::TimeScope::Camera);
 		add(camera);
+
+		/*
+		const auto backdrop = std::make_shared<AW::Backdrop>();
+		backdrop->setTexture("test-scene-background");
+		backdrop->setSizeToEffectiveInfinity();
+		add(backdrop);
+
+
 
 		auto parentEle = std::make_shared<AW::Rectangle>();
 		auto hatEle = std::make_shared<AW::Rectangle>();
@@ -121,8 +129,33 @@ namespace AWGame
 					board->add(newBlock);
 				}
 			}
-
 		}
+		*/
+
+		{
+			const auto testEle = std::make_shared<AW::Element>();
+			testEle->setTexture("nine-slice-black");
+			testEle->setSize(800.0, 800.0);
+			add(testEle);
+			//testEle->setFragmentShader(modules->shader->getShader({ "f-9slice", /*"f-texture",*/ "f-color" }));
+			testEle->setFragmentShader(modules->shader->getShader({ "f-9slice", "f-texture", "f-color" }));
+			testEle->getFragmentShader()->setFloatIUParam("cornerSize", 32);
+			testEle->getFragmentShader()->setFloatIUParam("targetWidth", 800.0);
+			testEle->getFragmentShader()->setFloatIUParam("targetHeight", 800.0);
+		}
+
+		{
+			const auto testEle = std::make_shared<AW::Element>();
+			testEle->setTexture("button-basic");
+			testEle->setSize(800.0, 600.0);
+			add(testEle);
+			testEle->setFragmentShader(modules->shader->getShader({ "f-clip", "f-9slice", "f-texture", "f-color", "f-negate" }));
+			testEle->getFragmentShader()->setFloatIUParam("cornerSize", 16);
+			testEle->getFragmentShader()->setFloatIUParam("clipWidth", 64);
+			testEle->getFragmentShader()->setFloatIUParam("clipHeight", 64);
+			testEle->setPosition(800.0, 0.0);
+		}
+
 	}
 
 	void TestScene::onChildrenHydrated()

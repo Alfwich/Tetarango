@@ -133,6 +133,7 @@ namespace AW
 		modules->shader->loadShader("res/shader/fragment/alpha.glsl", "f-alpha");
 		modules->shader->loadShader("res/shader/fragment/pulsate.glsl", "f-pulsate");
 		modules->shader->loadShader("res/shader/fragment/clip.glsl", "f-clip");
+		modules->shader->loadShader("res/shader/fragment/9slice.glsl", "f-9slice");
 
 		modules->shader->registerShaderComposition({ "f-texture", "f-color" }, "element");
 

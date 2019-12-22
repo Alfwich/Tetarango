@@ -92,6 +92,8 @@ namespace AW
 		void setDefaultShaders(std::shared_ptr<ShaderReference> vertexShader, std::shared_ptr<ShaderReference> fragmentShader);
 		bool isOpenGLEnabled();
 
+		void updateScreenConfig(const ScreenConfig& config);
+
 		void setClearColor(int r, int g, int b, int a);
 		void render(std::shared_ptr<Renderable> obj, Screen* screen, double frameTimestamp);
 
