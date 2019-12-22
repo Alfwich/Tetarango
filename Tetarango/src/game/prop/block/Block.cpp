@@ -32,33 +32,19 @@ namespace AWGame
 	{
 		modules->texture->loadTexture("res/image/prop/block/blocks.png", blockTextureName);
 
-		modules->shader->registerShaderComposition({ "f-texture", "f-blur", "f-pulsate", "f-color", "f-alpha" }, "block");
-
-		auto animationSet = std::make_shared<AW::AnimationSet>();
-		{
-			int fps = 15;
-			AW::RectI frameSize = {
-				0,
-				0,
-				32,
-				32
-			};
-
-			{
-				auto anim = animationSet->startNewAnimation("default");
-				anim->setFps(fps);
-				anim->addGeneralFrames(0, 0, frameSize.w, frameSize.h, 1);
-			}
-		}
-
-		modules->animation->addAnimationSet(animationSet, blockAnimationName);
+		modules->shader->registerShaderComposition({ "f-clip", "f-texture", "f-color", "f-pulsate", "f-negate", "f-alpha" }, "block");
 	}
 
 	void Block::onBindShaders()
 	{
-		Animated::onBindShaders();
+		Element::onBindShaders();
 
 		fragmentShader = modules->shader->getShader({ "block" }, true);
+		fragmentShader->setFloatIUParam("clipX", 0.0);
+		fragmentShader->setFloatIUParam("clipY", 0.0);
+		fragmentShader->setFloatIUParam("clipWidth", 28.0);
+		fragmentShader->setFloatIUParam("clipHeight", 28.0);
+
 		fragmentShader->setFloatIUParam("pulsateAmount", AW::NumberHelper::random(0.0, 0.3));
 		fragmentShader->setFloatIUParam("blurAmount", AW::NumberHelper::random());
 		fragmentShader->setFloatIUParam("alpha", 1.0);
@@ -66,16 +52,7 @@ namespace AWGame
 
 	void Block::onInitialAttach()
 	{
-		AW::Animated::onInitialAttach();
-
 		setTexture(blockTextureName);
-		setAnimationSet(blockAnimationName);
-		setCurrentAnimation("default");
-	}
-
-	void Block::onCreateChildren()
-	{
-		AW::Animated::onCreateChildren();
 	}
 
 	std::shared_ptr<AW::SerializationClient> Block::doSerialize(AW::SerializationHint hint)
@@ -86,6 +63,6 @@ namespace AWGame
 		blockY = client->serializeInt("block-y", blockY);
 		hasSettled = client->serializeBool("block-set", hasSettled);
 
-		return Animated::doSerialize(hint);
+		return Element::doSerialize(hint);
 	}
 }

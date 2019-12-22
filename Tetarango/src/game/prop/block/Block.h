@@ -8,7 +8,7 @@
 
 namespace AWGame
 {
-	class Block : public AW::Animated, public BaseProp, public AW::INotifyOnTransition
+	class Block : public AW::Element, public BaseProp, public AW::INotifyOnTransition
 	{
 		double energy = 0.0;
 	public:
@@ -23,7 +23,6 @@ namespace AWGame
 		void onBindShaders();
 
 		void onInitialAttach();
-		void onCreateChildren();
 		std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 	};
 }

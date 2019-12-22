@@ -68,8 +68,8 @@ namespace Config
 				base[Param::useAssetPack] = FALSE;
 				base[Param::saveWholeSceneOnClose] = TRUE;
 				base[Param::immediateDebugOutput] = TRUE;
+				base[Param::launchToLastScene] = TRUE;
 				//base[Param::runTests] = TRUE;
-				//base[Param::launchToLastScene] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::enableTestScenes] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;

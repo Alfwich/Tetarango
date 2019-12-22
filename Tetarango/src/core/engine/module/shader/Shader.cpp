@@ -8,7 +8,7 @@
 namespace
 {
 	const auto replaceToken = "_main";
-	const auto repeatToken = "//#RE";
+	const auto repeatToken = std::string("//#REPEAT");
 }
 
 namespace AW
@@ -78,7 +78,7 @@ namespace AW
 						line = std::string();
 					}
 				}
-				else if (dataPos + 3 < programData.size() && AW::StringHelper::startsWith(&programData.at(dataPos), repeatToken))
+				else if (dataPos + repeatToken.size()-1 < programData.size() && AW::StringHelper::startsWith(&programData.at(dataPos), repeatToken))
 				{
 					for (auto i = 1; i < loc + 1; ++i)
 					{
@@ -86,8 +86,8 @@ namespace AW
 						auto lineC = line.substr(0, tokenPos + 5) + std::to_string(i) + line.substr(tokenPos + 6);
 						processedData += lineC + "\n";
 					}
-					lineStartPos = dataPos + 4;
-					dataPos += 4;
+					lineStartPos = dataPos + repeatToken.size();
+					dataPos += repeatToken.size();
 					line = std::string();
 				}
 				else

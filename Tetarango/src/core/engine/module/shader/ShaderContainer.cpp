@@ -105,11 +105,19 @@ namespace AW
 					{
 						shadersToPack.push_back(shaders.at(compName));
 					}
+					else
+					{
+						Logger::instance()->logCritical("ShaderContainer::Failed to get shader with name=" + compName + ", from comp, as it does not exist");
+					}
 				}
 			}
 			else if (shaders.count(name) == 1)
 			{
 				shadersToPack.push_back(shaders.at(name));
+			}
+			else
+			{
+				Logger::instance()->logCritical("ShaderContainer::Failed to get shader with name=" + name + " as it does not exist");
 			}
 		}
 
