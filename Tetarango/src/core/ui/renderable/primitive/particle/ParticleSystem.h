@@ -37,6 +37,8 @@ namespace AW
 	public:
 		ParticleSystem();
 
+		void onBindShaders();
+
 		void setParticleFactory(std::shared_ptr<IParticleFactory> factory);
 		void setParticlesPerSecond(int particlesPerSecond);
 		void setSystemVelocity(double xVelocity, double yVelocity);

@@ -17,29 +17,6 @@ namespace AW
 		registerSerialization<Container>();
 	}
 
-	void Container::onBindShaders()
-	{
-		if (vertexShader == nullptr)
-		{
-			vertexShader = modules->shader->getShader({ "v-default" });
-		}
-
-		if (fragmentShader == nullptr)
-		{
-			fragmentShader = modules->shader->getShader({ "f-color", "f-texture" });
-		}
-
-		if (clipRectVertexShader == nullptr)
-		{
-			clipRectVertexShader = modules->shader->getShader({ "v-default" });
-		}
-
-		if (clipRectFragmentShader == nullptr)
-		{
-			clipRectFragmentShader = modules->shader->getShader({ "f-cliprect" });
-		}
-	}
-
 	void Container::setSizeToScreenSize()
 	{
 		setSize(modules->screen->getWidth(), modules->screen->getHeight());

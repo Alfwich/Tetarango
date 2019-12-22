@@ -62,6 +62,7 @@ namespace AW
 		void bindTime(std::shared_ptr<Time> time);
 
 		bool init(const ScreenConfig& config, std::string name = "Window");
+		void bindDefaultShaders();
 		int getWidth();
 		int getHeight();
 		void setClearColor(int r, int g, int b, int a = 0xff);

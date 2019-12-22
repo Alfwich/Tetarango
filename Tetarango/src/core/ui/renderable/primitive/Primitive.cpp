@@ -8,30 +8,6 @@ namespace AW
 		renderType = RenderType::Primitive;
 	}
 
-	void Primitive::onBindShaders()
-	{
-		if (vertexShader == nullptr)
-		{
-			vertexShader = modules->shader->getShader({ "v-default" });
-		}
-
-		if (fragmentShader == nullptr)
-		{
-			fragmentShader = modules->shader->getShader({ "f-color" });
-		}
-
-		if (clipRectVertexShader == nullptr)
-		{
-			clipRectVertexShader = modules->shader->getShader({ "v-default" });
-		}
-
-		if (clipRectFragmentShader == nullptr)
-		{
-			clipRectFragmentShader = modules->shader->getShader({ "f-cliprect" });
-		}
-
-	}
-
 	std::shared_ptr<SerializationClient> Primitive::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__primitive__", hint);

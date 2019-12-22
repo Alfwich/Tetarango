@@ -37,13 +37,11 @@ namespace AWGame
 
 	void Block::onBindShaders()
 	{
-		Element::onBindShaders();
-
 		fragmentShader = modules->shader->getShader({ "block" }, true);
 		fragmentShader->setFloatIUParam("clipX", 0.0);
 		fragmentShader->setFloatIUParam("clipY", 0.0);
-		fragmentShader->setFloatIUParam("clipWidth", 28.0);
-		fragmentShader->setFloatIUParam("clipHeight", 28.0);
+		fragmentShader->setFloatIUParam("clipWidth", 32.0);
+		fragmentShader->setFloatIUParam("clipHeight", 32.0);
 
 		fragmentShader->setFloatIUParam("pulsateAmount", AW::NumberHelper::random(0.0, 0.3));
 		fragmentShader->setFloatIUParam("blurAmount", AW::NumberHelper::random());

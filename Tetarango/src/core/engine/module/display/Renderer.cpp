@@ -106,6 +106,12 @@ namespace AW
 		layerFactor = (1 << 16) / maxLayers;
 	}
 
+	void Renderer::setDefaultShaders(std::shared_ptr<ShaderReference> vertexShader, std::shared_ptr<ShaderReference> fragmentShader)
+	{
+		defaultVertexShader = vertexShader;
+		defaultFragmentShader = fragmentShader;
+	}
+
 	void Renderer::harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous)
 	{
 		clearColor = previous->clearColor;
@@ -284,6 +290,29 @@ namespace AW
 		return programIdToProgramUniformMapId[programId][paramName];
 	}
 
+	void Renderer::changeProgram(const std::shared_ptr<Renderable>& renderable)
+	{
+		auto vertexShader = renderable->getVertexShader();
+		if (vertexShader == nullptr)
+		{
+			vertexShader = defaultVertexShader;
+			vertexShader->setCachedProgramId(renderable->cachedProgramId);
+		}
+
+		auto fragmentShader = renderable->getFragmentShader();
+		if (fragmentShader == nullptr)
+		{
+			fragmentShader = defaultFragmentShader;
+		}
+
+		changeProgram(vertexShader, fragmentShader);
+
+		renderable->cachedProgramId = vertexShader->getCachedProgramId();
+
+		applyShaderUniforms(vertexShader);
+		applyShaderUniforms(fragmentShader);
+	}
+
 	void Renderer::changeProgram(const std::shared_ptr<ShaderReference>& vertexShader, const std::shared_ptr<ShaderReference>& fragmentShader)
 	{
 		if (vertexShader->getCachedProgramId() != 0)
@@ -308,7 +337,6 @@ namespace AW
 			inMatrixLocation = getUniformLocationForCurrentProgram("mvp", programId);
 			inUVMatrixLocation = getUniformLocationForCurrentProgram("UVproj", programId);
 			inColorModLocation = getUniformLocationForCurrentProgram("cMod", programId);
-			inFrameTimeLocation = getUniformLocationForCurrentProgram("frameTime", programId);
 		}
 	}
 
@@ -364,14 +392,6 @@ namespace AW
 		}
 
 		return programs.at(key);
-	}
-
-
-
-	void Renderer::applyUserSpecificShaderUniformsForRenderable(const std::shared_ptr<Renderable>& renderable)
-	{
-		applyShaderUniforms(renderable->getVertexShader());
-		applyShaderUniforms(renderable->getFragmentShader());
 	}
 
 	void Renderer::applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader)
@@ -766,15 +786,7 @@ namespace AW
 			return;
 		}
 
-		const auto vShader = ele->getVertexShader();
-		const auto fShader = ele->getFragmentShader();
-
-		if (vShader == nullptr || fShader == nullptr)
-		{
-			return;
-		}
-
-		changeProgram(vShader, fShader);
+		changeProgram(ele);
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -830,20 +842,11 @@ namespace AW
 
 		bindGLTexture(glTextureId);
 
-		applyUserSpecificShaderUniformsForRenderable(ele);
-
 		openGLDrawArrays(renderPackage);
 	}
 
 	void Renderer::updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
-		const auto clipRectVShader = rend->getClipRectVertexShader(), clipRectFShader = rend->getClipRectFragmentShader();
-
-		if (clipRectVShader == nullptr || clipRectFShader == nullptr)
-		{
-			return;
-		}
-
 		const auto clipRect = rend->getClipRect();
 
 		const auto cW = clipRect->w / 2.0;
@@ -873,12 +876,28 @@ namespace AW
 
 		mat4x4_mul(mvp, tP, m);
 
-		changeProgram(clipRectVShader, clipRectFShader);
+		auto vertexShader = rend->getClipRectVertexShader();
+		if (vertexShader == nullptr)
+		{
+			vertexShader = defaultVertexShader;
+			vertexShader->setCachedProgramId(rend->cachedClipRectProgram);
+		}
+
+		auto fragmentShader = rend->getFragmentShader();
+		if (fragmentShader == nullptr)
+		{
+			fragmentShader = defaultFragmentShader;
+		}
+
+		changeProgram(vertexShader, fragmentShader);
+
+		rend->cachedClipRectProgram = vertexShader->getCachedProgramId();
+
+		applyShaderUniforms(vertexShader);
+		applyShaderUniforms(fragmentShader);
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
-
-		applyShaderUniforms(rend->getClipRectVertexShader());
-		applyShaderUniforms(rend->getClipRectFragmentShader());
+		glUniform4f(inColorModLocation, 1.0, 1.0, 1.0, 1.0);
 
 		openGLDrawArraysStencil(renderPackage);
 	}
@@ -922,15 +941,7 @@ namespace AW
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
 	{
-		const auto vShader = prim->getVertexShader();
-		const auto fShader = prim->getFragmentShader();
-
-		if (vShader == nullptr || fShader == nullptr)
-		{
-			return;
-		}
-
-		changeProgram(vShader, fShader);
+		changeProgram(prim);
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -965,8 +976,6 @@ namespace AW
 
 		setColorModParam(renderPackage);
 
-		applyUserSpecificShaderUniformsForRenderable(prim);
-
 		openGLDrawArrays(renderPackage);
 
 	}
@@ -975,14 +984,6 @@ namespace AW
 	{
 		const auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(prim);
 		if (particleSystem == nullptr)
-		{
-			return;
-		}
-
-		const auto systemVShader = prim->getVertexShader();
-		const auto systemFShader = prim->getFragmentShader();
-
-		if (systemVShader == nullptr || systemFShader == nullptr)
 		{
 			return;
 		}
@@ -1050,8 +1051,7 @@ namespace AW
 			}
 			else
 			{
-				changeProgram(systemVShader, systemFShader);
-				applyUserSpecificShaderUniformsForRenderable(prim);
+				changeProgram(prim);
 			}
 
 			glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
@@ -1072,15 +1072,7 @@ namespace AW
 			return;
 		}
 
-		const auto vShader = ele->getVertexShader();
-		const auto fShader = ele->getFragmentShader();
-
-		if (vShader == nullptr || fShader == nullptr)
-		{
-			return;
-		}
-
-		changeProgram(vShader, fShader);
+		changeProgram(ele);
 
 		const auto width = screenWidth, height = screenHeight;
 		const auto zoom = renderPackage->zoom;
@@ -1144,8 +1136,6 @@ namespace AW
 					setColorModParam(renderPackage);
 
 					bindGLTexture(glTextureId);
-
-					applyUserSpecificShaderUniformsForRenderable(ele);
 
 					openGLDrawArrays(renderPackage);
 				}

@@ -109,7 +109,6 @@ namespace AW
 		running = true;
 
 		root->onInitialAttach();
-		root->onBindShaders();
 		root->createChildren();
 
 		modules->logger->log("Application::onReady");
@@ -123,6 +122,7 @@ namespace AW
 		modules->shader->loadShaderLoader("res/shader/fragment/loader/loader-default.glsl", "default");
 
 		modules->shader->loadShader("res/shader/vertex/default.glsl", "v-default");
+		modules->shader->loadShader("res/shader/fragment/color.glsl", "f-default");
 
 		modules->shader->loadShader("res/shader/fragment/texture.glsl", "f-texture");
 		modules->shader->loadShader("res/shader/fragment/solid.glsl", "f-solid");
@@ -135,7 +135,8 @@ namespace AW
 		modules->shader->loadShader("res/shader/fragment/clip.glsl", "f-clip");
 
 		modules->shader->registerShaderComposition({ "f-color", "f-texture" }, "element");
-		modules->shader->registerShaderComposition({ "f-color" }, "primitive");
+
+		modules->screen->bindDefaultShaders();
 	}
 
 	void Application::primeSerialization()

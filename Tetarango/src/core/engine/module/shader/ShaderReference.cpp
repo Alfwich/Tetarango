@@ -2,7 +2,7 @@
 
 namespace AW
 {
-	ShaderReference::ShaderReference(std::vector<std::weak_ptr<Shader>> shaders, std::weak_ptr<Shader> loader) : shaders(shaders), loader(loader) {};
+	ShaderReference::ShaderReference(std::vector<std::weak_ptr<Shader>> shaders, std::weak_ptr<Shader> loader) : shaders(shaders), loader(loader) {}
 
 	std::vector<GLuint> ShaderReference::getShaderIds()
 	{
@@ -36,13 +36,16 @@ namespace AW
 
 	bool ShaderReference::hasCustomParams()
 	{
-		return hasSetParams;
+		return !paramsDisabled && hasSetParams;
 	}
 
 	void ShaderReference::setFloatIUParam(std::string name, GLfloat val)
 	{
-		hasSetParams = true;
-		floatIUParams[name] = val;
+		if (!paramsDisabled)
+		{
+			hasSetParams = true;
+			floatIUParams[name] = val;
+		}
 	}
 
 	const std::map<std::string, GLfloat>& ShaderReference::getFloatIUParams()
@@ -58,6 +61,11 @@ namespace AW
 	GLuint ShaderReference::getCachedProgramId()
 	{
 		return cachedProgramId;
+	}
+
+	void ShaderReference::lock()
+	{
+		paramsDisabled = true;
 	}
 
 	void ShaderReference::resetCache()

@@ -86,8 +86,8 @@ namespace AW
 						auto lineC = line.substr(0, tokenPos + 5) + std::to_string(i) + line.substr(tokenPos + 6);
 						processedData += lineC + "\n";
 					}
-					lineStartPos = dataPos + repeatToken.size();
-					dataPos += repeatToken.size();
+					lineStartPos = dataPos + (unsigned int)repeatToken.size();
+					dataPos += (unsigned int)repeatToken.size();
 					line = std::string();
 				}
 				else

@@ -135,6 +135,13 @@ namespace AW
 		return shader;
 	}
 
+	std::shared_ptr<ShaderReference> ShaderContainer::getLockedShader(std::vector<std::string> names, bool assignDefaultParams)
+	{
+		const auto result = getShader(names, assignDefaultParams);
+		result->lock();
+		return result;
+	}
+
 	void ShaderContainer::releaseAllShaders()
 	{
 		Logger::instance()->log("ShaderContainer::Releasing " + std::to_string(shaders.size()) + " shaders");

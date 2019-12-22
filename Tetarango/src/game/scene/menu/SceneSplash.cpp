@@ -58,6 +58,7 @@ namespace AWGame
 		add(splashImage);
 
 		splashText = std::make_shared<AW::Text>();
+		splashText->setFragmentShader(modules->shader->getShader({ "f-texture", "f-blur", "f-color" }));
 		splashText->setFont("medium", titleFontSizeBig);
 		splashText->setText("built with");
 		add(splashText);

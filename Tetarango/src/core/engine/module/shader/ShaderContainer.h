@@ -39,6 +39,8 @@ namespace AW
 		std::shared_ptr<ShaderReference> getShader(std::vector<std::string> names, bool assignDefaultParams = false);
 		std::shared_ptr<ShaderReference> getShader(std::vector<std::string> names, std::string loaderName, bool assignDefaultParams = false);
 
+		std::shared_ptr<ShaderReference> getLockedShader(std::vector<std::string> names, bool assignDefaultParams = false);
+
 		void releaseAllShaders();
 		void rebindAllShaders();
 

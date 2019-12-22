@@ -27,9 +27,11 @@ namespace AW
 
 		mat4x4 mvp, p, pAbs, m, t, UVp, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
+
+		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
 		std::unordered_map<std::string, GLuint> programs;
 		std::unordered_map<GLuint, std::unordered_map<std::string, GLuint>> programIdToProgramUniformMapId;
-		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0, inFrameTimeLocation = 0;
+		GLuint inMatrixLocation = 0, inUVMatrixLocation = 0, inColorModLocation = 0;
 
 		std::shared_ptr<Camera> camera;
 		std::stack<RenderPositionMode> renderPositionModeStack;
@@ -73,11 +75,11 @@ namespace AW
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
 		void changeProgram(GLuint programId);
+		void changeProgram(const std::shared_ptr<Renderable>& renderable);
 		void changeProgram(const std::shared_ptr<ShaderReference>& vertexShader, const std::shared_ptr<ShaderReference>& fragmentShader);
 		GLuint createAndLinkProgramIfNeeded(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId);
 		std::string getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds);
 
-		void applyUserSpecificShaderUniformsForRenderable(const std::shared_ptr<Renderable>& renderable);
 		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader);
 
 		GLuint getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId);
@@ -87,6 +89,7 @@ namespace AW
 		virtual ~Renderer();
 
 		void initOpenGL(SDL_Window* window);
+		void setDefaultShaders(std::shared_ptr<ShaderReference> vertexShader, std::shared_ptr<ShaderReference> fragmentShader);
 		bool isOpenGLEnabled();
 
 		void setClearColor(int r, int g, int b, int a);

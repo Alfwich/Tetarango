@@ -10,6 +10,11 @@ namespace AW
 		registerSerialization<ParticleSystem>();
 	}
 
+	void ParticleSystem::onBindShaders()
+	{
+		fragmentShader = modules->shader->getShader({ "f-color" });
+	}
+
 	void ParticleSystem::onInitialAttach()
 	{
 		frameTimer = modules->time->createTimer(getTimeScope(), true);

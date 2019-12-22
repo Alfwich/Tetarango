@@ -179,6 +179,14 @@ namespace AW
 		return window != nullptr && renderer->getOpenGLContext() != nullptr;
 	}
 
+	void Screen::bindDefaultShaders()
+	{
+		if (renderer != nullptr)
+		{
+			renderer->setDefaultShaders(shader->getLockedShader({ "v-default" }), shader->getLockedShader({ "f-default" }));
+		}
+	}
+
 	int Screen::getWidth()
 	{
 		return windowWidth;
