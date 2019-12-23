@@ -32,7 +32,8 @@ namespace AWGame
 	{
 		modules->texture->loadTexture("res/image/prop/block/blocks.png", blockTextureName);
 		modules->shader->loadShader("res/shader/fragment/block-pulsate.glsl", "f-block-pulsate");
-		modules->shader->registerShaderComposition({ "f-clip", "f-texture", "f-color", "f-block-pulsate" }, "block");
+		modules->shader->loadShader("res/shader/fragment/block.glsl", "f-block");
+		modules->shader->registerShaderComposition({ "f-clip", "f-texture", "f-color", "f-block" }, "block");
 	}
 
 	void Block::onBindShaders()
@@ -44,8 +45,10 @@ namespace AWGame
 		fragmentShader->setFloatIUParam("clipHeight", 32.0);
 
 		fragmentShader->setFloatIUParam("borderSize", 2.0);
-		fragmentShader->setFloatIUParam("blockEffect", 0.5);
-		fragmentShader->setFloatIUParam("blockEffectPulsate", 0.5);
+		fragmentShader->setFloatIUParam("blockEffect", 1.0);
+		fragmentShader->setFloatIUParam("blockEffectP", 0.25);
+		fragmentShader->setFloatIUParam("blockEffectG", 0.2);
+		fragmentShader->setFloatIUParam("blockBorderSize", 2.0);
 	}
 
 	void Block::onInitialAttach()

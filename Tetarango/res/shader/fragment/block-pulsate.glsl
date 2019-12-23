@@ -17,25 +17,34 @@ vec4 cRect;
 
 void main() 
 {
-	float borderSize = borderSize / tSize.x;
+	float effectTime = 1.0;
+	float offset = 3.0;
+	float amplitude = 2.0;
 
+	float maxCmp = max(pColor.r, max(pColor.g, pColor.b));
+	vec3 factors = vec3(maxCmp / 1.0);
+	vec3 eColor = vec3(pColor);
+	float pulsateOffset = sin(((frameTime - frameStartTime) * PI_2) / effectTime) * blockEffectPulsate;
+
+	float xF = (((tPos.x - cRect.x) / cRect.z) + offset + pulsateOffset) / amplitude;
+	eColor *= xF * factors;
+
+	float yF = (((tPos.y - cRect.y) / cRect.w) + offset + pulsateOffset) / amplitude;
+	eColor *= yF * factors * 0.5;
+
+	float borderSize = borderSize / tSize.x;
 	bool isBorder = 
 		tPos.x < (cRect.x + borderSize) ||
 		tPos.x > (cRect.x + cRect.z - borderSize) ||
 		tPos.y < (cRect.y + borderSize) ||
 		tPos.y > (cRect.y + cRect.w - borderSize);
 
-	if (!isBorder)
+	float p = blockEffect;
+
+	if (isBorder)
 	{
-		vec4 eColor = pColor;
-
-		float xF = ((tPos.x - cRect.x) / cRect.z) + sin((frameTime - frameStartTime) * PI_2) * blockEffectPulsate;
-		eColor.rgb *= xF;
-
-		float yF = ((tPos.y - cRect.y) / cRect.w) + sin((frameTime - frameStartTime) * PI_2) * blockEffectPulsate;
-		eColor.rgb *= yF;
-
-		float p = blockEffect;
-		pColor = (1 - p) * pColor + eColor * p;
+		p *= 0.5;
 	}
+
+	pColor = (1 - p) * pColor + vec4(eColor, pColor.a) * p;
 };
