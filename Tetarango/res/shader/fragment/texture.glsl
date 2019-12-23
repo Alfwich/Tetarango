@@ -4,9 +4,9 @@
 uniform sampler2D textureSampler;
 
 vec4 pColor;
-vec4 texLoc;
+vec4 tLoc;
 
 void main() 
 {
-	pColor *= texture(textureSampler, texLoc.xy).rgba;
+	pColor *= texture(textureSampler, tLoc.xy).rgba;
 };

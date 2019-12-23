@@ -20,7 +20,6 @@ namespace AWGame
 
 	void TestScene::onLoadResources()
 	{
-		modules->texture->loadTexture("res/image/ui/9slice-black.png", "nine-slice-black");
 	}
 
 	void TestScene::onInitialAttach()
@@ -53,109 +52,13 @@ namespace AWGame
 		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		camera->setTimeScope(AW::TimeScope::Camera);
 		add(camera);
-
-		/*
-		const auto backdrop = std::make_shared<AW::Backdrop>();
-		backdrop->setTexture("test-scene-background");
-		backdrop->setSizeToEffectiveInfinity();
-		add(backdrop);
-
-
-
-		auto parentEle = std::make_shared<AW::Rectangle>();
-		auto hatEle = std::make_shared<AW::Rectangle>();
 		{
-			parentEle->name = "rotation-root";
-			parentEle->setPosition(500, 500);
-			parentEle->setRotation(0.0);
-			parentEle->setSize(100, 100);
-			parentEle->zIndex = 8;
-			add(parentEle);
-
-			hatEle->setColor(0, 0xff, 0);
-			hatEle->name = "hatEle";
-			hatEle->setPosition(parentEle->getWidth() / 2, -400);
-			hatEle->setSize(400, 50);
-			parentEle->add(hatEle);
-
-			auto pRect = std::make_shared<AW::Rectangle>();
-			pRect->name = "left";
-			pRect->setColor(0, 0, 0xff);
-			pRect->setSizeAndPosition(0.0, hatEle->getHeight() / 2.0, 50.0, 50.0);
-			hatEle->add(pRect);
-
-			{
-				std::shared_ptr<AW::Rectangle> rect = std::make_shared<AW::Rectangle>();
-				rect->name = "middle";
-				rect->setColor(0xff, 0xff, 0xff);
-				rect->setSizeAndPosition(hatEle->getWidth() / 2.0, hatEle->getHeight() / 2.0, 50.0, 50.0);
-				hatEle->add(rect);
-			}
-
-			{
-				std::shared_ptr<AW::Rectangle> rect = std::make_shared<AW::Rectangle>();
-				rect->name = "right";
-				rect->setColor(0, 0xff, 0xff);
-				rect->setSizeAndPosition(hatEle->getWidth(), hatEle->getHeight() / 2.0, 50.0, 50.0);
-				hatEle->add(rect);
-			}
-
-			{
-				std::shared_ptr<AW::Rectangle> cRect = std::make_shared<AW::Rectangle>();
-				cRect->setColor(0, 0, 0);
-				cRect->setSizeAndPosition(pRect->getWidth() / 2.0, pRect->getHeight() / 2.0, 3.0, 3.0);
-				pRect->add(cRect);
-			}
-
-			{
-				auto text = std::make_shared<AW::Text>("medium", 28);
-				text->setText("Tetris Test");
-				text->setTextColor(0xff, 0xff, 0xff);
-				text->setPosition(hatEle->getWidth() / 2.0, hatEle->getHeight() / 2.0);
-				hatEle->add(text);
-			}
-
-			{
-				auto board = std::make_shared<Board>();
-				board->name = "board";
-				add(board);
-
-				for (auto i = 0; i < 5; ++i)
-				{
-					auto newBlock = std::make_shared<AWGame::Block>();
-					newBlock->setColor(AW::Color::random());
-					newBlock->setPosition(i * 64, 0);
-					newBlock->zIndex = 1;
-					board->add(newBlock);
-				}
-			}
+			const auto background = std::make_shared<AW::Rectangle>();
+			background->setColor(AW::Color(128, 128, 128));
+			background->setSize(10000, 10000);
+			background->setPosition(-1000, -1000);
+			add(background);
 		}
-		*/
-
-		{
-			const auto testEle = std::make_shared<AW::Element>();
-			testEle->setTexture("nine-slice-black");
-			testEle->setSize(800.0, 800.0);
-			add(testEle);
-			//testEle->setFragmentShader(modules->shader->getShader({ "f-9slice", /*"f-texture",*/ "f-color" }));
-			testEle->setFragmentShader(modules->shader->getShader({ "f-9slice", "f-texture", "f-color" }));
-			testEle->getFragmentShader()->setFloatIUParam("cornerSize", 32);
-			testEle->getFragmentShader()->setFloatIUParam("targetWidth", 800.0);
-			testEle->getFragmentShader()->setFloatIUParam("targetHeight", 800.0);
-		}
-
-		{
-			const auto testEle = std::make_shared<AW::Element>();
-			testEle->setTexture("button-basic");
-			testEle->setSize(800.0, 600.0);
-			add(testEle);
-			testEle->setFragmentShader(modules->shader->getShader({ "f-color" }));
-			testEle->getFragmentShader()->setFloatIUParam("cornerSize", 16);
-			testEle->getFragmentShader()->setFloatIUParam("clipWidth", 64);
-			testEle->getFragmentShader()->setFloatIUParam("clipHeight", 64);
-			testEle->setPosition(800.0, 0.0);
-		}
-
 	}
 
 	void TestScene::onChildrenHydrated()

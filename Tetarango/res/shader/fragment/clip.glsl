@@ -7,12 +7,18 @@ uniform float clipY;
 uniform float clipWidth;
 uniform float clipHeight;
 
-vec4 texLoc;
-ivec2 texSize;
+vec4 tLoc;
+vec4 cRect;
+ivec2 tSize;
 
 void main() 
 {
-	texLoc = vec4(UV.x * (clipWidth / texSize.x), UV.y * (clipHeight / texSize.y), 1, 1);
-	texLoc = vec4(texLoc.x + clipX * (1.0 / texSize.x), texLoc.y + clipY * (1.0 / texSize.y), 1, 1);
-	texSize = ivec2(clipWidth, clipHeight);
+	tLoc = vec4(UV.x * (clipWidth / tSize.x), UV.y * (clipHeight / tSize.y), 1, 1);
+	tLoc = vec4(tLoc.x + clipX * (1.0 / tSize.x), tLoc.y + clipY * (1.0 / tSize.y), 1, 1);
+	cRect = vec4(
+			cRect.x + clipX * (cRect.z / tSize.x), 
+			cRect.y + clipY * (cRect.w / tSize.y), 
+			(clipWidth / cRect.z) / tSize.x, 
+			(clipHeight / cRect.w) / tSize.x
+		);
 };

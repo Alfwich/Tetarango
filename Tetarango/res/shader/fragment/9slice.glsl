@@ -4,40 +4,62 @@ uniform float cornerSize;
 uniform float targetWidth;
 uniform float targetHeight;
 
-vec4 texLoc;
-ivec2 texSize;
+vec4 tLoc;
+vec4 cRect;
+ivec2 tSize;
 
 void main() 
 {
-	float widthR = cornerSize * (1.0 / targetWidth);
-	float heightR = cornerSize * (1.0 / targetHeight);
+	float renderSpaceCornerSizeWidth = (cornerSize / targetWidth) * cRect.z;
+	float textureSpaceCornerSizeWidth = cornerSize / tSize.x;
 
-	float widthP = cornerSize * (1.0 / texSize.x);
-	float heightP = cornerSize * (1.0 / texSize.y);
+	float x = tLoc.x;
 
-	if (texLoc.x < widthR)
+	float x1 = cRect.x;
+	float x2 = x1 + renderSpaceCornerSizeWidth;
+	float x4 = cRect.x + cRect.z;
+	float x3 = x4 - renderSpaceCornerSizeWidth;
+
+	if (x < x2)
 	{
-		texLoc.x = (1 - ((widthR - texLoc.x) / widthR)) * widthP;
+		float d = (x - x1) / renderSpaceCornerSizeWidth;
+		tLoc.x = d * textureSpaceCornerSizeWidth;
 	}
-	else if (texLoc.x > 1 - widthR)
+	else if (x >= x2 && x < x3)
 	{
-		texLoc.x = (1.0 / texSize.x) * (texSize.x / 2.0);
+		tLoc.x = textureSpaceCornerSizeWidth;
 	}
-	else
+	else if (x > x3)
 	{
-		texLoc.x = (1.0 / texSize.x) * (texSize.x / 2.0);
+		float d = (x - x3) / renderSpaceCornerSizeWidth;
+		tLoc.x = (d * textureSpaceCornerSizeWidth) + (cRect.z - textureSpaceCornerSizeWidth);
 	}
 
-	if (texLoc.y < heightR)
+	float renderSpaceCornerSizeHeight = (cornerSize / targetHeight) * cRect.z;
+	float textureSpaceCornerSizeHeight = cornerSize / tSize.x;
+
+	float y = tLoc.y;
+
+	float y1 = cRect.y;
+	float y2 = y1 + renderSpaceCornerSizeHeight;
+	float y4 = cRect.y + cRect.w;
+	float y3 = y4 - renderSpaceCornerSizeHeight;
+
+	if (y < y2)
 	{
-		texLoc.y = (1 - ((heightR - texLoc.y) / heightR)) * heightP;
+		float d = (y - y1) / renderSpaceCornerSizeHeight;
+		tLoc.y = d * textureSpaceCornerSizeHeight;
 	}
-	else if (texLoc.x > 1 - widthR)
+	else if (y >= y2 && y < y3)
 	{
-		texLoc.y = (1.0 / texSize.y) * (texSize.y / 2.0);
+		tLoc.y = textureSpaceCornerSizeHeight;
 	}
-	else
+	else if (y > y3)
 	{
-		texLoc.y = (1.0 / texSize.y) * (texSize.y / 2.0);
+		float d = (y - y3) / renderSpaceCornerSizeHeight;
+		tLoc.y = (d * textureSpaceCornerSizeHeight) + (cRect.w - textureSpaceCornerSizeHeight);
 	}
+
+	tLoc.x += cRect.x;
+	tLoc.y += cRect.y;
 };

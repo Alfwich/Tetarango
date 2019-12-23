@@ -440,6 +440,15 @@ namespace AW
 	void Renderer::updateScreenConfig(const ScreenConfig & config)
 	{
 		currentScreenConfig = config;
+
+		if (currentScreenConfig.openGlWireframeMode)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 	}
 
 	void Renderer::prepareRender(Screen* screen, double frameTimestamp)
@@ -587,7 +596,9 @@ namespace AW
 				debugObject->setAlpha(0.25);
 				debugObject->onInitialAttach();
 				colorStack.push(AW::Color::red());
-				renderPrimitive(debugObject, &Rect(), &RenderPackage());
+				auto rect = Rect();
+				auto renderPackage = RenderPackage();
+				renderPrimitive(debugObject, &rect, &renderPackage);
 				colorStack.pop();
 			}
 

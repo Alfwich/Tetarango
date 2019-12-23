@@ -40,8 +40,8 @@ namespace AWGame
 			screenConfig.vMode = (AW::VsyncModes)storageClient->readInt(displayVsyncModeParamKey);
 			screenConfig.msaaSamples = storageClient->readInt(displayMSAAParamKey);
 			screenConfig.openGLCompatibilityMode = storageClient->readBool(displayOpenGLCompatibilityParamKey);
-			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
 			screenConfig.useDoubleBuffer = storageClient->readBool(displayDoubleBufferParamKey);
+			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
 			screenConfig.frameLimiter = storageClient->readInt(displayFrameLimiterParamKey);
 			screenConfig.visualizeClipRects = storageClient->readBool(displayDebugClipRectsParamKey);
 			screenConfig.visualizeContainers = storageClient->readBool(displayDebugContainersParamKey);
@@ -191,6 +191,9 @@ namespace AWGame
 		storageClient->writeBool(displayDebugClipRectsParamKey, screenConfig.visualizeClipRects);
 		storageClient->writeBool(displayDebugContainersParamKey, screenConfig.visualizeContainers);
 		storageClient->writeBool(displayDebugOverlayParamKey, screenConfig.debugOverlayEnabled);
+		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
+		storageClient->writeBool(displayDoubleBufferParamKey, screenConfig.useDoubleBuffer);
+
 
 		if (masterSceneContainer != nullptr)
 		{

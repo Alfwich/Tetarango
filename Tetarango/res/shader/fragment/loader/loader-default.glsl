@@ -8,14 +8,16 @@ uniform sampler2D textureSampler;
 void mainN(); //#REPEAT
 
 vec4 pColor;
-vec4 texLoc;
-ivec2 texSize;
+vec4 tLoc;
+vec4 cRect;
+ivec2 tSize;
 
 void main() 
 {
 	pColor = vec4(1.0);
-	texLoc = vec4(UV, 1, 1);
-	texSize = textureSize(textureSampler, 0);
+	tLoc = vec4(UV, 1, 1);
+	tSize = textureSize(textureSampler, 0);
+	cRect = vec4(0, 0, 1.0, 1.0);
 
 	mainN(); //#REPEAT
 
