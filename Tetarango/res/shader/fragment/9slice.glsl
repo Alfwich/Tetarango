@@ -20,16 +20,16 @@ void main()
 	float x4 = cRect.x + cRect.z;
 	float x3 = x4 - renderSpaceCornerSizeWidth;
 
-	if (x < x2)
+	if (x <= x2)
 	{
 		float d = (x - x1) / renderSpaceCornerSizeWidth;
 		tLoc.x = d * textureSpaceCornerSizeWidth;
 	}
-	else if (x >= x2 && x < x3)
+	else if (x > x2 && x < x3)
 	{
-		tLoc.x = textureSpaceCornerSizeWidth;
+		tLoc.x = cRect.z / 2.0;
 	}
-	else if (x > x3)
+	else if (x >= x3)
 	{
 		float d = (x - x3) / renderSpaceCornerSizeWidth;
 		tLoc.x = (d * textureSpaceCornerSizeWidth) + (cRect.z - textureSpaceCornerSizeWidth);
@@ -45,16 +45,16 @@ void main()
 	float y4 = cRect.y + cRect.w;
 	float y3 = y4 - renderSpaceCornerSizeHeight;
 
-	if (y < y2)
+	if (y <= y2)
 	{
 		float d = (y - y1) / renderSpaceCornerSizeHeight;
 		tLoc.y = d * textureSpaceCornerSizeHeight;
 	}
-	else if (y >= y2 && y < y3)
+	else if (y > y2 && y < y3)
 	{
-		tLoc.y = textureSpaceCornerSizeHeight;
+		tLoc.y = cRect.w / 2.0;
 	}
-	else if (y > y3)
+	else if (y >= y3)
 	{
 		float d = (y - y3) / renderSpaceCornerSizeHeight;
 		tLoc.y = (d * textureSpaceCornerSizeHeight) + (cRect.w - textureSpaceCornerSizeHeight);

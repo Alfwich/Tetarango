@@ -3,7 +3,6 @@
 
 namespace
 {
-	const auto nineSliceAnimationName = "nine-slice-animation";
 	const auto cornerSizeParamName = "corner-size";
 }
 
@@ -11,267 +10,86 @@ namespace AW
 {
 	NineSlice::NineSlice()
 	{
-		renderType = RenderType::Container;
+		sizeToAnimation = false;
 		registerSerialization<NineSlice>();
 	}
 
-	void NineSlice::setCornerSize(unsigned int cornerSize)
+	void NineSlice::onBindShaders()
 	{
-		serializationClient->setInt(cornerSizeParamName, cornerSize);
-		generateNineSliceAnimationSet();
+		fragmentShader = modules->shader->getShader({ "f-clip", "f-9slice", "element" });
 	}
 
-	void NineSlice::generateNineSliceAnimationSet()
+	void NineSlice::onInitialAttach()
 	{
-		if (texture == nullptr)
-		{
-			return;
-		}
+		Animated::onInitialAttach();
 
-		if (nineSliceAnimationSet == nullptr)
+		if (fragmentShader != nullptr)
 		{
-			nineSliceAnimationSet = std::make_shared<AW::AnimationSet>();
-		}
+			fragmentShader->setFloatIUParam("cornerSize", getCornerSize());
+			fragmentShader->setFloatIUParam("targetWidth", getWidth());
+			fragmentShader->setFloatIUParam("targetHeight", getHeight());
 
-		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
-		if (animationSet == nullptr)
-		{
-			const auto textureWidth = texture->getWidth();
-			const auto textureHeight = texture->getHeight();
-
-			pushAnimation("", cornerSize, 0, 0, textureWidth, textureHeight);
-		}
-		else
-		{
-			for (const auto animation : animationSet->getAnimations())
+			const auto cR = getTextureClipRect();
+			if (cR != nullptr)
 			{
-				const auto rect = animation.second->getFrameRect(0);
-				pushAnimation(animation.first, cornerSize, rect->x, rect->y, rect->w, rect->h);
+				fragmentShader->setFloatIUParam("clipX", cR->x);
+				fragmentShader->setFloatIUParam("clipY", cR->y);
+				fragmentShader->setFloatIUParam("clipWidth", cR->w);
+				fragmentShader->setFloatIUParam("clipHeight", cR->h);
+			}
+			else
+			{
+				fragmentShader->setFloatIUParam("clipWidth", 0.0);
+				fragmentShader->setFloatIUParam("clipHeight", 0.0);
 			}
 		}
-
-		for (const auto animated : getChildrenOfType<AW::Animated>())
-		{
-			animated->setTexture(texture);
-			animated->setAnimationSet(nineSliceAnimationSet);
-		}
-	}
-
-	void NineSlice::pushAnimation(std::string prefix, int cornerSize, int x, int y, int width, int height)
-	{
-
-		if (nineSliceAnimationSet == nullptr)
-		{
-			Logger::instance()->log("NineSlice > pushAnimation: Attempted to create animation before animation set was created");
-			return;
-		}
-
-		const auto tl = nineSliceAnimationSet->startNewAnimation(prefix + "top-left");
-		tl->addAnimationFrame(x, y, cornerSize, cornerSize);
-
-		const auto t = nineSliceAnimationSet->startNewAnimation(prefix + "top");
-		t->addAnimationFrame(x + cornerSize, y, width - 2 * cornerSize, cornerSize);
-
-		const auto tr = nineSliceAnimationSet->startNewAnimation(prefix + "top-right");
-		tr->addAnimationFrame(x + width - cornerSize, y, cornerSize, cornerSize);
-
-		const auto l = nineSliceAnimationSet->startNewAnimation(prefix + "left");
-		l->addAnimationFrame(x, y + cornerSize, cornerSize, height - 2 * cornerSize);
-
-		const auto c = nineSliceAnimationSet->startNewAnimation(prefix + "center");
-		c->addAnimationFrame(x + cornerSize, y + cornerSize, width - 2 * cornerSize, height - 2 * cornerSize);
-
-		const auto r = nineSliceAnimationSet->startNewAnimation(prefix + "right");
-		r->addAnimationFrame(x + width - cornerSize, y + cornerSize, cornerSize, height - 2 * cornerSize);
-
-		const auto bl = nineSliceAnimationSet->startNewAnimation(prefix + "bottom-left");
-		bl->addAnimationFrame(x, y + height - cornerSize, cornerSize, cornerSize);
-
-		const auto b = nineSliceAnimationSet->startNewAnimation(prefix + "bottom");
-		b->addAnimationFrame(x + cornerSize, y + height - cornerSize, width - 2 * cornerSize, cornerSize);
-
-		const auto br = nineSliceAnimationSet->startNewAnimation(prefix + "bottom-right");
-		br->addAnimationFrame(x + width - cornerSize, y + height - cornerSize, cornerSize, cornerSize);
-	}
-
-	void NineSlice::onCreateChildren()
-	{
-		topLeft = std::make_shared<AW::Animated>();
-		topLeft->name = "tl";
-		topLeft->sizeToAnimation = false;
-		topLeft->setAnimationSet(nineSliceAnimationSet);
-		topLeft->play("top-left");
-		topLeft->setTexture(texture);
-		add(topLeft);
-
-		top = std::make_shared<AW::Animated>();
-		top->name = "t";
-		top->sizeToAnimation = false;
-		top->setAnimationSet(nineSliceAnimationSet);
-		top->play("top");
-		top->setTexture(texture);
-		add(top);
-
-		topRight = std::make_shared<AW::Animated>();
-		topRight->name = "tr";
-		topRight->sizeToAnimation = false;
-		topRight->setAnimationSet(nineSliceAnimationSet);
-		topRight->play("top-right");
-		topRight->setTexture(texture);
-		add(topRight);
-
-		left = std::make_shared<AW::Animated>();
-		left->name = "l";
-		left->sizeToAnimation = false;
-		left->setAnimationSet(nineSliceAnimationSet);
-		left->play("left");
-		left->setTexture(texture);
-		add(left);
-
-		center = std::make_shared<AW::Animated>();
-		center->name = "c";
-		center->sizeToAnimation = false;
-		center->setAnimationSet(nineSliceAnimationSet);
-		center->play("center");
-		center->setTexture(texture);
-		add(center);
-
-		right = std::make_shared<AW::Animated>();
-		right->name = "r";
-		right->sizeToAnimation = false;
-		right->setAnimationSet(nineSliceAnimationSet);
-		right->play("right");
-		right->setTexture(texture);
-		add(right);
-
-		bottomLeft = std::make_shared<AW::Animated>();
-		bottomLeft->name = "bl";
-		bottomLeft->sizeToAnimation = false;
-		bottomLeft->setAnimationSet(nineSliceAnimationSet);
-		bottomLeft->play("bottom-left");
-		bottomLeft->setTexture(texture);
-		add(bottomLeft);
-
-		bottom = std::make_shared<AW::Animated>();
-		bottom->name = "b";
-		bottom->sizeToAnimation = false;
-		bottom->setAnimationSet(nineSliceAnimationSet);
-		bottom->play("bottom");
-		bottom->setTexture(texture);
-		add(bottom);
-
-		bottomRight = std::make_shared<AW::Animated>();
-		bottomRight->name = "br";
-		bottomRight->sizeToAnimation = false;
-		bottomRight->setAnimationSet(nineSliceAnimationSet);
-		bottomRight->play("bottom-right");
-		bottomRight->setTexture(texture);
-		add(bottomRight);
-	}
-
-	void NineSlice::onChildrenHydrated()
-	{
-		topRight = findChildWithName<AW::Animated>("tr");
-		top = findChildWithName<AW::Animated>("t");
-		topLeft = findChildWithName<AW::Animated>("tl");
-
-		right = findChildWithName<AW::Animated>("r");
-		center = findChildWithName<AW::Animated>("c");
-		left = findChildWithName<AW::Animated>("l");
-
-		bottomRight = findChildWithName<AW::Animated>("br");
-		bottom = findChildWithName<AW::Animated>("b");
-		bottomLeft = findChildWithName<AW::Animated>("bl");
-
-		generateNineSliceAnimationSet();
 	}
 
 	void NineSlice::onLayoutChildren()
 	{
-		const auto cornerSize = serializationClient->getInt(cornerSizeParamName, 0);
-		const auto cornerBoxWidth = cornerSize;
-		const auto cornerBoxHeight = cornerSize;
-		const auto centerBoxWidth = getWidth() - 2 * cornerBoxWidth;
-		const auto centerBoxHeight = getHeight() - 2 * cornerBoxHeight;
-
-		topLeft->setSizeAndPosition(cornerBoxWidth / 2.0, cornerBoxHeight / 2.0, cornerBoxWidth, cornerBoxHeight);
-
-		top->setSize(centerBoxWidth, cornerBoxHeight);
-		top->toRightOf(topLeft);
-
-		topRight->setSize(cornerBoxWidth, cornerBoxHeight);
-		topRight->toRightOf(top);
-
-		left->setSize(cornerBoxWidth, centerBoxHeight);
-		left->toBottomOf(topLeft);
-
-		center->setSize(centerBoxWidth, centerBoxHeight);
-		center->toRightOf(left);
-
-		right->setSize(cornerBoxWidth, centerBoxHeight);
-		right->toRightOf(center);
-
-		bottomLeft->setSize(cornerBoxWidth, cornerBoxHeight);
-		bottomLeft->toBottomOf(left);
-
-		bottom->setSize(centerBoxWidth, cornerBoxHeight);
-		bottom->toRightOf(bottomLeft);
-
-		bottomRight->setSize(cornerBoxWidth, cornerBoxHeight);
-		bottomRight->toRightOf(bottom);
-	}
-
-	void NineSlice::play(std::string animationName)
-	{
-		for (const auto animated : getChildrenOfType<AW::Animated>())
+		if (fragmentShader != nullptr)
 		{
-			animated->setAnimationPrefix(animationName);
-			animated->play(animated->getCurrentAnimationName());
+			fragmentShader->setFloatIUParam("targetWidth", getWidth());
+			fragmentShader->setFloatIUParam("targetHeight", getHeight());
 		}
 	}
 
-	void NineSlice::setAnimationSet(std::string animationSetName)
+	void NineSlice::setWidth(double width)
 	{
-		currentAnimationSetName = animationSetName;
-		setAnimationSet(modules->animation->getAnimationSet(animationSetName));
+		Animated::setWidth(width);
+		layout();
 	}
 
-	void NineSlice::setAnimationSet(std::shared_ptr<AnimationSet> animationSet)
+	void NineSlice::setHeight(double height)
 	{
-		this->animationSet = animationSet;
-		generateNineSliceAnimationSet();
+		Animated::setHeight(height);
+		layout();
 	}
 
-	void NineSlice::setTexture(std::shared_ptr<Texture> texture)
+	void NineSlice::setCurrentAnimation(std::string animationName)
 	{
-		this->texture = texture;
-		generateNineSliceAnimationSet();
-	}
+		Animated::setCurrentAnimation(animationName);
 
-	void NineSlice::setTexture(std::string textureName)
-	{
-		currentTextureName = textureName;
-		setTexture(modules->texture->getTexture(textureName));
-	}
-
-	std::shared_ptr<SerializationClient> NineSlice::doSerialize(SerializationHint hint)
-	{
-		const auto client = serializationClient->getClient("__nine_slice__", hint);
-		currentTextureName = client->serializeString("ctn", currentTextureName);
-		currentAnimationSetName = client->serializeString("casn", currentAnimationSetName);
-
-		if (!currentTextureName.empty() && texture == nullptr)
+		const auto clipRect = getTextureClipRect();
+		if (fragmentShader != nullptr && clipRect != nullptr)
 		{
-			texture = modules->texture->getTexture(currentTextureName);
+			fragmentShader->setFloatIUParam("targetWidth", getWidth());
+			fragmentShader->setFloatIUParam("targetHeight", getHeight());
 		}
+	}
 
-		if (!currentAnimationSetName.empty() && animationSet == nullptr)
+	double NineSlice::getCornerSize()
+	{
+		return serializationClient->getDouble(cornerSizeParamName);
+	}
+
+	void NineSlice::setCornerSize(double cornerSize)
+	{
+		serializationClient->serializeDouble(cornerSizeParamName, cornerSize);
+
+		if (fragmentShader != nullptr)
 		{
-			animationSet = modules->animation->getAnimationSet(currentAnimationSetName);
+			fragmentShader->setFloatIUParam("cornerSize", cornerSize);
 		}
-
-		generateNineSliceAnimationSet();
-
-		return Container::doSerialize(hint);
 	}
 }

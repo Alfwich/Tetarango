@@ -547,11 +547,11 @@ namespace AW
 					debugObject->zIndex = 1;
 					container->add(debugObject);
 				}
-			}
 
-			if (container->getHasClipRect())
-			{
-				updateClipRectOpenGL(container, &computed, &renderPackage);
+				if (container->getHasClipRect())
+				{
+					updateClipRectOpenGL(container, &computed, &renderPackage);
+				}
 			}
 		}
 		break;
