@@ -6,5 +6,5 @@ vec4 pColor;
 
 void main() 
 {
-	pColor = vec4(alpha * pColor.xyz, alpha);
+	pColor = vec4(alpha * pColor.rgb, alpha);
 };

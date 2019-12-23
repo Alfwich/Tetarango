@@ -93,7 +93,7 @@ namespace AW
 
 	std::shared_ptr<ShaderReference> ShaderContainer::getShader(std::vector<std::string> names, std::string loaderName, bool assignDefaultParams)
 	{
-		auto shadersToPack = std::vector<std::weak_ptr<Shader>>();
+		auto shadersToPack = std::vector<std::shared_ptr<Shader>>();
 
 		for (const auto name : names)
 		{
@@ -127,7 +127,6 @@ namespace AW
 		if (assignDefaultParams)
 		{
 			shader->setFloatIUParam("frameStartTime", (GLfloat)time->getFrameStartTime());
-			shader->setFloatIUParam("frameTime", -1.f);
 		}
 
 		shaderReferences.push_back(shader);

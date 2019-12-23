@@ -2,19 +2,16 @@
 
 namespace AW
 {
-	ShaderReference::ShaderReference(std::vector<std::weak_ptr<Shader>> shaders, std::weak_ptr<Shader> loader) : shaders(shaders), loader(loader) {}
+	ShaderReference::ShaderReference(std::vector<std::shared_ptr<Shader>> shaders, std::shared_ptr<Shader> loader) : shaders(shaders), loader(loader) {}
 
 	std::vector<GLuint> ShaderReference::getShaderIds()
 	{
 		auto ids = std::vector<GLuint>();
+
 		int i = 1;
-		for (const auto shaderWeakPtr : shaders)
+		for (const auto shaderPtr : shaders)
 		{
-			const auto ptr = shaderWeakPtr.lock();
-			if (ptr != nullptr)
-			{
-				ids.push_back(ptr->getShaderId(i++));
-			}
+			ids.push_back(shaderPtr->getShaderId(i++));
 		}
 
 		return ids;
@@ -22,13 +19,9 @@ namespace AW
 
 	GLuint ShaderReference::getLoaderId()
 	{
-		if (loaderId == 0)
+		if (loaderId == 0 && loader != nullptr)
 		{
-			const auto shaderPtr = loader.lock();
-			if (shaderPtr != nullptr)
-			{
-				return shaderPtr->getShaderId((unsigned int)shaders.size());
-			}
+			return loader->getShaderId((unsigned int)shaders.size());
 		}
 
 		return loaderId;
@@ -44,25 +37,19 @@ namespace AW
 		return cachedParamValues;
 	}
 
-	bool ShaderReference::hasFrameTimeParam()
-	{
-		return frameTimeParamEnabled;
-	}
-
-	void ShaderReference::setFloatIUParam(std::string name, GLfloat val)
+	void ShaderReference::setFloatIUParam(std::string name, double val)
 	{
 		if (!paramsDisabled)
 		{
-			if (floatIUParams.count(name) == 1 && floatIUParams.at(name) == val)
+			auto fVal = (GLfloat)val;
+			if (floatIUParams.count(name) == 1 && floatIUParams.at(name) == fVal)
 			{
 				return;
 			}
 
 			hasSetParams = true;
 			cachedParamValues = false;
-
-			frameTimeParamEnabled = frameTimeParamEnabled || name == "frameTime";
-			floatIUParams[name] = val;
+			floatIUParams[name] = fVal;
 		}
 	}
 

@@ -13,5 +13,5 @@ const float PI_2 = PI * 2.0;
 
 void main() 
 {
-	pColor = vec4(pColor.xyz * (pulsateMin + (pulsateMax - pulsateMin) * abs(sin((frameTime - frameStartTime) * PI))), pColor.w);
+	pColor = vec4(pColor.rgb * (pulsateMin + (pulsateMax - pulsateMin) * abs(sin((frameTime - frameStartTime) * PI))), pColor.a);
 };

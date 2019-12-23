@@ -4,7 +4,7 @@ uniform sampler2D textureSampler;
 uniform float blurAmount;
 
 vec4 pColor;
-vec4 tLoc;
+vec4 tPos;
 ivec2 tSize;
 
 const float PI = 3.1415926535897932384626433832795;
@@ -19,10 +19,10 @@ void main()
 
 	for (int i = 0; i < samplePasses; ++i)
 	{
-		blurred += texture(textureSampler, vec2(tLoc.x + offset.x, tLoc.y + offset.y).xy).rgba;
-		blurred += texture(textureSampler, vec2(tLoc.x + offset.x, tLoc.y - offset.y).xy).rgba;
-		blurred += texture(textureSampler, vec2(tLoc.x - offset.x, tLoc.y + offset.y).xy).rgba;
-		blurred += texture(textureSampler, vec2(tLoc.x - offset.x, tLoc.y - offset.y).xy).rgba;
+		blurred += texture(textureSampler, vec2(tPos.x + offset.x, tPos.y + offset.y).xy).rgba;
+		blurred += texture(textureSampler, vec2(tPos.x + offset.x, tPos.y - offset.y).xy).rgba;
+		blurred += texture(textureSampler, vec2(tPos.x - offset.x, tPos.y + offset.y).xy).rgba;
+		blurred += texture(textureSampler, vec2(tPos.x - offset.x, tPos.y - offset.y).xy).rgba;
 
 		offset += offsetAmount;
 	}

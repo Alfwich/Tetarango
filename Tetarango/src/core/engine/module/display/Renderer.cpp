@@ -414,16 +414,6 @@ namespace AW
 					glUniform1f(cachedParam.first, cachedParam.second);
 				}
 			}
-
-			if (shader->hasFrameTimeParam())
-			{
-				const auto position = getUniformLocationForCurrentProgram("frameTime", currentProgramId);
-
-				if (position != -1)
-				{
-					glUniform1f(position, currentFrameTimestamp);
-				}
-			}
 		}
 		else
 		{
@@ -433,19 +423,19 @@ namespace AW
 
 				if (position != -1)
 				{
-					if (paramNameToValue.first == "frameTime" && paramNameToValue.second == -1.f)
-					{
-						glUniform1f(position, currentFrameTimestamp);
-					}
-					else
-					{
-						glUniform1f(position, paramNameToValue.second);
-					}
+					glUniform1f(position, paramNameToValue.second);
 				}
 
 				shader->setCachedParam(position, paramNameToValue.second);
 			}
 		}
+
+		const auto position = getUniformLocationForCurrentProgram("frameTime", currentProgramId);
+		if (position != -1)
+		{
+			glUniform1f(position, currentFrameTimestamp);
+		}
+
 	}
 
 	SDL_GLContext Renderer::getOpenGLContext()
