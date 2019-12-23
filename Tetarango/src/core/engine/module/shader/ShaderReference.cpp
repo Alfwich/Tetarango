@@ -39,11 +39,23 @@ namespace AW
 		return !paramsDisabled && hasSetParams;
 	}
 
+	bool ShaderReference::hasCachedCustomParams()
+	{
+		return cachedParamValues;
+	}
+
+	bool ShaderReference::hasFrameTimeParam()
+	{
+		return frameTimeParamEnabled;
+	}
+
 	void ShaderReference::setFloatIUParam(std::string name, GLfloat val)
 	{
 		if (!paramsDisabled)
 		{
 			hasSetParams = true;
+			cachedParamValues = false;
+			frameTimeParamEnabled = frameTimeParamEnabled || name == "frameTime";
 			floatIUParams[name] = val;
 		}
 	}
@@ -51,6 +63,17 @@ namespace AW
 	const std::map<std::string, GLfloat>& ShaderReference::getFloatIUParams()
 	{
 		return floatIUParams;
+	}
+
+	void ShaderReference::setCachedParam(GLuint modLocation, GLfloat val)
+	{
+		cachedParamValues = true;
+		cachedFloatIUParams[modLocation] = val;
+	}
+
+	const std::map<GLuint, GLfloat>& ShaderReference::getCachedFloatIUParams()
+	{
+		return cachedFloatIUParams;
 	}
 
 	void ShaderReference::setCachedProgramId(GLuint programId)
@@ -72,5 +95,6 @@ namespace AW
 	{
 		loaderId = 0;
 		cachedProgramId = 0;
+		cachedFloatIUParams.clear();
 	}
 }

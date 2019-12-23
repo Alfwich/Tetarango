@@ -4,8 +4,8 @@ in vec2 UV;
 
 uniform float clipX;
 uniform float clipY;
-uniform float clipWidth = 0.0;
-uniform float clipHeight = 0.0;
+uniform float clipWidth;
+uniform float clipHeight;
 
 vec4 tLoc;
 vec4 cRect;

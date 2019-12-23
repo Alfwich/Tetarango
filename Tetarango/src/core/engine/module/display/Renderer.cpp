@@ -400,20 +400,45 @@ namespace AW
 			return;
 		}
 
-		for (const auto paramNameToValue : shader->getFloatIUParams())
+		if (shader->hasCachedCustomParams())
 		{
-			const auto position = getUniformLocationForCurrentProgram(paramNameToValue.first, currentProgramId);
-
-			if (position != -1)
+			for (const auto cachedParam : shader->getCachedFloatIUParams())
 			{
-				if (paramNameToValue.first == "frameTime" && paramNameToValue.second == -1.f)
+				if (cachedParam.first != -1)
+				{
+					glUniform1f(cachedParam.first, cachedParam.second);
+				}
+			}
+
+			if (shader->hasFrameTimeParam())
+			{
+				const auto position = getUniformLocationForCurrentProgram("frameTime", currentProgramId);
+
+				if (position != -1)
 				{
 					glUniform1f(position, currentFrameTimestamp);
 				}
-				else
+			}
+		}
+		else
+		{
+			for (const auto paramNameToValue : shader->getFloatIUParams())
+			{
+				const auto position = getUniformLocationForCurrentProgram(paramNameToValue.first, currentProgramId);
+
+				if (position != -1)
 				{
-					glUniform1f(position, paramNameToValue.second);
+					if (paramNameToValue.first == "frameTime" && paramNameToValue.second == -1.f)
+					{
+						glUniform1f(position, currentFrameTimestamp);
+					}
+					else
+					{
+						glUniform1f(position, paramNameToValue.second);
+					}
 				}
+
+				shader->setCachedParam(position, paramNameToValue.second);
 			}
 		}
 	}
