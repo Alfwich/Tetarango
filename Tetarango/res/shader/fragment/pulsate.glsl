@@ -1,9 +1,10 @@
 ﻿#version 330 core
 
-
 uniform float frameTime;
 uniform float frameStartTime;
-uniform float pulsateAmount;
+
+uniform float pulsateMin;
+uniform float pulsateMax;
 
 vec4 pColor;
 
@@ -12,5 +13,5 @@ const float PI_2 = PI * 2.0;
 
 void main() 
 {
-	pColor = pColor * (1 - pulsateAmount) + (pColor * sin((frameTime - frameStartTime) * PI_2) * pulsateAmount);
+	pColor = vec4(pColor.xyz * (pulsateMin + (pulsateMax - pulsateMin) * abs(sin((frameTime - frameStartTime) * PI))), pColor.w);
 };
