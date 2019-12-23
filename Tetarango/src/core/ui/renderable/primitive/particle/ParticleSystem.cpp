@@ -335,6 +335,8 @@ namespace AW
 			return;
 		}
 
+		destroyChildren();
+		const auto children = getChildren();
 		while (children.size() != 0)
 		{
 			remove(*children.begin());

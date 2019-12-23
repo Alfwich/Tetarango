@@ -25,6 +25,7 @@ namespace AW
 		RebuildOnLoad,
 		LayoutOnLoad,
 		SerializationEnabled,
+		ChildrenSorted,
 
 		IsActive,
 		IsCurrentActive,
@@ -44,10 +45,11 @@ namespace AW
 		bool getTag(GTags tag);
 		void setTag(GTags tag, bool value);
 
+		std::list<std::shared_ptr<GameObject>> children;
+
 	protected:
 		std::weak_ptr<GameObject> parent;
 		std::shared_ptr<Schematic> schematic;
-		std::list<std::shared_ptr<GameObject>> children;
 		std::list<std::shared_ptr<ISerializable>> softAddedChildren;
 		void commandChildren(void(*cmd)(std::shared_ptr<GameObject>));
 		TimeScope timeScope = TimeScope::None;
@@ -133,7 +135,7 @@ namespace AW
 		void removeFromParent();
 		std::weak_ptr<GameObject> getParent();
 		const std::list<std::shared_ptr<GameObject>>& getChildren();
-		const std::list<std::shared_ptr<GameObject>>& getChildrenRenderOrder();
+		const std::list<std::shared_ptr<GameObject>>& getChildrenOrdered();
 
 		template <typename T>
 		const std::list<std::shared_ptr<T>> getChildrenOfType(bool checkChildren = false);

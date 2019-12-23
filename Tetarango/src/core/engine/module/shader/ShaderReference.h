@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include "GL/glew.h"
 #include "engine/module/asset/ResourceBundle.h"
@@ -16,8 +16,8 @@ namespace AW
 
 		GLuint loaderId = 0, cachedProgramId = 0;
 
-		std::map<std::string, GLfloat> floatIUParams;
-		std::map<GLuint, GLfloat> cachedFloatIUParams;
+		std::unordered_map<std::string, GLfloat> floatIUParams;
+		std::unordered_map<GLuint, GLfloat> cachedFloatIUParams;
 		bool hasSetParams = false, paramsDisabled = false, cachedParamValues = false, frameTimeParamEnabled = false;
 	public:
 		ShaderReference(std::vector<std::weak_ptr<Shader>> shaders, std::weak_ptr<Shader> loader);
@@ -30,10 +30,10 @@ namespace AW
 		bool hasFrameTimeParam();
 
 		void setFloatIUParam(std::string name, GLfloat val);
-		const std::map<std::string, GLfloat>& getFloatIUParams();
+		const std::unordered_map<std::string, GLfloat>& getFloatIUParams();
 
 		void setCachedParam(GLuint modLocation, GLfloat val);
-		const std::map<GLuint, GLfloat>& getCachedFloatIUParams();
+		const std::unordered_map<GLuint, GLfloat>& getCachedFloatIUParams();
 
 		void setCachedProgramId(GLuint programId);
 		GLuint getCachedProgramId();

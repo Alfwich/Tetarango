@@ -282,12 +282,17 @@ namespace AW
 
 	GLuint Renderer::getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId)
 	{
-		if (programIdToProgramUniformMapId[programId].count(paramName) == 0)
+		if (programIdToProgramUniformMapId.count(programId) == 0)
+		{
+			programIdToProgramUniformMapId[programId] = std::unordered_map<std::string, GLuint>();
+		}
+
+		if (programIdToProgramUniformMapId.at(programId).count(paramName) == 0)
 		{
 			programIdToProgramUniformMapId[programId][paramName] = glGetUniformLocation(programId, paramName.c_str());
 		}
 
-		return programIdToProgramUniformMapId[programId][paramName];
+		return programIdToProgramUniformMapId.at(programId).at(paramName);
 	}
 
 	void Renderer::changeProgram(const std::shared_ptr<Renderable>& renderable)
@@ -588,7 +593,7 @@ namespace AW
 			if (aoPtr != nullptr)
 			{
 				renderPackage.depth += aoPtr->zIndex;
-				for (const auto child : aoPtr->getChildrenRenderOrder())
+				for (const auto child : aoPtr->getChildrenOrdered())
 				{
 					const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
 					if (renderableChildPtr != nullptr)

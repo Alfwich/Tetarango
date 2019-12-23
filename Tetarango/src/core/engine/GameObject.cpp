@@ -5,7 +5,7 @@
 namespace
 {
 	int nextId = 100;
-	const auto renderOrderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) {return a->zIndex < b->zIndex;};
+	const auto orderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) {return a->zIndex < b->zIndex;};
 }
 
 namespace AW
@@ -18,6 +18,7 @@ namespace AW
 		setTag(GTags::IsActive, true);
 		setTag(GTags::LayoutOnLoad, true);
 		setTag(GTags::SerializationEnabled, true);
+		setTag(GTags::ChildrenSorted, true);
 
 		registerSerialization<GameObject>();
 	}
@@ -175,6 +176,7 @@ namespace AW
 
 		ao->parent = shared_from_this();
 		children.push_back(ao);
+		setTag(GTags::ChildrenSorted, false);
 
 		ao->attach();
 	}
@@ -192,18 +194,17 @@ namespace AW
 			children.erase(eleItr);
 			ao->detach();
 			ao->parent = std::weak_ptr<GameObject>();
+			setTag(GTags::ChildrenSorted, false);
 		}
 	}
 
 	void GameObject::removeFromParent()
 	{
 		auto parentPointer = parent.lock();
-		if (parentPointer == nullptr)
+		if (parentPointer != nullptr)
 		{
-			return;
+			parentPointer->remove(shared_from_this());
 		}
-
-		parentPointer->remove(shared_from_this());
 	}
 
 	std::weak_ptr<GameObject> GameObject::getParent()
@@ -216,9 +217,14 @@ namespace AW
 		return children;
 	}
 
-	const std::list<std::shared_ptr<GameObject>>& GameObject::getChildrenRenderOrder()
+	const std::list<std::shared_ptr<GameObject>>& GameObject::getChildrenOrdered()
 	{
-		children.sort(renderOrderLambda);
+		if (!getTag(GTags::ChildrenSorted))
+		{
+			children.sort(orderLambda);
+			setTag(GTags::ChildrenSorted, true);
+		}
+
 		return children;
 	}
 
@@ -235,7 +241,13 @@ namespace AW
 	void GameObject::destroyChildren()
 	{
 		onDestroyChildren();
-		this->children.clear();
+		for (const auto child : children)
+		{
+			child->detach();
+			child->parent = std::weak_ptr<GameObject>();
+		}
+		children.clear();
+		setTag(GTags::ChildrenSorted, false);
 		setTag(GTags::HasCreatedChildren, false);
 	}
 
@@ -385,6 +397,7 @@ namespace AW
 				{
 					children.push_back(ao);
 				}
+				setTag(GTags::ChildrenSorted, false);
 			}
 
 			softAddedChildren.clear();

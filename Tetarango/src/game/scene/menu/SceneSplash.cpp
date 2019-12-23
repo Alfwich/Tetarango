@@ -220,14 +220,15 @@ namespace AWGame
 
 	void SceneSplash::onEnterFrame(const double& frameTime)
 	{
+		const auto deltaTime = frameTime / 1000.0;
+		const auto movePos = 600.0 * deltaTime;
 		for (const auto block : blocks)
 		{
-			const auto deltaTime = frameTime / 1000.0;
-			block->movePosition(600.0 * deltaTime, 600.0 * deltaTime);
+			block->movePosition(movePos, movePos);
 
 			if (state == 7)
 			{
-				block->setScale(AW::NumberHelper::clamp<double>(block->getScaleX() - frameTime / 1000.0, 0.0, 1.0));
+				block->setScale(AW::NumberHelper::clamp<double>(block->getScaleX() - deltaTime, 0.0, 1.0));
 			}
 		}
 	}

@@ -53,14 +53,20 @@ namespace AW
 	{
 		if (!paramsDisabled)
 		{
+			if (floatIUParams.count(name) == 1 && floatIUParams.at(name) == val)
+			{
+				return;
+			}
+
 			hasSetParams = true;
 			cachedParamValues = false;
+
 			frameTimeParamEnabled = frameTimeParamEnabled || name == "frameTime";
 			floatIUParams[name] = val;
 		}
 	}
 
-	const std::map<std::string, GLfloat>& ShaderReference::getFloatIUParams()
+	const std::unordered_map<std::string, GLfloat>& ShaderReference::getFloatIUParams()
 	{
 		return floatIUParams;
 	}
@@ -71,7 +77,7 @@ namespace AW
 		cachedFloatIUParams[modLocation] = val;
 	}
 
-	const std::map<GLuint, GLfloat>& ShaderReference::getCachedFloatIUParams()
+	const std::unordered_map<GLuint, GLfloat>& ShaderReference::getCachedFloatIUParams()
 	{
 		return cachedFloatIUParams;
 	}
