@@ -16,7 +16,10 @@ namespace AW
 
 	void Element::onBindShaders()
 	{
-		fragmentShader = modules->shader->getShader({ "element" });
+		if (fragmentShader == nullptr)
+		{
+			fragmentShader = modules->shader->getShader({ "element" });
+		}
 	}
 
 	std::shared_ptr<Rect> Element::getTextureClipRect()

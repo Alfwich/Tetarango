@@ -52,13 +52,13 @@ namespace AWGame
 		add(blockContainer);
 
 		splashImage = std::make_shared<AW::Element>();
-		splashImage->setFragmentShader(modules->shader->getShader({ "f-texture", "f-blur", "f-color" }));
+		splashImage->setFragmentShader(modules->shader->getShader({ "element" }));
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
 
 		splashText = std::make_shared<AW::Text>();
-		splashText->setFragmentShader(modules->shader->getShader({ "f-texture", "f-blur", "f-color" }));
+		splashText->setFragmentShader(modules->shader->getShader({ "element" }));
 		splashText->setFont("medium", titleFontSizeBig);
 		splashText->setText("built with");
 		add(splashText);

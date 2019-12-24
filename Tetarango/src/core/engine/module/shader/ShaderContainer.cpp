@@ -3,6 +3,8 @@
 #include "GL/glew.h"
 #include <map>
 
+#include "util/NumberHelper.h"
+
 namespace
 {
 	std::string vertexShaderPathPrefix = "/vertex/";
@@ -127,6 +129,7 @@ namespace AW
 		if (assignDefaultParams)
 		{
 			shader->setFloatIUParam("frameStartTime", (GLfloat)time->getFrameStartTime());
+			shader->setFloatIUParam("random", (GLfloat)AW::NumberHelper::random());
 		}
 
 		shaderReferences.push_back(shader);

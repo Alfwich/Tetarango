@@ -12,7 +12,7 @@ namespace AW
 
 	void ParticleSystem::onBindShaders()
 	{
-		fragmentShader = modules->shader->getShader({ "f-color" });
+		//fragmentShader = modules->shader->getShader({ "f-color" });
 	}
 
 	void ParticleSystem::onInitialAttach()

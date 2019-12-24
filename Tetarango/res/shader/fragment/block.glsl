@@ -2,6 +2,7 @@
 
 uniform float frameTime;
 uniform float frameStartTime;
+uniform float random;
 
 uniform float blockEffect;
 uniform float blockEffectP;
@@ -23,8 +24,8 @@ void main()
 	float period = 10.0;
 	float pX = clamp(pow((tPos.x - cRect.x) / cRect.z, 2.0), 0.0, 1.0);
 	float pY = clamp(pow((tPos.y - cRect.y) / cRect.w, 2.0), 0.0, 1.0);
-	float offsetX = cos((frameStartTime - frameTime * PI_2) / period) * blockEffectG * 6.0;
-	float offsetY = sin((frameStartTime - frameTime * PI_2) / period) * blockEffectG;
+	float offsetX = cos(((frameTime - frameStartTime) * PI_2) / period + random * 4.0) * blockEffectG;
+	float offsetY = sin(((frameTime - frameStartTime )* PI_2) / period + random * 4.0) * blockEffectG;
 
 	float x2 = blockEffectP + offsetX;
 	float x3 = 1.0;
@@ -35,23 +36,23 @@ void main()
 	if (pX < x2)
 	{
 		float p = (pX) / x2;
-		effect /= vec4(p, p, p, 1.0);
+		effect *= vec4(p, p, p, 1.0);
 	}
 	else if (pX < x3)
 	{
 		float p = 1 - ((pX - x2) / (1 - x2));
-		effect /= vec4(p, p, p, 1.0);
+		effect *= vec4(p, p, p, 1.0);
 	}
 
 	if (pY < y2)
 	{
 		float p = (pY) / y2;
-		effect /= vec4(p, p, p, 1.0);
+		effect *= vec4(p, p, p, 1.0);
 	}
 	else if (pY < y3)
 	{
 		float p = 1 - ((pY - y2) / (1 - y2));
-		effect /= vec4(p, p, p, 1.0);
+		effect *= vec4(p, p, p, 1.0);
 	}
 
 	float borderSize = blockBorderSize / tSize.x;
@@ -63,9 +64,11 @@ void main()
 
 	float p = blockEffect;
 
-	if (!isBorder)
+	if (isBorder)
 	{
-		vec4 pC = pColor * (1 - p) + effect * p;
-		pColor *= pC;
+		p = 0.25;
 	}
+
+	vec4 pC = pColor * (1 - p) + effect * p;
+	pColor *= pC;
 };
