@@ -15,6 +15,7 @@ namespace Config
 		logToConsole,
 		logToFile,
 		throwOnCriticalLog,
+		throwOnFatalLog,
 		runTests,
 		saveOnClose,
 		saveReadableStoreFiles,
@@ -45,6 +46,7 @@ namespace Config
 					{ Param::logToConsole, TRUE },
 					{ Param::logToFile, TRUE },
 					{ Param::throwOnCriticalLog, FALSE },
+					{ Param::throwOnFatalLog, TRUE },
 					{ Param::runTests, FALSE },
 					{ Param::saveOnClose, TRUE },
 					{ Param::saveReadableStoreFiles, FALSE },
@@ -79,7 +81,7 @@ namespace Config
 			else if (GAME_ENVIRONMENT == "PROD")
 			{
 				//base[Param::enableTestScenes] = TRUE;
-				//base[ConfigParam::throwOnCriticalLog] = TRUE;
+				//base[ConfigParam::throwOnFatalLog] = TRUE;
 				//base[Param::visualizeZones] = TRUE;
 			}
 			else

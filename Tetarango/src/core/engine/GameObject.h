@@ -38,9 +38,10 @@ namespace AW
 
 	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<GameObject>
 	{
+		static std::unordered_map<std::string, bool> resourcesLoadedMap;
 		int id = 0;
 
-		std::bitset<20> tags;
+		std::bitset<32> tags;
 
 		bool getTag(GTags tag);
 		void setTag(GTags tag, bool value);
@@ -60,13 +61,14 @@ namespace AW
 		template <typename T>
 		std::shared_ptr<T> findChildWithName(std::string name, bool checkChildren = true);
 
+		template<typename T>
+		void registerGameObject();
+
 	public:
+		static int nextId();
 		GameObject();
 
-		static int getNextId();
-
-		template<typename T>
-		void registerSerialization();
+		int getId();
 
 		std::string name;
 		int zIndex = 0;
@@ -93,8 +95,6 @@ namespace AW
 		void markIsZone();
 		bool getIsZone();
 
-
-		int getId();
 		int inputListenerObjectId() { return getId(); };
 
 		std::shared_ptr<SystemModuleBundle> modules;
@@ -246,7 +246,7 @@ namespace AW
 	}
 
 	template<typename T>
-	inline void GameObject::registerSerialization()
+	inline void GameObject::registerGameObject()
 	{
 		this->typeName = std::string(typeid(T).name());
 		if (this->modules->serialization->hasSchematic(this->typeName))

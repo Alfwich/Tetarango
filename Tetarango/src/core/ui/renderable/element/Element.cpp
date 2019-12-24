@@ -3,6 +3,7 @@
 namespace
 {
 	const auto elementAutoSizeToTextureParam = "element-a-s-t-t";
+	auto hasLoadedResources = false;
 }
 
 namespace AW
@@ -11,7 +12,16 @@ namespace AW
 	Element::Element()
 	{
 		renderType = RenderType::Element;
-		registerSerialization<Element>();
+		registerGameObject<Element>();
+	}
+
+	void Element::onLoadResources()
+	{
+		if (!hasLoadedResources)
+		{
+			modules->shader->registerShaderComposition({ "f-texture", "f-color" }, "element");
+			hasLoadedResources = true;
+		}
 	}
 
 	void Element::onBindShaders()

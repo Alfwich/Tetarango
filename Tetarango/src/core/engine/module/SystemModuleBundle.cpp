@@ -83,6 +83,18 @@ namespace AW
 		init = true;
 	}
 
+	void SystemModuleBundle::onLoadResources()
+	{
+		if (loaded) return;
+
+		for (const auto module : modules)
+		{
+			module->onLoadResources();
+		}
+
+		loaded = true;
+	}
+
 	void SystemModuleBundle::onReady()
 	{
 		if (ready) return;

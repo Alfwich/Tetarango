@@ -108,7 +108,7 @@ namespace AW
 	CachedImage::CachedImage()
 	{
 		textureBindingKey = "__cached_image__" + std::to_string(getId());
-		registerSerialization<CachedImage>();
+		registerGameObject<CachedImage>();
 	}
 
 	CachedImage::~CachedImage()

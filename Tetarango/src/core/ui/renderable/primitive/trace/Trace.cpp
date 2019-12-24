@@ -7,7 +7,7 @@ namespace AW
 {
 	Trace::Trace()
 	{
-		registerSerialization<Trace>();
+		registerGameObject<Trace>();
 	}
 
 	void Trace::onInitialAttach()

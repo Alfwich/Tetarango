@@ -123,6 +123,12 @@ namespace AW
 			}
 		}
 
+		if (shadersToPack.empty())
+		{
+			Logger::instance()->logCritical("ShaderContainer::Attempted to create ShaderReference with no resolved Shader units");
+			return nullptr;
+		}
+
 		const auto shaderLoader = loaderShaders[loaderName];
 		auto shader = std::make_shared<ShaderReference>(shadersToPack, shaderLoader);
 
@@ -197,5 +203,25 @@ namespace AW
 			}
 		}
 
+	}
+
+	void ShaderContainer::onLoadResources()
+	{
+		loadShaderLoader("res/shader/fragment/loader/loader-default.glsl", "default");
+
+		loadShader("res/shader/vertex/default.glsl", "v-default");
+		loadShader("res/shader/fragment/color.glsl", "f-default");
+
+		loadShader("res/shader/fragment/texture.glsl", "f-texture");
+		loadShader("res/shader/fragment/color.glsl", "f-color");
+		loadShader("res/shader/fragment/solid.glsl", "f-cliprect");
+		loadShader("res/shader/fragment/blur.glsl", "f-blur");
+		loadShader("res/shader/fragment/negate.glsl", "f-negate");
+		loadShader("res/shader/fragment/alpha.glsl", "f-alpha");
+		loadShader("res/shader/fragment/pulsate.glsl", "f-pulsate");
+		loadShader("res/shader/fragment/clip-texture.glsl", "f-clip-texture");
+		loadShader("res/shader/fragment/9slice.glsl", "f-9slice");
+		loadShader("res/shader/fragment/step-color.glsl", "f-step-color");
+		loadShader("res/shader/fragment/step-texture.glsl", "f-step-texture");
 	}
 }

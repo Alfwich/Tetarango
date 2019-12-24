@@ -8,7 +8,7 @@ namespace AW
 	{
 		frame = 0;
 		fpsOffset = 0;
-		registerSerialization<Animated>();
+		registerGameObject<Animated>();
 	}
 
 	void Animated::updateFrame(double frameTime)
@@ -130,7 +130,7 @@ namespace AW
 
 	void Animated::onBindShaders()
 	{
-		fragmentShader = modules->shader->getShader({ "f-clip", "element" });
+		fragmentShader = modules->shader->getShader({ "f-clip-texture", "element" });
 	}
 
 	void Animated::onInitialAttach()

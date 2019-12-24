@@ -36,7 +36,7 @@ namespace AW
 
 		if (music == nullptr)
 		{
-			Logger::instance()->logFatal("Music::Failed to load music on path=" + path);
+			Logger::instance()->logCritical("Music::Failed to load music on path=" + path);
 			return;
 		}
 

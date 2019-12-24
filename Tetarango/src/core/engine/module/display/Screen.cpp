@@ -309,6 +309,11 @@ namespace AW
 		}
 	}
 
+	void Screen::onReady()
+	{
+		bindDefaultShaders();
+	}
+
 	void Screen::onCleanup()
 	{
 		renderer->reportOpenGLErrors();

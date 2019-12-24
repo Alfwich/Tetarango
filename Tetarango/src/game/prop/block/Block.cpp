@@ -11,7 +11,7 @@ namespace AWGame
 	Block::Block()
 	{
 		setSize(32, 32);
-		registerSerialization<Block>();
+		registerGameObject<Block>();
 	}
 
 	void Block::addEnergy(double amount)
@@ -34,7 +34,7 @@ namespace AWGame
 		modules->shader->loadShader("res/shader/fragment/block-pulsate.glsl", "f-block-pulsate");
 		modules->shader->loadShader("res/shader/fragment/block-fill.glsl", "f-block-fill");
 		modules->shader->loadShader("res/shader/fragment/block.glsl", "f-block");
-		modules->shader->registerShaderComposition({ "f-clip", "f-texture", "f-color", "f-block", "f-block-fill" }, "block");
+		modules->shader->registerShaderComposition({ "f-clip-texture", "f-texture", "f-color", "f-block", "f-block-fill" }, "block");
 	}
 
 	void Block::onBindShaders()

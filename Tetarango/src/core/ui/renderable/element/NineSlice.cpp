@@ -11,12 +11,12 @@ namespace AW
 	NineSlice::NineSlice()
 	{
 		sizeToAnimation = false;
-		registerSerialization<NineSlice>();
+		registerGameObject<NineSlice>();
 	}
 
 	void NineSlice::onBindShaders()
 	{
-		fragmentShader = modules->shader->getShader({ "f-clip", "f-9slice", "element" });
+		fragmentShader = modules->shader->getShader({ "f-clip-texture", "f-9slice", "element" });
 	}
 
 	void NineSlice::onInitialAttach()

@@ -17,7 +17,7 @@ namespace AWGame
 {
 	SceneTetris::SceneTetris() : BaseScene(SceneGame::Tetris)
 	{
-		registerSerialization<SceneTetris>();
+		registerGameObject<SceneTetris>();
 	}
 
 	void SceneTetris::onLoadResources()

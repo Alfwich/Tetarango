@@ -25,7 +25,7 @@ namespace AWGame
 
 	ScrollArea::ScrollArea() : BaseGui(GuiScrollArea::ScrollArea)
 	{
-		registerSerialization<ScrollArea>();
+		registerGameObject<ScrollArea>();
 	}
 
 	double ScrollArea::getScrollMaxLimit()

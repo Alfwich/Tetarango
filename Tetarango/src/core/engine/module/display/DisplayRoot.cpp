@@ -8,7 +8,7 @@ namespace AW
 		enableInput();
 		setIsRootElement();
 		timeScope = TimeScope::Global;
-		registerSerialization<DisplayRoot>();
+		registerGameObject<DisplayRoot>();
 	}
 
 	void DisplayRoot::onInitialAttach()

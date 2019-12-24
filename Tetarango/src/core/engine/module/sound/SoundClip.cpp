@@ -35,7 +35,7 @@ namespace AW
 
 		if (chunk == nullptr)
 		{
-			Logger::instance()->logFatal("Sound::Failed to load sound on path=" + path);
+			Logger::instance()->logCritical("Sound::Failed to load sound on path=" + path);
 			return;
 		}
 

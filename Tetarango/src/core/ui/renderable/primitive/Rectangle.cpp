@@ -4,6 +4,6 @@ namespace AW
 {
 	Rectangle::Rectangle()
 	{
-		registerSerialization<Rectangle>();
+		registerGameObject<Rectangle>();
 	}
 }

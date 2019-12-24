@@ -4,15 +4,20 @@
 
 namespace
 {
-	int nextId = 100;
+	int nextGameObjectId = 100;
 	const auto orderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) {return a->zIndex < b->zIndex;};
 }
 
 namespace AW
 {
+	int GameObject::nextId()
+	{
+		return nextGameObjectId++;
+	}
+
 	GameObject::GameObject()
 	{
-		id = nextId++;
+		id = nextId();
 		modules = SystemModuleBundle::getModuleBundle();
 
 		setTag(GTags::IsActive, true);
@@ -20,12 +25,7 @@ namespace AW
 		setTag(GTags::SerializationEnabled, true);
 		setTag(GTags::ChildrenSorted, true);
 
-		registerSerialization<GameObject>();
-	}
-
-	int GameObject::getNextId()
-	{
-		return nextId++;
+		registerGameObject<GameObject>();
 	}
 
 	void GameObject::setTag(GTags tag, bool value)
@@ -404,7 +404,7 @@ namespace AW
 		}
 
 		const auto client = serializationClient->getClient("__application_object__", hint);
-		tags = std::bitset<20>(client->serializeString("tags", tags.to_string()));
+		tags = std::bitset<32>(client->serializeString("tags", tags.to_string()));
 		timeScope = (TimeScope)client->serializeInt("timescope", (int)timeScope);
 		zIndex = client->serializeInt("z-index", zIndex);
 		name = client->serializeString("name", name);

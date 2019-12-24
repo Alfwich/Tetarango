@@ -74,7 +74,8 @@ namespace AW
 
 		if (throwOnCritical)
 		{
-			throw msg;
+			this->purgeToLogFile(true);
+			throw std::exception(msg.c_str());
 		}
 	}
 
@@ -86,8 +87,12 @@ namespace AW
 	void Logger::logFatal(std::string msg)
 	{
 		log(msg, "!! FATAL !!");
-		this->purgeToLogFile(true);
-		throw msg;
+
+		if (throwOnFatal)
+		{
+			this->purgeToLogFile(true);
+			throw std::exception(msg.c_str());
+		}
 	}
 
 	void Logger::logFatal(char * msg)
@@ -114,6 +119,7 @@ namespace AW
 		logToConsoleEnabled = gameConfig->getConfigBool(Config::Param::logToConsole);
 		logToFileEnabled = gameConfig->getConfigBool(Config::Param::logToFile);
 		throwOnCritical = gameConfig->getConfigBool(Config::Param::throwOnCriticalLog);
+		throwOnFatal = gameConfig->getConfigBool(Config::Param::throwOnFatalLog);
 	}
 
 	void Logger::onCleanup()

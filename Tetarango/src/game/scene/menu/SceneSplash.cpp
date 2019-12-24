@@ -33,7 +33,7 @@ namespace AWGame
 	SceneSplash::SceneSplash() : BaseScene(SceneGame::Splash)
 	{
 		setShouldRebuildOnLoad();
-		registerSerialization<SceneSplash>();
+		registerGameObject<SceneSplash>();
 	}
 
 	void SceneSplash::onLoadResources()
@@ -52,13 +52,13 @@ namespace AWGame
 		add(blockContainer);
 
 		splashImage = std::make_shared<AW::Element>();
-		splashImage->setFragmentShader(modules->shader->getShader({ "element" }));
+		splashImage->setFragmentShader(modules->shader->getShader({ "f-step-texture", "element" }));
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
 
 		splashText = std::make_shared<AW::Text>();
-		splashText->setFragmentShader(modules->shader->getShader({ "element" }));
+		splashText->setFragmentShader(modules->shader->getShader({ "f-step-texture", "element" }));
 		splashText->setFont("medium", titleFontSizeBig);
 		splashText->setText("built with");
 		add(splashText);

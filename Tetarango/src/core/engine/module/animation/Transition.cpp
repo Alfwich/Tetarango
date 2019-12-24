@@ -5,7 +5,7 @@ namespace AW
 {
 	Transition::Transition(std::shared_ptr<Time> time, TimeScope scopeName)
 	{
-		id = GameObject::getNextId();
+		id = GameObject::nextId();
 		this->scopeName = scopeName;
 		this->time = time;
 	}

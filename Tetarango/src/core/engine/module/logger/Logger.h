@@ -21,7 +21,7 @@ namespace AW
 		static Logger* staticLoggerInstance;
 
 		SDL_sem* lock;
-		bool logToFileEnabled = true, logToConsoleEnabled = true, throwOnCritical = false;
+		bool logToFileEnabled = true, logToConsoleEnabled = true, throwOnCritical = false, throwOnFatal = false;
 		std::vector<std::string> cachedLogMessages;
 		std::string logFileName = "log.txt";
 		double msBetweenLogFilePurges = 10000.0;

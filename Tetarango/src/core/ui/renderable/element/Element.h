@@ -24,6 +24,7 @@ namespace AW
 	public:
 		Element();
 
+		void onLoadResources();
 		void onBindShaders();
 
 		virtual void setTexture(std::string key);

@@ -14,7 +14,7 @@ namespace AW
 	{
 		renderType = RenderType::Container;
 		debugColor = AW::Color(0, AW::NumberHelper::randomInt(0, 255), AW::NumberHelper::randomInt(0, 255));
-		registerSerialization<Container>();
+		registerGameObject<Container>();
 	}
 
 	void Container::setSizeToScreenSize()

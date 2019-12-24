@@ -10,7 +10,7 @@ namespace AW
 		zIndex = 20;
 		setRequestReconciliation(true);
 		markIsZone();
-		registerSerialization<Zone>();
+		registerGameObject<Zone>();
 	}
 
 	void Zone::visualize()

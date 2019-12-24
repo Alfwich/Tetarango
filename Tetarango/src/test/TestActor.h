@@ -7,7 +7,7 @@ namespace AWTest
 	class TestActor : public AW::Animated
 	{
 	public:
-		TestActor() { this->registerSerialization<TestActor>(); }
+		TestActor() { this->registerGameObject<TestActor>(); }
 	};
 
 }

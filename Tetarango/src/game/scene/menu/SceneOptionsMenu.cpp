@@ -25,7 +25,7 @@ namespace AWGame
 	SceneOptionsMenu::SceneOptionsMenu() : BaseScene(SceneGame::OptionsMenu)
 	{
 		setShouldRebuildOnLoad();
-		registerSerialization<SceneOptionsMenu>();
+		registerGameObject<SceneOptionsMenu>();
 	}
 
 	void SceneOptionsMenu::onInitialAttach()

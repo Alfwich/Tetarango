@@ -35,7 +35,7 @@ namespace AW
 	{
 		static SystemModuleBundle* staticModuleBundle;
 		std::vector<std::shared_ptr<IBaseModule>> modules;
-		bool init = false, ready = false, cleanup = false;
+		bool init = false, loaded = false, ready = false, cleanup = false;
 
 		template <typename T>
 		std::shared_ptr<T> createModule();
@@ -67,6 +67,7 @@ namespace AW
 
 		void onAssignConfig(std::shared_ptr<Config::GameConfig> config);
 		void onInit();
+		void onLoadResources();
 		void onReady();
 		void onEnterFrame(const double& frameTime);
 		void onCleanup();

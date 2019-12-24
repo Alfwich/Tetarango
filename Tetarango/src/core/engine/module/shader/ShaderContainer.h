@@ -45,6 +45,8 @@ namespace AW
 		void rebindAllShaders();
 
 		void purgeWeakRefs();
+
+		void onLoadResources();
 	};
 
 }

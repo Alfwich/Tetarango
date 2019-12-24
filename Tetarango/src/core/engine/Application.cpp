@@ -87,6 +87,9 @@ namespace AW
 		modules->logger->log("Application::Load resources");
 		loadResources();
 
+		modules->logger->log("Application::Modules load resources");
+		modules->onLoadResources();
+
 		modules->logger->log("Application::Priming system serialization pool");
 		primeSerialization();
 
@@ -108,6 +111,7 @@ namespace AW
 
 		running = true;
 
+		modules->logger->log("Application::Preparing display root");
 		root->onInitialAttach();
 		root->createChildren();
 
@@ -119,27 +123,6 @@ namespace AW
 
 	void Application::loadResources()
 	{
-		modules->shader->loadShaderLoader("res/shader/fragment/loader/loader-default.glsl", "default");
-
-		modules->shader->loadShader("res/shader/vertex/default.glsl", "v-default");
-		modules->shader->loadShader("res/shader/fragment/color.glsl", "f-default");
-
-		modules->shader->loadShader("res/shader/fragment/texture.glsl", "f-texture");
-		modules->shader->loadShader("res/shader/fragment/solid.glsl", "f-solid");
-		modules->shader->loadShader("res/shader/fragment/color.glsl", "f-color");
-		modules->shader->loadShader("res/shader/fragment/solid.glsl", "f-cliprect");
-		modules->shader->loadShader("res/shader/fragment/blur.glsl", "f-blur");
-		modules->shader->loadShader("res/shader/fragment/negate.glsl", "f-negate");
-		modules->shader->loadShader("res/shader/fragment/alpha.glsl", "f-alpha");
-		modules->shader->loadShader("res/shader/fragment/pulsate.glsl", "f-pulsate");
-		modules->shader->loadShader("res/shader/fragment/clip.glsl", "f-clip");
-		modules->shader->loadShader("res/shader/fragment/9slice.glsl", "f-9slice");
-		modules->shader->loadShader("res/shader/fragment/step-color.glsl", "f-step-color");
-		modules->shader->loadShader("res/shader/fragment/step-texture.glsl", "f-step-texture");
-
-		modules->shader->registerShaderComposition({ "f-texture", "f-color" }, "element");
-
-		modules->screen->bindDefaultShaders();
 	}
 
 	void Application::primeSerialization()

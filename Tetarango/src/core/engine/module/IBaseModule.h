@@ -14,6 +14,7 @@ namespace AW
 		bool isCleanedUp = false;
 
 		virtual void onInit() { /* NO-OP */ };
+		virtual void onLoadResources() { /* NO-OP */ };
 		virtual void onReady() { /* NO-OP */ };
 		virtual void onEnterFrame(const double& frameTime) { onEnterFrame(); };
 		virtual void onEnterFrame() { /* NO-OP */ };
