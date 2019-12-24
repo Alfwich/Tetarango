@@ -223,5 +223,6 @@ namespace AW
 		loadShader("res/shader/fragment/9slice.glsl", "f-9slice");
 		loadShader("res/shader/fragment/step-color.glsl", "f-step-color");
 		loadShader("res/shader/fragment/step-texture.glsl", "f-step-texture");
+		loadShader("res/shader/fragment/scanline.glsl", "f-scanline");
 	}
 }

@@ -22,7 +22,8 @@ namespace
 	const auto numBlocksToMake = 200;
 	const auto blockHeightGenerationLimit = -6000.0;
 	const auto titleBackgroundMovement = 9.0;
-	const auto blurAmount = 1.0;
+	const auto scanlineAmount = 20.0;
+	const auto xScaleAmount = 0.35;
 
 	AWGame::GeneratorBlock blockColorGenerator;
 }
@@ -52,13 +53,13 @@ namespace AWGame
 		add(blockContainer);
 
 		splashImage = std::make_shared<AW::Element>();
-		splashImage->setFragmentShader(modules->shader->getShader({ "f-step-texture", "element" }));
+		splashImage->setFragmentShader(modules->shader->getShader({ "element", "f-scanline" }));
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
 
 		splashText = std::make_shared<AW::Text>();
-		splashText->setFragmentShader(modules->shader->getShader({ "f-step-texture", "element" }));
+		splashText->setFragmentShader(modules->shader->getShader({ "element" }));
 		splashText->setFont("medium", titleFontSizeBig);
 		splashText->setText("built with");
 		add(splashText);
@@ -111,19 +112,21 @@ namespace AWGame
 		if (state == 0)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
-			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
+			splashImage->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * (1.0 - scaledMainPositionIn));
+			splashImage->setScaleX(1.0 + xScaleAmount * (1.0 - scaledMainPositionIn));
 			splashImage->setAlpha(scaledMainPositionIn);
 
 			splashText->toTopOf(splashImage);
 			splashText->setAlpha(scaledMainPositionIn);
-			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
+			splashText->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * (1.0 - scaledMainPositionIn));
 
 			tryToGotoNextState(position, 2.0);
 		}
 		else if (state == 1)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
-			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
+			splashImage->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * scaledMainPositionOut);
+			splashImage->setScaleX(1.0 + xScaleAmount * scaledMainPositionOut);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
@@ -134,7 +137,8 @@ namespace AWGame
 		else if (state == 2)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
-			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
+			splashImage->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * (1.0 - scaledMainPositionIn));
+			splashImage->setScaleX(1.0 + xScaleAmount * (1.0 - scaledMainPositionIn));
 			splashImage->setAlpha(scaledMainPositionIn);
 
 			tryToGotoNextState(position, 2.0);
@@ -142,12 +146,13 @@ namespace AWGame
 		else if (state == 3)
 		{
 			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
-			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
+			splashImage->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * scaledMainPositionOut);
+			splashImage->setScaleX(1.0 + xScaleAmount * scaledMainPositionOut);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
 
 			splashText->toTopOf(splashImage);
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
-			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
+			splashText->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
 			{
@@ -164,12 +169,13 @@ namespace AWGame
 		else if (state == 4)
 		{
 			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
-			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
+			splashText->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * (1.0 - scaledMainPositionIn));
 			splashText->setAlpha(scaledMainPositionIn);
 
-			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * (1.0 - scaledMainPositionIn));
+			splashImage->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * (1.0 - scaledMainPositionIn));
 			splashImage->toTopOf(splashText);
 			splashImage->setAlpha(scaledMainPositionIn);
+			splashImage->setScaleX(1.0 + xScaleAmount * (1.0 - scaledMainPositionIn));
 
 			tryToGotoNextState(position, 2.0);
 		}
@@ -177,16 +183,17 @@ namespace AWGame
 		{
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
 			splashText->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
-			splashText->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
+			splashText->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * scaledMainPositionOut);
 
 			splashImage->toTopOf(splashText);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
-			splashImage->getFragmentShader()->setFloatIUParam("blurAmount", blurAmount * scaledMainPositionOut);
+			splashImage->setScaleX(1.0 + xScaleAmount * scaledMainPositionOut);
+			splashImage->getFragmentShader()->setFloatIUParam("fScanlineAmount", scanlineAmount * scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
 			{
-				splashText->getFragmentShader()->setFloatIUParam("blurAmount", 0.0);
-				splashImage->getFragmentShader()->setFloatIUParam("blurAmount", 0.0);
+				splashText->getFragmentShader()->setFloatIUParam("fScanlineAmount", 0.0);
+				splashImage->getFragmentShader()->setFloatIUParam("fScanlineAmount", 0.0);
 				for (auto i = 0; i < numBlocksToMake; ++i)
 				{
 					for (auto block : blockColorGenerator.getTetromino())
