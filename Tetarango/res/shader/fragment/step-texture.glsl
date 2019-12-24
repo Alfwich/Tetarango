@@ -1,6 +1,6 @@
 ﻿#version 330 core
 
-uniform float fStepT = 1.0;
+uniform float fStepT;
 
 vec4 pColor;
 

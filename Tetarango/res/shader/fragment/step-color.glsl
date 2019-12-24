@@ -1,12 +1,18 @@
 ﻿#version 330 core
 
-uniform float fStepC = 256.0;
+uniform float fStepOldSpace;
+uniform float fStepC;
 
 vec4 pColor;
 
 void main() 
 {
-	float oldSpace = 256.0;
+	float oldSpace = clamp(fStepOldSpace, 0.0, 256.0);
+	if (oldSpace == 0.0)
+	{
+		oldSpace = 256.0;
+	}
+
 	float conversionFactor = fStepC / oldSpace;
 
 	float oldRedSpaceValue = pColor.r * oldSpace;

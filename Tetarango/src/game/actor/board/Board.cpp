@@ -141,6 +141,8 @@ namespace AWGame
 				return;
 			}
 
+			blockPtr->zIndex = 5;
+
 			const auto mapOffset = calcMapOffset(blockPtr);
 			if (blockMap.count(mapOffset) != 0)
 			{
@@ -308,7 +310,6 @@ namespace AWGame
 	{
 		background = std::make_shared<AW::NineSlice>();
 		background->name = "background";
-		background->zIndex = -2;
 		updateBoardIfNeeded();
 		background->setTexture("board-background");
 		background->setCornerSize(16);
@@ -342,8 +343,35 @@ namespace AWGame
 		return AW::Element::doSerialize(hint);
 	}
 
-	void Board::onEnterFrame(const double& deltaTime)
+	void Board::onEnterFrame(const double& frameTime)
 	{
+		for (unsigned int x = 0; x <= boardWidth; ++x)
+		{
+			for (unsigned int y = 0; y <= boardHeight; ++y)
+			{
+				const auto mapping = calcMapOffset(x, y);
+				if (blockMap.count(mapping) == 0)
+				{
+					continue;
+				}
+
+				const auto blockPtr = blockMap.at(mapping);
+				if (blockPtr->hasSettled && blockPtr->getEnergy() > 0.0)
+				{
+					const auto nextMapping = calcMapOffset(blockPtr->blockX, blockPtr->blockY + 1);
+					if (blockMap.count(nextMapping) == 1)
+					{
+						const auto nextBlockPtr = blockMap.at(nextMapping);
+						if (nextBlockPtr->getEnergy() < 1.0)
+						{
+							nextBlockPtr->addEnergy(blockPtr->removeEnergy((frameTime / 1000.0) * AW::NumberHelper::random(0.05, 1.0)));
+						}
+					}
+				}
+
+			}
+		}
+
 		if (isFallingEnabled && !hasFailedToPlacePiece && actionTimer->isAboveThresholdAndRestart(isFastFalling ? 25 : 750))
 		{
 			for (auto it = transitions.begin(); it != transitions.end();)
@@ -486,7 +514,6 @@ namespace AWGame
 						(*it)->hasSettled = true;
 						blocksToDrop.erase(it);
 					}
-					currentBlock->addEnergy(-currentBlock->getEnergy());
 				}
 				currentBlocks.clear();
 				modules->sound->playSoundClip(pieceLandSoundName);

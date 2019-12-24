@@ -1,8 +1,7 @@
 ﻿#version 330 core
 
-uniform float fScanline = 0.0;
-uniform float fScanlineY = 0.0;
-uniform float fScanlineRetroAmount = 0.0;
+uniform float fScanline;
+uniform float fScanlineRetroAmount;
 
 vec4 pColor;
 vec4 tPos;
@@ -11,7 +10,7 @@ ivec2 tSize;
 void main() 
 {
 	vec4 effect = vec4(pColor.rgb, pColor.a);
-	int cp = int(floor(tPos.x * tSize.x + (tPos.y * tSize.y * fScanlineY)));
+	int cp = int(floor(tPos.x * tSize.x));
 	int cmpL = cp % 3;
 
 	switch(cmpL)
@@ -31,6 +30,12 @@ void main()
 	default:
 		effect = vec4(effect.rgb * 0.25, effect.a);
 		break;
+	}
+
+	int yp = int(floor(tPos.y * tSize.y));
+	if (yp % 2 == 0)
+	{
+		effect *= 0.75;
 	}
 
 	pColor = pColor * (1 - fScanlineRetroAmount) + effect * fScanlineRetroAmount;

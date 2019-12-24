@@ -17,6 +17,8 @@ namespace AWGame
 		bool hasSettled = false;
 
 		void addEnergy(double amount);
+		double removeEnergy(double amount);
+		void setEnergy(double amount);
 		double getEnergy();
 
 		void onLoadResources();
