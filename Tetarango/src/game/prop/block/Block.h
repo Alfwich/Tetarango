@@ -10,13 +10,13 @@ namespace AWGame
 {
 	class Block : public AW::Element, public BaseProp, public AW::INotifyOnTransition
 	{
-		double energy = 0.0;
+		double energy = 1.0;
 	public:
 		Block();
 		int blockX = 0, blockY = 0;
 		bool hasSettled = false;
 
-		void addEnergy(double amount);
+		double addEnergy(double amount);
 		double removeEnergy(double amount);
 		void setEnergy(double amount);
 		double getEnergy();

@@ -10,7 +10,7 @@ namespace AWGame
 {
 	class Board : public AW::Element
 	{
-		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true;
+		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true, energyShiftEnabled = false;
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 32, cellHeight = 32;
 		std::vector<std::shared_ptr<AW::Transition>> transitions;
 		std::vector<std::shared_ptr<Block>> currentBlocks;

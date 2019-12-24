@@ -339,36 +339,80 @@ namespace AWGame
 		cellHeight = (unsigned int)client->serializeInt("cell-height", cellHeight);
 		isFallingEnabled = client->serializeBool("board-is-falling-enabled", isFallingEnabled);
 		hasFailedToPlacePiece = client->serializeBool("board-has-failed-to-place-piece", hasFailedToPlacePiece);
+		energyShiftEnabled = client->serializeBool("board-energy-shift-enabled", energyShiftEnabled);
 
 		return AW::Element::doSerialize(hint);
 	}
 
 	void Board::onEnterFrame(const double& frameTime)
 	{
-		for (unsigned int x = 0; x <= boardWidth; ++x)
+		if (energyShiftEnabled)
 		{
-			for (unsigned int y = 0; y <= boardHeight; ++y)
+			for (unsigned int x = 0; x <= boardWidth; ++x)
 			{
-				const auto mapping = calcMapOffset(x, y);
-				if (blockMap.count(mapping) == 0)
+				for (unsigned int y = 0; y <= boardHeight; ++y)
 				{
-					continue;
-				}
-
-				const auto blockPtr = blockMap.at(mapping);
-				if (blockPtr->hasSettled && blockPtr->getEnergy() > 0.0)
-				{
-					const auto nextMapping = calcMapOffset(blockPtr->blockX, blockPtr->blockY + 1);
-					if (blockMap.count(nextMapping) == 1)
+					const auto mapping = calcMapOffset(x, y);
+					if (blockMap.count(mapping) == 0)
 					{
-						const auto nextBlockPtr = blockMap.at(nextMapping);
-						if (nextBlockPtr->getEnergy() < 1.0)
+						continue;
+					}
+
+					const auto blockPtr = blockMap.at(mapping);
+					if (blockPtr->hasSettled && blockPtr->getEnergy() > 0.0)
+					{
+						const auto nextMapping = calcMapOffset(blockPtr->blockX, blockPtr->blockY + 1);
+						if (blockMap.count(nextMapping) == 1)
 						{
-							nextBlockPtr->addEnergy(blockPtr->removeEnergy((frameTime / 1000.0) * AW::NumberHelper::random(0.05, 1.0)));
+							const auto nextBlockPtr = blockMap.at(nextMapping);
+							if (nextBlockPtr->hasSettled && nextBlockPtr->getEnergy() < 1.0)
+							{
+								const auto r = nextBlockPtr->addEnergy(blockPtr->removeEnergy((frameTime / 1000.0)));
+								blockPtr->addEnergy(r);
+							}
 						}
 					}
-				}
 
+				}
+			}
+
+			for (unsigned int x = 0; x <= boardWidth; ++x)
+			{
+				for (unsigned int y = 0; y <= boardHeight; ++y)
+				{
+					const auto mapping = calcMapOffset(x, y);
+					if (blockMap.count(mapping) == 0)
+					{
+						continue;
+					}
+
+					const auto blockPtr = blockMap.at(mapping);
+					if (blockPtr->hasSettled && blockPtr->getEnergy() > 0.0)
+					{
+						const auto leftNeightbor = calcMapOffset(blockPtr->blockX - 1, blockPtr->blockY);
+						if (blockMap.count(leftNeightbor) == 1)
+						{
+							const auto leftBlockPtr = blockMap.at(leftNeightbor);
+							if (leftBlockPtr->hasSettled && leftBlockPtr->getEnergy() < blockPtr->getEnergy())
+							{
+								const auto r = leftBlockPtr->addEnergy(blockPtr->removeEnergy((frameTime / 1000.0)));
+								blockPtr->addEnergy(r);
+							}
+						}
+
+						const auto rightNeightbor = calcMapOffset(blockPtr->blockX + 1, blockPtr->blockY);
+						if (blockMap.count(rightNeightbor) == 1)
+						{
+							const auto rightBlockPtr = blockMap.at(rightNeightbor);
+							if (rightBlockPtr->hasSettled && rightBlockPtr->getEnergy() < blockPtr->getEnergy())
+							{
+								const auto r = rightBlockPtr->addEnergy(blockPtr->removeEnergy((frameTime / 1000.0)));
+								blockPtr->addEnergy(r);
+							}
+						}
+					}
+
+				}
 			}
 		}
 

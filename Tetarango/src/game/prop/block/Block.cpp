@@ -14,14 +14,23 @@ namespace AWGame
 		registerGameObject<Block>();
 	}
 
-	void Block::addEnergy(double amount)
+	double Block::addEnergy(double amount)
 	{
-		energy = AW::NumberHelper::clamp(energy + amount, 0.0, 1.0);
+		energy = energy + amount;
+
+		double r = 0.0;
+		if (energy > 1.0)
+		{
+			r = energy - 1.0;
+			energy = 1.0;
+		}
 
 		if (fragmentShader != nullptr)
 		{
 			fragmentShader->setFloatIUParam("blockCenterFill", energy);
 		}
+
+		return r;
 	}
 
 	double Block::removeEnergy(double amount)
