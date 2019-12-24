@@ -1,9 +1,8 @@
 ﻿#version 330 core
 
-uniform float fScanlineAmount;
-
-const float PI = 3.1415926535897932384626433832795;
-const float PI_2 = PI * 2.0;
+uniform float fScanline = 0.0;
+uniform float fScanlineY = 0.0;
+uniform float fScanlineAmount = 0.0;
 
 vec4 pColor;
 vec4 tPos;
@@ -11,10 +10,11 @@ ivec2 tSize;
 
 void main() 
 {
-	int cp = int(floor(tPos.x * tSize.x));
+	int cp = int(floor(tPos.x * tSize.x + (tPos.y * tSize.y * fScanlineY)));
 
-	if (cp % int(fScanlineAmount) > 0)
+	if (cp % int(fScanline) > 0)
 	{
-		pColor = vec4(0);
+		vec4 effect = vec4(0);
+		pColor = pColor * (1 - fScanlineAmount) + effect * fScanlineAmount;
 	}
 };
