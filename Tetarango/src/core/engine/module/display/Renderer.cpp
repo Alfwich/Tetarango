@@ -163,6 +163,11 @@ namespace AW
 		clearColor.a = a;
 	}
 
+	void Renderer::setClearEnabled(bool flag)
+	{
+		clearEnabled = flag;
+	}
+
 	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen, double frameTimestamp)
 	{
 		prepareRender(screen, frameTimestamp);
@@ -182,7 +187,7 @@ namespace AW
 	{
 		glClearColor(clearColor.r / 255.0, clearColor.g / 255.0, clearColor.b / 255.0, clearColor.a / 255.0);
 
-		if (clearColor.a != 0)
+		if (clearEnabled && clearColor.a != 0)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
@@ -400,42 +405,12 @@ namespace AW
 
 	void Renderer::applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader)
 	{
-		if (shader == nullptr || !shader->hasCustomParams())
+		if (shader == nullptr)
 		{
 			return;
 		}
 
-		if (shader->hasCachedCustomParams())
-		{
-			for (const auto cachedParam : shader->getCachedFloatIUParams())
-			{
-				if (cachedParam.first != -1)
-				{
-					glUniform1f(cachedParam.first, cachedParam.second);
-				}
-			}
-		}
-		else
-		{
-			for (const auto paramNameToValue : shader->getFloatIUParams())
-			{
-				const auto position = getUniformLocationForCurrentProgram(paramNameToValue.first, currentProgramId);
-
-				if (position != -1)
-				{
-					glUniform1f(position, paramNameToValue.second);
-				}
-
-				shader->setCachedParam(position, paramNameToValue.second);
-			}
-		}
-
-		const auto position = getUniformLocationForCurrentProgram("frameTime", currentProgramId);
-		if (position != -1)
-		{
-			glUniform1f(position, currentFrameTimestamp);
-		}
-
+		shader->setUniforms(currentProgramId, currentFrameTimestamp);
 	}
 
 	SDL_GLContext Renderer::getOpenGLContext()
@@ -524,8 +499,6 @@ namespace AW
 		switch (rend->renderType)
 		{
 		case RenderType::Element:
-		case RenderType::Backdrop:
-		case RenderType::TileMap:
 		{
 			const auto ele = std::static_pointer_cast<Element>(rend);
 
@@ -768,16 +741,7 @@ namespace AW
 			updateClipRectOpenGL(ele, computed, renderPackage);
 		}
 
-		switch (ele->renderType)
-		{
-		case RenderType::TileMap:
-			renderTileMapOpenGL(ele, computed, renderPackage);
-			break;
-
-		default:
-			renderElementOpenGL(ele, computed, renderPackage);
-			break;
-		}
+		renderElementOpenGL(ele, computed, renderPackage);
 	}
 
 	void Renderer::renderPrimitive(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
@@ -813,6 +777,11 @@ namespace AW
 
 	void Renderer::renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage)
 	{
+		if (!ele->isDirty())
+		{
+			return;
+		}
+
 		const auto glTextureId = ele->getTexture()->openGlTextureId();
 		if (glTextureId == 0)
 		{
@@ -855,6 +824,8 @@ namespace AW
 		bindGLTexture(glTextureId);
 
 		openGLDrawArrays(renderPackage);
+
+		ele->markClean();
 	}
 
 	void Renderer::updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
@@ -953,6 +924,11 @@ namespace AW
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
 	{
+		if (!prim->isDirty())
+		{
+			return;
+		}
+
 		changeProgram(prim);
 
 		const auto cW = computed->w / 2.0;
@@ -988,6 +964,7 @@ namespace AW
 
 		openGLDrawArrays(renderPackage);
 
+		prim->markClean();
 	}
 
 	void Renderer::renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
@@ -1007,7 +984,7 @@ namespace AW
 			mat4x4_dup(tP, p);
 		}
 
-		for (const auto particle : particleSystem->getParticles())
+		for (const auto& particle : particleSystem->getParticles())
 		{
 			const auto particleTexture = particle->getTexture();
 			const auto glTextureId = particleTexture != nullptr ? particleTexture->openGlTextureId() : 0;
@@ -1065,82 +1042,6 @@ namespace AW
 			bindGLTexture(glTextureId);
 
 			openGLDrawArrays(renderPackage);
-		}
-	}
-
-	void Renderer::renderTileMapOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage)
-	{
-		const auto tileMap = std::dynamic_pointer_cast<TileMap>(ele);
-		if (tileMap == nullptr)
-		{
-			return;
-		}
-
-		changeProgram(ele);
-
-		const auto width = screenWidth, height = screenHeight;
-		const auto zoom = renderPackage->zoom;
-		auto texture = tileMap->getTexture();
-
-		if (texture == nullptr)
-		{
-			return;
-		}
-
-		const double tileW = tileMap->getTileWidth();
-		const double tileH = tileMap->getTileHeight();
-		Rect tileSize = {
-			0,
-			0,
-			tileW,
-			tileH
-		};
-
-		int rows = std::ceil(computed->w / tileSize.w) + 1;
-		int cols = std::ceil(computed->h / tileSize.h) + 1;
-		int rowOffset = std::floor(rows / 2);
-		int colOffset = std::floor(cols / 2);
-
-		const auto glTextureId = texture->openGlTextureId();
-		if (glTextureId != 0)
-		{
-			for (int r = 0; r < rows; ++r)
-			{
-				for (int c = 0; c < cols; ++c)
-				{
-					const auto offsetX = (computed->w - tileSize.w) / 2.0;
-					const auto offsetY = (computed->h - tileSize.h) / 2.0;
-					const auto cW = tileSize.w / 2.0;
-					const auto cH = tileSize.h / 2.0;
-					const auto cX = (computed->x + cW) + offsetX + tileSize.w * (r - rowOffset);
-					const auto cY = (computed->y + cH) + offsetY + tileSize.h * (c - colOffset);
-
-					mat4x4_identity(m);
-
-					mat4x4_scale_aniso(m, m, cW, cH, 1.0);
-					mat4x4_translate(t, cX, cY, (cY + (renderPackage->depth + tileMap->zIndex) * layerFactor));
-					mat4x4_mul(m, t, m);
-
-					if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
-					{
-						mat4x4_dup(tP, pAbs);
-					}
-					else
-					{
-						mat4x4_dup(tP, p);
-					}
-
-					mat4x4_mul(mvp, tP, m);
-
-					glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
-
-					setColorModParam(renderPackage);
-
-					bindGLTexture(glTextureId);
-
-					openGLDrawArrays(renderPackage);
-				}
-			}
 		}
 	}
 }

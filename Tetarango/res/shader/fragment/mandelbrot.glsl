@@ -3,9 +3,7 @@
 uniform sampler2D textureSampler;
 uniform float iter;
 
-uniform float r;
-uniform float g;
-uniform float b;
+uniform vec3 fColor;
 
 vec4 pColor;
 vec4 tPos;
@@ -33,11 +31,11 @@ void main() {
 
 	if (i == iter)
 	{
-		pColor = vec4(0);
+		discard;
 	}
 	else
 	{
-		vec4 c = vec4(r, g, b, 1.0);
+		vec4 c = vec4(fColor, 1.0);
 		pColor *= c * (i / iter);
 	}
 

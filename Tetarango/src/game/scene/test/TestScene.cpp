@@ -41,7 +41,13 @@ namespace AWGame
 
 	void TestScene::onAttach()
 	{
+		modules->screen->disableClear();
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
+	}
+
+	void TestScene::onDetach()
+	{
+		modules->screen->enableClear();
 	}
 
 	void TestScene::onCreateChildren()
@@ -67,14 +73,16 @@ namespace AWGame
 		camera->setDefaultsAndReset(2.0, 0.0, 0.0);
 		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		camera->setTimeScope(AW::TimeScope::Camera);
+		camera->listener = shared_from_this();
 		add(camera);
 		{
 			const auto background = std::make_shared<AW::Rectangle>();
+			background->renderUpdateMode = AW::RenderUpdateMode::WhenDirty;
+			background->setVertexShader(modules->shader->getShader({ "v-default" }));
 			background->setFragmentShader(modules->shader->getShader({ "f-mandelbrot" }));
+			background->getVertexShader()->setFloatV2IUParam("vTranslate", 0.0, 0.0);
 			background->getFragmentShader()->setFloatIUParam("iter", currentIters);
-			background->getFragmentShader()->setFloatIUParam("r", 1.0);
-			background->getFragmentShader()->setFloatIUParam("g", 1.0);
-			background->getFragmentShader()->setFloatIUParam("b", 1.0);
+			background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
 			background->setColor(AW::Color::white());
 			background->setSize(600, 400);
 			background->setPosition(0, 0);
@@ -123,12 +131,14 @@ namespace AWGame
 				currentIters = AW::NumberHelper::clamp(currentIters + 1.0, 0.0, 1000.0);
 				obj->getFragmentShader()->setFloatIUParam("iter", currentIters);
 				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
+				obj->markDirty();
 			}
 			else if (itersDecPressed)
 			{
 				currentIters = AW::NumberHelper::clamp(currentIters - 1.0, 0.0, 1000.0);
 				obj->getFragmentShader()->setFloatIUParam("iter", currentIters);
 				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
+				obj->markDirty();
 			}
 		}
 	}
@@ -155,25 +165,30 @@ namespace AWGame
 		}
 	}
 
-	void TestScene::onMouseButtonLeftDown()
-	{
-	}
-
 	void TestScene::onScrollBarScroll(int id, double pos)
 	{
+		auto currentColor = obj->getFragmentShader()->getFloatV3IUParam("fColor");
 		if (id == red->getId())
 		{
-			obj->getFragmentShader()->setFloatIUParam("r", 1.0 - pos);
+			obj->getFragmentShader()->setFloatV3IUParam("fColor", 1.0 - pos, std::get<1>(currentColor), std::get<2>(currentColor));
+			obj->markDirty();
 		}
 
 		if (id == green->getId())
 		{
-			obj->getFragmentShader()->setFloatIUParam("g", 1.0 - pos);
+			obj->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), 1.0 - pos, std::get<2>(currentColor));
+			obj->markDirty();
 		}
 
 		if (id == blue->getId())
 		{
-			obj->getFragmentShader()->setFloatIUParam("b", 1.0 - pos);
+			obj->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), std::get<1>(currentColor), 1.0 - pos);
+			obj->markDirty();
 		}
+	}
+
+	void TestScene::onCameraUpdate()
+	{
+		obj->markDirty();
 	}
 }

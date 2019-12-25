@@ -9,11 +9,12 @@
 #include "gui/camera/GameCamera.h"
 #include "gui/IGuiListener.h"
 #include "gui/scrollbar/ScrollBarBasic.h"
+#include "ui/camera/ICameraListener.h"
 
 namespace AWGame
 {
 
-	class TestScene : public AW::Scene, public IGuiListener
+	class TestScene : public AW::Scene, public AW::ICameraListener, public IGuiListener
 	{
 		double currentIters = 4;
 		bool itersIncPressed = false, itersDecPressed = false;
@@ -32,15 +33,16 @@ namespace AWGame
 
 		void onInitialAttach();
 		void onAttach();
+		void onDetach();
 		void onCreateChildren();
 		void onChildrenHydrated();
 
 		void onEnterFrame(const double& deltaTime);
 		void onKeyPressed(SDL_Scancode key);
 		void onKey(SDL_Scancode key, bool isPressed);
-		void onMouseButtonLeftDown();
 
 		void onScrollBarScroll(int id, double pos);
+		void onCameraUpdate();
 	};
 
 }

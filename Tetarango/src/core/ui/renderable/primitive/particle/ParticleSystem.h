@@ -55,7 +55,7 @@ namespace AW
 		void onTimeScopeChanged();
 
 		virtual void preRender(Rect* renderRect, RenderPackage* renderPackage);
-		const std::list<std::shared_ptr<Particle>> getParticles();
+		const std::list<std::shared_ptr<Particle>>& getParticles();
 
 		void start();
 		void emitImmediately(int numberOfParticles);

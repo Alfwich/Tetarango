@@ -5,7 +5,6 @@ namespace AW
 
 	TileMap::TileMap()
 	{
-		renderType = RenderType::TileMap;
 		registerGameObject<TileMap>();
 	}
 

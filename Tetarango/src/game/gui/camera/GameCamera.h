@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ui/Camera.h"
+#include "ui/camera/Camera.h"
 #include "gui/BaseGui.h"
 
 namespace AWGame

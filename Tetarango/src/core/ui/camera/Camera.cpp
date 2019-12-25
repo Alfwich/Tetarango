@@ -2,6 +2,15 @@
 
 namespace AW
 {
+	void Camera::notifyListener()
+	{
+		const auto listenerPtr = std::dynamic_pointer_cast<ICameraListener>(listener.lock());
+		if (listenerPtr != nullptr)
+		{
+			listenerPtr->onCameraUpdate(getId());
+		}
+	}
+
 	double Camera::getX()
 	{
 		return xPosition;
@@ -10,6 +19,7 @@ namespace AW
 	void Camera::setX(double x)
 	{
 		xPosition = x;
+		notifyListener();
 	}
 
 	double Camera::getY()
@@ -20,6 +30,7 @@ namespace AW
 	void Camera::setY(double y)
 	{
 		yPosition = y;
+		notifyListener();
 	}
 
 	double Camera::getZoom()
@@ -30,6 +41,7 @@ namespace AW
 	void Camera::setZoom(double scale)
 	{
 		zoom = std::min(maxZoomIn, std::max(scale, maxZoomOut));
+		notifyListener();
 	}
 
 	double Camera::getXOffset()

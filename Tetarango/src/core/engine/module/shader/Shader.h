@@ -13,6 +13,7 @@ namespace AW
 		Vertex,
 		Loader
 	};
+
 	class Shader
 	{
 		const ShaderType shaderType;

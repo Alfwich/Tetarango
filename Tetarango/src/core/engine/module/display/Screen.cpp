@@ -209,6 +209,22 @@ namespace AW
 		}
 	}
 
+	void Screen::disableClear()
+	{
+		if (renderer != nullptr)
+		{
+			renderer->setClearEnabled(false);
+		}
+	}
+
+	void Screen::enableClear()
+	{
+		if (renderer != nullptr)
+		{
+			renderer->setClearEnabled(true);
+		}
+	}
+
 	SDL_Window* Screen::getWindow()
 	{
 		return window;

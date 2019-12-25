@@ -17,8 +17,6 @@ namespace AW
 		Element,
 		Primitive,
 		ParticleSystem,
-		TileMap,
-		Backdrop,
 		Container
 	};
 
@@ -57,10 +55,16 @@ namespace AW
 		Disabled
 	};
 
+	enum class RenderUpdateMode
+	{
+		EveryFrame,
+		WhenDirty
+	};
+
 	class Renderable : public ISerializableDataSubscriber
 	{
 		double rot = 0.0, alpha = 1.0, scaleX = 1.0, scaleY = 1.0;
-		bool hasClipRect = false;
+		bool hasClipRect = false, dirty = true;
 
 	protected:
 		Rect rect, clipRect, worldRect, screenRect;
@@ -76,6 +80,7 @@ namespace AW
 		RenderMultiSampleMode renderMultiSampleMode = RenderMultiSampleMode::Unspecified;
 		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
 		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
+		RenderUpdateMode renderUpdateMode = RenderUpdateMode::EveryFrame;
 
 		const std::shared_ptr<ShaderReference>& getVertexShader();
 		const std::shared_ptr<ShaderReference>& getFragmentShader();
@@ -232,5 +237,10 @@ namespace AW
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
+
+		void markDirty();
+		void markClean();
+
+		bool isDirty();
 	};
 }

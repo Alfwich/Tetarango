@@ -11,28 +11,48 @@ namespace AW
 {
 	class ShaderReference
 	{
+		GLuint loaderId = 0, cachedProgramId = 0;
+		bool hasSetParams = false, paramsDisabled = false, cachedParamsValid = false;
+
 		const std::vector<std::shared_ptr<Shader>> shaders;
 		const std::shared_ptr<Shader> loader;
 
-		GLuint loaderId = 0, cachedProgramId = 0;
-
 		std::unordered_map<std::string, GLfloat> floatIUParams;
 		std::unordered_map<GLuint, GLfloat> cachedFloatIUParams;
-		bool hasSetParams = false, paramsDisabled = false, cachedParamValues = false;
+		void setCachedParam(GLuint modLocation, GLfloat v1);
+
+		std::unordered_map<std::string, std::tuple<GLfloat, GLfloat>> floatV2IUParams;
+		std::unordered_map<GLuint, std::tuple<GLfloat, GLfloat>> cachedFloatV2IUParams;
+		void setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat> values);
+
+		std::unordered_map<std::string, std::tuple<GLfloat, GLfloat, GLfloat>> floatV3IUParams;
+		std::unordered_map<GLuint, std::tuple<GLfloat, GLfloat, GLfloat>> cachedFloatV3IUParams;
+		void setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat, GLfloat> values);
+
+		std::unordered_map<std::string, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat>> floatV4IUParams;
+		std::unordered_map<GLuint, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat>> cachedFloatV4IUParams;
+		void setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat> values);
+
+		void setCachedUniforms();
+		void updateUniformCaches(GLuint programId);
+
 	public:
 		ShaderReference(std::vector<std::shared_ptr<Shader>> shaders, std::shared_ptr<Shader> loader);
 
 		std::vector<GLuint> getShaderIds();
 		GLuint getLoaderId();
 
-		bool hasCustomParams();
-		bool hasCachedCustomParams();
+		void setFloatIUParam(std::string name, double v);
+		void setFloatV2IUParam(std::string name, double v1, double v2);
+		void setFloatV3IUParam(std::string name, double v1, double v2, double v3);
+		void setFloatV4IUParam(std::string name, double v1, double v2, double v3, double v4);
 
-		void setFloatIUParam(std::string name, double val);
-		const std::unordered_map<std::string, GLfloat>& getFloatIUParams();
+		double getFloatIUParam(std::string name, double v);
+		std::tuple<double, double> getFloatV2IUParam(std::string name);
+		std::tuple<double, double, double> getFloatV3IUParam(std::string name);
+		std::tuple<double, double, double, double> getFloatV4IUParam(std::string name);
 
-		void setCachedParam(GLuint modLocation, GLfloat val);
-		const std::unordered_map<GLuint, GLfloat>& getCachedFloatIUParams();
+		void setUniforms(GLuint programId, double currentFrameTimestamp);
 
 		void setCachedProgramId(GLuint programId);
 		GLuint getCachedProgramId();

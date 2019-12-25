@@ -1,7 +1,7 @@
 #include "Application.h"
 
 #include "engine/GameObject.h"
-#include "ui/Camera.h"
+#include "ui/camera/Camera.h"
 #include "ui/scene/Scene.h"
 #include "ui/scene/SceneContainer.h"
 #include "ui/renderable/primitive/particle/ParticleSystem.h"

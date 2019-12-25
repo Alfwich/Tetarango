@@ -6,7 +6,7 @@
 #include <SDL.h>
 #include "GL/glew.h"
 #include "engine/GameObject.h"
-#include "ui/Camera.h"
+#include "ui/camera/Camera.h"
 #include "util/Rect.h"
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Primitive.h"
@@ -42,7 +42,7 @@ namespace AW
 		std::stack<RenderMultiSampleMode> renderMultiSampleModeStack;
 
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
-		bool depthEnabled = false, msaaEnabled = false;
+		bool depthEnabled = false, msaaEnabled = false, clearEnabled = true;
 		double currentFrameTimestamp = 0.0;
 
 		void prepareRender(Screen* screen, double renderTimestamp);
@@ -69,7 +69,6 @@ namespace AW
 		void renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
 		void renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
 		void renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
-		void renderTileMapOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
 
 		void openGLDrawArrays(RenderPackage* renderPackage);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
@@ -95,6 +94,7 @@ namespace AW
 		void updateScreenConfig(const ScreenConfig& config);
 
 		void setClearColor(int r, int g, int b, int a);
+		void setClearEnabled(bool flag);
 		void render(std::shared_ptr<Renderable> obj, Screen* screen, double frameTimestamp);
 
 		SDL_GLContext getOpenGLContext();

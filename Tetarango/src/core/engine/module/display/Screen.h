@@ -44,15 +44,16 @@ namespace AW
 
 	class Screen : public IBaseModule
 	{
+		SDL_Window* window;
+		ScreenConfig currentConfig;
+		int windowWidth, windowHeight;
+
 		std::shared_ptr<TextureContainer> texture;
 		std::shared_ptr<ShaderContainer> shader;
 		std::shared_ptr<Time> time;
 
-		SDL_Window* window;
 		std::shared_ptr<Renderer> renderer;
 		std::shared_ptr<Camera> camera;
-		ScreenConfig currentConfig;
-		int windowWidth, windowHeight;
 
 	public:
 		virtual ~Screen();
@@ -65,7 +66,10 @@ namespace AW
 		void bindDefaultShaders();
 		int getWidth();
 		int getHeight();
+
 		void setClearColor(int r, int g, int b, int a = 0xff);
+		void disableClear();
+		void enableClear();
 
 		SDL_Window* getWindow();
 
@@ -89,7 +93,7 @@ namespace AW
 }
 
 #include "Renderer.h"
-#include "ui/Camera.h"
+#include "ui/camera/Camera.h"
 #include "ui/renderable/Renderable.h"
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Primitive.h"

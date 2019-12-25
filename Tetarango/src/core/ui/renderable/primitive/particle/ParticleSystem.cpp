@@ -45,7 +45,7 @@ namespace AW
 		}
 	}
 
-	const std::list<std::shared_ptr<Particle>> ParticleSystem::getParticles()
+	const std::list<std::shared_ptr<Particle>>& ParticleSystem::getParticles()
 	{
 		return particles;
 	}
