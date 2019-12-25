@@ -57,7 +57,7 @@ namespace Config
 					{ Param::visualizeClipRects, FALSE },
 					{ Param::useAssetPack, TRUE },
 					{ Param::assetPackName, "asset.pack" },
-					{ Param::enableTestScenes, FALSE },
+					{ Param::enableTestScenes, TRUE },
 					{ Param::immediateDebugOutput, FALSE }
 			};
 

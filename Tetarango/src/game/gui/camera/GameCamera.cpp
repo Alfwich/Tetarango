@@ -16,8 +16,6 @@ namespace AWGame
 		modules->input->keyboard->registerKeys(std::vector<SDL_Scancode>{ SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_2, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_6, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_PLUS, SDL_SCANCODE_KP_MINUS, SDL_SCANCODE_E, SDL_SCANCODE_C, SDL_SCANCODE_I, SDL_SCANCODE_J, SDL_SCANCODE_K, SDL_SCANCODE_L}, weak_from_this());
 		modules->input->gamepad->registerAxis(0, AW::GamepadAxisMapping::RIGHT, weak_from_this());
 
-		setZoomLimits(0.03125, 64.0);
-		setDefaultsAndReset(1.0, 0.0, 0.0);
 		setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		setTimeScope(AW::TimeScope::Camera);
 
@@ -51,22 +49,22 @@ namespace AWGame
 		double speed = 1000.0;
 		if (upDown)
 		{
-			yDelta = -speed;
+			yDelta = -speed / getZoom();
 		}
 
 		if (downDown)
 		{
-			yDelta = speed;
+			yDelta = speed / getZoom();
 		}
 
 		if (leftDown)
 		{
-			xDelta = -speed;
+			xDelta = -speed / getZoom();
 		}
 
 		if (rightDown)
 		{
-			xDelta = speed;
+			xDelta = speed / getZoom();
 		}
 
 		if (xDelta != 0.0)
