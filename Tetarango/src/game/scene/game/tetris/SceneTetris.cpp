@@ -198,7 +198,7 @@ namespace AWGame
 	{
 		if (id == saveScreenshotTimeoutId)
 		{
-			auto imageCatcher = std::make_shared<AW::CachedImage>();
+			auto imageCatcher = std::make_shared<AW::ScreenImage>();
 			imageCatcher->setShouldSerializeImage(true);
 			imageCatcher->captureWholeScreen();
 
@@ -232,7 +232,7 @@ namespace AWGame
 		{
 		case SDL_SCANCODE_0:
 		{
-			const auto cImage = std::make_shared<AW::CachedImage>();
+			const auto cImage = std::make_shared<AW::ScreenImage>();
 			cImage->markIsDebugElement();
 			cImage->captureWholeScreen();
 			cImage->toRightOf(scoreText);

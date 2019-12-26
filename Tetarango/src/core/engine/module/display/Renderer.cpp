@@ -5,6 +5,7 @@
 #include "ui/renderable/element/tilemap/TileMap.h"
 #include "ui/renderable/primitive/trace/Trace.h"
 #include "ui/renderable/primitive/Rectangle.h"
+#include "ui/renderable/element/Cached.h"
 
 namespace
 {
@@ -36,6 +37,8 @@ namespace AW
 		textureModeStack.push(RenderTextureMode::LinearNoWrap);
 		renderDepthStack.push(RenderDepthTest::Disabled);
 		renderMultiSampleModeStack.push(RenderMultiSampleMode::Disabled);
+		renderTargetStack.push(RenderTarget::Screen);
+		renderColorMode.push(RenderColorMode::Multiplicative);
 
 		if (oldRenderer != nullptr)
 		{
@@ -494,6 +497,11 @@ namespace AW
 			renderMultiSampleModeStack.push(rend->renderMultiSampleMode);
 		}
 
+		if (rend->renderColorMode != RenderColorMode::Multiplicative)
+		{
+			renderColorMode.push(rend->renderColorMode);
+		}
+
 		bool pushedColorStack = false;
 		std::shared_ptr<Rectangle> debugObject = nullptr;
 		switch (rend->renderType)
@@ -503,6 +511,89 @@ namespace AW
 			const auto ele = std::static_pointer_cast<Element>(rend);
 
 			pushedColorStack = updateColorStack(ele);
+			renderElement(ele, &computed, &renderPackage);
+		}
+		break;
+		case RenderType::CachedElement:
+		{
+			const auto ele = std::static_pointer_cast<Cached>(rend);
+			if (ele->visible && !ele->isClean())
+			{
+				glBindTexture(GL_TEXTURE_2D, 0);
+				GLuint backRenderBuffer;
+				glGenFramebuffers(1, &backRenderBuffer);
+				glBindFramebuffer(GL_FRAMEBUFFER, backRenderBuffer);
+
+				GLuint texColorBuffer;
+				if (false && ele->hasTexture())
+				{
+					texColorBuffer = ele->getTexture()->openGlTextureId();
+				}
+				else
+				{
+					glGenTextures(1, &texColorBuffer);
+					glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ele->getWidth(), ele->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glBindTexture(GL_TEXTURE_2D, 0);
+				}
+
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+				const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, ele->getWidth(), ele->getHeight());
+				ele->setTexture(cachedTexture);
+
+				if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+				{
+					Logger::instance()->logCritical("Renderer::Failed to bind back frame buffer for Cached element");
+					break;
+				}
+
+				mat4x4_ortho(cAbs, 0, cachedTexture->getWidth(), cachedTexture->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+				glViewport(0, 0, cachedTexture->getWidth(), cachedTexture->getHeight());
+
+				const auto cColor = ele->getClearColor();
+				if (cColor != nullptr && cColor->a > 0)
+				{
+					glClearColor(cColor->r / 255.0, cColor->g / 255.0, cColor->b / 255.0, cColor->a / 255.0);
+					glClear(GL_COLOR_BUFFER_BIT);
+				}
+
+				renderTargetStack.push(RenderTarget::Background);
+
+				pushedColorStack = updateColorStack(ele);
+				RenderPackage childRenderPackage;
+				Rect childRect;
+				childRect.y = cachedTexture->getHeight();
+
+				childRenderPackage.alpha = renderPackage.alpha * ele->getAlpha();
+				childRenderPackage.depth = renderPackage.depth;
+				childRenderPackage.stencilDepth = renderPackage.stencilDepth;
+
+				const auto aoPtr = std::dynamic_pointer_cast<GameObject>(ele);
+				if (aoPtr != nullptr)
+				{
+					renderPackage.depth += aoPtr->zIndex;
+					for (const auto child : aoPtr->getChildrenOrdered())
+					{
+						const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
+						if (renderableChildPtr != nullptr)
+						{
+							renderRecursive(renderableChildPtr, childRect, childRenderPackage);
+						}
+					}
+				}
+
+				renderTargetStack.pop();
+
+				glDeleteFramebuffers(1, &backRenderBuffer);
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				glViewport(0, 0, currentScreenConfig.width, currentScreenConfig.height);
+			}
+
 			renderElement(ele, &computed, &renderPackage);
 		}
 		break;
@@ -550,7 +641,7 @@ namespace AW
 		break;
 		}
 
-		if (rend->visible && rend->renderType != RenderType::NoneAndBlockChildren)
+		if (rend->visible && rend->renderType != RenderType::NoneAndBlockChildren && rend->renderType != RenderType::CachedElement)
 		{
 			const auto aoPtr = std::dynamic_pointer_cast<GameObject>(rend);
 			if (aoPtr != nullptr)
@@ -603,6 +694,11 @@ namespace AW
 			}
 		}
 
+		if (rend->renderColorMode != RenderColorMode::Multiplicative)
+		{
+			renderColorMode.pop();
+		}
+
 		if (rend->renderMultiSampleMode != RenderMultiSampleMode::Unspecified)
 		{
 			renderMultiSampleModeStack.pop();
@@ -636,6 +732,7 @@ namespace AW
 		auto rect = rend->getRect();
 		auto rectMiddleX = (rect.x - rect.w / 2.0);
 		auto rectMiddleY = (rect.y - rect.h / 2.0);
+		auto rotation = renderPackage->rotation;
 
 		if (renderProcessingStack.top() == RenderPositionProcessing::Floor)
 		{
@@ -651,6 +748,10 @@ namespace AW
 		if (rend->rotateInParentSpace)
 		{
 			double rotationRad = renderPackage->rotation * AW::NumberHelper::degToRad;
+			if (renderTargetStack.top() == RenderTarget::Background)
+			{
+				rotationRad = -rotationRad;
+			}
 			double newX = computed->x + rectMiddleX;
 			double newY = computed->y + rectMiddleY;
 			double oX = computed->x + (originW / 2.0) - (computed->w / 2.0);
@@ -661,7 +762,15 @@ namespace AW
 			double yP = cY * std::cos(rotationRad) + cX * std::sin(rotationRad);
 
 			computed->x = (xP + oX);
-			computed->y = (yP + oY);
+
+			if (renderTargetStack.top() == RenderTarget::Background)
+			{
+				computed->y = (-yP + oY);
+			}
+			else
+			{
+				computed->y = (yP + oY);
+			}
 
 		}
 		else
@@ -670,7 +779,14 @@ namespace AW
 			computed->y += rect.y - rect.h / 2.0;
 		}
 
-		renderPackage->rotation += rend->getRotation();
+		if (renderTargetStack.top() == RenderTarget::Background)
+		{
+			renderPackage->rotation -= rend->getRotation();
+		}
+		else
+		{
+			renderPackage->rotation += rend->getRotation();
+		}
 		renderPackage->alpha *= rend->getAlpha();
 	}
 
@@ -678,15 +794,23 @@ namespace AW
 	{
 		if (rend != nullptr && rend->getColor() != nullptr)
 		{
-			const auto currentColor = colorStack.empty() ? Color(255, 255, 255, 255) : Color(colorStack.top());
 			const auto rendColor = rend->getColor();
-			const auto newColor = Color(
-				(currentColor.r / 255.0) * rendColor->r,
-				(currentColor.g / 255.0) * rendColor->g,
-				(currentColor.b / 255.0) * rendColor->b,
-				(currentColor.a / 255.0) * rendColor->a
-			);
-			colorStack.push(newColor);
+			if (renderColorMode.top() == RenderColorMode::Multiplicative)
+			{
+
+				const auto currentColor = colorStack.empty() ? Color(255, 255, 255, 255) : Color(colorStack.top());
+				const auto newColor = Color(
+					(currentColor.r / 255.0) * rendColor->r,
+					(currentColor.g / 255.0) * rendColor->g,
+					(currentColor.b / 255.0) * rendColor->b,
+					(currentColor.a / 255.0) * rendColor->a
+				);
+				colorStack.push(newColor);
+			}
+			else
+			{
+				colorStack.push(rendColor);
+			}
 			return true;
 		}
 
@@ -730,12 +854,6 @@ namespace AW
 		ele->setWorldRect(computed);
 		ele->updateScreenRect(renderPackage, renderPositionModeStack.top());
 
-		const auto shouldCull = !ele->disableCulling && renderShouldCull(ele->getScreenRect(), renderPackage) && renderPositionModeStack.top() != RenderPositionMode::Absolute;
-		if (shouldCull || !ele->visible || !ele->hasTexture())
-		{
-			return;
-		}
-
 		if (ele->getHasClipRect())
 		{
 			updateClipRectOpenGL(ele, computed, renderPackage);
@@ -777,13 +895,8 @@ namespace AW
 
 	void Renderer::renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage)
 	{
-		if (!ele->isDirty())
-		{
-			return;
-		}
-
-		const auto glTextureId = ele->getTexture()->openGlTextureId();
-		if (glTextureId == 0)
+		const auto texture = ele->getTexture();
+		if (texture == nullptr)
 		{
 			return;
 		}
@@ -810,6 +923,10 @@ namespace AW
 		{
 			mat4x4_dup(tP, pAbs);
 		}
+		else if (renderTargetStack.top() == RenderTarget::Background)
+		{
+			mat4x4_dup(tP, cAbs);
+		}
 		else
 		{
 			mat4x4_dup(tP, p);
@@ -821,7 +938,7 @@ namespace AW
 
 		setColorModParam(renderPackage);
 
-		bindGLTexture(glTextureId);
+		bindGLTexture(texture->openGlTextureId());
 
 		openGLDrawArrays(renderPackage);
 
@@ -851,6 +968,10 @@ namespace AW
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
 			mat4x4_dup(tP, pAbs);
+		}
+		else if (renderTargetStack.top() == RenderTarget::Background)
+		{
+			mat4x4_dup(tP, cAbs);
 		}
 		else
 		{
@@ -924,11 +1045,6 @@ namespace AW
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
 	{
-		if (!prim->isDirty())
-		{
-			return;
-		}
-
 		changeProgram(prim);
 
 		const auto cW = computed->w / 2.0;
@@ -950,6 +1066,10 @@ namespace AW
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
 			mat4x4_dup(tP, pAbs);
+		}
+		else if (renderTargetStack.top() == RenderTarget::Background)
+		{
+			mat4x4_dup(tP, cAbs);
 		}
 		else
 		{
@@ -978,6 +1098,10 @@ namespace AW
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
 			mat4x4_dup(tP, pAbs);
+		}
+		else if (renderTargetStack.top() == RenderTarget::Background)
+		{
+			mat4x4_dup(tP, cAbs);
 		}
 		else
 		{

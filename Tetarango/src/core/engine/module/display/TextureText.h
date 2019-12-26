@@ -32,8 +32,8 @@ namespace AW
 		void bindOpenGLTexture(SDL_Surface* surface, const TextureTextRenderConfiguration& textRenderConfiguration);
 
 	public:
-		TextureText(std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset) : Texture(screen, asset) {};
-		TextureText(TextureTextRenderConfiguration config, std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset) : TextureText(screen, asset) { this->config = config; };
+		TextureText(std::shared_ptr<Asset> asset) : Texture(asset) {};
+		TextureText(TextureTextRenderConfiguration config, std::shared_ptr<Asset> asset) : TextureText(asset) { this->config = config; };
 		~TextureText();
 
 		void updateConfiguration(TextureTextRenderConfiguration config);

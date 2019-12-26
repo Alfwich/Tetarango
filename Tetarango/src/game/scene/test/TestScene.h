@@ -16,13 +16,13 @@ namespace AWGame
 
 	class TestScene : public AW::Scene, public AW::ICameraListener, public IGuiListener
 	{
-		double currentIters = 4;
+		double currentIters = 1;
 		bool itersIncPressed = false, itersDecPressed = false;
 		std::shared_ptr<GameCamera> camera;
 
 		std::shared_ptr<ScrollBarBasic> red, green, blue;
 		std::shared_ptr<AW::Text> infoLabel;
-		std::shared_ptr<Renderable> obj;
+		std::shared_ptr<Renderable> obj1, obj2, obj3, obj4;
 
 		std::shared_ptr<AW::Timer> iterTimer;
 
@@ -33,7 +33,6 @@ namespace AWGame
 
 		void onInitialAttach();
 		void onAttach();
-		void onDetach();
 		void onCreateChildren();
 		void onChildrenHydrated();
 

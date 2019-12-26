@@ -14,8 +14,9 @@
 #include "ui/renderable/Zone.h"
 #include "ui/renderable/primitive/trace/Trace.h"
 #include "ui/renderable/element/NineSlice.h"
-#include "ui/renderable/element/CachedImage.h"
+#include "ui/renderable/element/ScreenImage.h"
 #include "debug/monitor/DebugMonitor.h"
+#include "ui/renderable/element/Cached.h"
 
 #include "Tests.h"
 
@@ -142,8 +143,9 @@ namespace AW
 		std::make_unique<Element>();
 		std::make_unique<Trace>();
 		std::make_unique<NineSlice>();
-		std::make_unique<CachedImage>();
+		std::make_unique<ScreenImage>();
 		std::make_unique<DebugMonitor>();
+		std::make_unique<Cached>();
 	}
 
 	void Application::run(int argc, char* args[])

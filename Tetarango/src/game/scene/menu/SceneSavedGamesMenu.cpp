@@ -1,7 +1,7 @@
 #include "SceneSavedGamesMenu.h"
 
 #include "scene/game/SceneMainGame.h"
-#include "ui/renderable/element/CachedImage.h"
+#include "ui/renderable/element/ScreenImage.h"
 
 namespace
 {
@@ -52,7 +52,7 @@ namespace AWGame
 		const auto img1 = client->readSring(storagePath(StorePaths::System_SaveSlot1_Image));
 		if (!img1.empty())
 		{
-			const auto cachedImage = std::dynamic_pointer_cast<AW::CachedImage>(modules->serialization->hydrate(img1));
+			const auto cachedImage = std::dynamic_pointer_cast<AW::ScreenImage>(modules->serialization->hydrate(img1));
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
@@ -78,7 +78,7 @@ namespace AWGame
 		const auto img2 = client->readSring(storagePath(StorePaths::System_SaveSlot2_Image));
 		if (!img2.empty())
 		{
-			const auto cachedImage = std::dynamic_pointer_cast<AW::CachedImage>(modules->serialization->hydrate(img2));
+			const auto cachedImage = std::dynamic_pointer_cast<AW::ScreenImage>(modules->serialization->hydrate(img2));
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
@@ -104,7 +104,7 @@ namespace AWGame
 		const auto img3 = client->readSring(storagePath(StorePaths::System_SaveSlot3_Image));
 		if (!img3.empty())
 		{
-			const auto cachedImage = std::dynamic_pointer_cast<AW::CachedImage>(modules->serialization->hydrate(img3));
+			const auto cachedImage = std::dynamic_pointer_cast<AW::ScreenImage>(modules->serialization->hydrate(img3));
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);

@@ -25,21 +25,24 @@ namespace AW
 		SDL_GLContext glContext;
 		Color clearColor;
 
-		mat4x4 mvp, p, pAbs, m, t, tP;
+		mat4x4 mvp, p, pAbs, cAbs, m, t, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
 
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
 		std::unordered_map<std::string, GLuint> programs;
 		std::unordered_map<GLuint, std::unordered_map<std::string, GLuint>> programIdToProgramUniformMapId;
-		GLuint inMatrixLocation = 0, inColorModLocation = 0;
+		GLuint inMatrixLocation = 0, inColorModLocation = 0, currentFrameBufferId = 0;
 
 		std::shared_ptr<Camera> camera;
+
 		std::stack<RenderPositionMode> renderPositionModeStack;
 		std::stack<Color> colorStack;
 		std::stack<RenderPositionProcessing> renderProcessingStack;
 		std::stack<RenderTextureMode> textureModeStack;
 		std::stack<RenderDepthTest> renderDepthStack;
 		std::stack<RenderMultiSampleMode> renderMultiSampleModeStack;
+		std::stack<RenderTarget> renderTargetStack;
+		std::stack<RenderColorMode> renderColorMode;
 
 		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 		bool depthEnabled = false, msaaEnabled = false, clearEnabled = true;

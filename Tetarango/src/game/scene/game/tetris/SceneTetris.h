@@ -5,7 +5,7 @@
 #include "gui/camera/GameCamera.h"
 #include "ui/renderable/element/Text.h"
 #include "ui/renderable/primitive/particle/ParticleSystem.h"
-#include "ui/renderable/element/CachedImage.h"
+#include "ui/renderable/element/ScreenImage.h"
 #include "ui/renderable/primitive/Rectangle.h"
 
 namespace AWGame

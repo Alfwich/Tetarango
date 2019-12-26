@@ -6,7 +6,7 @@
 namespace AW
 {
 
-	class CachedImage : public Element
+	class ScreenImage : public Element
 	{
 		std::string textureBindingKey;
 		std::shared_ptr<AW::ImageBundle> imageData;
@@ -18,8 +18,8 @@ namespace AW
 		void updateCachedImage(std::shared_ptr<AW::ImageBundle> bundle);
 
 	public:
-		CachedImage();
-		~CachedImage();
+		ScreenImage();
+		~ScreenImage();
 
 		int cachedImageWidth();
 		int cachedImageHeight();

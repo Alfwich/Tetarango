@@ -1,4 +1,4 @@
-#include "CachedImage.h"
+#include "ScreenImage.h"
 
 namespace
 {
@@ -12,7 +12,7 @@ namespace
 
 namespace AW
 {
-	void CachedImage::updateCachedImage(std::shared_ptr<AW::ImageBundle> bundle)
+	void ScreenImage::updateCachedImage(std::shared_ptr<AW::ImageBundle> bundle)
 	{
 		const auto texture = modules->texture->getEmptyTextureForKey("__cached_image_" + std::to_string(getId()));
 		texture->rebindWithImageBundle(bundle);
@@ -24,7 +24,7 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<ImageBundle> CachedImage::compressImage()
+	std::shared_ptr<ImageBundle> ScreenImage::compressImage()
 	{
 		const auto result = std::make_shared<AW::ImageBundle>();
 
@@ -33,7 +33,7 @@ namespace AW
 		return result;
 	}
 
-	void CachedImage::updateImageDataBuffer(int size)
+	void ScreenImage::updateImageDataBuffer(int size)
 	{
 		if (imageData == nullptr)
 		{
@@ -47,12 +47,12 @@ namespace AW
 		}
 	}
 
-	void CachedImage::updateImageDataBuffer(int w, int h)
+	void ScreenImage::updateImageDataBuffer(int w, int h)
 	{
 		updateImageDataBuffer(w * h * 3);
 	}
 
-	bool CachedImage::captureScreenData(int x, int y, int w, int h)
+	bool ScreenImage::captureScreenData(int x, int y, int w, int h)
 	{
 		updateImageDataBuffer(w, h);
 
@@ -63,7 +63,7 @@ namespace AW
 
 		if (err != GL_NO_ERROR)
 		{
-			AW::Logger::instance()->logCritical("CachedImage::OpenGL Error reported: " + std::to_string(err));
+			AW::Logger::instance()->logCritical("ScreenImage::OpenGL Error reported: " + std::to_string(err));
 			return false;
 		}
 
@@ -105,38 +105,38 @@ namespace AW
 		return true;
 	}
 
-	CachedImage::CachedImage()
+	ScreenImage::ScreenImage()
 	{
 		textureBindingKey = "__cached_image__" + std::to_string(getId());
-		registerGameObject<CachedImage>();
+		registerGameObject<ScreenImage>();
 	}
 
-	CachedImage::~CachedImage()
+	ScreenImage::~ScreenImage()
 	{
 		modules->texture->removeTexture("__cached_image_" + std::to_string(getId()));
 	}
 
-	int CachedImage::cachedImageWidth()
+	int ScreenImage::cachedImageWidth()
 	{
 		return serializationClient->getInt(imageWidthParamName);
 	}
 
-	int CachedImage::cachedImageHeight()
+	int ScreenImage::cachedImageHeight()
 	{
 		return serializationClient->getInt(imageHeightParamName);
 	}
 
-	void CachedImage::setShouldScaleToImageSize(bool flag)
+	void ScreenImage::setShouldScaleToImageSize(bool flag)
 	{
 		serializationClient->setBool(shouldScaleToImageParamName, flag);
 	}
 
-	void CachedImage::setShouldSerializeImage(bool flag)
+	void ScreenImage::setShouldSerializeImage(bool flag)
 	{
 		serializationClient->setBool(shouldSerializeImageParamName, flag);
 	}
 
-	void CachedImage::onInitialAttach()
+	void ScreenImage::onInitialAttach()
 	{
 		Element::onInitialAttach();
 
@@ -161,12 +161,12 @@ namespace AW
 		}
 	}
 
-	void CachedImage::captureWholeScreen()
+	void ScreenImage::captureWholeScreen()
 	{
 		captureScreen(0, 0, modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
-	void CachedImage::captureScreen(int x, int y, int w, int h)
+	void ScreenImage::captureScreen(int x, int y, int w, int h)
 	{
 		if (x < 0)
 		{
@@ -199,7 +199,7 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<AW::SerializationClient> CachedImage::doSerialize(AW::SerializationHint hint)
+	std::shared_ptr<AW::SerializationClient> ScreenImage::doSerialize(AW::SerializationHint hint)
 	{
 		if (imageData != nullptr && serializationClient->getBool(shouldSerializeImageParamName) && hint == AW::SerializationHint::SERIALIZE)
 		{

@@ -240,6 +240,12 @@ namespace AW
 		setAlpha(targetAlpha);
 	}
 
+	void Renderable::setPosition(const std::shared_ptr<Renderable>& other)
+	{
+		setX(other->getX());
+		setY(other->getY());
+	}
+
 	void Renderable::setPosition(double x, double y)
 	{
 		setX(x);
@@ -342,6 +348,18 @@ namespace AW
 		}
 	}
 
+
+	void Renderable::matchPosition(Renderable * other, double xOffset, double yOffset)
+	{
+		if (other != nullptr)
+		{
+			setPosition(other->getX(), other->getY());
+		}
+	}
+
+	void Renderable::matchPosition(std::shared_ptr<Renderable> other, double xOffset, double yOffset)
+	{
+	}
 
 	void Renderable::toLeftOf(Renderable* other, double xOffset, double yOffset)
 	{
@@ -780,6 +798,8 @@ namespace AW
 		renderDepthTest = (RenderDepthTest)client->serializeInt("r-d-t-e", (int)renderDepthTest);
 		renderMultiSampleMode = (RenderMultiSampleMode)client->serializeInt("r-m-s-m", (int)renderMultiSampleMode);
 		renderUpdateMode = (RenderUpdateMode)client->serializeInt("r-u-m", (int)renderUpdateMode);
+		renderTarget = (RenderTarget)client->serializeInt("r-target", (int)renderTarget);
+		renderColorMode = (RenderColorMode)client->serializeInt("r-color-m", (int)renderColorMode);
 
 		clipRect.x = client->serializeDouble("cr-x", clipRect.x);
 		clipRect.y = client->serializeDouble("cr-y", clipRect.y);
@@ -812,8 +832,8 @@ namespace AW
 		dirty = false;
 	}
 
-	bool Renderable::isDirty()
+	bool Renderable::isClean()
 	{
-		return renderUpdateMode != RenderUpdateMode::WhenDirty || dirty;
+		return renderUpdateMode == RenderUpdateMode::WhenDirty && !dirty;
 	}
 }

@@ -27,9 +27,10 @@ namespace AW
 		void bindOpenGLTexture(SDL_Surface* surface);
 
 	public:
-		Texture(std::shared_ptr<Screen> screen);
-		Texture(std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset);
-		Texture(std::string path, std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset);
+		Texture();
+		Texture(GLuint textureId, unsigned int width, unsigned int height);
+		Texture(std::shared_ptr<Asset> asset);
+		Texture(std::string path, std::shared_ptr<Asset> asset);
 		virtual ~Texture();
 
 		GLuint openGlTextureId();
@@ -41,6 +42,7 @@ namespace AW
 
 		void releaseTexture();
 		void rebindTexture();
+		void rebindWithEmptyData(unsigned int width, unsigned height);
 		virtual void rebindWithImageBundle(std::shared_ptr<ImageBundle> bundle);
 	};
 }

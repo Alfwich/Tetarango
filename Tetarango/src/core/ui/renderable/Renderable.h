@@ -15,6 +15,7 @@ namespace AW
 		None,
 		NoneAndBlockChildren,
 		Element,
+		CachedElement,
 		Primitive,
 		ParticleSystem,
 		Container
@@ -61,6 +62,18 @@ namespace AW
 		WhenDirty
 	};
 
+	enum class RenderTarget
+	{
+		Screen,
+		Background
+	};
+
+	enum class RenderColorMode
+	{
+		Multiplicative,
+		Absolute
+	};
+
 	class Renderable : public ISerializableDataSubscriber
 	{
 		double rot = 0.0, alpha = 1.0, scaleX = 1.0, scaleY = 1.0;
@@ -81,6 +94,8 @@ namespace AW
 		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
 		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
 		RenderUpdateMode renderUpdateMode = RenderUpdateMode::EveryFrame;
+		RenderTarget renderTarget = RenderTarget::Screen;
+		RenderColorMode renderColorMode = RenderColorMode::Multiplicative;
 
 		const std::shared_ptr<ShaderReference>& getVertexShader();
 		const std::shared_ptr<ShaderReference>& getFragmentShader();
@@ -142,6 +157,7 @@ namespace AW
 		virtual void onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId);
 		virtual void onTransitionEnd() { /* NO-OP */ };
 
+		void setPosition(const std::shared_ptr<Renderable>& other);
 		void setPosition(double x, double y);
 		void movePosition(double xDelta, double yDelta);
 		void setSize(double width, double height);
@@ -165,6 +181,9 @@ namespace AW
 
 		void centerAlignWithin(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
 		void centerAlignWithin(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
+
+		void matchPosition(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void matchPosition(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
 
 		void toLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
 		void toLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
@@ -241,6 +260,6 @@ namespace AW
 		void markDirty();
 		void markClean();
 
-		bool isDirty();
+		bool isClean();
 	};
 }

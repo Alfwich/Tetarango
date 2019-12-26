@@ -29,14 +29,14 @@ void main() {
         z.y = y;
     }
 
+	vec4 col = vec4(fColor, 1.0);
 	if (i == iter)
 	{
-		discard;
+		pColor = col;
 	}
 	else
 	{
-		vec4 c = vec4(fColor, 1.0);
-		pColor *= c * (i / iter);
+		pColor *= col * (i / iter);
 	}
 
 }

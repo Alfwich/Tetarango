@@ -1,22 +1,26 @@
 #include "Texture.h"
 namespace AW
 {
-	Texture::Texture(std::shared_ptr<Screen> screen)
+	Texture::Texture()
 	{
-		this->screen = screen;
 		allowRebindWithRawPixelData = true;
 	}
 
-	Texture::Texture(std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset)
+	Texture::Texture(GLuint textureId, unsigned int width, unsigned int height)
 	{
-		this->screen = screen;
+		this->textureId = textureId;
+		this->width = width;
+		this->height = height;
+	}
+
+	Texture::Texture(std::shared_ptr<Asset> asset)
+	{
 		this->asset = asset;
 	}
 
-	Texture::Texture(std::string path, std::shared_ptr<Screen> screen, std::shared_ptr<Asset> asset)
+	Texture::Texture(std::string path, std::shared_ptr<Asset> asset)
 	{
 		this->path = path;
-		this->screen = screen;
 		this->asset = asset;
 		rebindTexture();
 	}
@@ -54,7 +58,7 @@ namespace AW
 
 	void Texture::rebindTexture()
 	{
-		if (allowRebindWithRawPixelData) {
+		if (asset == nullptr || allowRebindWithRawPixelData) {
 			return;
 		}
 
@@ -83,6 +87,21 @@ namespace AW
 		width = tempSurface->w;
 		height = tempSurface->h;
 		SDL_FreeSurface(tempSurface);
+	}
+
+	void Texture::rebindWithEmptyData(unsigned int width, unsigned height)
+	{
+		if (textureId != 0)
+		{
+			glDeleteTextures(1, &textureId);
+			textureId = 0;
+		}
+
+		glGenTextures(1, &textureId);
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		this->width = width;
+		this->height = height;
 	}
 
 	void Texture::rebindWithImageBundle(std::shared_ptr<ImageBundle> bundle)
@@ -136,6 +155,7 @@ namespace AW
 			glDeleteTextures(1, &textureId);
 		}
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glGenTextures(1, &textureId);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 

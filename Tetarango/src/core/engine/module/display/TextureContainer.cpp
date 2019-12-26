@@ -20,7 +20,7 @@ namespace AW
 			return false;
 		}
 
-		textureCache[key] = std::make_shared<Texture>(path, screen, asset);
+		textureCache[key] = std::make_shared<Texture>(path, asset);
 		Logger::instance()->log("TextureContainer::Loaded Texture key=" + key + ", path=" + path);
 
 		return textureCache[key]->isLoaded();
@@ -45,7 +45,7 @@ namespace AW
 			return nullptr;
 		}
 
-		textureCache[key] = std::make_shared<Texture>(screen);
+		textureCache[key] = std::make_shared<Texture>();
 
 		return textureCache[key];
 
@@ -59,7 +59,7 @@ namespace AW
 			return nullptr;
 		}
 
-		textureCache[key] = std::make_shared<TextureText>(screen, asset);
+		textureCache[key] = std::make_shared<TextureText>(asset);
 
 		return textureCache[key];
 	}

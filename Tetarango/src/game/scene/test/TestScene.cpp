@@ -2,6 +2,7 @@
 
 #include <random>
 #include "GameImports.h"
+#include "ui/renderable/element/Cached.h"
 
 namespace
 {
@@ -30,7 +31,11 @@ namespace AWGame
 		modules->input->keyboard->registerKeys({
 				SDL_SCANCODE_ESCAPE,
 				SDL_SCANCODE_1,
-				SDL_SCANCODE_2
+				SDL_SCANCODE_2,
+				SDL_SCANCODE_LEFT,
+				SDL_SCANCODE_RIGHT,
+				SDL_SCANCODE_UP,
+				SDL_SCANCODE_DOWN
 			}
 		, weak_from_this());
 		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
@@ -41,13 +46,7 @@ namespace AWGame
 
 	void TestScene::onAttach()
 	{
-		modules->screen->disableClear();
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
-	}
-
-	void TestScene::onDetach()
-	{
-		modules->screen->enableClear();
 	}
 
 	void TestScene::onCreateChildren()
@@ -70,27 +69,11 @@ namespace AWGame
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
 		camera->setZoomLimits(16000000.0, 0);
-		camera->setDefaultsAndReset(2.0, 0.0, 0.0);
+		camera->setDefaultsAndReset(1.0, 0.0, 0.0);
 		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		camera->setTimeScope(AW::TimeScope::Camera);
 		camera->listener = shared_from_this();
 		add(camera);
-		{
-			const auto background = std::make_shared<AW::Rectangle>();
-			background->renderUpdateMode = AW::RenderUpdateMode::WhenDirty;
-			background->setVertexShader(modules->shader->getShader({ "v-default" }));
-			background->setFragmentShader(modules->shader->getShader({ "f-mandelbrot" }));
-			background->getVertexShader()->setFloatV2IUParam("vTranslate", 0.0, 0.0);
-			background->getFragmentShader()->setFloatIUParam("iter", currentIters);
-			background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
-			background->setColor(AW::Color::white());
-			background->setSize(600, 400);
-			background->setPosition(0, 0);
-			background->zIndex = -1;
-			add(background);
-
-			obj = background;
-		}
 
 		red = std::make_shared<ScrollBarBasic>();
 		red->renderPositionMode = AW::RenderPositionMode::Absolute;
@@ -115,6 +98,71 @@ namespace AWGame
 		blue->setColor(0, 0, 192);
 		blue->toRightOf(green, 2.0);
 		add(blue);
+
+		const auto background = std::make_shared<AW::Rectangle>();
+		background->renderUpdateMode = AW::RenderUpdateMode::WhenDirty;
+		background->renderTarget = AW::RenderTarget::Background;
+		background->setVertexShader(modules->shader->getShader({ "v-default" }));
+		background->setFragmentShader(modules->shader->getShader({ "f-mandelbrot" }));
+		background->getVertexShader()->setFloatV2IUParam("vTranslate", 0.0, 0.0);
+		background->getFragmentShader()->setFloatIUParam("iter", currentIters);
+		background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
+		background->setColor(AW::Color::white());
+		background->setSize(500, 500);
+		background->setPosition(500 / 2, 500 / 2);
+		background->zIndex = -1;
+		obj1 = background;
+
+		const auto innerTester = std::make_shared<AW::Rectangle>();
+		innerTester->setPosition(250.0, 250.0);
+		innerTester->setColor(128, 128, 128);
+		innerTester->setSize(50.0, 50.0);
+		background->add(innerTester);
+		obj3 = innerTester;
+
+		const auto iiT = std::make_shared<AW::Element>();
+		iiT->setFragmentShader(modules->shader->getShader({ "element", "f-scanline-retro" }));
+		iiT->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 1.0);
+		iiT->setSize(50.0, 50.0);
+		iiT->setTexture("splash-sdl-logo");
+		iiT->setPosition(100.0, 100.0);
+		innerTester->add(iiT);
+
+		{
+			const auto iiT2 = std::make_shared<AW::Element>();
+			iiT2->renderColorMode = AW::RenderColorMode::Absolute;
+			iiT2->setTexture("splash-aw-games-logo");
+			iiT2->setColor(155, 20, 120);
+			iiT2->setSize(25.0, 25.0);
+			iiT2->setPosition(100.0, 100.0);
+			iiT->add(iiT2);
+		}
+
+		{
+			const auto cached = std::make_shared<AW::Cached>();
+			cached->setSize(500.0, 500.0);
+			cached->setClearColor(0, 0, 0);
+			add(cached);
+			cached->add(background);
+			obj2 = cached;
+		}
+
+		{
+			const auto cached = std::make_shared<AW::Cached>();
+			cached->setSize(500.0, 500.0);
+			cached->setClearColor(0, 0, 0);
+			add(cached);
+			cached->add(background);
+			obj4 = cached;
+		}
+
+		{
+			const auto example = std::make_shared<AW::Container>();
+			example->setSize(500.0, 500.0);
+			example->setPosition(550.0, 0.0);
+			add(example);
+			example->add(background);
+		}
 	}
 
 	void TestScene::onChildrenHydrated()
@@ -129,18 +177,28 @@ namespace AWGame
 			if (itersIncPressed)
 			{
 				currentIters = AW::NumberHelper::clamp(currentIters + 1.0, 0.0, 1000.0);
-				obj->getFragmentShader()->setFloatIUParam("iter", currentIters);
+				obj1->getFragmentShader()->setFloatIUParam("iter", currentIters);
 				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
-				obj->markDirty();
+				obj2->markDirty();
+				obj4->markDirty();
 			}
 			else if (itersDecPressed)
 			{
 				currentIters = AW::NumberHelper::clamp(currentIters - 1.0, 0.0, 1000.0);
-				obj->getFragmentShader()->setFloatIUParam("iter", currentIters);
+				obj1->getFragmentShader()->setFloatIUParam("iter", currentIters);
 				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
-				obj->markDirty();
+				obj2->markDirty();
+				obj4->markDirty();
 			}
 		}
+
+		obj1->rotate((deltaTime / 1000.0) * 45.0);
+		obj3->rotate((deltaTime / 1000.0) * 45.0);
+
+		const auto xD = std::cos(((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0) / 10.0);
+		const auto yD = std::sin(((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0) / 10.0);
+		obj1->setPosition(250.0 + 250.0 * xD, 250.0 + 250.0 * yD);
+		obj3->setPosition(250.0 + 250.0 * xD, 250.0 + 250.0 * yD);
 	}
 
 	void TestScene::onKeyPressed(SDL_Scancode key)
@@ -163,32 +221,54 @@ namespace AWGame
 		{
 			itersIncPressed = isPressed;
 		}
+
+		if (key == SDL_SCANCODE_LEFT && isPressed)
+		{
+			obj2->movePosition(-50.0, 0);
+		}
+
+		if (key == SDL_SCANCODE_RIGHT && isPressed)
+		{
+			obj2->movePosition(50.0, 0);
+		}
+
+		if (key == SDL_SCANCODE_UP && isPressed)
+		{
+			obj2->movePosition(0, 50.0);
+		}
+
+		if (key == SDL_SCANCODE_DOWN && isPressed)
+		{
+			obj2->movePosition(0, -50.0);
+		}
 	}
 
 	void TestScene::onScrollBarScroll(int id, double pos)
 	{
-		auto currentColor = obj->getFragmentShader()->getFloatV3IUParam("fColor");
+		auto currentColor = obj1->getFragmentShader()->getFloatV3IUParam("fColor");
 		if (id == red->getId())
 		{
-			obj->getFragmentShader()->setFloatV3IUParam("fColor", 1.0 - pos, std::get<1>(currentColor), std::get<2>(currentColor));
-			obj->markDirty();
+			obj1->getFragmentShader()->setFloatV3IUParam("fColor", 1.0 - pos, std::get<1>(currentColor), std::get<2>(currentColor));
+			obj2->markDirty();
+			obj4->markDirty();
 		}
 
 		if (id == green->getId())
 		{
-			obj->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), 1.0 - pos, std::get<2>(currentColor));
-			obj->markDirty();
+			obj1->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), 1.0 - pos, std::get<2>(currentColor));
+			obj2->markDirty();
+			obj4->markDirty();
 		}
 
 		if (id == blue->getId())
 		{
-			obj->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), std::get<1>(currentColor), 1.0 - pos);
-			obj->markDirty();
+			obj1->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), std::get<1>(currentColor), 1.0 - pos);
+			obj2->markDirty();
+			obj4->markDirty();
 		}
 	}
 
 	void TestScene::onCameraUpdate()
 	{
-		obj->markDirty();
 	}
 }
