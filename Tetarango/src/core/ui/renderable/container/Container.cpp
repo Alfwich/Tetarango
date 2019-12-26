@@ -12,7 +12,7 @@ namespace AW
 {
 	Container::Container()
 	{
-		renderType = RenderType::Container;
+		renderMode = RenderMode::Container;
 		debugColor = AW::Color(0, AW::NumberHelper::randomInt(0, 255), AW::NumberHelper::randomInt(0, 255));
 		registerGameObject<Container>();
 	}

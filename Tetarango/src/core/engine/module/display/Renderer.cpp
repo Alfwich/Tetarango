@@ -459,22 +459,69 @@ namespace AW
 
 	void Renderer::renderRecursive(std::shared_ptr<Renderable> rend, Rect computed, RenderPackage renderPackage)
 	{
+		renderRecursivePushStacks(rend);
+		renderRecursivePushStencilBuffer(rend, &renderPackage);
+		renderRecursiveDoRender(rend, &computed, &renderPackage);
+		renderRecursivePopStencilBuffer(rend, &renderPackage);
+		renderRecursivePopStacks(rend);
+	}
+
+	void Renderer::renderRecursiveDoRender(const std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	{
+		switch (rend->renderMode)
+		{
+		case RenderMode::Element:
+			renderElement(rend, computed, renderPackage);
+			renderRecursiveRenderChildren(rend, computed, renderPackage);
+			break;
+
+		case RenderMode::CachedElement:
+			if (!rend->isClean())
+			{
+				renderElementChildrenIntoElementTexture(rend, renderPackage);
+			}
+
+			renderElement(rend, computed, renderPackage);
+			break;
+
+		case RenderMode::Primitive:
+		case RenderMode::ParticleSystem:
+			renderPrimitive(rend, computed, renderPackage);
+			renderRecursiveRenderChildren(rend, computed, renderPackage);
+			break;
+
+		case RenderMode::Container:
+		{
+			const auto container = std::dynamic_pointer_cast<Container>(rend);
+			container->performAutoLayoutIfNeeded();
+
+			renderUpdateRect(container, computed, renderPackage);
+			container->setWorldRect(computed);
+			container->updateScreenRect(renderPackage, renderPositionModeStack.top());
+
+			if (container->getHasClipRect())
+			{
+				updateClipRectOpenGL(container, computed, renderPackage);
+			}
+
+			renderRecursiveRenderChildren(rend, computed, renderPackage);
+		}
+		break;
+
+		case RenderMode::ChildrenOnly:
+			renderRecursiveRenderChildren(rend, computed, renderPackage);
+			break;
+
+		}
+	}
+
+	void Renderer::renderRecursivePushStacks(const std::shared_ptr<Renderable>& rend)
+	{
 		switch (rend->renderPositionMode)
 		{
 		case RenderPositionMode::Absolute:
 		case RenderPositionMode::Positioned:
 			renderPositionModeStack.push(rend->renderPositionMode);
-		}
-
-		if (rend->getHasClipRect())
-		{
-			if (renderPackage.stencilDepth == 0)
-			{
-				glClear(GL_STENCIL_BUFFER_BIT);
-				glEnable(GL_STENCIL_TEST);
-			}
-
-			renderPackage.stencilDepth++;
 		}
 
 		if (rend->renderPositionProcessing != RenderPositionProcessing::None)
@@ -502,196 +549,19 @@ namespace AW
 			renderColorMode.push(rend->renderColorMode);
 		}
 
-		bool pushedColorStack = false;
-		std::shared_ptr<Rectangle> debugObject = nullptr;
-		switch (rend->renderType)
+		const auto color = rend->getColor();
+		if (color != nullptr)
 		{
-		case RenderType::Element:
-		{
-			const auto ele = std::static_pointer_cast<Element>(rend);
-
-			pushedColorStack = updateColorStack(ele);
-			renderElement(ele, &computed, &renderPackage);
+			pushColorStack(color);
 		}
-		break;
-		case RenderType::CachedElement:
+	}
+
+	void Renderer::renderRecursivePopStacks(const std::shared_ptr<Renderable>& rend)
+	{
+		const auto color = rend->getColor();
+		if (color != nullptr)
 		{
-			const auto ele = std::static_pointer_cast<Cached>(rend);
-			if (ele->visible && !ele->isClean())
-			{
-				glBindTexture(GL_TEXTURE_2D, 0);
-				GLuint backRenderBuffer;
-				glGenFramebuffers(1, &backRenderBuffer);
-				glBindFramebuffer(GL_FRAMEBUFFER, backRenderBuffer);
-
-				GLuint texColorBuffer;
-				if (false && ele->hasTexture())
-				{
-					texColorBuffer = ele->getTexture()->openGlTextureId();
-				}
-				else
-				{
-					glGenTextures(1, &texColorBuffer);
-					glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ele->getWidth(), ele->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-					glBindTexture(GL_TEXTURE_2D, 0);
-				}
-
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
-
-				const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, ele->getWidth(), ele->getHeight());
-				ele->setTexture(cachedTexture);
-
-				if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-				{
-					Logger::instance()->logCritical("Renderer::Failed to bind back frame buffer for Cached element");
-					break;
-				}
-
-				mat4x4_ortho(cAbs, 0, cachedTexture->getWidth(), cachedTexture->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
-				glViewport(0, 0, cachedTexture->getWidth(), cachedTexture->getHeight());
-
-				const auto cColor = ele->getClearColor();
-				if (cColor != nullptr && cColor->a > 0)
-				{
-					glClearColor(cColor->r / 255.0, cColor->g / 255.0, cColor->b / 255.0, cColor->a / 255.0);
-					glClear(GL_COLOR_BUFFER_BIT);
-				}
-
-				renderTargetStack.push(RenderTarget::Background);
-
-				pushedColorStack = updateColorStack(ele);
-				RenderPackage childRenderPackage;
-				Rect childRect;
-				childRect.y = cachedTexture->getHeight();
-
-				childRenderPackage.alpha = renderPackage.alpha * ele->getAlpha();
-				childRenderPackage.depth = renderPackage.depth;
-				childRenderPackage.stencilDepth = renderPackage.stencilDepth;
-
-				const auto aoPtr = std::dynamic_pointer_cast<GameObject>(ele);
-				if (aoPtr != nullptr)
-				{
-					renderPackage.depth += aoPtr->zIndex;
-					for (const auto child : aoPtr->getChildrenOrdered())
-					{
-						const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
-						if (renderableChildPtr != nullptr)
-						{
-							renderRecursive(renderableChildPtr, childRect, childRenderPackage);
-						}
-					}
-				}
-
-				renderTargetStack.pop();
-
-				glDeleteFramebuffers(1, &backRenderBuffer);
-				glBindTexture(GL_TEXTURE_2D, 0);
-
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				glViewport(0, 0, currentScreenConfig.width, currentScreenConfig.height);
-			}
-
-			renderElement(ele, &computed, &renderPackage);
-		}
-		break;
-
-		case RenderType::Primitive:
-		case RenderType::ParticleSystem:
-		{
-			const auto prim = std::static_pointer_cast<Primitive>(rend);
-
-			pushedColorStack = updateColorStack(prim);
-			renderPrimitive(prim, &computed, &renderPackage);
-		}
-		break;
-
-		case RenderType::Container:
-		{
-			const auto container = std::dynamic_pointer_cast<Container>(rend);
-			if (container != nullptr)
-			{
-				container->performAutoLayoutIfNeeded();
-
-				pushedColorStack = updateColorStack(container);
-				renderUpdateRect(container, &computed, &renderPackage);
-				container->setWorldRect(&computed);
-				container->updateScreenRect(&renderPackage, renderPositionModeStack.top());
-
-				if (currentScreenConfig.visualizeContainers)
-				{
-					debugObject = std::make_shared<Rectangle>();
-					debugObject->markIsDebugElement();
-					debugObject->matchSize(container);
-					debugObject->topLeftAlignSelf();
-					debugObject->setAlpha(0.20);
-					debugObject->setColor(container->debugColor);
-					debugObject->zIndex = 1;
-					container->add(debugObject);
-				}
-
-				if (container->getHasClipRect())
-				{
-					updateClipRectOpenGL(container, &computed, &renderPackage);
-				}
-			}
-		}
-		break;
-		}
-
-		if (rend->visible && rend->renderType != RenderType::NoneAndBlockChildren && rend->renderType != RenderType::CachedElement)
-		{
-			const auto aoPtr = std::dynamic_pointer_cast<GameObject>(rend);
-			if (aoPtr != nullptr)
-			{
-				renderPackage.depth += aoPtr->zIndex;
-				for (const auto child : aoPtr->getChildrenOrdered())
-				{
-					const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
-					if (renderableChildPtr != nullptr)
-					{
-						renderRecursive(renderableChildPtr, computed, renderPackage);
-					}
-				}
-			}
-		}
-
-		if (debugObject != nullptr)
-		{
-			debugObject->removeFromParent();
-			debugObject = nullptr;
-		}
-
-		if (pushedColorStack)
-		{
-			revertColorStack();
-		}
-
-		if (rend->getHasClipRect())
-		{
-			if (currentScreenConfig.visualizeClipRects)
-			{
-				const auto debugObject = std::make_shared<Rectangle>();
-				debugObject->markIsDebugElement();
-				debugObject->setSizeAndPosition(-2000.0, -2000.0, 30000.0, 30000.0);
-				debugObject->zIndex = 20;
-				debugObject->setAlpha(0.25);
-				debugObject->onInitialAttach();
-				colorStack.push(AW::Color::red());
-				auto rect = Rect();
-				auto renderPackage = RenderPackage();
-				renderPrimitive(debugObject, &rect, &renderPackage);
-				colorStack.pop();
-			}
-
-			renderPackage.stencilDepth--;
-
-			if (renderPackage.stencilDepth == 0)
-			{
-				glDisable(GL_STENCIL_TEST);
-			}
+			colorStack.pop();
 		}
 
 		if (rend->renderColorMode != RenderColorMode::Multiplicative)
@@ -727,12 +597,41 @@ namespace AW
 		}
 	}
 
+	void Renderer::renderRecursivePushStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage)
+	{
+		if (rend->getHasClipRect())
+		{
+			if (renderPackage->stencilDepth == 0)
+			{
+				glClear(GL_STENCIL_BUFFER_BIT);
+				glEnable(GL_STENCIL_TEST);
+			}
+
+			renderPackage->stencilDepth++;
+		}
+	}
+
+	void Renderer::renderRecursivePopStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage)
+	{
+		if (rend->getHasClipRect())
+		{
+			renderPackage->stencilDepth--;
+
+			if (renderPackage->stencilDepth == 0)
+			{
+				glDisable(GL_STENCIL_TEST);
+			}
+		}
+	}
+
 	void Renderer::renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
-		auto rect = rend->getRect();
+		const auto rect = rend->getRect();
+		const auto rotation = renderPackage->rotation;
+		const auto targetOrientation = renderTargetOrientation();
+
 		auto rectMiddleX = (rect.x - rect.w / 2.0);
 		auto rectMiddleY = (rect.y - rect.h / 2.0);
-		auto rotation = renderPackage->rotation;
 
 		if (renderProcessingStack.top() == RenderPositionProcessing::Floor)
 		{
@@ -747,11 +646,7 @@ namespace AW
 
 		if (rend->rotateInParentSpace)
 		{
-			double rotationRad = renderPackage->rotation * AW::NumberHelper::degToRad;
-			if (renderTargetStack.top() == RenderTarget::Background)
-			{
-				rotationRad = -rotationRad;
-			}
+			double rotationRad = (renderPackage->rotation * AW::NumberHelper::degToRad) * targetOrientation;
 			double newX = computed->x + rectMiddleX;
 			double newY = computed->y + rectMiddleY;
 			double oX = computed->x + (originW / 2.0) - (computed->w / 2.0);
@@ -759,19 +654,10 @@ namespace AW
 			double cX = newX - oX;
 			double cY = newY - oY;
 			double xP = cX * std::cos(rotationRad) - cY * std::sin(rotationRad);
-			double yP = cY * std::cos(rotationRad) + cX * std::sin(rotationRad);
+			double yP = (cY * std::cos(rotationRad) + cX * std::sin(rotationRad)) * targetOrientation;
 
 			computed->x = (xP + oX);
-
-			if (renderTargetStack.top() == RenderTarget::Background)
-			{
-				computed->y = (-yP + oY);
-			}
-			else
-			{
-				computed->y = (yP + oY);
-			}
-
+			computed->y = (yP + oY);
 		}
 		else
 		{
@@ -779,42 +665,52 @@ namespace AW
 			computed->y += rect.y - rect.h / 2.0;
 		}
 
-		if (renderTargetStack.top() == RenderTarget::Background)
-		{
-			renderPackage->rotation -= rend->getRotation();
-		}
-		else
-		{
-			renderPackage->rotation += rend->getRotation();
-		}
+		renderPackage->rotation += rend->getRotation() * targetOrientation;
 		renderPackage->alpha *= rend->getAlpha();
 	}
 
-	bool Renderer::updateColorStack(std::shared_ptr<Renderable> rend)
+	int Renderer::renderTargetOrientation()
 	{
-		if (rend != nullptr && rend->getColor() != nullptr)
+		return renderTargetStack.top() == RenderTarget::Screen ? 1 : -1;
+	}
+
+	void Renderer::renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, const Rect* computed, RenderPackage* renderPackage)
+	{
+		if (rend->visible)
 		{
-			const auto rendColor = rend->getColor();
-			if (renderColorMode.top() == RenderColorMode::Multiplicative)
+			const auto aoPtr = std::dynamic_pointer_cast<GameObject>(rend);
+			if (aoPtr != nullptr)
 			{
-
-				const auto currentColor = colorStack.empty() ? Color(255, 255, 255, 255) : Color(colorStack.top());
-				const auto newColor = Color(
-					(currentColor.r / 255.0) * rendColor->r,
-					(currentColor.g / 255.0) * rendColor->g,
-					(currentColor.b / 255.0) * rendColor->b,
-					(currentColor.a / 255.0) * rendColor->a
-				);
-				colorStack.push(newColor);
+				renderPackage->depth += aoPtr->zIndex;
+				for (const auto child : aoPtr->getChildrenOrdered())
+				{
+					const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
+					if (renderableChildPtr != nullptr)
+					{
+						renderRecursive(renderableChildPtr, *computed, *renderPackage);
+					}
+				}
 			}
-			else
-			{
-				colorStack.push(rendColor);
-			}
-			return true;
 		}
+	}
 
-		return false;
+	void Renderer::pushColorStack(const Color* color)
+	{
+		if (renderColorMode.top() == RenderColorMode::Multiplicative)
+		{
+			const auto currentColor = colorStack.empty() ? Color(255, 255, 255, 255) : colorStack.top();
+			const auto newColor = Color(
+				(currentColor.r / 255.0) * color->r,
+				(currentColor.g / 255.0) * color->g,
+				(currentColor.b / 255.0) * color->b,
+				(currentColor.a / 255.0) * color->a
+			);
+			colorStack.push(newColor);
+		}
+		else
+		{
+			colorStack.push(*color);
+		}
 	}
 
 	void Renderer::setColorModParam(RenderPackage* renderPackage)
@@ -830,11 +726,6 @@ namespace AW
 		}
 	}
 
-	void Renderer::revertColorStack()
-	{
-		colorStack.pop();
-	}
-
 	bool Renderer::renderShouldCull(Rect* rect, RenderPackage* renderPackage)
 	{
 		const auto modifiedCullingOffset = cullingOffset * renderPackage->zoom;
@@ -842,8 +733,9 @@ namespace AW
 			rect->y > screenHeight + modifiedCullingOffset || rect->h + rect->h < -modifiedCullingOffset;
 	}
 
-	void Renderer::renderElement(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderElement(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
+		auto ele = std::dynamic_pointer_cast<Element>(rend);
 		if (ele == nullptr)
 		{
 			return;
@@ -862,15 +754,15 @@ namespace AW
 		renderElementOpenGL(ele, computed, renderPackage);
 	}
 
-	void Renderer::renderPrimitive(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderPrimitive(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
+		auto prim = std::dynamic_pointer_cast<Primitive>(rend);
 		if (prim == nullptr)
 		{
 			return;
 		}
 
 		renderUpdateRect(prim, computed, renderPackage);
-
 		prim->preUpdateRender(computed, renderPackage);
 		prim->setWorldRect(computed);
 		prim->updateScreenRect(renderPackage, renderPositionModeStack.top());
@@ -881,15 +773,94 @@ namespace AW
 			updateClipRectOpenGL(prim, computed, renderPackage);
 		}
 
-		switch (prim->renderType)
+		switch (prim->renderMode)
 		{
-		case RenderType::ParticleSystem:
+		case RenderMode::ParticleSystem:
 			renderParticleSystemOpenGL(prim, computed, renderPackage);
 			break;
 
 		default:
 			renderPrimitiveOpenGL(prim, computed, renderPackage);
 			break;
+		}
+	}
+
+	void Renderer::renderElementChildrenIntoElementTexture(std::shared_ptr<Renderable> rend, const RenderPackage* renderPackage)
+	{
+		const auto cached = std::dynamic_pointer_cast<Cached>(rend);
+		if (cached == nullptr)
+		{
+			return;
+		}
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		GLuint backRenderBuffer;
+		glGenFramebuffers(1, &backRenderBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, backRenderBuffer);
+
+		frameBufferStack.push(std::make_tuple(cached->getWidth(), cached->getHeight(), backRenderBuffer));
+
+		GLuint texColorBuffer;
+		glGenTextures(1, &texColorBuffer);
+		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, cached->getWidth(), cached->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+		const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, cached->getWidth(), cached->getHeight());
+		cached->setTexture(cachedTexture);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
+			Logger::instance()->logCritical("Renderer::Failed to bind back frame buffer for Cached element");
+			return;
+		}
+
+		mat4x4_ortho(cAbs, 0, cachedTexture->getWidth(), cachedTexture->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+		glViewport(0, 0, cachedTexture->getWidth(), cachedTexture->getHeight());
+
+		const auto cColor = cached->getClearColor();
+		if (cColor != nullptr && cColor->a > 0)
+		{
+			glClearColor(cColor->r / 255.0, cColor->g / 255.0, cColor->b / 255.0, cColor->a / 255.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+		}
+
+		renderTargetStack.push(RenderTarget::Background);
+
+		RenderPackage childRenderPackage;
+		Rect childRect;
+		childRect.y = cachedTexture->getHeight();
+
+		childRenderPackage.alpha = renderPackage->alpha * cached->getAlpha();
+		childRenderPackage.depth = renderPackage->depth;
+		childRenderPackage.stencilDepth = renderPackage->stencilDepth;
+
+		renderRecursiveRenderChildren(cached, &childRect, &childRenderPackage);
+
+		renderTargetStack.pop();
+
+		glDeleteFramebuffers(1, &backRenderBuffer);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		frameBufferStack.pop();
+
+		if (frameBufferStack.empty())
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glViewport(0, 0, currentScreenConfig.width, currentScreenConfig.height);
+		}
+		else
+		{
+			const auto previous = frameBufferStack.top();
+			frameBufferStack.pop();
+
+			glBindFramebuffer(GL_FRAMEBUFFER, std::get<2>(previous));
+			glViewport(0, 0, std::get<0>(previous), std::get<1>(previous));
+			mat4x4_ortho(cAbs, 0, std::get<0>(previous), std::get<1>(previous), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 		}
 	}
 

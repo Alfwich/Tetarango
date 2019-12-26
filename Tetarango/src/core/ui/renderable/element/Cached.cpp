@@ -4,13 +4,9 @@ namespace AW
 {
 	Cached::Cached()
 	{
-		renderType = RenderType::CachedElement;
+		renderMode = RenderMode::CachedElement;
 		renderUpdateMode = RenderUpdateMode::WhenDirty;
 		registerGameObject<Cached>();
-	}
-
-	void Cached::onInitialAttach()
-	{
 	}
 
 	void Cached::setClearColor(int r, int g, int b, int a)

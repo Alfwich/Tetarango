@@ -6,7 +6,7 @@ namespace AW
 	ParticleSystem::ParticleSystem()
 	{
 		disableCulling = true;
-		renderType = RenderType::ParticleSystem;
+		renderMode = RenderMode::ParticleSystem;
 		registerGameObject<ParticleSystem>();
 	}
 

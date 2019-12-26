@@ -17,7 +17,6 @@
 
 namespace AW
 {
-
 	class Renderer
 	{
 		ScreenConfig currentScreenConfig;
@@ -35,8 +34,9 @@ namespace AW
 
 		std::shared_ptr<Camera> camera;
 
-		std::stack<RenderPositionMode> renderPositionModeStack;
+		std::stack<std::tuple<double, double, GLuint>> frameBufferStack;
 		std::stack<Color> colorStack;
+		std::stack<RenderPositionMode> renderPositionModeStack;
 		std::stack<RenderPositionProcessing> renderProcessingStack;
 		std::stack<RenderTextureMode> textureModeStack;
 		std::stack<RenderDepthTest> renderDepthStack;
@@ -49,12 +49,20 @@ namespace AW
 		double currentFrameTimestamp = 0.0;
 
 		void prepareRender(Screen* screen, double renderTimestamp);
-		void renderRecursive(std::shared_ptr<Renderable> ao, Rect computed, RenderPackage parentRotation);
-		void renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
 
-		bool updateColorStack(std::shared_ptr<Renderable> rend);
+		void renderRecursive(std::shared_ptr<Renderable> ao, Rect computed, RenderPackage renderPackage);
+		void renderRecursiveDoRender(const std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderRecursivePushStacks(const std::shared_ptr<Renderable>& rend);
+		void renderRecursivePopStacks(const std::shared_ptr<Renderable>& rend);
+		void renderRecursivePushStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
+		void renderRecursivePopStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
+		void renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, const Rect* rect, RenderPackage* renderPackage);
+
+		void renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		int renderTargetOrientation();
+
+		void pushColorStack(const Color* color);
 		void setColorModParam(RenderPackage* renderPackage);
-		void revertColorStack();
 
 		bool renderShouldCull(Rect* r, RenderPackage* renderPackage);
 
@@ -63,8 +71,9 @@ namespace AW
 
 		void renderOpenGL(std::shared_ptr<Renderable> obj, Rect rootRect, Screen* screen, RenderPackage* package);
 
-		void renderElement(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
-		void renderPrimitive(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
+		void renderElement(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderPrimitive(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderElementChildrenIntoElementTexture(std::shared_ptr<Renderable> rend, const RenderPackage* renderPackage);
 
 		void updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
 		void bindGLTexture(GLuint textureId);
@@ -105,4 +114,3 @@ namespace AW
 		void reportOpenGLErrors();
 	};
 }
-

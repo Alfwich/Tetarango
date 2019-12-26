@@ -32,6 +32,7 @@ namespace AWGame
 				SDL_SCANCODE_ESCAPE,
 				SDL_SCANCODE_1,
 				SDL_SCANCODE_2,
+				SDL_SCANCODE_3,
 				SDL_SCANCODE_LEFT,
 				SDL_SCANCODE_RIGHT,
 				SDL_SCANCODE_UP,
@@ -138,6 +139,10 @@ namespace AWGame
 			iiT->add(iiT2);
 		}
 
+		const auto b = std::make_shared<Block>();
+		b->setColor(128, 128, 255);
+		iiT->add(b);
+
 		{
 			const auto cached = std::make_shared<AW::Cached>();
 			cached->setSize(500.0, 500.0);
@@ -163,6 +168,7 @@ namespace AWGame
 			add(example);
 			example->add(background);
 		}
+
 	}
 
 	void TestScene::onChildrenHydrated()
@@ -220,6 +226,11 @@ namespace AWGame
 		if (key == SDL_SCANCODE_2)
 		{
 			itersIncPressed = isPressed;
+		}
+
+		if (key == SDL_SCANCODE_3)
+		{
+			obj4->renderMode = AW::RenderMode::ChildrenOnly;
 		}
 
 		if (key == SDL_SCANCODE_LEFT && isPressed)

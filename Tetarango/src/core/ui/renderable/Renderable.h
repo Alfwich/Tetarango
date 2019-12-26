@@ -10,10 +10,10 @@
 
 namespace AW
 {
-	enum class RenderType
+	enum class RenderMode
 	{
 		None,
-		NoneAndBlockChildren,
+		ChildrenOnly,
 		Element,
 		CachedElement,
 		Primitive,
@@ -87,7 +87,7 @@ namespace AW
 
 	public:
 		GLuint cachedProgramId = 0, cachedClipRectProgram = 0;
-		RenderType renderType = RenderType::None;
+		RenderMode renderMode = RenderMode::ChildrenOnly;
 		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
 		RenderDepthTest renderDepthTest = RenderDepthTest::Unspecified;
 		RenderMultiSampleMode renderMultiSampleMode = RenderMultiSampleMode::Unspecified;

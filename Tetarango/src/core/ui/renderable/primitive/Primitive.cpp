@@ -5,7 +5,7 @@ namespace AW
 
 	Primitive::Primitive()
 	{
-		renderType = RenderType::Primitive;
+		renderMode = RenderMode::Primitive;
 	}
 
 	std::shared_ptr<SerializationClient> Primitive::doSerialize(SerializationHint hint)

@@ -18,7 +18,7 @@ namespace AW
 		dynamicResizing = true;
 		setTextColor(0xff, 0xff, 0xff);
 		setBackgroundColor(0x00, 0x00, 0x00);
-		renderType = RenderType::Container;
+		renderMode = RenderMode::Container;
 		renderTextureMode = RenderTextureMode::BilinearNoWrap;
 		registerGameObject<Text>();
 	}

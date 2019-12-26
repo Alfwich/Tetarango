@@ -11,7 +11,7 @@ namespace AW
 
 	Element::Element()
 	{
-		renderType = RenderType::Element;
+		renderMode = RenderMode::Element;
 		registerGameObject<Element>();
 	}
 
