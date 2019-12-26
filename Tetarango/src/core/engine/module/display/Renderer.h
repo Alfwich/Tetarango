@@ -24,7 +24,7 @@ namespace AW
 		SDL_GLContext glContext;
 		Color clearColor;
 
-		mat4x4 mvp, p, pAbs, cAbs, m, t, tP;
+		mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
 
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
@@ -73,6 +73,8 @@ namespace AW
 
 		void renderElement(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
 		void renderPrimitive(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderContainer(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+
 		void renderElementChildrenIntoElementTexture(std::shared_ptr<Renderable> rend, const RenderPackage* renderPackage);
 
 		void updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);

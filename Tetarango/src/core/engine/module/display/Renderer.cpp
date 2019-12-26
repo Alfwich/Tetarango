@@ -491,27 +491,13 @@ namespace AW
 			break;
 
 		case RenderMode::Container:
-		{
-			const auto container = std::dynamic_pointer_cast<Container>(rend);
-			container->performAutoLayoutIfNeeded();
-
-			renderUpdateRect(container, computed, renderPackage);
-			container->setWorldRect(computed);
-			container->updateScreenRect(renderPackage, renderPositionModeStack.top());
-
-			if (container->getHasClipRect())
-			{
-				updateClipRectOpenGL(container, computed, renderPackage);
-			}
-
+			renderContainer(rend, computed, renderPackage);
 			renderRecursiveRenderChildren(rend, computed, renderPackage);
-		}
-		break;
+			break;
 
 		case RenderMode::ChildrenOnly:
 			renderRecursiveRenderChildren(rend, computed, renderPackage);
 			break;
-
 		}
 	}
 
@@ -785,6 +771,27 @@ namespace AW
 		}
 	}
 
+	void Renderer::renderContainer(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	{
+		const auto container = std::dynamic_pointer_cast<Container>(rend);
+		if (container == nullptr)
+		{
+			return;
+		}
+
+		container->performAutoLayoutIfNeeded();
+
+		renderUpdateRect(container, computed, renderPackage);
+
+		container->setWorldRect(computed);
+		container->updateScreenRect(renderPackage, renderPositionModeStack.top());
+
+		if (container->getHasClipRect())
+		{
+			updateClipRectOpenGL(container, computed, renderPackage);
+		}
+	}
+
 	void Renderer::renderElementChildrenIntoElementTexture(std::shared_ptr<Renderable> rend, const RenderPackage* renderPackage)
 	{
 		const auto cached = std::dynamic_pointer_cast<Cached>(rend);
@@ -819,7 +826,7 @@ namespace AW
 			return;
 		}
 
-		mat4x4_ortho(cAbs, 0, cachedTexture->getWidth(), cachedTexture->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+		mat4x4_ortho(pBackground, 0, cachedTexture->getWidth(), cachedTexture->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 		glViewport(0, 0, cachedTexture->getWidth(), cachedTexture->getHeight());
 
 		const auto cColor = cached->getClearColor();
@@ -860,7 +867,7 @@ namespace AW
 
 			glBindFramebuffer(GL_FRAMEBUFFER, std::get<2>(previous));
 			glViewport(0, 0, std::get<0>(previous), std::get<1>(previous));
-			mat4x4_ortho(cAbs, 0, std::get<0>(previous), std::get<1>(previous), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+			mat4x4_ortho(pBackground, 0, std::get<0>(previous), std::get<1>(previous), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 		}
 	}
 
@@ -896,7 +903,7 @@ namespace AW
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, cAbs);
+			mat4x4_dup(tP, pBackground);
 		}
 		else
 		{
@@ -942,7 +949,7 @@ namespace AW
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, cAbs);
+			mat4x4_dup(tP, pBackground);
 		}
 		else
 		{
@@ -1040,7 +1047,7 @@ namespace AW
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, cAbs);
+			mat4x4_dup(tP, pBackground);
 		}
 		else
 		{
@@ -1072,7 +1079,7 @@ namespace AW
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, cAbs);
+			mat4x4_dup(tP, pBackground);
 		}
 		else
 		{

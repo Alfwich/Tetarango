@@ -145,8 +145,9 @@ namespace AWGame
 
 		{
 			const auto cached = std::make_shared<AW::Cached>();
+			cached->setClearColor(64, 64, 64);
+			cached->setPosition(-550.0, 0.0);
 			cached->setSize(500.0, 500.0);
-			cached->setClearColor(0, 0, 0);
 			add(cached);
 			cached->add(background);
 			obj2 = cached;
@@ -154,8 +155,8 @@ namespace AWGame
 
 		{
 			const auto cached = std::make_shared<AW::Cached>();
+			cached->setClearColor(64, 64, 64);
 			cached->setSize(500.0, 500.0);
-			cached->setClearColor(0, 0, 0);
 			add(cached);
 			cached->add(background);
 			obj4 = cached;
