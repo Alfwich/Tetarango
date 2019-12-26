@@ -348,17 +348,12 @@ namespace AW
 		}
 	}
 
-
 	void Renderable::matchPosition(Renderable * other, double xOffset, double yOffset)
 	{
 		if (other != nullptr)
 		{
-			setPosition(other->getX(), other->getY());
+			setPosition(other->getX() + xOffset, other->getY() + yOffset);
 		}
-	}
-
-	void Renderable::matchPosition(std::shared_ptr<Renderable> other, double xOffset, double yOffset)
-	{
 	}
 
 	void Renderable::toLeftOf(Renderable* other, double xOffset, double yOffset)
@@ -500,6 +495,15 @@ namespace AW
 		{
 			const auto otherPtr = other.get();
 			toLeftOf(otherPtr, xOffset, yOffset);
+		}
+	}
+
+	void Renderable::matchPosition(std::shared_ptr<Renderable> other, double xOffset, double yOffset)
+	{
+		if (other != nullptr)
+		{
+			const auto otherPtr = other.get();
+			matchPosition(otherPtr, xOffset, yOffset);
 		}
 	}
 
