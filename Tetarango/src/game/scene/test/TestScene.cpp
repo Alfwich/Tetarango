@@ -114,7 +114,8 @@ namespace AWGame
 		background->zIndex = -1;
 		obj1 = background;
 
-		const auto innerTester = std::make_shared<AW::Rectangle>();
+		const auto innerTester = std::make_shared<AW::Element>();
+		innerTester->setTexture("splash-sdl-logo");
 		innerTester->setPosition(250.0, 250.0);
 		innerTester->setColor(128, 128, 128);
 		innerTester->setSize(50.0, 50.0);
@@ -145,27 +146,16 @@ namespace AWGame
 
 		{
 			const auto cached = std::make_shared<AW::Cached>();
-			cached->setClearColor(64, 64, 64);
-			cached->setPosition(-550.0, 0.0);
-			cached->setSize(500.0, 500.0);
+			cached->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
+			cached->setSize(1000.0, 1000.0);
 			add(cached);
 			cached->add(background);
 			obj2 = cached;
 		}
 
 		{
-			const auto cached = std::make_shared<AW::Cached>();
-			cached->setClearColor(64, 64, 64);
-			cached->setSize(500.0, 500.0);
-			add(cached);
-			cached->add(background);
-			obj4 = cached;
-		}
-
-		{
 			const auto example = std::make_shared<AW::Container>();
-			example->setSize(500.0, 500.0);
-			example->setPosition(550.0, 0.0);
+			example->setSize(1000, 1000);
 			add(example);
 			example->add(background);
 		}
@@ -187,7 +177,6 @@ namespace AWGame
 				obj1->getFragmentShader()->setFloatIUParam("iter", currentIters);
 				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
 				obj2->markDirty();
-				obj4->markDirty();
 			}
 			else if (itersDecPressed)
 			{
@@ -195,15 +184,14 @@ namespace AWGame
 				obj1->getFragmentShader()->setFloatIUParam("iter", currentIters);
 				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
 				obj2->markDirty();
-				obj4->markDirty();
 			}
 		}
 
-		obj1->rotate((deltaTime / 1000.0) * 45.0);
-		obj3->rotate((deltaTime / 1000.0) * 45.0);
+		obj1->rotate((deltaTime / 1000.0) * 10.0);
+		obj3->rotate((deltaTime / 1000.0) * 10.0);
 
-		const auto xD = std::cos(((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0) / 10.0);
-		const auto yD = std::sin(((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0) / 10.0);
+		const auto xD = std::cos(((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0) / 40.0);
+		const auto yD = std::sin(((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0) / 40.0);
 		obj1->setPosition(250.0 + 250.0 * xD, 250.0 + 250.0 * yD);
 		obj3->setPosition(250.0 + 250.0 * xD, 250.0 + 250.0 * yD);
 	}
@@ -231,27 +219,26 @@ namespace AWGame
 
 		if (key == SDL_SCANCODE_3)
 		{
-			obj4->renderMode = AW::RenderMode::ChildrenOnly;
 		}
 
 		if (key == SDL_SCANCODE_LEFT && isPressed)
 		{
-			obj2->movePosition(-50.0, 0);
+			obj2->movePosition(-10.0, 0);
 		}
 
 		if (key == SDL_SCANCODE_RIGHT && isPressed)
 		{
-			obj2->movePosition(50.0, 0);
+			obj2->movePosition(10.0, 0);
 		}
 
 		if (key == SDL_SCANCODE_UP && isPressed)
 		{
-			obj2->movePosition(0, 50.0);
+			obj2->movePosition(0, 10.0);
 		}
 
 		if (key == SDL_SCANCODE_DOWN && isPressed)
 		{
-			obj2->movePosition(0, -50.0);
+			obj2->movePosition(0, -10.0);
 		}
 	}
 
@@ -262,21 +249,18 @@ namespace AWGame
 		{
 			obj1->getFragmentShader()->setFloatV3IUParam("fColor", 1.0 - pos, std::get<1>(currentColor), std::get<2>(currentColor));
 			obj2->markDirty();
-			obj4->markDirty();
 		}
 
 		if (id == green->getId())
 		{
 			obj1->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), 1.0 - pos, std::get<2>(currentColor));
 			obj2->markDirty();
-			obj4->markDirty();
 		}
 
 		if (id == blue->getId())
 		{
 			obj1->getFragmentShader()->setFloatV3IUParam("fColor", std::get<0>(currentColor), std::get<1>(currentColor), 1.0 - pos);
 			obj2->markDirty();
-			obj4->markDirty();
 		}
 	}
 

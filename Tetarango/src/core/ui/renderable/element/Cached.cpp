@@ -9,6 +9,16 @@ namespace AW
 		registerGameObject<Cached>();
 	}
 
+	void Cached::onLoadResources()
+	{
+		modules->shader->loadShader("res/shader/fragment/texture.glsl", "f-texture");
+	}
+
+	void Cached::onBindShaders()
+	{
+		fragmentShader = modules->shader->getShader({ "f-cached", "element" });
+	}
+
 	void Cached::setClearColor(int r, int g, int b, int a)
 	{
 		if (clearColor == nullptr)

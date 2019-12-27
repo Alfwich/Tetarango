@@ -614,7 +614,6 @@ namespace AW
 	{
 		const auto rect = rend->getRect();
 		const auto rotation = renderPackage->rotation;
-		const auto targetOrientation = renderTargetOrientation();
 
 		auto rectMiddleX = (rect.x - rect.w / 2.0);
 		auto rectMiddleY = (rect.y - rect.h / 2.0);
@@ -632,7 +631,7 @@ namespace AW
 
 		if (rend->rotateInParentSpace)
 		{
-			double rotationRad = (renderPackage->rotation * AW::NumberHelper::degToRad) * targetOrientation;
+			double rotationRad = renderPackage->rotation * AW::NumberHelper::degToRad;
 			double newX = computed->x + rectMiddleX;
 			double newY = computed->y + rectMiddleY;
 			double oX = computed->x + (originW / 2.0) - (computed->w / 2.0);
@@ -640,7 +639,7 @@ namespace AW
 			double cX = newX - oX;
 			double cY = newY - oY;
 			double xP = cX * std::cos(rotationRad) - cY * std::sin(rotationRad);
-			double yP = (cY * std::cos(rotationRad) + cX * std::sin(rotationRad)) * targetOrientation;
+			double yP = cY * std::cos(rotationRad) + cX * std::sin(rotationRad);
 
 			computed->x = (xP + oX);
 			computed->y = (yP + oY);
@@ -651,13 +650,8 @@ namespace AW
 			computed->y += rect.y - rect.h / 2.0;
 		}
 
-		renderPackage->rotation += rend->getRotation() * targetOrientation;
+		renderPackage->rotation += rend->getRotation();
 		renderPackage->alpha *= rend->getAlpha();
-	}
-
-	int Renderer::renderTargetOrientation()
-	{
-		return renderTargetStack.top() == RenderTarget::Screen ? 1 : -1;
 	}
 
 	void Renderer::renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, const Rect* computed, RenderPackage* renderPackage)
@@ -840,7 +834,6 @@ namespace AW
 
 		RenderPackage childRenderPackage;
 		Rect childRect;
-		childRect.y = cachedTexture->getHeight();
 
 		childRenderPackage.alpha = renderPackage->alpha * cached->getAlpha();
 		childRenderPackage.depth = renderPackage->depth;

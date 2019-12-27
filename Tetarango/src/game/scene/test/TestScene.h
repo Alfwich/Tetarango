@@ -16,7 +16,7 @@ namespace AWGame
 
 	class TestScene : public AW::Scene, public AW::ICameraListener, public IGuiListener
 	{
-		double currentIters = 1;
+		double currentIters = 15;
 		bool itersIncPressed = false, itersDecPressed = false;
 		std::shared_ptr<GameCamera> camera;
 

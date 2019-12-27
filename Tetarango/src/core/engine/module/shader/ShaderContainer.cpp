@@ -225,6 +225,7 @@ namespace AW
 		loadShader("res/shader/fragment/step-texture.glsl", "f-step-texture");
 		loadShader("res/shader/fragment/scanline.glsl", "f-scanline");
 		loadShader("res/shader/fragment/scanline-retro.glsl", "f-scanline-retro");
+		loadShader("res/shader/fragment/cached.glsl", "f-cached");
 
 		loadShader("res/shader/fragment/mandelbrot.glsl", "f-mandelbrot");
 	}

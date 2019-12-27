@@ -12,6 +12,9 @@ namespace AW
 	public:
 		Cached();
 
+		void onLoadResources();
+		void onBindShaders();
+
 		void setClearColor(int r, int g, int b, int a = 255);
 		const std::shared_ptr<Color>& getClearColor();
 	};

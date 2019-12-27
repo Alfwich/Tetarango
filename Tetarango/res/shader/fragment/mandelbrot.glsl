@@ -32,7 +32,7 @@ void main() {
 	vec4 col = vec4(fColor, 1.0);
 	if (i == iter)
 	{
-		pColor = col;
+		discard;
 	}
 	else
 	{
