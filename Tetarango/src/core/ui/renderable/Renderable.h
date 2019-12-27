@@ -77,7 +77,7 @@ namespace AW
 
 	class Renderable : public ISerializableDataSubscriber
 	{
-		double rot = 0.0, alpha = 1.0, scaleX = 1.0, scaleY = 1.0;
+		double rot = 0.0, alpha = 1.0, scale = 1.0;
 		bool hasClipRect = false, dirty = true;
 
 	protected:
@@ -145,17 +145,11 @@ namespace AW
 		virtual double getRotation();
 		virtual void setRotation(double newRotation);
 
-		virtual double getScaleX();
-		virtual void setScaleX(double newScaleX);
-
-		virtual double getScaleY();
-		virtual void setScaleY(double newScaleY);
-
 		virtual double getAlpha();
 		virtual void setAlpha(double newAlpha);
 
 		void setScale(double scale);
-		void setScale(double scaleX, double scaleY);
+		double getScale();
 
 		virtual void onTransitionStart() { /* NO-OP */ };
 		virtual void onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId);

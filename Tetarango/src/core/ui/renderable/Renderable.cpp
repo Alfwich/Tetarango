@@ -189,26 +189,6 @@ namespace AW
 		rot = NumberHelper::clampWrap(newRotation, 0.0, 359.0);
 	}
 
-	double Renderable::getScaleX()
-	{
-		return scaleX;
-	}
-
-	void Renderable::setScaleX(double newScaleX)
-	{
-		scaleX = newScaleX;
-	}
-
-	double Renderable::getScaleY()
-	{
-		return scaleY;
-	}
-
-	void Renderable::setScaleY(double newScaleY)
-	{
-		scaleY = newScaleY;
-	}
-
 	double Renderable::getAlpha()
 	{
 		return alpha;
@@ -262,14 +242,12 @@ namespace AW
 
 	void Renderable::setScale(double scale)
 	{
-		scaleX = scale;
-		scaleY = scale;
+		this->scale = scale;
 	}
 
-	void Renderable::setScale(double scaleX, double scaleY)
+	double Renderable::getScale()
 	{
-		this->scaleX = scaleX;
-		this->scaleY = scaleY;
+		return scale;
 	}
 
 	void Renderable::rotate(double rotDelta)
@@ -776,8 +754,7 @@ namespace AW
 		setHeight(client->serializeDouble("h", rect.h));
 		setRotation(client->serializeDouble("r", getRotation()));
 		setAlpha(client->serializeDouble("al", Renderable::getAlpha()));
-		setScaleX(client->serializeDouble("sX", getScaleX()));
-		setScaleY(client->serializeDouble("sY", getScaleY()));
+		setScale(client->serializeDouble("scale", getScale()));
 
 		visible = client->serializeBool("visible", visible);
 		renderMode = (RenderMode)client->serializeInt("r-mode", (int)renderMode);

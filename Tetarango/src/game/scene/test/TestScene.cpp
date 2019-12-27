@@ -46,6 +46,9 @@ namespace AWGame
 
 		iterTimer = modules->time->createTimer();
 		iterTimer->start();
+
+		updateTimer = modules->time->createTimer();
+		updateTimer->start();
 	}
 
 	void TestScene::onAttach()
@@ -55,6 +58,9 @@ namespace AWGame
 
 	void TestScene::onCreateChildren()
 	{
+		setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		topLeftAlignSelf();
+
 		const auto mainGameMenu = std::make_shared<GameMainMenu>();
 		mainGameMenu->zIndex = 20;
 		mainGameMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
@@ -84,7 +90,7 @@ namespace AWGame
 		red->setSize(30, 500);
 		red->scrollListener = shared_from_this();
 		red->setColor(192, 0, 0);
-		red->topLeftAlignSelf(2.0, modules->screen->getHeight() / 2.0 - red->getHalfHeight());
+		red->toInnerLeftIn(this);
 		add(red);
 
 		green = std::make_shared<ScrollBarBasic>();
@@ -112,13 +118,14 @@ namespace AWGame
 		background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
 		background->setColor(AW::Color::white());
 		background->setSize(1200, 800);
-		background->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		background->centerWithin(this);
 		background->zIndex = -1;
 		obj1 = background;
 
 		const auto cached = std::make_shared<AW::DisplayBuffer>();
 		cached->setClearColor(64, 0, 0);
 		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		cached->centerWithin(this);
 		cached->zIndex = -1;
 		add(cached);
 		cached->add(background);
@@ -255,5 +262,15 @@ namespace AWGame
 
 	void TestScene::onCameraUpdate()
 	{
+		const auto vShader = obj1->getVertexShader();
+
+		vShader->setFloatV2IUParam("vTranslate", -camera->getX(), -camera->getY());
+		//vShader->setFloatIUParam("vScale", camera->getZoom());
+		obj1->setScale(camera->getZoom());
+
+		if (updateTimer->isAboveThresholdAndRestart(16))
+		{
+			obj2->markDirty();
+		}
 	}
 }

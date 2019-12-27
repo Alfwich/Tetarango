@@ -218,7 +218,7 @@ namespace AWGame
 
 			if (state == 7)
 			{
-				block->setScale(AW::NumberHelper::clamp<double>(block->getScaleX() - deltaTime, 0.0, 1.0));
+				block->setScale(AW::NumberHelper::clamp<double>(block->getScale() - deltaTime, 0.0, 1.0));
 			}
 		}
 	}
