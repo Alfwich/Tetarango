@@ -16,7 +16,7 @@
 #include "ui/renderable/element/NineSlice.h"
 #include "ui/renderable/element/ScreenImage.h"
 #include "debug/monitor/DebugMonitor.h"
-#include "ui/renderable/element/Cached.h"
+#include "ui/renderable/element/DisplayBuffer.h"
 
 #include "Tests.h"
 
@@ -145,7 +145,7 @@ namespace AW
 		std::make_unique<NineSlice>();
 		std::make_unique<ScreenImage>();
 		std::make_unique<DebugMonitor>();
-		std::make_unique<Cached>();
+		std::make_unique<DisplayBuffer>();
 	}
 
 	void Application::run(int argc, char* args[])

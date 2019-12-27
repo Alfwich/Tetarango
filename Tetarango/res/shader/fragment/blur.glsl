@@ -1,7 +1,7 @@
 ﻿#version 330 core
 
 uniform sampler2D textureSampler;
-uniform float blurAmount;
+uniform float fBlurAmount;
 
 vec4 pColor;
 vec4 tPos;
@@ -29,5 +29,5 @@ void main()
 
 	blurred /= (4 * samplePasses);
 
-	pColor = pColor * (1 - blurAmount) + blurred * blurAmount;
+	pColor = pColor * (1 - fBlurAmount) + blurred * fBlurAmount;
 };

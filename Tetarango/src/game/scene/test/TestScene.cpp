@@ -2,7 +2,7 @@
 
 #include <random>
 #include "GameImports.h"
-#include "ui/renderable/element/Cached.h"
+#include "ui/renderable/element/DisplayBuffer.h"
 
 namespace
 {
@@ -116,7 +116,7 @@ namespace AWGame
 		background->zIndex = -1;
 		obj1 = background;
 
-		const auto cached = std::make_shared<AW::Cached>();
+		const auto cached = std::make_shared<AW::DisplayBuffer>();
 		cached->setClearColor(64, 0, 0);
 		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		cached->zIndex = -1;

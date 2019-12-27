@@ -39,7 +39,8 @@ namespace AW
 	{
 		Unspecified,
 		Positioned,
-		Absolute
+		Absolute,
+		AbsoluteSelfOnly
 	};
 
 	enum class RenderDepthTest
@@ -153,6 +154,9 @@ namespace AW
 		virtual double getAlpha();
 		virtual void setAlpha(double newAlpha);
 
+		void setScale(double scale);
+		void setScale(double scaleX, double scaleY);
+
 		virtual void onTransitionStart() { /* NO-OP */ };
 		virtual void onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId);
 		virtual void onTransitionEnd() { /* NO-OP */ };
@@ -163,8 +167,6 @@ namespace AW
 		void setSize(double width, double height);
 		void setSizeAndPosition(double x, double y, double width, double height);
 		void setSizeAndPosition(const Rect& rect);
-		void setScale(double scale);
-		void setScale(double scaleX, double scaleY);
 		void rotate(double rotDelta);
 
 		double getLeft();

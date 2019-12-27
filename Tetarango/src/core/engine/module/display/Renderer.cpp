@@ -5,7 +5,7 @@
 #include "ui/renderable/element/tilemap/TileMap.h"
 #include "ui/renderable/primitive/trace/Trace.h"
 #include "ui/renderable/primitive/Rectangle.h"
-#include "ui/renderable/element/Cached.h"
+#include "ui/renderable/element/DisplayBuffer.h"
 
 namespace
 {
@@ -106,6 +106,14 @@ namespace AW
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
+		if (backgroundRenderBuffer == 0)
+		{
+			glGenRenderbuffers(1, &backgroundRenderBuffer);
+			glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		}
+
 		layerFactor = (1 << 16) / maxLayers;
 	}
 
@@ -156,6 +164,12 @@ namespace AW
 			glDeleteProgram(programPairToProgramId.second);
 		}
 		programs.clear();
+
+		if (backgroundRenderBuffer != 0)
+		{
+			glDeleteRenderbuffers(1, &backgroundRenderBuffer);
+			backgroundRenderBuffer = 0;
+		}
 	}
 
 	void Renderer::setClearColor(int r, int g, int b, int a)
@@ -177,11 +191,6 @@ namespace AW
 
 		Rect rootRect;
 		RenderPackage renderPackage;
-		renderPackage.zoom = camera == nullptr ? 1.0 : camera->getZoom();
-		renderPackage.cameraX = camera == nullptr ? 0.0 : camera->getX() - screenWidth / 2;
-		renderPackage.cameraY = camera == nullptr ? 0.0 : camera->getY() - screenHeight / 2;
-		renderPackage.xOffset = camera == nullptr ? 0.0 : camera->getXOffset();
-		renderPackage.yOffset = camera == nullptr ? 0.0 : camera->getYOffset();
 
 		renderOpenGL(root, rootRect, screen, &renderPackage);
 	}
@@ -457,6 +466,17 @@ namespace AW
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
+
+		if (backgroundRenderBuffer != 0)
+		{
+			glDeleteRenderbuffers(1, &backgroundRenderBuffer);
+			backgroundRenderBuffer = 0;
+
+			glGenRenderbuffers(1, &backgroundRenderBuffer);
+			glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		}
 	}
 
 	void Renderer::prepareRender(Screen* screen, double frameTimestamp)
@@ -464,7 +484,6 @@ namespace AW
 		currentFrameTimestamp = frameTimestamp;
 		screenWidth = screen->getWidth();
 		screenHeight = screen->getHeight();
-		camera = screen->getCamera();
 	}
 
 	void Renderer::renderRecursive(std::shared_ptr<Renderable> rend, Rect computed, RenderPackage renderPackage)
@@ -796,7 +815,7 @@ namespace AW
 
 	void Renderer::renderElementChildrenIntoElementTexture(std::shared_ptr<Renderable> rend, const RenderPackage* renderPackage)
 	{
-		const auto cached = std::dynamic_pointer_cast<Cached>(rend);
+		const auto cached = std::dynamic_pointer_cast<DisplayBuffer>(rend);
 		if (cached == nullptr)
 		{
 			return;
@@ -807,7 +826,10 @@ namespace AW
 		glGenFramebuffers(1, &backRenderBuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, backRenderBuffer);
 
-		frameBufferStack.push(std::make_tuple(cached->getWidth(), cached->getHeight(), backRenderBuffer));
+		glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, backgroundRenderBuffer);
+
+		frameBufferStack.push(std::make_tuple(cached->getWidth(), cached->getHeight(), backRenderBuffer, backgroundRenderBuffer));
 
 		GLuint texColorBuffer;
 		if (!cached->hasTexture())
@@ -829,10 +851,10 @@ namespace AW
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
 
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		const auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
 		{
-			Logger::instance()->logCritical("Renderer::Failed to bind back frame buffer for Cached element");
+			Logger::instance()->logCritical("Renderer::Failed to bind back frame buffer for DisplayBuffer");
 			return;
 		}
 
@@ -861,20 +883,19 @@ namespace AW
 
 		glDeleteFramebuffers(1, &backRenderBuffer);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
 		frameBufferStack.pop();
 
 		if (frameBufferStack.empty())
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
 			setViewport(currentScreenConfig.width, currentScreenConfig.height);
 		}
 		else
 		{
 			const auto previous = frameBufferStack.top();
-			frameBufferStack.pop();
-
 			glBindFramebuffer(GL_FRAMEBUFFER, std::get<2>(previous));
+			glBindRenderbuffer(GL_RENDERBUFFER, std::get<3>(previous));
 			setViewport(std::get<0>(previous), std::get<1>(previous));
 			mat4x4_ortho(pBackground, 0, std::get<0>(previous), std::get<1>(previous), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 		}
@@ -906,7 +927,7 @@ namespace AW
 
 		mat4x4_mul(m, t, m);
 
-		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
+		if (renderPositionModeStack.top() == RenderPositionMode::Absolute || ele->renderPositionMode == RenderPositionMode::AbsoluteSelfOnly)
 		{
 			mat4x4_dup(tP, pAbs);
 		}
@@ -974,7 +995,7 @@ namespace AW
 			vertexShader->setCachedProgramId(rend->cachedClipRectProgram);
 		}
 
-		auto fragmentShader = rend->getFragmentShader();
+		auto fragmentShader = rend->getClipRectFragmentShader();
 		if (fragmentShader == nullptr)
 		{
 			fragmentShader = defaultFragmentShader;

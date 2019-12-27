@@ -54,7 +54,7 @@ namespace AWGame
 
 		splashImage = std::make_shared<AW::Element>();
 		splashImage->setFragmentShader(modules->shader->getShader({ "element", "f-scanline-retro" }));
-		splashImage->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 1.0);
+		//splashImage->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 1.0);
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);

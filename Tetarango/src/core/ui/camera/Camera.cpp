@@ -96,7 +96,6 @@ namespace AW
 	void Camera::enableCamera()
 	{
 		const auto cameraRef = std::dynamic_pointer_cast<Camera>(shared_from_this());
-		modules->screen->setCamera(cameraRef);
 	}
 
 	std::shared_ptr<SerializationClient> Camera::doSerialize(SerializationHint hint)

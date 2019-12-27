@@ -27,25 +27,21 @@ namespace AW
 	void Renderable::setVertexShader(std::shared_ptr<ShaderReference> shader)
 	{
 		vertexShader = shader;
-		markDirty();
 	}
 
 	void Renderable::setFragmentShader(std::shared_ptr<ShaderReference> shader)
 	{
 		fragmentShader = shader;
-		markDirty();
 	}
 
 	void Renderable::setClipRectVertexShader(std::shared_ptr<ShaderReference> shader)
 	{
 		clipRectVertexShader = shader;
-		markDirty();
 	}
 
 	void Renderable::setClipRectFragmentShader(std::shared_ptr<ShaderReference> shader)
 	{
 		clipRectFragmentShader = shader;
-		markDirty();
 	}
 
 	void Renderable::setColor(int r, int g, int b, int a)
@@ -60,7 +56,6 @@ namespace AW
 			colorModulation->b = b;
 			colorModulation->a = a;
 		}
-		markDirty();
 	}
 
 	void Renderable::setColor(const Color& color)
@@ -83,12 +78,7 @@ namespace AW
 
 	Rect Renderable::getRect()
 	{
-		Rect r = rect;
-
-		r.w *= scaleX;
-		r.h *= scaleY;
-
-		return r;
+		return rect;
 	}
 
 	void Renderable::setWorldRect(Rect* r)
@@ -147,7 +137,6 @@ namespace AW
 	{
 		clipRect = *rect;
 		hasClipRect = (clipRect.x > 0.0 || clipRect.y > 0.0 || clipRect.w > 0.0 || clipRect.h > 0.0);
-		markDirty();
 	}
 
 	void Renderable::setClipRect(const Rect & rect)
@@ -163,7 +152,6 @@ namespace AW
 	void Renderable::setX(double newX)
 	{
 		rect.x = newX;
-		markDirty();
 	}
 
 	double Renderable::getY()
@@ -174,29 +162,26 @@ namespace AW
 	void Renderable::setY(double newY)
 	{
 		rect.y = newY;
-		markDirty();
 	}
 
 	double Renderable::getWidth()
 	{
-		return rect.w * scaleX;
+		return rect.w;
 	}
 
 	void Renderable::setWidth(double newWidth)
 	{
 		rect.w = newWidth;
-		markDirty();
 	}
 
 	double Renderable::getHeight()
 	{
-		return rect.h * scaleY;
+		return rect.h;
 	}
 
 	void Renderable::setHeight(double newHeight)
 	{
 		rect.h = newHeight;
-		markDirty();
 	}
 
 	void Renderable::setRotation(double newRotation)
@@ -795,6 +780,7 @@ namespace AW
 		setScaleY(client->serializeDouble("sY", getScaleY()));
 
 		visible = client->serializeBool("visible", visible);
+		renderMode = (RenderMode)client->serializeInt("r-mode", (int)renderMode);
 		renderPositionMode = (RenderPositionMode)client->serializeInt("r-p-m", (int)renderPositionMode);
 		renderPositionProcessing = (RenderPositionProcessing)client->serializeInt("r-p-p-m", (int)renderPositionProcessing);
 		renderTextureMode = (RenderTextureMode)client->serializeInt("r-t-m", (int)renderPositionProcessing);

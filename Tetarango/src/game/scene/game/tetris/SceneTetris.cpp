@@ -3,7 +3,7 @@
 #include "generator/block/GeneratorBlock.h"
 #include "prop/particles/space/ParticleSpaceBackgroundFactory.h"
 #include "prop/particles/block/BlockParticleFactory.h"
-#include "ui/renderable/element/Cached.h"
+#include "ui/renderable/element/DisplayBuffer.h"
 
 namespace
 {
@@ -77,9 +77,11 @@ namespace AWGame
 
 	void SceneTetris::onCreateChildren()
 	{
-		const auto cached = std::make_shared<AW::Cached>();
+		const auto cached = std::make_shared<AW::DisplayBuffer>();
 		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		cached->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
+		cached->renderMode = AW::RenderMode::ChildrenOnly;
+		cached->topLeftAlignSelf();
 		add(cached);
 
 		const auto testBlock = std::make_shared<Block>();
@@ -100,6 +102,7 @@ namespace AWGame
 
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
+		camera->listener = weak_from_this();
 		add(camera);
 
 		scoreText = std::make_shared<AW::Text>();
@@ -131,6 +134,7 @@ namespace AWGame
 		board = findChildWithName<Board>("board");
 		previewBoard = findChildWithName<Board>("preview-board");
 		camera = findChildWithName<GameCamera>("camera");
+		camera->listener = weak_from_this();
 		scoreText = findChildWithName<AW::Text>("score-text");
 		particleSystem = findChildWithName<AW::ParticleSystem>("p-system");
 		particleSystem->emitImmediately(40);
@@ -238,7 +242,7 @@ namespace AWGame
 		{
 		case SDL_SCANCODE_0:
 		{
-			for (const auto cached : getChildrenOfType<AW::Cached>())
+			for (const auto cached : getChildrenOfType<AW::DisplayBuffer>())
 			{
 				if (cached->renderMode == AW::RenderMode::CachedElement)
 				{
@@ -300,5 +304,11 @@ namespace AWGame
 	void SceneTetris::onAboutToSave()
 	{
 		setTimeout(100.0, &saveScreenshotTimeoutId);
+	}
+
+	void SceneTetris::onCameraUpdate()
+	{
+		setScale(camera->getZoom());
+		setPosition(-camera->getX(), -camera->getY());
 	}
 }

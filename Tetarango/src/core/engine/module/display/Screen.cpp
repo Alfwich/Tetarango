@@ -296,21 +296,6 @@ namespace AW
 		return renderer->getOpenGLContext();
 	}
 
-	std::shared_ptr<Camera> Screen::getCamera()
-	{
-		return camera;
-	}
-
-	void Screen::setCamera(std::shared_ptr<Camera> camera)
-	{
-		this->camera = camera;
-	}
-
-	void Screen::clearCamera()
-	{
-		camera = nullptr;
-	}
-
 	void Screen::render(std::shared_ptr<Renderable> root)
 	{
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);

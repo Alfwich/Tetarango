@@ -11,7 +11,7 @@
 namespace AWGame
 {
 
-	class SceneTetris : public BaseScene
+	class SceneTetris : public BaseScene, public AW::ICameraListener
 	{
 		int score = 0, saveScreenshotTimeoutId = 0;
 		bool isLeftDown = false, isRightDown = false, saveScreenOnNextEnterFrame = false, hasPlayedGameOverSound = false;
@@ -43,5 +43,6 @@ namespace AWGame
 		void onKeyPressed(SDL_Scancode key);
 		void onKeyReleased(SDL_Scancode key);
 		void onAboutToSave();
+		void onCameraUpdate();
 	};
 }

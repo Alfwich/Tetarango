@@ -53,7 +53,6 @@ namespace AW
 		std::shared_ptr<Time> time;
 
 		std::shared_ptr<Renderer> renderer;
-		std::shared_ptr<Camera> camera;
 
 	public:
 		virtual ~Screen();
@@ -79,10 +78,6 @@ namespace AW
 
 		bool isOpenGLEnabled();
 		SDL_GLContext getOpenGLContext();
-
-		std::shared_ptr<Camera> getCamera();
-		void setCamera(std::shared_ptr<Camera> camera);
-		void clearCamera();
 
 		void render(std::shared_ptr<Renderable> obj);
 

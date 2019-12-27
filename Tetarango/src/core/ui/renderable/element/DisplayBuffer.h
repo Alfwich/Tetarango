@@ -4,18 +4,20 @@
 
 namespace AW
 {
-	class Cached : public Element
+	class DisplayBuffer : public Element
 	{
 		std::shared_ptr<Texture> cachedTexture;
 		std::shared_ptr<Color> clearColor;
 
 	public:
-		Cached();
+		DisplayBuffer();
 
 		void onLoadResources();
 		void onBindShaders();
 
 		void setClearColor(int r, int g, int b, int a = 255);
 		const std::shared_ptr<Color>& getClearColor();
+
+		void rebuildInternalTexture();
 	};
 }

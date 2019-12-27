@@ -34,7 +34,6 @@ namespace AWGame
 
 	void GameCamera::onDetach()
 	{
-		modules->screen->clearCamera();
 	}
 
 	void GameCamera::onEnterFrame(const double& frameTime)

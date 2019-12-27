@@ -86,12 +86,23 @@ namespace AWGame
 		modules->time->createTimeScope(AW::TimeScope::Menu, 1.0);
 		modules->time->createTimeScope(AW::TimeScope::Camera, 1.0);
 
+		screenBuffer = std::make_shared<AW::DisplayBuffer>();
+		screenBuffer->setFragmentShader(modules->shader->getShader({ "f-cached", "f-texture", "f-color", "f-scanline-retro", "f-blur" }));
+		screenBuffer->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 0.25);
+		screenBuffer->getFragmentShader()->setFloatIUParam("fBlurAmount", 0.25);
+		screenBuffer->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
+		screenBuffer->renderPositionMode = AW::RenderPositionMode::AbsoluteSelfOnly;
+		screenBuffer->setClearColor(0, 0, 0);
+		screenBuffer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		screenBuffer->topLeftAlignSelf();
+		root->add(screenBuffer);
+
 		const auto storageClient = modules->storage->getClient();
 
 		if (gameConfig->getConfigBool(Config::Param::hydrateOnLoad) && storageClient->hasKey("whole_scene_graph"))
 		{
 			masterSceneContainer = std::static_pointer_cast<AW::SceneContainer>(modules->serialization->hydrate(storageClient->readSring("whole_scene_graph")));
-			root->add(masterSceneContainer);
+			screenBuffer->add(masterSceneContainer);
 
 			if (!gameConfig->getConfigBool(Config::Param::launchToLastScene))
 			{
@@ -106,7 +117,7 @@ namespace AWGame
 		else
 		{
 			masterSceneContainer = std::make_shared<AW::SceneContainer>();
-			root->add(masterSceneContainer);
+			screenBuffer->add(masterSceneContainer);
 
 			masterSceneContainer->add(std::make_shared<SceneSplash>());
 			masterSceneContainer->add(std::make_shared<SceneMainMenu>());
@@ -194,6 +205,12 @@ namespace AWGame
 		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
 		storageClient->writeBool(displayDoubleBufferParamKey, screenConfig.useDoubleBuffer);
 
+		if (screenBuffer != nullptr)
+		{
+			screenBuffer->rebuildInternalTexture();
+			screenBuffer->setSize(screenConfig.width, screenConfig.height);
+			screenBuffer->topLeftAlignSelf();
+		}
 
 		if (masterSceneContainer != nullptr)
 		{

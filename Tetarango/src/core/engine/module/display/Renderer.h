@@ -25,16 +25,14 @@ namespace AW
 		Color clearColor;
 
 		mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
-		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0;
+		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
 
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
 		std::unordered_map<std::string, GLuint> programs;
 		std::unordered_map<GLuint, std::unordered_map<std::string, GLuint>> programIdToProgramUniformMapId;
 		GLuint inMatrixLocation = 0, inColorModLocation = 0, currentFrameBufferId = 0;
 
-		std::shared_ptr<Camera> camera;
-
-		std::stack<std::tuple<double, double, GLuint>> frameBufferStack;
+		std::stack<std::tuple<double, double, GLuint, GLuint>> frameBufferStack;
 		std::stack<Color> colorStack;
 		std::stack<RenderPositionMode> renderPositionModeStack;
 		std::stack<RenderPositionProcessing> renderProcessingStack;
