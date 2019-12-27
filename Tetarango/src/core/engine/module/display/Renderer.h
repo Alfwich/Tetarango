@@ -86,14 +86,14 @@ namespace AW
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
 		void changeProgram(GLuint programId);
-		void changeProgram(const std::shared_ptr<Renderable>& renderable);
+		void changeProgram(const std::shared_ptr<Renderable>& renderable, const RenderPackage* renderPackage);
 		void changeProgram(const std::shared_ptr<ShaderReference>& vertexShader, const std::shared_ptr<ShaderReference>& fragmentShader);
 		GLuint createAndLinkProgramIfNeeded(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId);
 		std::string getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds);
 
 		void setViewport(unsigned int width, unsigned int height);
 
-		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader);
+		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader, const RenderPackage* renderPackage);
 		GLuint getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId);
 
 	public:

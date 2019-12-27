@@ -114,7 +114,7 @@ namespace AWGame
 		obj1 = background;
 
 		const auto cached = std::make_shared<AW::Cached>();
-		cached->setClearColor(255, 0, 0);
+		//cached->setClearColor(255, 0, 0);
 		cached->setSize(1200.0, 800.0);
 		add(cached);
 		cached->add(background);
@@ -148,9 +148,8 @@ namespace AWGame
 
 		/*
 		obj1->getVertexShader()->setFloatV2IUParam("vTranslate",
-			//1200 * std::cos((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0),
-			1200,
-			800 * std::sin((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0)
+			600 + 10 * std::cos((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0),
+			400 + 10 * std::sin((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0)
 		);
 		*/
 	}

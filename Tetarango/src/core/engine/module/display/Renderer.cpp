@@ -303,7 +303,7 @@ namespace AW
 		return programIdToProgramUniformMapId.at(programId).at(paramName);
 	}
 
-	void Renderer::changeProgram(const std::shared_ptr<Renderable>& renderable)
+	void Renderer::changeProgram(const std::shared_ptr<Renderable>& renderable, const RenderPackage* renderPackage)
 	{
 		auto vertexShader = renderable->getVertexShader();
 		if (vertexShader == nullptr)
@@ -322,8 +322,8 @@ namespace AW
 
 		renderable->cachedProgramId = vertexShader->getCachedProgramId();
 
-		applyShaderUniforms(vertexShader);
-		applyShaderUniforms(fragmentShader);
+		applyShaderUniforms(vertexShader, renderPackage);
+		applyShaderUniforms(fragmentShader, renderPackage);
 	}
 
 	void Renderer::changeProgram(const std::shared_ptr<ShaderReference>& vertexShader, const std::shared_ptr<ShaderReference>& fragmentShader)
@@ -406,14 +406,15 @@ namespace AW
 		return programs.at(key);
 	}
 
-	void Renderer::applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader)
+	void Renderer::applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader, const RenderPackage* renderPackage)
 	{
 		if (shader == nullptr)
 		{
 			return;
 		}
 
-		RendererInfoBundle info{ currentFrameTimestamp, screenWidth, screenHeight };
+		const auto zoom = renderPackage == nullptr ? 1.0 : renderPackage->zoom;
+		ShaderUniformInfoBundle info{ currentFrameTimestamp, screenWidth / zoom, screenHeight / zoom };
 
 		shader->setUniforms(currentProgramId, info);
 	}
@@ -887,7 +888,7 @@ namespace AW
 			return;
 		}
 
-		changeProgram(ele);
+		changeProgram(ele, renderPackage);
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -983,8 +984,8 @@ namespace AW
 
 		rend->cachedClipRectProgram = vertexShader->getCachedProgramId();
 
-		applyShaderUniforms(vertexShader);
-		applyShaderUniforms(fragmentShader);
+		applyShaderUniforms(vertexShader, renderPackage);
+		applyShaderUniforms(fragmentShader, renderPackage);
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 		glUniform4f(inColorModLocation, 1.0, 1.0, 1.0, 1.0);
@@ -1031,7 +1032,7 @@ namespace AW
 
 	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
 	{
-		changeProgram(prim);
+		changeProgram(prim, renderPackage);
 
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
@@ -1138,12 +1139,12 @@ namespace AW
 			if (pVShader != nullptr && pFShader != nullptr)
 			{
 				changeProgram(pVShader, pFShader);
-				applyShaderUniforms(pVShader);
-				applyShaderUniforms(pFShader);
+				applyShaderUniforms(pVShader, renderPackage);
+				applyShaderUniforms(pFShader, renderPackage);
 			}
 			else
 			{
-				changeProgram(prim);
+				changeProgram(prim, renderPackage);
 			}
 
 			glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);

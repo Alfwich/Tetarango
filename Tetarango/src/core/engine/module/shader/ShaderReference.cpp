@@ -186,7 +186,7 @@ namespace AW
 		return result;
 	}
 
-	void ShaderReference::setUniforms(GLuint programId, const RendererInfoBundle& info)
+	void ShaderReference::setUniforms(GLuint programId, const ShaderUniformInfoBundle& info)
 	{
 		if (paramsDisabled || !hasSetParams)
 		{
@@ -207,7 +207,7 @@ namespace AW
 		}
 	}
 
-	void ShaderReference::setCachedUniforms(const RendererInfoBundle& info)
+	void ShaderReference::setCachedUniforms(const ShaderUniformInfoBundle& info)
 	{
 		for (const auto cachedParam : cachedFloatIUParams)
 		{
@@ -281,7 +281,7 @@ namespace AW
 		}
 	}
 
-	void ShaderReference::setVTranslate(GLuint location, const std::tuple<GLfloat, GLfloat>& value, const RendererInfoBundle& info)
+	void ShaderReference::setVTranslate(GLuint location, const std::tuple<GLfloat, GLfloat>& value, const ShaderUniformInfoBundle& info)
 	{
 		const double xTranslate = (std::get<0>(value) / (double)info.screenWidth) * 2.0;
 		const double yTranslate = -(std::get<1>(value) / (double)info.screenHeight) * 2.0;
