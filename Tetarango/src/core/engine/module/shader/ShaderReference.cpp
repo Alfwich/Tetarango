@@ -138,7 +138,7 @@ namespace AW
 		cachedFloatV4IUParams[modLocation] = values;
 	}
 
-	double ShaderReference::getFloatIUParam(std::string name, double v)
+	double ShaderReference::getFloatIUParam(std::string name)
 	{
 		auto result = 0.0;
 

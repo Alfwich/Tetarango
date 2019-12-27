@@ -36,6 +36,9 @@ namespace AWGame
 				SDL_SCANCODE_LEFT,
 				SDL_SCANCODE_RIGHT,
 				SDL_SCANCODE_UP,
+				SDL_SCANCODE_LEFTBRACKET,
+				SDL_SCANCODE_RIGHTBRACKET,
+				SDL_SCANCODE_UP,
 				SDL_SCANCODE_DOWN
 			}
 		, weak_from_this());
@@ -103,19 +106,20 @@ namespace AWGame
 		const auto background = std::make_shared<AW::Rectangle>();
 		background->setVertexShader(modules->shader->getShader({ "v-default" }));
 		background->setFragmentShader(modules->shader->getShader({ "f-mandelbrot" }));
-		background->getVertexShader()->setFloatV2IUParam("vTranslate", 600, 400);
+		background->getVertexShader()->setFloatV2IUParam("vTranslate", 0, 0);
 		background->getVertexShader()->setFloatIUParam("vScale", 1.0);
 		background->getFragmentShader()->setFloatIUParam("iter", currentIters);
 		background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
 		background->setColor(AW::Color::white());
 		background->setSize(1200, 800);
-		//background->setPosition(1200 / 2, 800 / 2);
+		background->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		background->zIndex = -1;
 		obj1 = background;
 
 		const auto cached = std::make_shared<AW::Cached>();
-		//cached->setClearColor(255, 0, 0);
-		cached->setSize(1200.0, 800.0);
+		cached->setClearColor(64, 0, 0);
+		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		cached->zIndex = -1;
 		add(cached);
 		cached->add(background);
 		obj2 = cached;
@@ -128,7 +132,7 @@ namespace AWGame
 
 	void TestScene::onEnterFrame(const double& deltaTime)
 	{
-		if ((itersIncPressed || itersDecPressed) && iterTimer->isAboveThresholdAndRestart(100))
+		if ((itersIncPressed || itersDecPressed) && iterTimer->isAboveThresholdAndRestart(10))
 		{
 			if (itersIncPressed)
 			{
@@ -145,13 +149,6 @@ namespace AWGame
 				obj2->markDirty();
 			}
 		}
-
-		/*
-		obj1->getVertexShader()->setFloatV2IUParam("vTranslate",
-			600 + 10 * std::cos((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0),
-			400 + 10 * std::sin((iterTimer->getTicks() / 1000.0) * AW::NumberHelper::PI * 2.0)
-		);
-		*/
 	}
 
 	void TestScene::onKeyPressed(SDL_Scancode key)
@@ -178,26 +175,59 @@ namespace AWGame
 		if (key == SDL_SCANCODE_3)
 		{
 			obj2->renderMode = AW::RenderMode::ChildrenOnly;
+			obj1->getVertexShader()->setFloatV2IUParam("vTranslate", 0, 0);
+			obj1->getVertexShader()->setFloatIUParam("vScale", 1.0);
 		}
 
+		if (key == SDL_SCANCODE_LEFTBRACKET && isPressed)
+		{
+			const auto vShader = obj1->getVertexShader();
+			const auto currentZoom = vShader->getFloatIUParam("vScale");
+			vShader->setFloatIUParam("vScale", currentZoom / 2.0);
+			obj2->markDirty();
+		}
+
+		if (key == SDL_SCANCODE_RIGHTBRACKET && isPressed)
+		{
+			const auto vShader = obj1->getVertexShader();
+			const auto currentZoom = vShader->getFloatIUParam("vScale");
+			vShader->setFloatIUParam("vScale", currentZoom * 2.0);
+			obj2->markDirty();
+		}
+
+		const auto vShader = obj1->getVertexShader();
+		const auto currentZoom = vShader->getFloatIUParam("vScale");
+		const auto moveDelta = 10.0 / currentZoom;
 		if (key == SDL_SCANCODE_LEFT && isPressed)
 		{
-			obj2->movePosition(-10.0, 0);
+			const auto vShader = obj1->getVertexShader();
+			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
+			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos) + moveDelta, std::get<1>(currentPos));
+			obj2->markDirty();
 		}
 
 		if (key == SDL_SCANCODE_RIGHT && isPressed)
 		{
-			obj2->movePosition(10.0, 0);
+			const auto vShader = obj1->getVertexShader();
+			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
+			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos) - moveDelta, std::get<1>(currentPos));
+			obj2->markDirty();
 		}
 
 		if (key == SDL_SCANCODE_UP && isPressed)
 		{
-			obj2->movePosition(0, 10.0);
+			const auto vShader = obj1->getVertexShader();
+			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
+			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos), std::get<1>(currentPos) + moveDelta);
+			obj2->markDirty();
 		}
 
 		if (key == SDL_SCANCODE_DOWN && isPressed)
 		{
-			obj2->movePosition(0, -10.0);
+			const auto vShader = obj1->getVertexShader();
+			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
+			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos), std::get<1>(currentPos) - moveDelta);
+			obj2->markDirty();
 		}
 	}
 

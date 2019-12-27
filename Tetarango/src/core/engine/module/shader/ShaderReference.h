@@ -55,7 +55,7 @@ namespace AW
 		void setFloatV3IUParam(std::string name, double v1, double v2, double v3);
 		void setFloatV4IUParam(std::string name, double v1, double v2, double v3, double v4);
 
-		double getFloatIUParam(std::string name, double v);
+		double getFloatIUParam(std::string name);
 		std::tuple<double, double> getFloatV2IUParam(std::string name);
 		std::tuple<double, double, double> getFloatV3IUParam(std::string name);
 		std::tuple<double, double, double, double> getFloatV4IUParam(std::string name);
