@@ -1,5 +1,10 @@
 #include "ShaderReference.h"
 
+namespace
+{
+	const auto vTranslateName = "vTranslate";
+}
+
 namespace AW
 {
 	ShaderReference::ShaderReference(std::vector<std::shared_ptr<Shader>> shaders, std::shared_ptr<Shader> loader) : shaders(shaders), loader(loader) {}
@@ -181,7 +186,7 @@ namespace AW
 		return result;
 	}
 
-	void ShaderReference::setUniforms(GLuint programId, double currentFrameTimestamp)
+	void ShaderReference::setUniforms(GLuint programId, const RendererInfoBundle& info)
 	{
 		if (paramsDisabled || !hasSetParams)
 		{
@@ -193,16 +198,16 @@ namespace AW
 			updateUniformCaches(programId);
 		}
 
-		setCachedUniforms();
+		setCachedUniforms(info);
 
 		const auto position = glGetUniformLocation(programId, "frameTime");
 		if (position != -1)
 		{
-			glUniform1f(position, (GLfloat)currentFrameTimestamp);
+			glUniform1f(position, (GLfloat)info.currentFrameTimestamp);
 		}
 	}
 
-	void ShaderReference::setCachedUniforms()
+	void ShaderReference::setCachedUniforms(const RendererInfoBundle& info)
 	{
 		for (const auto cachedParam : cachedFloatIUParams)
 		{
@@ -216,7 +221,14 @@ namespace AW
 		{
 			if (cachedParam.first != -1)
 			{
-				glUniform2f(cachedParam.first, std::get<0>(cachedParam.second), std::get<1>(cachedParam.second));
+				if (cachedParam.first == vTranslateCachedLocation)
+				{
+					setVTranslate(cachedParam.first, cachedParam.second, info);
+				}
+				else
+				{
+					glUniform2f(cachedParam.first, std::get<0>(cachedParam.second), std::get<1>(cachedParam.second));
+				}
 			}
 		}
 
@@ -245,10 +257,15 @@ namespace AW
 			setCachedParam(position, paramNameToValue.second);
 		}
 
+		vTranslateCachedLocation = 0;
 		for (const auto paramNameToValue : floatV2IUParams)
 		{
 			const auto position = glGetUniformLocation(programId, paramNameToValue.first.c_str());
 			setCachedParam(position, paramNameToValue.second);
+			if (paramNameToValue.first == vTranslateName)
+			{
+				vTranslateCachedLocation = position;
+			}
 		}
 
 		for (const auto paramNameToValue : floatV3IUParams)
@@ -262,6 +279,13 @@ namespace AW
 			const auto position = glGetUniformLocation(programId, paramNameToValue.first.c_str());
 			setCachedParam(position, paramNameToValue.second);
 		}
+	}
+
+	void ShaderReference::setVTranslate(GLuint location, const std::tuple<GLfloat, GLfloat>& value, const RendererInfoBundle& info)
+	{
+		const double xTranslate = (std::get<0>(value) / (double)info.screenWidth) * 2.0;
+		const double yTranslate = -(std::get<1>(value) / (double)info.screenHeight) * 2.0;
+		glUniform2f(location, (GLfloat)xTranslate, (GLfloat)yTranslate);
 	}
 
 	void ShaderReference::setCachedProgramId(GLuint programId)

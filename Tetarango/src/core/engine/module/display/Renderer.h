@@ -44,9 +44,13 @@ namespace AW
 		std::stack<RenderTarget> renderTargetStack;
 		std::stack<RenderColorMode> renderColorMode;
 
-		int screenWidth = 0, screenHeight = 0, layerFactor = 1, maxLayers = 60, cullingOffset = 500;
+		unsigned int screenWidth = 0, screenHeight = 0;
+		int layerFactor = 1, maxLayers = 60, cullingOffset = 500;
 		bool depthEnabled = false, msaaEnabled = false, clearEnabled = true;
 		double currentFrameTimestamp = 0.0;
+
+		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
+		void releaseOpenGLObjects();
 
 		void prepareRender(Screen* screen, double renderTimestamp);
 
@@ -62,11 +66,6 @@ namespace AW
 
 		void pushColorStack(const Color* color);
 		void setColorModParam(RenderPackage* renderPackage);
-
-		bool renderShouldCull(Rect* r, RenderPackage* renderPackage);
-
-		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
-		void releaseOpenGLObjects();
 
 		void renderOpenGL(std::shared_ptr<Renderable> obj, Rect rootRect, Screen* screen, RenderPackage* package);
 
@@ -92,8 +91,9 @@ namespace AW
 		GLuint createAndLinkProgramIfNeeded(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId);
 		std::string getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds);
 
-		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader);
+		void setViewport(unsigned int width, unsigned int height);
 
+		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader);
 		GLuint getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId);
 
 	public:

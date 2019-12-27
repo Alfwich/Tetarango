@@ -413,7 +413,16 @@ namespace AW
 			return;
 		}
 
-		shader->setUniforms(currentProgramId, currentFrameTimestamp);
+		RendererInfoBundle info{ currentFrameTimestamp, screenWidth, screenHeight };
+
+		shader->setUniforms(currentProgramId, info);
+	}
+
+	void Renderer::setViewport(unsigned int width, unsigned int height)
+	{
+		glViewport(0, 0, width, height);
+		screenWidth = width;
+		screenHeight = height;
 	}
 
 	SDL_GLContext Renderer::getOpenGLContext()
@@ -496,6 +505,11 @@ namespace AW
 			break;
 
 		case RenderMode::ChildrenOnly:
+			renderUpdateRect(rend, computed, renderPackage);
+
+			rend->setWorldRect(computed);
+			rend->updateScreenRect(renderPackage, renderPositionModeStack.top());
+
 			renderRecursiveRenderChildren(rend, computed, renderPackage);
 			break;
 		}
@@ -706,13 +720,6 @@ namespace AW
 		}
 	}
 
-	bool Renderer::renderShouldCull(Rect* rect, RenderPackage* renderPackage)
-	{
-		const auto modifiedCullingOffset = cullingOffset * renderPackage->zoom;
-		return rect->x > screenWidth + modifiedCullingOffset || rect->x + rect->w < -modifiedCullingOffset ||
-			rect->y > screenHeight + modifiedCullingOffset || rect->h + rect->h < -modifiedCullingOffset;
-	}
-
 	void Renderer::renderElement(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
 		auto ele = std::dynamic_pointer_cast<Element>(rend);
@@ -802,17 +809,25 @@ namespace AW
 		frameBufferStack.push(std::make_tuple(cached->getWidth(), cached->getHeight(), backRenderBuffer));
 
 		GLuint texColorBuffer;
-		glGenTextures(1, &texColorBuffer);
-		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, cached->getWidth(), cached->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		if (!cached->hasTexture())
+		{
+			glGenTextures(1, &texColorBuffer);
+			glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, cached->getWidth(), cached->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, cached->getWidth(), cached->getHeight());
+			cached->setTexture(cachedTexture);
+		}
+		else
+		{
+			texColorBuffer = cached->getTexture()->openGlTextureId();
+		}
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
 
-		const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, cached->getWidth(), cached->getHeight());
-		cached->setTexture(cachedTexture);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{
@@ -820,8 +835,8 @@ namespace AW
 			return;
 		}
 
-		mat4x4_ortho(pBackground, 0, cachedTexture->getWidth(), cachedTexture->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
-		glViewport(0, 0, cachedTexture->getWidth(), cachedTexture->getHeight());
+		mat4x4_ortho(pBackground, 0, cached->getWidth(), cached->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+		setViewport(cached->getWidth(), cached->getHeight());
 
 		const auto cColor = cached->getClearColor();
 		if (cColor != nullptr && cColor->a > 0)
@@ -851,7 +866,7 @@ namespace AW
 		if (frameBufferStack.empty())
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			glViewport(0, 0, currentScreenConfig.width, currentScreenConfig.height);
+			setViewport(currentScreenConfig.width, currentScreenConfig.height);
 		}
 		else
 		{
@@ -859,7 +874,7 @@ namespace AW
 			frameBufferStack.pop();
 
 			glBindFramebuffer(GL_FRAMEBUFFER, std::get<2>(previous));
-			glViewport(0, 0, std::get<0>(previous), std::get<1>(previous));
+			setViewport(std::get<0>(previous), std::get<1>(previous));
 			mat4x4_ortho(pBackground, 0, std::get<0>(previous), std::get<1>(previous), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 		}
 	}

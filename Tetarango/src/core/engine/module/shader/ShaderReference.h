@@ -9,9 +9,15 @@
 
 namespace AW
 {
+	class RendererInfoBundle
+	{
+	public:
+		double currentFrameTimestamp;
+		unsigned int screenWidth, screenHeight;
+	};
 	class ShaderReference
 	{
-		GLuint loaderId = 0, cachedProgramId = 0;
+		GLuint loaderId = 0, cachedProgramId = 0, vTranslateCachedLocation = 0;
 		bool hasSetParams = false, paramsDisabled = false, cachedParamsValid = false;
 
 		const std::vector<std::shared_ptr<Shader>> shaders;
@@ -33,8 +39,10 @@ namespace AW
 		std::unordered_map<GLuint, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat>> cachedFloatV4IUParams;
 		void setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat> values);
 
-		void setCachedUniforms();
+		void setCachedUniforms(const RendererInfoBundle& info);
 		void updateUniformCaches(GLuint programId);
+
+		void setVTranslate(GLuint location, const std::tuple<GLfloat, GLfloat>& value, const RendererInfoBundle& info);
 
 	public:
 		ShaderReference(std::vector<std::shared_ptr<Shader>> shaders, std::shared_ptr<Shader> loader);
@@ -52,7 +60,7 @@ namespace AW
 		std::tuple<double, double, double> getFloatV3IUParam(std::string name);
 		std::tuple<double, double, double, double> getFloatV4IUParam(std::string name);
 
-		void setUniforms(GLuint programId, double currentFrameTimestamp);
+		void setUniforms(GLuint programId, const RendererInfoBundle& info);
 
 		void setCachedProgramId(GLuint programId);
 		GLuint getCachedProgramId();
