@@ -76,9 +76,6 @@ namespace AW
 		DisplayModeInfo getAllSupportedDisplayModes();
 		ScreenConfig getCurrentScreenConfig();
 
-		bool isOpenGLEnabled();
-		SDL_GLContext getOpenGLContext();
-
 		void render(std::shared_ptr<Renderable> obj);
 
 		void onReady();

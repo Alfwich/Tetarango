@@ -98,17 +98,14 @@ namespace AW
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();
 
-		void initOpenGL(SDL_Window* window);
+		bool initOpenGL(SDL_Window* window);
 		void setDefaultShaders(std::shared_ptr<ShaderReference> vertexShader, std::shared_ptr<ShaderReference> fragmentShader);
-		bool isOpenGLEnabled();
 
 		void updateScreenConfig(const ScreenConfig& config);
 
 		void setClearColor(int r, int g, int b, int a);
 		void setClearEnabled(bool flag);
 		void render(std::shared_ptr<Renderable> obj, Screen* screen, double frameTimestamp);
-
-		SDL_GLContext getOpenGLContext();
 
 		void reportOpenGLErrors();
 	};

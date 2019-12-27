@@ -140,10 +140,11 @@ namespace AW
 			return false;
 		}
 
+		bool rendererInit;
 		if (renderer == nullptr)
 		{
 			renderer = std::make_shared<Renderer>(currentConfig, renderer);
-			renderer->initOpenGL(window);
+			rendererInit = renderer->initOpenGL(window);
 		}
 		else
 		{
@@ -180,7 +181,7 @@ namespace AW
 			SDL_GL_SetSwapInterval(VsyncOff);
 		}
 
-		return window != nullptr && renderer->getOpenGLContext() != nullptr;
+		return window != nullptr && rendererInit;
 	}
 
 	void Screen::bindDefaultShaders()
@@ -284,16 +285,6 @@ namespace AW
 	ScreenConfig Screen::getCurrentScreenConfig()
 	{
 		return currentConfig;
-	}
-
-	bool Screen::isOpenGLEnabled()
-	{
-		return renderer->isOpenGLEnabled();
-	}
-
-	SDL_GLContext Screen::getOpenGLContext()
-	{
-		return renderer->getOpenGLContext();
 	}
 
 	void Screen::render(std::shared_ptr<Renderable> root)

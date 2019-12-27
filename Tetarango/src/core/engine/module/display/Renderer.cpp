@@ -54,14 +54,21 @@ namespace AW
 	}
 
 
-	void Renderer::initOpenGL(SDL_Window* window)
+	bool Renderer::initOpenGL(SDL_Window* window)
 	{
 		glContext = SDL_GL_CreateContext(window);
+		if (glContext == nullptr)
+		{
+			Logger::instance()->logFatal("Renderer::SDL_GL_CreateContext failed to init return an OpenGL context");
+			return false;
+		}
+
 		glewExperimental = GL_TRUE;
 		GLenum glewError = glewInit();
 		if (glewError != GLEW_OK)
 		{
-			Logger::instance()->logFatal("Renderer::GLEW::Failed to init: " + std::string((char*)glewGetErrorString(glewError)));
+			Logger::instance()->logFatal("Renderer::GLEW failed to init: " + std::string((char*)glewGetErrorString(glewError)));
+			return false;
 		}
 
 		int major, minor;
@@ -115,6 +122,8 @@ namespace AW
 		}
 
 		layerFactor = (1 << 16) / maxLayers;
+
+		return true;
 	}
 
 	void Renderer::setDefaultShaders(std::shared_ptr<ShaderReference> vertexShader, std::shared_ptr<ShaderReference> fragmentShader)
@@ -435,11 +444,6 @@ namespace AW
 		screenHeight = height;
 	}
 
-	SDL_GLContext Renderer::getOpenGLContext()
-	{
-		return glContext;
-	}
-
 	void Renderer::reportOpenGLErrors()
 	{
 		GLenum err;
@@ -447,11 +451,6 @@ namespace AW
 		{
 			Logger::instance()->logCritical("OpenGL::Error reported: " + std::to_string(err));
 		}
-	}
-
-	bool Renderer::isOpenGLEnabled()
-	{
-		return glContext != NULL;
 	}
 
 	void Renderer::updateScreenConfig(const ScreenConfig & config)
