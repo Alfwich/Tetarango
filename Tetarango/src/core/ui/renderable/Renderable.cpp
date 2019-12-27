@@ -462,7 +462,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSizeAndCenter(Renderable* other, double wOffset, double hOffset, double xOffset, double yOffset)
+	void Renderable::matchSizeAndCenter(Renderable* other, double xOffset, double yOffset, double wOffset, double hOffset)
 	{
 		if (other != nullptr)
 		{
@@ -487,7 +487,6 @@ namespace AW
 			centerAlignWithin(otherPtr, xOffset, yOffset);
 		}
 	}
-
 
 	void Renderable::toLeftOf(std::shared_ptr<Renderable> other, double xOffset, double yOffset)
 	{
@@ -615,12 +614,12 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSizeAndCenter(std::shared_ptr<Renderable> other, double wOffset, double hOffset, double xOffset, double yOffset)
+	void Renderable::matchSizeAndCenter(std::shared_ptr<Renderable> other, double xOffset, double yOffset, double wOffset, double hOffset)
 	{
 		if (other != nullptr)
 		{
 			const auto otherPtr = other.get();
-			matchSizeAndCenter(otherPtr, wOffset, hOffset, xOffset, yOffset);
+			matchSizeAndCenter(otherPtr, xOffset, yOffset, wOffset, hOffset);
 		}
 	}
 

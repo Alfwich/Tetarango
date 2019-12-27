@@ -224,8 +224,8 @@ namespace AW
 		void matchSize(Renderable* other, double wOffset = 0.0, double hOffset = 0.0);
 		void matchSize(std::shared_ptr<Renderable> other, double wOffset = 0.0, double hOffset = 0.0);
 
-		void matchSizeAndCenter(Renderable* other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
-		void matchSizeAndCenter(std::shared_ptr<Renderable> other, double wOffset = 0.0, double hOffset = 0.0, double xOffset = 0.0, double yOffset = 0.0);
+		void matchSizeAndCenter(Renderable* other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
+		void matchSizeAndCenter(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
 
 		void leftAlign(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
 		void leftAlign(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);

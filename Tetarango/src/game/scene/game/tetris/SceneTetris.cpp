@@ -3,6 +3,7 @@
 #include "generator/block/GeneratorBlock.h"
 #include "prop/particles/space/ParticleSpaceBackgroundFactory.h"
 #include "prop/particles/block/BlockParticleFactory.h"
+#include "ui/renderable/element/Cached.h"
 
 namespace
 {
@@ -76,19 +77,24 @@ namespace AWGame
 
 	void SceneTetris::onCreateChildren()
 	{
-		const auto testBlock = std::make_shared<Block>();
+		const auto cached = std::make_shared<AW::Cached>();
+		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		cached->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
+		add(cached);
 
+		const auto testBlock = std::make_shared<Block>();
 		board = std::make_shared<Board>(10, 24);
 		board->setCellSize(testBlock->getWidth(), testBlock->getHeight());
+		board->centerAlignWithin(cached);
 		board->name = "board";
-		add(board);
+		cached->add(board);
 
 		previewBoard = std::make_shared<Board>(5, 5);
 		previewBoard->setCellSize(testBlock->getWidth(), testBlock->getHeight());
 		previewBoard->name = "preview-board";
 		previewBoard->disableBoardFalling();
 		previewBoard->addTetromino(blockColorGenerator.getTetromino());
-		add(previewBoard);
+		cached->add(previewBoard);
 
 		previewBoard->toRightTopOf(board, 10);
 
@@ -102,7 +108,7 @@ namespace AWGame
 		scoreText->setFont("medium", 48);
 		updateScoreText();
 		scoreText->toRightOf(board, 10);
-		add(scoreText);
+		cached->add(scoreText);
 
 		particleSystem = std::make_shared<AW::ParticleSystem>();
 		particleSystem->zIndex = -5;
@@ -111,13 +117,13 @@ namespace AWGame
 		particleSystem->setParticleFactory(std::make_shared<ParticleSpaceBackgroundParticleFactory>());
 		particleSystem->setParticlesPerSecond(2);
 		particleSystem->emitImmediately(40);
-		add(particleSystem);
+		cached->add(particleSystem);
 
 		blockParticleSystem = std::make_shared<AW::ParticleSystem>();
 		blockParticleSystem->zIndex = -5;
 		blockParticleSystem->name = "p-b-system";
-		blockParticleSystem->matchSizeAndCenter(board);
-		add(blockParticleSystem);
+		blockParticleSystem->matchSizeAndCenter(board, modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		cached->add(blockParticleSystem);
 	}
 
 	void SceneTetris::onChildrenHydrated()
@@ -232,11 +238,17 @@ namespace AWGame
 		{
 		case SDL_SCANCODE_0:
 		{
-			const auto cImage = std::make_shared<AW::ScreenImage>();
-			cImage->markIsDebugElement();
-			cImage->captureWholeScreen();
-			cImage->toRightOf(scoreText);
-			add(cImage);
+			for (const auto cached : getChildrenOfType<AW::Cached>())
+			{
+				if (cached->renderMode == AW::RenderMode::CachedElement)
+				{
+					cached->renderMode = AW::RenderMode::ChildrenOnly;
+				}
+				else
+				{
+					cached->renderMode = AW::RenderMode::CachedElement;
+				}
+			}
 		}
 		break;
 
