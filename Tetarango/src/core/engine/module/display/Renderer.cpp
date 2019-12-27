@@ -113,13 +113,7 @@ namespace AW
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
-		if (backgroundRenderBuffer == 0)
-		{
-			glGenRenderbuffers(1, &backgroundRenderBuffer);
-			glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		}
+		generateBackgroundRenderBuffer();
 
 		layerFactor = (1 << 16) / maxLayers;
 
@@ -321,6 +315,20 @@ namespace AW
 		return programIdToProgramUniformMapId.at(programId).at(paramName);
 	}
 
+	void Renderer::generateBackgroundRenderBuffer()
+	{
+		if (backgroundRenderBuffer != 0)
+		{
+			glDeleteRenderbuffers(1, &backgroundRenderBuffer);
+			backgroundRenderBuffer = 0;
+		}
+
+		glGenRenderbuffers(1, &backgroundRenderBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+
 	void Renderer::changeProgram(const std::shared_ptr<Renderable>& renderable, const RenderPackage* renderPackage)
 	{
 		auto vertexShader = renderable->getVertexShader();
@@ -466,16 +474,7 @@ namespace AW
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
-		if (backgroundRenderBuffer != 0)
-		{
-			glDeleteRenderbuffers(1, &backgroundRenderBuffer);
-			backgroundRenderBuffer = 0;
-
-			glGenRenderbuffers(1, &backgroundRenderBuffer);
-			glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		}
+		generateBackgroundRenderBuffer();
 	}
 
 	void Renderer::prepareRender(Screen* screen, double frameTimestamp)
@@ -836,6 +835,8 @@ namespace AW
 			glGenTextures(1, &texColorBuffer);
 			glBindTexture(GL_TEXTURE_2D, texColorBuffer);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, cached->getWidth(), cached->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			// TODO: Consider if needed
+			//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, currentScreenConfig.msaaSamples, GL_RGBA, cached->getHeight(), cached->getWidth(), false);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glBindTexture(GL_TEXTURE_2D, 0);

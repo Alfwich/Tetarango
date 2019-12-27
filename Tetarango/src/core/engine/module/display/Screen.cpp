@@ -140,7 +140,7 @@ namespace AW
 			return false;
 		}
 
-		bool rendererInit;
+		bool rendererInit = true;
 		if (renderer == nullptr)
 		{
 			renderer = std::make_shared<Renderer>(currentConfig, renderer);

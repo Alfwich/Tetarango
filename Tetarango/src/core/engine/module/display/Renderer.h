@@ -94,6 +94,8 @@ namespace AW
 		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader, const RenderPackage* renderPackage);
 		GLuint getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId);
 
+		void generateBackgroundRenderBuffer();
+
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);
 		virtual ~Renderer();
