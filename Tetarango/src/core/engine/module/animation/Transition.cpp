@@ -24,8 +24,15 @@ namespace AW
 	{
 		startRect = target->getRect();
 		startAlpha = target->getAlpha();
+		const auto listenerPtr = getNotificationPtr();
 		if (startRect == endRect && startAlpha == targetAlpha)
 		{
+			if (listenerPtr != nullptr)
+			{
+				listenerPtr->onTransitionStarted(id);
+				listenerPtr->onTransitionCompleted(id);
+			}
+
 			return;
 		}
 
@@ -58,10 +65,14 @@ namespace AW
 		enterFrameActivated = true;
 
 		target->onTransitionStart();
-		const auto listenerPtr = getNotificationPtr();
 		if (listenerPtr != nullptr)
 		{
 			listenerPtr->onTransitionStarted(id);
+		}
+
+		if (duration == 0.0)
+		{
+			performTargetedFrameUpdate(0.0);
 		}
 	}
 
@@ -79,6 +90,11 @@ namespace AW
 		if (listenerPtr != nullptr)
 		{
 			listenerPtr->onTransitionStarted(id);
+		}
+
+		if (duration == 0.0)
+		{
+			performTargetlessFrameUpdate(0.0);
 		}
 	}
 

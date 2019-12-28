@@ -6,6 +6,7 @@ namespace AW
 {
 	class ScrollContainer : public Container
 	{
+		bool doNextLayoutInstantly = false;
 		std::shared_ptr<Transition> scrollTransition;
 		std::shared_ptr<Container> scrollContainer;
 

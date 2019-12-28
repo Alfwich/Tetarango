@@ -52,7 +52,8 @@ namespace AW
 		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 50);
 		Rect target = scrollContainer->getRect() + Rect(0, scrollContainer->getHalfHeight(), 0, 0);
 		target.y = -scrollContainer->getHeight() * scrollAmount + scrollContainer->getHalfHeight();
-		scrollTransition->startTransition(scrollContainer, scrollSpeedMs, target);
+		scrollTransition->startTransition(scrollContainer, doNextLayoutInstantly ? 0.0 : scrollSpeedMs, target);
+		doNextLayoutInstantly = false;
 	}
 
 	void ScrollContainer::add(std::shared_ptr<GameObject> ao)
@@ -64,6 +65,7 @@ namespace AW
 		else if (scrollContainer != nullptr)
 		{
 			scrollContainer->add(ao);
+			doNextLayoutInstantly = true;
 			layout();
 		}
 	}
@@ -77,6 +79,7 @@ namespace AW
 		else if (scrollContainer != nullptr)
 		{
 			scrollContainer->remove(ao);
+			doNextLayoutInstantly = true;
 			layout();
 		}
 	}
