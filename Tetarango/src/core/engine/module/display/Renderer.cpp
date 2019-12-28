@@ -230,7 +230,9 @@ namespace AW
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		renderRecursive(root, rootRect, *renderPackage);
+		RenderPackage rootPackage = *renderPackage;
+		rootPackage.computed = rootRect;
+		renderRecursive(root, *renderPackage);
 
 		SDL_GL_SwapWindow(screen->getWindow());
 
@@ -477,22 +479,22 @@ namespace AW
 		setViewport(screenWidth, screenHeight);
 	}
 
-	void Renderer::renderRecursive(std::shared_ptr<Renderable> rend, Rect computed, RenderPackage renderPackage)
+	void Renderer::renderRecursive(std::shared_ptr<Renderable> rend, RenderPackage renderPackage)
 	{
 		renderRecursivePushStacks(rend);
 		renderRecursivePushStencilBuffer(rend, &renderPackage);
-		renderRecursiveDoRender(rend, &computed, &renderPackage);
+		renderRecursiveDoRender(rend, &renderPackage);
 		renderRecursivePopStencilBuffer(rend, &renderPackage);
 		renderRecursivePopStacks(rend);
 	}
 
-	void Renderer::renderRecursiveDoRender(const std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderRecursiveDoRender(const std::shared_ptr<Renderable> rend, RenderPackage* renderPackage)
 	{
 		switch (rend->renderMode)
 		{
 		case RenderMode::Element:
-			renderElement(rend, computed, renderPackage);
-			renderRecursiveRenderChildren(rend, computed, renderPackage);
+			renderElement(rend, renderPackage);
+			renderRecursiveRenderChildren(rend, renderPackage);
 			break;
 
 		case RenderMode::CachedElement:
@@ -501,23 +503,23 @@ namespace AW
 				renderElementChildrenIntoElementTexture(rend, renderPackage);
 			}
 
-			renderElement(rend, computed, renderPackage);
+			renderElement(rend, renderPackage);
 			break;
 
 		case RenderMode::Primitive:
 		case RenderMode::ParticleSystem:
-			renderPrimitive(rend, computed, renderPackage);
-			renderRecursiveRenderChildren(rend, computed, renderPackage);
+			renderPrimitive(rend, renderPackage);
+			renderRecursiveRenderChildren(rend, renderPackage);
 			break;
 
 		case RenderMode::Container:
-			renderContainer(rend, computed, renderPackage);
-			renderRecursiveRenderChildren(rend, computed, renderPackage);
+			renderContainer(rend, renderPackage);
+			renderRecursiveRenderChildren(rend, renderPackage);
 			break;
 
 		case RenderMode::ChildrenOnly:
-			renderUpdateRenderableRects(rend, computed, renderPackage);
-			renderRecursiveRenderChildren(rend, computed, renderPackage);
+			renderUpdateRenderableRects(rend, renderPackage);
+			renderRecursiveRenderChildren(rend, renderPackage);
 			break;
 		}
 	}
@@ -631,7 +633,7 @@ namespace AW
 		}
 	}
 
-	void Renderer::renderUpdateRenderableRects(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderUpdateRenderableRects(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage)
 	{
 		const auto scale = renderPackage->zoom * rend->getScale();
 		const auto rect = rend->getRect() * Rect(renderPackage->zoom, renderPackage->zoom, scale, scale);
@@ -646,41 +648,41 @@ namespace AW
 			rectMiddleY = std::floor(rectMiddleY);
 		}
 
-		double originW = computed->w;
-		double originH = computed->h;
-		computed->w = rect.w;
-		computed->h = rect.h;
+		double originW = renderPackage->computed.w;
+		double originH = renderPackage->computed.h;
+		renderPackage->computed.w = rect.w;
+		renderPackage->computed.h = rect.h;
 
 		if (rend->rotateInParentSpace)
 		{
 			double rotationRad = renderPackage->rotation * AW::NumberHelper::degToRad;
-			double newX = computed->x + rectMiddleX;
-			double newY = computed->y + rectMiddleY;
-			double oX = computed->x + (originW / 2.0) - (computed->w / 2.0);
-			double oY = computed->y + (originH / 2.0) - (computed->h / 2.0);
+			double newX = renderPackage->computed.x + rectMiddleX;
+			double newY = renderPackage->computed.y + rectMiddleY;
+			double oX = renderPackage->computed.x + (originW / 2.0) - (renderPackage->computed.w / 2.0);
+			double oY = renderPackage->computed.y + (originH / 2.0) - (renderPackage->computed.h / 2.0);
 			double cX = newX - oX;
 			double cY = newY - oY;
 			double xP = cX * std::cos(rotationRad) - cY * std::sin(rotationRad);
 			double yP = cY * std::cos(rotationRad) + cX * std::sin(rotationRad);
 
-			computed->x = (xP + oX);
-			computed->y = (yP + oY);
+			renderPackage->computed.x = (xP + oX);
+			renderPackage->computed.y = (yP + oY);
 		}
 		else
 		{
-			computed->x += rect.x - rect.w / 2.0;
-			computed->y += rect.y - rect.h / 2.0;
+			renderPackage->computed.x += rect.x - rect.w / 2.0;
+			renderPackage->computed.y += rect.y - rect.h / 2.0;
 		}
 
 		renderPackage->zoom *= rend->getScale();
 		renderPackage->rotation += rend->getRotation();
 		renderPackage->alpha *= rend->getAlpha();
 
-		rend->setWorldRect(computed);
-		rend->setScreenRect(computed);
+		rend->setWorldRect(&renderPackage->computed);
+		rend->setScreenRect(&renderPackage->computed);
 	}
 
-	void Renderer::renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, const Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage)
 	{
 		if (rend->visible)
 		{
@@ -693,29 +695,29 @@ namespace AW
 					const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
 					if (renderableChildPtr != nullptr)
 					{
-						renderRecursive(renderableChildPtr, *computed, *renderPackage);
+						renderRecursive(renderableChildPtr, *renderPackage);
 					}
 				}
 			}
 		}
 	}
 
-	void Renderer::pushColorStack(const Color* color)
+	void Renderer::pushColorStack(const Color& color)
 	{
 		if (renderColorMode.top() == RenderColorMode::Multiplicative)
 		{
 			const auto currentColor = colorStack.empty() ? Color(255, 255, 255, 255) : colorStack.top();
 			const auto newColor = Color(
-				(currentColor.r / 255.0) * color->r,
-				(currentColor.g / 255.0) * color->g,
-				(currentColor.b / 255.0) * color->b,
-				(currentColor.a / 255.0) * color->a
+				(currentColor.r / 255.0) * color.r,
+				(currentColor.g / 255.0) * color.g,
+				(currentColor.b / 255.0) * color.b,
+				(currentColor.a / 255.0) * color.a
 			);
 			colorStack.push(newColor);
 		}
 		else
 		{
-			colorStack.push(*color);
+			colorStack.push(color);
 		}
 	}
 
@@ -732,7 +734,7 @@ namespace AW
 		}
 	}
 
-	void Renderer::renderElement(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderElement(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage)
 	{
 		auto ele = std::dynamic_pointer_cast<Element>(rend);
 		if (ele == nullptr)
@@ -740,17 +742,17 @@ namespace AW
 			return;
 		}
 
-		renderUpdateRenderableRects(ele, computed, renderPackage);
+		renderUpdateRenderableRects(ele, renderPackage);
 
 		if (ele->getHasClipRect())
 		{
-			updateClipRectOpenGL(ele, computed, renderPackage);
+			updateClipRectOpenGL(ele, renderPackage);
 		}
 
-		renderElementOpenGL(ele, computed, renderPackage);
+		renderElementOpenGL(ele, renderPackage);
 	}
 
-	void Renderer::renderPrimitive(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderPrimitive(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage)
 	{
 		auto prim = std::dynamic_pointer_cast<Primitive>(rend);
 		if (prim == nullptr)
@@ -758,28 +760,28 @@ namespace AW
 			return;
 		}
 
-		renderUpdateRenderableRects(prim, computed, renderPackage);
-		prim->preUpdateRender(computed, renderPackage);
-		prim->preRender(computed, renderPackage);
+		renderUpdateRenderableRects(prim, renderPackage);
+		prim->preUpdateRender(&renderPackage->computed, renderPackage);
+		prim->preRender(&renderPackage->computed, renderPackage);
 
 		if (prim->getHasClipRect())
 		{
-			updateClipRectOpenGL(prim, computed, renderPackage);
+			updateClipRectOpenGL(prim, renderPackage);
 		}
 
 		switch (prim->renderMode)
 		{
 		case RenderMode::ParticleSystem:
-			renderParticleSystemOpenGL(prim, computed, renderPackage);
+			renderParticleSystemOpenGL(prim, renderPackage);
 			break;
 
 		default:
-			renderPrimitiveOpenGL(prim, computed, renderPackage);
+			renderPrimitiveOpenGL(prim, renderPackage);
 			break;
 		}
 	}
 
-	void Renderer::renderContainer(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderContainer(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage)
 	{
 		const auto container = std::dynamic_pointer_cast<Container>(rend);
 		if (container == nullptr)
@@ -789,11 +791,11 @@ namespace AW
 
 		container->performAutoLayoutIfNeeded();
 
-		renderUpdateRenderableRects(container, computed, renderPackage);
+		renderUpdateRenderableRects(container, renderPackage);
 
 		if (container->getHasClipRect())
 		{
-			updateClipRectOpenGL(container, computed, renderPackage);
+			updateClipRectOpenGL(container, renderPackage);
 		}
 	}
 
@@ -857,13 +859,12 @@ namespace AW
 		renderTargetStack.push(RenderTarget::Background);
 
 		RenderPackage childRenderPackage;
-		Rect childRect;
 
 		childRenderPackage.alpha = renderPackage->alpha * cached->getAlpha();
 		childRenderPackage.depth = renderPackage->depth;
 		childRenderPackage.stencilDepth = renderPackage->stencilDepth;
 
-		renderRecursiveRenderChildren(cached, &childRect, &childRenderPackage);
+		renderRecursiveRenderChildren(cached, &childRenderPackage);
 
 		renderTargetStack.pop();
 
@@ -887,7 +888,7 @@ namespace AW
 		}
 	}
 
-	void Renderer::renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderElementOpenGL(std::shared_ptr<Element> ele, RenderPackage* renderPackage)
 	{
 		const auto texture = ele->getTexture();
 		if (texture == nullptr)
@@ -897,6 +898,7 @@ namespace AW
 
 		changeProgram(ele, renderPackage);
 
+		const auto computed = &renderPackage->computed;
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
 		const auto cX = computed->x + cW;
@@ -939,10 +941,11 @@ namespace AW
 		ele->markClean();
 	}
 
-	void Renderer::updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::updateClipRectOpenGL(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage)
 	{
 		const auto clipRect = rend->getClipRect();
 
+		const auto computed = &renderPackage->computed;
 		const auto cW = clipRect->w / 2.0;
 		const auto cH = clipRect->h / 2.0;
 		const auto cX = computed->x + clipRect->x + computed->w / 2.0;
@@ -1037,10 +1040,11 @@ namespace AW
 		}
 	}
 
-	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, RenderPackage* renderPackage)
 	{
 		changeProgram(prim, renderPackage);
 
+		const auto computed = &renderPackage->computed;
 		const auto cW = computed->w / 2.0;
 		const auto cH = computed->h / 2.0;
 		const auto cX = computed->x + cW;
@@ -1081,7 +1085,7 @@ namespace AW
 		prim->markClean();
 	}
 
-	void Renderer::renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, RenderPackage* renderPackage)
 	{
 		const auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(prim);
 		if (particleSystem == nullptr)
@@ -1102,6 +1106,7 @@ namespace AW
 			mat4x4_dup(tP, p);
 		}
 
+		const auto computed = &renderPackage->computed;
 		for (const auto& particle : particleSystem->getParticles())
 		{
 			const auto particleTexture = particle->getTexture();

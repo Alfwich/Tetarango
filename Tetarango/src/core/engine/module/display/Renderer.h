@@ -27,6 +27,9 @@ namespace AW
 		mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
 
+		unsigned int renderBufferIndex = 0;
+		std::vector<RenderPackage> renderBuffer;
+
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
 		std::unordered_map<std::string, GLuint> programs;
 		std::unordered_map<GLuint, std::unordered_map<std::string, GLuint>> programIdToProgramUniformMapId;
@@ -52,33 +55,33 @@ namespace AW
 
 		void prepareRender(Screen* screen, double renderTimestamp);
 
-		void renderRecursive(std::shared_ptr<Renderable> ao, Rect computed, RenderPackage renderPackage);
-		void renderRecursiveDoRender(const std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderRecursive(std::shared_ptr<Renderable> rend, RenderPackage renderPackage);
+		void renderRecursiveDoRender(const std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
 		void renderRecursivePushStacks(const std::shared_ptr<Renderable>& rend);
 		void renderRecursivePopStacks(const std::shared_ptr<Renderable>& rend);
 		void renderRecursivePushStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
 		void renderRecursivePopStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
-		void renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, const Rect* rect, RenderPackage* renderPackage);
+		void renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
 
-		void renderUpdateRenderableRects(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderUpdateRenderableRects(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
 
-		void pushColorStack(const Color* color);
+		void pushColorStack(const Color& color);
 		void setColorModParam(RenderPackage* renderPackage);
 
 		void renderOpenGL(std::shared_ptr<Renderable> obj, Rect rootRect, Screen* screen, RenderPackage* package);
 
-		void renderElement(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
-		void renderPrimitive(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
-		void renderContainer(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderElement(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
+		void renderPrimitive(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
+		void renderContainer(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
 
 		void renderElementChildrenIntoElementTexture(std::shared_ptr<Renderable> rend, const RenderPackage* renderPackage);
 
-		void updateClipRectOpenGL(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void updateClipRectOpenGL(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
 		void bindGLTexture(GLuint textureId);
 
-		void renderElementOpenGL(std::shared_ptr<Element> ele, Rect* computed, RenderPackage* renderPackage);
-		void renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
-		void renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, Rect* computed, RenderPackage* renderPackage);
+		void renderElementOpenGL(std::shared_ptr<Element> ele, RenderPackage* renderPackage);
+		void renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, RenderPackage* renderPackage);
+		void renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, RenderPackage* renderPackage);
 
 		void openGLDrawArrays(RenderPackage* renderPackage);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);

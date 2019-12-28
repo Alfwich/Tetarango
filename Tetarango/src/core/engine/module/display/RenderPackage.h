@@ -1,14 +1,20 @@
 #pragma once
 
-#include "util/QuadMap.h"
+#include <memory>
+#include "util/Rect.h"
 
 namespace AW
 {
+	class Renderable;
 
 	class RenderPackage
 	{
 	public:
-		double alpha = 1.0, rotation = 0.0, zoom = 1.0, cameraX = 0.0, cameraY = 0.0, xOffset = 0.0, yOffset = 0.0, depth = 1.0;
+		std::shared_ptr<Renderable> obj;
+		double alpha = 1.0, rotation = 0.0, zoom = 1.0, xOffset = 0.0, yOffset = 0.0, depth = 1.0;
+		Rect computed, world;
 		int stencilDepth = 0;
 	};
 }
+
+#include "ui/renderable/Renderable.h"
