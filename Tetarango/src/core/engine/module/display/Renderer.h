@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <stack>
+#include <list>
 #include <SDL.h>
 #include "GL/glew.h"
 #include "engine/GameObject.h"
@@ -27,8 +28,8 @@ namespace AW
 		mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
 
-		unsigned int renderBufferIndex = 0;
-		std::vector<RenderPackage> renderBuffer;
+		std::list<RenderPackage>::iterator nextPackage;
+		std::list<RenderPackage> renderList;
 
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
 		std::unordered_map<std::string, GLuint> programs;
@@ -55,39 +56,41 @@ namespace AW
 
 		void prepareRender(Screen* screen, double renderTimestamp);
 
-		void renderRecursive(std::shared_ptr<Renderable> rend, RenderPackage renderPackage);
-		void renderRecursiveDoRender(const std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
-		void renderRecursivePushStacks(const std::shared_ptr<Renderable>& rend);
-		void renderRecursivePopStacks(const std::shared_ptr<Renderable>& rend);
-		void renderRecursivePushStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
-		void renderRecursivePopStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
-		void renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
+		RenderPackage* nextRenderPackage(std::shared_ptr<Renderable> obj, RenderPackage* previous = nullptr);
 
-		void renderUpdateRenderableRects(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
+		void renderOpenGL(std::shared_ptr<Renderable> obj);
 
-		void pushColorStack(const Color& color);
+		void renderRecursive(RenderPackage* renderPackage);
+		void renderRecursiveDoRender(RenderPackage* renderPackage);
+		void renderRecursivePushStacks(RenderPackage* renderPackage);
+		void renderRecursivePopStacks(RenderPackage* renderPackage);
+		void renderRecursivePushStencilBuffer(RenderPackage* renderPackage);
+		void renderRecursivePopStencilBuffer(RenderPackage* renderPackage);
+		void renderRecursiveRenderChildren(RenderPackage* renderPackage);
+
+		void renderUpdateRenderableRects(RenderPackage* renderPackage);
+
+		void pushColorStack(RenderPackage* renderPackage);
 		void setColorModParam(RenderPackage* renderPackage);
 
-		void renderOpenGL(std::shared_ptr<Renderable> obj, Rect rootRect, Screen* screen, RenderPackage* package);
+		void renderElement(RenderPackage* renderPackage);
+		void renderPrimitive(RenderPackage* renderPackage);
+		void renderContainer(RenderPackage* renderPackage);
 
-		void renderElement(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
-		void renderPrimitive(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
-		void renderContainer(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
+		void renderElementChildrenIntoElementTexture(RenderPackage* renderPackage);
 
-		void renderElementChildrenIntoElementTexture(std::shared_ptr<Renderable> rend, const RenderPackage* renderPackage);
-
-		void updateClipRectOpenGL(std::shared_ptr<Renderable> rend, RenderPackage* renderPackage);
+		void updateClipRectOpenGL(RenderPackage* renderPackage);
 		void bindGLTexture(GLuint textureId);
 
-		void renderElementOpenGL(std::shared_ptr<Element> ele, RenderPackage* renderPackage);
-		void renderPrimitiveOpenGL(std::shared_ptr<Primitive> prim, RenderPackage* renderPackage);
-		void renderParticleSystemOpenGL(std::shared_ptr<Primitive> prim, RenderPackage* renderPackage);
+		void renderElementOpenGL(RenderPackage* renderPackage);
+		void renderPrimitiveOpenGL(RenderPackage* renderPackage);
+		void renderParticleSystemOpenGL(RenderPackage* renderPackage);
 
 		void openGLDrawArrays(RenderPackage* renderPackage);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
 		void changeProgram(GLuint programId);
-		void changeProgram(const std::shared_ptr<Renderable>& renderable, const RenderPackage* renderPackage);
+		void changeProgram(RenderPackage* renderPackage);
 		void changeProgram(const std::shared_ptr<ShaderReference>& vertexShader, const std::shared_ptr<ShaderReference>& fragmentShader);
 		GLuint createAndLinkProgramIfNeeded(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId);
 		std::string getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds);
