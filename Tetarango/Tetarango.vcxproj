@@ -77,12 +77,13 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Async</ExceptionHandling>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;$(SolutionDir)Tetarango\lib\libpng\lib\x64\debug;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -101,7 +102,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
