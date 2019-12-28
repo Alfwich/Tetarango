@@ -58,39 +58,70 @@ namespace AWGame
 
 	void TestScene::onCreateChildren()
 	{
-		setSize(modules->screen->getWidth(), modules->screen->getHeight());
-		topLeftAlignSelf();
+		const auto contentContainer = std::make_shared<AW::Rectangle>();
+		contentContainer->renderColorMode = AW::RenderColorMode::Absolute;
+		contentContainer->setColor(255, 0, 255);
+		contentContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		contentContainer->topLeftAlignSelf();
+		add(contentContainer);
+		this->contentContainer = contentContainer;
 
-		const auto mainGameMenu = std::make_shared<GameMainMenu>();
-		mainGameMenu->zIndex = 20;
-		mainGameMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		mainGameMenu->renderPositionMode = AW::RenderPositionMode::Absolute;
-		mainGameMenu->visible = false;
-		add(mainGameMenu);
+		camera = std::make_shared<GameCamera>();
+		camera->name = "camera";
+		camera->setZoomLimits(16000000.0, 0);
+		camera->setDefaultZoomAndAnchorPoint(1.0, modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		camera->setTimeScope(AW::TimeScope::Camera);
+		camera->listener = shared_from_this();
+		contentContainer->add(camera);
+
+		const auto cached = std::make_shared<AW::DisplayBuffer>();
+		cached->setClearColor(128, 128, 128);
+		cached->setColor(AW::Color::white());
+		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		cached->centerWithin(contentContainer, 30.0, 30.0);
+		cached->zIndex = -1;
+		contentContainer->add(cached);
+		obj2 = cached;
+
+		const auto background = std::make_shared<AW::Rectangle>();
+		background->setVertexShader(modules->shader->getShader({ "v-default" }));
+		background->setFragmentShader(modules->shader->getShader({ "f-mandelbrot" }));
+		background->getFragmentShader()->setFloatIUParam("iter", currentIters);
+		background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
+		background->setColor(AW::Color::blue());
+		background->setSize(1200, 800);
+		background->centerWithin(cached, 100.0);
+		background->zIndex = -1;
+		cached->add(background);
+		obj1 = background;
+
+		const auto testR = std::make_shared<AW::Rectangle>();
+		testR->setColor(AW::Color::red());
+		testR->setSize(25.0, 25.0);
+		testR->centerAlignWithin(contentContainer);
+		background->add(testR);
+
+		const auto testR2 = std::make_shared<AW::Rectangle>();
+		testR2->renderColorMode = AW::RenderColorMode::Absolute;
+		testR2->setColor(AW::Color::green());
+		testR2->setSize(15.0, 15.0);
+		testR2->centerAlignWithin(contentContainer);
+		testR->add(testR2);
 
 		infoLabel = std::make_shared<AW::Text>();
 		infoLabel->renderPositionMode = AW::RenderPositionMode::Absolute;
 		infoLabel->setFont("console", 24);
 		infoLabel->setTextColor(255, 64, 64);
 		infoLabel->setText("Iters: " + std::to_string((int)currentIters));
-		infoLabel->topLeftAlignSelf(modules->screen->getWidth() / 2.0, 20.0);
+		infoLabel->toInnerTopIn(contentContainer);
 		add(infoLabel);
-
-		camera = std::make_shared<GameCamera>();
-		camera->name = "camera";
-		camera->setZoomLimits(16000000.0, 0);
-		camera->setDefaultsAndReset(1.0, 0.0, 0.0);
-		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		camera->setTimeScope(AW::TimeScope::Camera);
-		camera->listener = shared_from_this();
-		add(camera);
 
 		red = std::make_shared<ScrollBarBasic>();
 		red->renderPositionMode = AW::RenderPositionMode::Absolute;
 		red->setSize(30, 500);
 		red->scrollListener = shared_from_this();
 		red->setColor(192, 0, 0);
-		red->toInnerLeftIn(this);
+		red->toInnerLeftIn(contentContainer);
 		add(red);
 
 		green = std::make_shared<ScrollBarBasic>();
@@ -108,28 +139,6 @@ namespace AWGame
 		blue->setColor(0, 0, 192);
 		blue->toRightOf(green, 2.0);
 		add(blue);
-
-		const auto background = std::make_shared<AW::Rectangle>();
-		background->setVertexShader(modules->shader->getShader({ "v-default" }));
-		background->setFragmentShader(modules->shader->getShader({ "f-mandelbrot" }));
-		background->getVertexShader()->setFloatV2IUParam("vTranslate", 0, 0);
-		background->getVertexShader()->setFloatIUParam("vScale", 1.0);
-		background->getFragmentShader()->setFloatIUParam("iter", currentIters);
-		background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
-		background->setColor(AW::Color::white());
-		background->setSize(1200, 800);
-		background->centerWithin(this);
-		background->zIndex = -1;
-		obj1 = background;
-
-		const auto cached = std::make_shared<AW::DisplayBuffer>();
-		cached->setClearColor(64, 0, 0);
-		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
-		cached->centerWithin(this);
-		cached->zIndex = -1;
-		add(cached);
-		cached->add(background);
-		obj2 = cached;
 	}
 
 	void TestScene::onChildrenHydrated()
@@ -179,61 +188,9 @@ namespace AWGame
 			itersIncPressed = isPressed;
 		}
 
-		if (key == SDL_SCANCODE_3)
+		if (key == SDL_SCANCODE_3 && isPressed)
 		{
-			obj2->renderMode = AW::RenderMode::ChildrenOnly;
-			obj1->getVertexShader()->setFloatV2IUParam("vTranslate", 0, 0);
-			obj1->getVertexShader()->setFloatIUParam("vScale", 1.0);
-		}
-
-		if (key == SDL_SCANCODE_LEFTBRACKET && isPressed)
-		{
-			const auto vShader = obj1->getVertexShader();
-			const auto currentZoom = vShader->getFloatIUParam("vScale");
-			vShader->setFloatIUParam("vScale", currentZoom / 2.0);
-			obj2->markDirty();
-		}
-
-		if (key == SDL_SCANCODE_RIGHTBRACKET && isPressed)
-		{
-			const auto vShader = obj1->getVertexShader();
-			const auto currentZoom = vShader->getFloatIUParam("vScale");
-			vShader->setFloatIUParam("vScale", currentZoom * 2.0);
-			obj2->markDirty();
-		}
-
-		const auto vShader = obj1->getVertexShader();
-		const auto currentZoom = vShader->getFloatIUParam("vScale");
-		const auto moveDelta = 10.0 / currentZoom;
-		if (key == SDL_SCANCODE_LEFT && isPressed)
-		{
-			const auto vShader = obj1->getVertexShader();
-			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
-			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos) + moveDelta, std::get<1>(currentPos));
-			obj2->markDirty();
-		}
-
-		if (key == SDL_SCANCODE_RIGHT && isPressed)
-		{
-			const auto vShader = obj1->getVertexShader();
-			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
-			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos) - moveDelta, std::get<1>(currentPos));
-			obj2->markDirty();
-		}
-
-		if (key == SDL_SCANCODE_UP && isPressed)
-		{
-			const auto vShader = obj1->getVertexShader();
-			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
-			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos), std::get<1>(currentPos) + moveDelta);
-			obj2->markDirty();
-		}
-
-		if (key == SDL_SCANCODE_DOWN && isPressed)
-		{
-			const auto vShader = obj1->getVertexShader();
-			const auto currentPos = vShader->getFloatV2IUParam("vTranslate");
-			vShader->setFloatV2IUParam("vTranslate", std::get<0>(currentPos), std::get<1>(currentPos) - moveDelta);
+			obj2->renderMode = obj2->renderMode == AW::RenderMode::CachedElement ? AW::RenderMode::ChildrenOnly : AW::RenderMode::CachedElement;
 			obj2->markDirty();
 		}
 	}
@@ -262,12 +219,6 @@ namespace AWGame
 
 	void TestScene::onCameraUpdate()
 	{
-		const auto vShader = obj1->getVertexShader();
-
-		vShader->setFloatV2IUParam("vTranslate", -camera->getX(), -camera->getY());
-		//vShader->setFloatIUParam("vScale", camera->getZoom());
-		obj1->setScale(camera->getZoom());
-
 		if (updateTimer->isAboveThresholdAndRestart(16))
 		{
 			obj2->markDirty();

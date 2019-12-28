@@ -38,6 +38,11 @@ namespace AW
 		}
 	}
 
+	void DisplayBuffer::setClearColor(const Color & c)
+	{
+		setClearColor(c.r, c.g, c.b, c.a);
+	}
+
 	const std::shared_ptr<Color>& DisplayBuffer::getClearColor()
 	{
 		return clearColor;

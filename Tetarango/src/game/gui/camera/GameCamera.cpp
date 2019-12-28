@@ -16,64 +16,44 @@ namespace AWGame
 		modules->input->keyboard->registerKeys(std::vector<SDL_Scancode>{ SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_2, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_6, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_PLUS, SDL_SCANCODE_KP_MINUS, SDL_SCANCODE_E, SDL_SCANCODE_C, SDL_SCANCODE_I, SDL_SCANCODE_J, SDL_SCANCODE_K, SDL_SCANCODE_L}, weak_from_this());
 		modules->input->gamepad->registerAxis(0, AW::GamepadAxisMapping::RIGHT, weak_from_this());
 
-		setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		setTimeScope(AW::TimeScope::Camera);
 
 		enableEnterFrame(1);
 	}
 
-	void GameCamera::onAttach()
-	{
-		GameObject::onAttach();
-
-		if (isAttached())
-		{
-			enableCamera();
-		}
-	}
-
-	void GameCamera::onDetach()
-	{
-	}
-
 	void GameCamera::onEnterFrame(const double& frameTime)
 	{
+		const auto deltaTime = frameTime / 1000.0;
 		if (xAxis || yAxis)
 		{
-			setX(getX() + xAxis * -1000.0 * (frameTime / 1000.0));
-			setY(getY() + yAxis * -1000.0 * (frameTime / 1000.0));
+			setScreenAnchorPoint(getScreenAnchorX() + xAxis * deltaTime, getScreenAnchorY() + yAxis * deltaTime);
 		}
 
 		double xDelta = 0.0, yDelta = 0.0;
-		double speed = 1000.0;
+		double speed = -1000.0 * deltaTime;
 		if (upDown)
 		{
-			yDelta = -speed / getZoom();
+			yDelta = speed;
 		}
 
 		if (downDown)
 		{
-			yDelta = speed / getZoom();
+			yDelta = -speed;
 		}
 
 		if (leftDown)
 		{
-			xDelta = -speed / getZoom();
+			xDelta = speed;
 		}
 
 		if (rightDown)
 		{
-			xDelta = speed / getZoom();
+			xDelta = -speed;
 		}
 
-		if (xDelta != 0.0)
+		if (xDelta != 0.0 || yDelta != 0.0)
 		{
-			setX(getX() + xDelta * (frameTime / 1000.0));
-		}
-
-		if (yDelta != 0.0)
-		{
-			setY(getY() + yDelta * (frameTime / 1000.0));
+			setScreenAnchorPoint(getScreenAnchorX() + xDelta, getScreenAnchorY() + yDelta);
 		}
 	}
 

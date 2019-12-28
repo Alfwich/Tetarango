@@ -44,8 +44,7 @@ namespace AWGame
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
 		camera->setZoomLimits(4.0, 1.0);
-		camera->setDefaultsAndReset(2.0, 0.0, 0.0);
-		camera->setZoomAnchorPointOnScreen(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		camera->setDefaultZoomAndAnchorPoint(1.0, 0.0, 0.0);
 		camera->setTimeScope(AW::TimeScope::Camera);
 		add(camera);
 

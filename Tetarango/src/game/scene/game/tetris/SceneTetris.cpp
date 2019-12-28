@@ -309,6 +309,6 @@ namespace AWGame
 	void SceneTetris::onCameraUpdate()
 	{
 		setScale(camera->getZoom());
-		setPosition(-camera->getX(), -camera->getY());
+		setPosition(-camera->getScreenAnchorX(), -camera->getScreenAnchorY());
 	}
 }

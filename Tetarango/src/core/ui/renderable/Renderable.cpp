@@ -93,18 +93,7 @@ namespace AW
 	{
 		if (renderPackage != nullptr)
 		{
-			const double zoom = renderPackage->zoom;
-
 			screenRect = worldRect;
-
-			if (mode != RenderPositionMode::Absolute)
-			{
-				screenRect = screenRect * zoom;
-				const double xOffset = renderPackage->xOffset;
-				const double yOffset = renderPackage->yOffset;
-				screenRect.x -= (renderPackage->cameraX * zoom) - (renderPackage->cameraX - xOffset) * zoom;
-				screenRect.y -= (renderPackage->cameraY * zoom) - (renderPackage->cameraY - yOffset) * zoom;
-			}
 		}
 	}
 

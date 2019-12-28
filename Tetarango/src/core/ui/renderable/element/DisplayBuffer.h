@@ -16,6 +16,7 @@ namespace AW
 		void onBindShaders();
 
 		void setClearColor(int r, int g, int b, int a = 255);
+		void setClearColor(const Color& c);
 		const std::shared_ptr<Color>& getClearColor();
 
 		void rebuildInternalTexture();

@@ -66,9 +66,10 @@ namespace AW
 		}
 
 		Rect operator * (double scalar);
-		Rect operator + (Rect other);
-		Rect operator - (Rect other);
-		bool operator == (Rect other);
+		Rect operator * (const Rect& other);
+		Rect operator + (const Rect& other);
+		Rect operator - (const Rect& other);
+		bool operator == (const Rect& other);
 	};
 
 	class RectI
@@ -98,9 +99,10 @@ namespace AW
 		}
 
 		RectI operator * (int scalar);
-		RectI operator + (RectI other);
-		RectI operator - (RectI other);
-		bool operator == (RectI other);
+		RectI operator * (const RectI& other);
+		RectI operator + (const RectI& other);
+		RectI operator - (const RectI& other);
+		bool operator == (const RectI& other);
 	};
 
 }

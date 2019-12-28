@@ -23,7 +23,16 @@ namespace AW
 		);
 	}
 
-	Rect Rect::operator+(Rect other)
+	Rect Rect::operator*(const Rect & other)
+	{
+		return Rect(
+			x * other.x,
+			y * other.y,
+			w * other.w,
+			h * other.h);
+	}
+
+	Rect Rect::operator+(const Rect& other)
 	{
 		return Rect(
 			x + other.x,
@@ -33,7 +42,7 @@ namespace AW
 		);
 	}
 
-	Rect Rect::operator-(Rect other)
+	Rect Rect::operator-(const Rect& other)
 	{
 		return Rect(
 			x - other.x,
@@ -43,7 +52,7 @@ namespace AW
 		);
 	}
 
-	bool Rect::operator==(Rect other)
+	bool Rect::operator==(const Rect& other)
 	{
 		return x == other.x && y == other.y && w == other.w && h == other.h;
 	}
@@ -80,7 +89,12 @@ namespace AW
 		);
 	}
 
-	RectI RectI::operator+(RectI other)
+	RectI RectI::operator*(const RectI & other)
+	{
+		return RectI();
+	}
+
+	RectI RectI::operator+(const RectI& other)
 	{
 		return RectI(
 			x + other.x,
@@ -90,7 +104,7 @@ namespace AW
 		);
 	}
 
-	RectI RectI::operator-(RectI other)
+	RectI RectI::operator-(const RectI& other)
 	{
 		return RectI(
 			x - other.x,
@@ -100,11 +114,9 @@ namespace AW
 		);
 	}
 
-	bool RectI::operator==(RectI other)
+	bool RectI::operator==(const RectI& other)
 	{
 		return x == other.x && y == other.y && w == other.w && h == other.h;
 	}
-
-
 
 }

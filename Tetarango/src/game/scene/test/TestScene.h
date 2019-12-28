@@ -22,7 +22,7 @@ namespace AWGame
 
 		std::shared_ptr<ScrollBarBasic> red, green, blue;
 		std::shared_ptr<AW::Text> infoLabel;
-		std::shared_ptr<Renderable> obj1, obj2, obj3, obj4;
+		std::shared_ptr<Renderable> obj1, obj2, obj3, obj4, contentContainer;
 
 		std::shared_ptr<AW::Timer> iterTimer, updateTimer;
 

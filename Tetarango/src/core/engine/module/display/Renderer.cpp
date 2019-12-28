@@ -213,18 +213,10 @@ namespace AW
 
 		const auto width = screenWidth, height = screenHeight;
 
-		renderPackage->xOffset = renderPackage->cameraX - (width / renderPackage->zoom - width) / 2.0;
-		renderPackage->yOffset = renderPackage->cameraY - (height / renderPackage->zoom - height) / 2.0;
-
-		mat4x4_ortho(p,
-			renderPackage->xOffset,
-			width / renderPackage->zoom + renderPackage->xOffset,
-			height / renderPackage->zoom + renderPackage->yOffset,
-			renderPackage->yOffset,
-			-(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
-
-		mat4x4_ortho(pAbs, 0, width, height, 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
-
+		double lowerDepthLayer = -(maxLayers / 2) * layerFactor;
+		double upperDepthLayer = (maxLayers / 2) * layerFactor;
+		mat4x4_ortho(p, 0.0, width / renderPackage->zoom, height / renderPackage->zoom, 0.0, lowerDepthLayer, upperDepthLayer);
+		mat4x4_ortho(pAbs, 0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -644,11 +636,12 @@ namespace AW
 
 	void Renderer::renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
-		const auto rect = rend->getRect();
+		const auto scale = renderPackage->zoom * rend->getScale();
+		const auto rect = rend->getRect() * Rect(renderPackage->zoom, renderPackage->zoom, scale, scale);
 		const auto rotation = renderPackage->rotation;
 
-		auto rectMiddleX = (rect.x - rect.w / 2.0);
-		auto rectMiddleY = (rect.y - rect.h / 2.0);
+		auto rectMiddleX = (rect.x - (rend->getWidth() / 2.0) * scale) + renderPackage->xOffset;
+		auto rectMiddleY = (rect.y - (rend->getHeight() / 2.0) * scale) + renderPackage->yOffset;
 
 		if (renderProcessingStack.top() == RenderPositionProcessing::Floor)
 		{
@@ -682,6 +675,7 @@ namespace AW
 			computed->y += rect.y - rect.h / 2.0;
 		}
 
+		renderPackage->zoom *= rend->getScale();
 		renderPackage->rotation += rend->getRotation();
 		renderPackage->alpha *= rend->getAlpha();
 	}
