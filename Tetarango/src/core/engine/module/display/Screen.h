@@ -63,8 +63,10 @@ namespace AW
 
 		bool init(const ScreenConfig& config, std::string name = "Window");
 		void bindDefaultShaders();
+
 		int getWidth();
 		int getHeight();
+		double getDeviceScaling();
 
 		void setClearColor(int r, int g, int b, int a = 0xff);
 		void disableClear();

@@ -86,11 +86,6 @@ namespace AWGame
 		std::shared_ptr<ButtonBasic> prevResolutionButton;
 		for (const auto resolution : info.resolutions)
 		{
-			if (AW::StringHelper::getDisplayComponentForDisplayString(resolution, 0) < 1240 || AW::StringHelper::getDisplayComponentForDisplayString(resolution, 1) < 1024)
-			{
-				continue;
-			}
-
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
 			resolutionButton->setSize(180.0, 60.0);

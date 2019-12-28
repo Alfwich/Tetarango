@@ -75,6 +75,20 @@ namespace AW
 			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
 		}
 
+		SDL_DisplayMode desktopMode, displayMode;
+
+		SDL_GetDesktopDisplayMode(0, &desktopMode);
+		SDL_GetDisplayMode(0, 0, &displayMode);
+
+		double scaling = desktopMode.w / (double)displayMode.w;
+		currentConfig.deviceScaling = scaling;
+
+		if (currentConfig.mode == ScreenModes::FullscreenDesktop)
+		{
+			currentConfig.width = desktopMode.w;
+			currentConfig.height = desktopMode.h;
+		}
+
 		if (window == nullptr)
 		{
 			int windowFlags = windowFlags = SDL_WINDOW_OPENGL;
@@ -117,6 +131,8 @@ namespace AW
 			case ScreenModes::FullscreenDesktop:
 				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 				SDL_SetWindowBordered(window, SDL_FALSE);
+				currentMode.w = desktopMode.w;
+				currentMode.h = desktopMode.h;
 				break;
 
 			case ScreenModes::Windowed:
@@ -150,9 +166,6 @@ namespace AW
 		{
 			renderer->updateScreenConfig(currentConfig);
 		}
-
-		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-		glViewport(0, 0, windowWidth, windowHeight);
 
 		switch (currentConfig.vMode)
 		{
@@ -194,12 +207,19 @@ namespace AW
 
 	int Screen::getWidth()
 	{
+		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 		return windowWidth;
 	}
 
 	int Screen::getHeight()
 	{
+		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 		return windowHeight;
+	}
+
+	double Screen::getDeviceScaling()
+	{
+		return currentConfig.deviceScaling;
 	}
 
 	void Screen::setClearColor(int r, int g, int b, int a)
@@ -275,8 +295,10 @@ namespace AW
 			{
 				Logger::instance()->logCritical("Screen::Could not get display mode for video display: " + std::string(SDL_GetError()));
 			}
-
-			result.push_back(mode);
+			else
+			{
+				result.push_back(mode);
+			}
 		}
 
 		return DisplayModeInfo(result);
@@ -289,7 +311,6 @@ namespace AW
 
 	void Screen::render(std::shared_ptr<Renderable> root)
 	{
-		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 		if (root != nullptr)
 		{
 			renderer->render(root, this, time->getHighResolutionTicks() / 1000.0);

@@ -474,6 +474,7 @@ namespace AW
 		currentFrameTimestamp = frameTimestamp;
 		screenWidth = screen->getWidth();
 		screenHeight = screen->getHeight();
+		setViewport(screenWidth, screenHeight);
 	}
 
 	void Renderer::renderRecursive(std::shared_ptr<Renderable> rend, Rect computed, RenderPackage renderPackage)

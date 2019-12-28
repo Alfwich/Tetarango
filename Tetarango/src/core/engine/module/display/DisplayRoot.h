@@ -9,7 +9,6 @@ namespace AW
 	public:
 		DisplayRoot();
 
-		void onInitialAttach();
 		void onLayoutChildren();
 	};
 }

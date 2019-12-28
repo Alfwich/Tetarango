@@ -113,6 +113,7 @@ namespace AW
 		running = true;
 
 		modules->logger->log("Application::Preparing display root");
+		root->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		root->onInitialAttach();
 		root->createChildren();
 

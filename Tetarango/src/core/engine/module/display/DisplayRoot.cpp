@@ -11,11 +11,6 @@ namespace AW
 		registerGameObject<DisplayRoot>();
 	}
 
-	void DisplayRoot::onInitialAttach()
-	{
-		setSize(modules->screen->getWidth(), modules->screen->getHeight());
-	}
-
 	void DisplayRoot::onLayoutChildren()
 	{
 		topLeftAlignSelf();

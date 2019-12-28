@@ -208,7 +208,7 @@ namespace AWGame
 		if (screenBuffer != nullptr)
 		{
 			screenBuffer->rebuildInternalTexture();
-			screenBuffer->setSize(screenConfig.width, screenConfig.height);
+			screenBuffer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 			screenBuffer->topLeftAlignSelf();
 		}
 
@@ -219,17 +219,9 @@ namespace AWGame
 
 		if (debugMonitor != nullptr)
 		{
-			if (screenConfig.debugOverlayEnabled)
-			{
-				debugMonitor->clear();
-				debugMonitor->visible = true;
-				debugMonitor->enterFrameActivated = true;
-			}
-			else
-			{
-				debugMonitor->visible = false;
-				debugMonitor->enterFrameActivated = false;
-			}
+			debugMonitor->clear();
+			debugMonitor->visible = screenConfig.debugOverlayEnabled;
+			debugMonitor->enterFrameActivated = screenConfig.debugOverlayEnabled;
 		}
 	}
 }
