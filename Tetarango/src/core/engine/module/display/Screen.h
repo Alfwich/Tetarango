@@ -46,7 +46,7 @@ namespace AW
 	{
 		SDL_Window* window;
 		ScreenConfig currentConfig;
-		int windowWidth, windowHeight;
+		int windowWidth, windowHeight, maxWindowedWidth, maxWindowedHeight;
 
 		std::shared_ptr<TextureContainer> texture;
 		std::shared_ptr<ShaderContainer> shader;
@@ -66,6 +66,10 @@ namespace AW
 
 		int getWidth();
 		int getHeight();
+
+		int getMaxWindowedHeight();
+		int getMaxWindowedWidth();
+
 		double getDeviceScaling();
 
 		void setClearColor(int r, int g, int b, int a = 0xff);

@@ -87,15 +87,6 @@ namespace AWGame
 	void ButtonBasic::setEnabled(bool flag)
 	{
 		serializationClient->setBool(enabledParamName, flag);
-
-		if (flag)
-		{
-			setColor(255, 255, 255);
-		}
-		else
-		{
-			setColor(64, 64, 64);
-		}
 	}
 
 	bool ButtonBasic::getEnabled()

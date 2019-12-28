@@ -98,14 +98,14 @@ namespace AWGame
 		const auto testR = std::make_shared<AW::Rectangle>();
 		testR->setColor(AW::Color::red());
 		testR->setSize(25.0, 25.0);
-		testR->centerAlignWithin(contentContainer);
+		testR->centerAlignWithin(background, -10.0, -10.0);
 		background->add(testR);
 
 		const auto testR2 = std::make_shared<AW::Rectangle>();
 		testR2->renderColorMode = AW::RenderColorMode::Absolute;
 		testR2->setColor(AW::Color::green());
 		testR2->setSize(15.0, 15.0);
-		testR2->centerAlignWithin(contentContainer);
+		testR2->centerAlignWithin(testR, 20.0, 20.0);
 		testR->add(testR2);
 
 		infoLabel = std::make_shared<AW::Text>();
@@ -165,6 +165,8 @@ namespace AWGame
 				obj2->markDirty();
 			}
 		}
+
+		contentContainer->rotate((deltaTime / 1000.0) * 15.0);
 	}
 
 	void TestScene::onKeyPressed(SDL_Scancode key)

@@ -18,7 +18,7 @@ namespace AW
 	class ScreenConfig
 	{
 	public:
-		int width = 1280, height = 1024, windowFlags = 0;
+		int width = 1280, height = 720, windowFlags = 0;
 		double deviceScaling = 1.0;
 		ScreenModes mode = ScreenModes::Windowed;
 		VsyncModes vMode = VsyncModes::Adaptive;

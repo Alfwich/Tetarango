@@ -49,7 +49,7 @@ namespace AW
 		scrollContainer->resizeSelfToChildrenAndCenterChildren();
 		scrollContainer->setX(scrollContainer->getHalfWidth());
 		const auto scrollAmount = getScrollPosition();
-		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 0);
+		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 50);
 		Rect target = scrollContainer->getRect() + Rect(0, scrollContainer->getHalfHeight(), 0, 0);
 		target.y = -scrollContainer->getHeight() * scrollAmount + scrollContainer->getHalfHeight();
 		scrollTransition->startTransition(scrollContainer, scrollSpeedMs, target);

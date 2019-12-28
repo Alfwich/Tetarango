@@ -18,6 +18,12 @@ namespace
 		200,
 		240
 	};
+	const auto resolutionButtonSelectedColor = AW::Color(255, 225, 255);
+	const auto resolutionButtonDisabledColor = AW::Color(64, 64, 64);
+	const auto resolutionButtonColor = AW::Color(192, 192, 192);
+
+	const auto applyButtonColor = AW::Color(255, 255, 255);
+	const auto applyButtonDisabledColor = AW::Color(64, 64, 64);
 }
 
 namespace AWGame
@@ -67,6 +73,7 @@ namespace AWGame
 		applyButton->setText("Apply");
 		applyButton->clickListener = weak_from_this();
 		applyButton->setEnabled(false);
+		applyButton->setColor(applyButtonDisabledColor);
 		rootContainer->add(applyButton);
 
 		resetButton = std::make_shared<ButtonBasic>();
@@ -84,15 +91,35 @@ namespace AWGame
 
 		resolutionButtons.clear();
 		std::shared_ptr<ButtonBasic> prevResolutionButton;
+		const auto maxWindowedWidth = modules->screen->getMaxWindowedWidth();
+		const auto maxWindowedHeight = modules->screen->getMaxWindowedHeight();
 		for (const auto resolution : info.resolutions)
 		{
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
 			resolutionButton->setSize(180.0, 60.0);
 			resolutionButton->setFontSize(24.0);
-			if (config.mode == AW::ScreenModes::FullscreenDesktop || resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+			const auto resWidth = AW::StringHelper::getDisplayComponentForDisplayString(resolution, 0);
+			const auto resHeight = AW::StringHelper::getDisplayComponentForDisplayString(resolution, 1);
+			if (resWidth > maxWindowedWidth || resHeight > maxWindowedHeight)
+			{
+				continue;
+			}
+
+			if (config.mode == AW::ScreenModes::FullscreenDesktop
+				|| resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
 			{
 				resolutionButton->setEnabled(false);
+				resolutionButton->setColor(resolutionButtonDisabledColor);
+			}
+
+			if (resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+			{
+				resolutionButton->setColor(resolutionButtonSelectedColor);
+			}
+			else if (resolutionButton->getEnabled())
+			{
+				resolutionButton->setColor(resolutionButtonColor);
 			}
 
 			resolutionButton->clickListener = weak_from_this();
@@ -479,13 +506,29 @@ namespace AWGame
 
 		for (const auto resolutionButton : resolutionButtons)
 		{
-			if (config.mode == AW::ScreenModes::FullscreenDesktop || (resolutionButton->getText() == std::to_string(config.width) + "x" + std::to_string(config.height)))
+			const auto resolution = resolutionButton->getText();
+			const auto resWidth = AW::StringHelper::getDisplayComponentForDisplayString(resolution, 0);
+			const auto resHeight = AW::StringHelper::getDisplayComponentForDisplayString(resolution, 1);
+			const auto maxWindowedWidth = modules->screen->getMaxWindowedWidth();
+			const auto maxWindowedHeight = modules->screen->getMaxWindowedHeight();
+			const auto disabled = config.mode == AW::ScreenModes::FullscreenDesktop
+				|| resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight()))
+				|| resWidth > maxWindowedWidth
+				|| resHeight > maxWindowedHeight;
+
+			resolutionButton->setEnabled(!disabled);
+
+			if (resolution == (std::to_string(config.width) + "x" + std::to_string(config.height)))
 			{
-				resolutionButton->setEnabled(false);
+				resolutionButton->setColor(resolutionButtonSelectedColor);
+			}
+			else if (disabled)
+			{
+				resolutionButton->setColor(resolutionButtonDisabledColor);
 			}
 			else
 			{
-				resolutionButton->setEnabled(true);
+				resolutionButton->setColor(resolutionButtonColor);
 			}
 		}
 
@@ -506,12 +549,14 @@ namespace AWGame
 		if (shouldEnableApply)
 		{
 			applyButton->setEnabled(true);
+			applyButton->setColor(applyButtonColor);
 		}
 
 		if (shouldNotifyApplication)
 		{
 			modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
 			applyButton->setEnabled(false);
+			applyButton->setColor(applyButtonDisabledColor);
 		}
 	}
 
@@ -534,6 +579,7 @@ namespace AWGame
 			modules->sound->setMusicVolume(0.6);
 			modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
 			applyButton->setEnabled(false);
+			applyButton->setColor(applyButtonDisabledColor);
 		}
 	}
 
@@ -570,6 +616,7 @@ namespace AWGame
 		{
 			config.frameLimiter = positionToFrameLimit(position);
 			applyButton->setEnabled(true);
+			applyButton->setColor(applyButtonColor);
 			setDynamicLabels();
 		}
 
@@ -628,6 +675,9 @@ namespace AWGame
 		{
 			return false;
 		}
+
+		config.width = getScreenWidth();
+		config.height = getScreenHeight();
 
 		fullscreenCheckbox->setChecked(false);
 		windowedCheckbox->setChecked(false);

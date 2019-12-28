@@ -80,10 +80,15 @@ namespace AW
 		SDL_GetDesktopDisplayMode(0, &desktopMode);
 		SDL_GetDisplayMode(0, 0, &displayMode);
 
+		maxWindowedWidth = desktopMode.w;
+		maxWindowedHeight = desktopMode.h;
+
 		double scaling = desktopMode.w / (double)displayMode.w;
 		currentConfig.deviceScaling = scaling;
 
-		if (currentConfig.mode == ScreenModes::FullscreenDesktop)
+		if (currentConfig.mode == ScreenModes::FullscreenDesktop
+			|| currentConfig.width > desktopMode.w
+			|| currentConfig.height > desktopMode.h)
 		{
 			currentConfig.width = desktopMode.w;
 			currentConfig.height = desktopMode.h;
@@ -215,6 +220,16 @@ namespace AW
 	{
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 		return windowHeight;
+	}
+
+	int Screen::getMaxWindowedWidth()
+	{
+		return maxWindowedWidth;
+	}
+
+	int Screen::getMaxWindowedHeight()
+	{
+		return maxWindowedHeight;
 	}
 
 	double Screen::getDeviceScaling()
