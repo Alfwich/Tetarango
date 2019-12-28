@@ -10,13 +10,13 @@ namespace AW
 			const auto zoom = getZoom();
 			const auto anchorX = getScreenAnchorX();
 			const auto anchorY = getScreenAnchorY();
-			const auto screenWidth = modules->screen->getWidth();
-			const auto screenHeight = modules->screen->getHeight();
 			const auto pRect = cameraParent->getRect();
-			const auto xOffset = screenWidth - anchorX;
-			const auto yOffset = screenHeight - anchorY;
-			const auto xZoomOffset = (anchorX - screenWidth / 2.0) * zoom - (anchorX - screenWidth / 2.0);
-			const auto yZoomOffset = (anchorY - screenHeight / 2.0) * zoom - (anchorY - screenHeight / 2.0);
+			const auto containerWidth = pRect.w;
+			const auto containerHeignt = pRect.h;
+			const auto xOffset = containerWidth - anchorX;
+			const auto yOffset = containerHeignt - anchorY;
+			const auto xZoomOffset = (anchorX - containerWidth / 2.0) * zoom - (anchorX - containerWidth / 2.0);
+			const auto yZoomOffset = (anchorY - containerHeignt / 2.0) * zoom - (anchorY - containerHeignt / 2.0);
 
 			cameraParent->setScale(zoom);
 			cameraParent->setPosition(xOffset - xZoomOffset, yOffset - yZoomOffset);

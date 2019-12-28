@@ -79,9 +79,9 @@ namespace AWGame
 	{
 		const auto cached = std::make_shared<AW::DisplayBuffer>();
 		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		cached->topLeftAlignSelf();
 		cached->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
 		cached->renderMode = AW::RenderMode::ChildrenOnly;
-		cached->topLeftAlignSelf();
 		add(cached);
 
 		const auto testBlock = std::make_shared<Block>();
@@ -102,8 +102,9 @@ namespace AWGame
 
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
+		camera->setDefaultZoomAndAnchorPoint(1.0, modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		camera->listener = weak_from_this();
-		add(camera);
+		cached->add(camera);
 
 		scoreText = std::make_shared<AW::Text>();
 		scoreText->name = "score-text";
@@ -308,7 +309,5 @@ namespace AWGame
 
 	void SceneTetris::onCameraUpdate()
 	{
-		setScale(camera->getZoom());
-		setPosition(-camera->getScreenAnchorX(), -camera->getScreenAnchorY());
 	}
 }
