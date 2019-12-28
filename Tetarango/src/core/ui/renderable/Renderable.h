@@ -119,7 +119,7 @@ namespace AW
 		virtual Rect getRect();
 
 		virtual void setWorldRect(Rect* r);
-		virtual void updateScreenRect(const RenderPackage* renderPackage, RenderPositionMode mode);
+		virtual void setScreenRect(Rect* r);
 		virtual Rect* getWorldRect();
 		virtual Rect* getScreenRect();
 
@@ -217,11 +217,11 @@ namespace AW
 		void toBottomRightOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
 		void toBottomRightOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
 
-		void matchSize(Renderable* other, double wOffset = 0.0, double hOffset = 0.0);
-		void matchSize(std::shared_ptr<Renderable> other, double wOffset = 0.0, double hOffset = 0.0);
+		void setSize(Renderable* other, double wOffset = 0.0, double hOffset = 0.0);
+		void setSize(std::shared_ptr<Renderable> other, double wOffset = 0.0, double hOffset = 0.0);
 
-		void matchSizeAndCenter(Renderable* other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
-		void matchSizeAndCenter(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
+		void setSizeAndCenter(Renderable* other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
+		void setSizeAndCenter(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
 
 		void leftAlign(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
 		void leftAlign(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);

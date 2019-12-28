@@ -55,7 +55,7 @@ namespace AWGame
 		add(rootContainer);
 
 		centeringContainer = std::make_shared<AW::Container>();
-		centeringContainer->matchSizeAndCenter(rootContainer);
+		centeringContainer->setSizeAndCenter(rootContainer);
 		rootContainer->add(centeringContainer);
 
 		optionsMenuTitle = std::make_shared<AW::Text>();

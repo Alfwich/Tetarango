@@ -198,7 +198,7 @@ namespace AWGame
 
 	void ScrollBarBasic::onLayoutChildren()
 	{
-		background->matchSize(this);
+		background->setSize(this);
 		background->topLeftAlignSelf();
 		if (getHorizontal())
 		{

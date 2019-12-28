@@ -69,7 +69,7 @@ namespace AWGame
 		setSize(modules->screen->getWidth(), modules->screen->getHeight());
 
 		const auto backgroundFade = findChildWithName<AW::Rectangle>("background");
-		backgroundFade->matchSizeAndCenter(this);
+		backgroundFade->setSizeAndCenter(this);
 
 		const auto centeringContainer = findChildWithName<AW::Container>("center-c");
 		centeringContainer->centerAlignWithin(this);

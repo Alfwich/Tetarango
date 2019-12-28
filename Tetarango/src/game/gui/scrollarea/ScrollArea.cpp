@@ -119,7 +119,6 @@ namespace AWGame
 		else
 		{
 			container->add(ao);
-			//matchSize(container);
 			layout();
 		}
 	}
@@ -133,7 +132,6 @@ namespace AWGame
 		else
 		{
 			container->remove(ao);
-			//matchSize(container);
 			layout();
 		}
 	}

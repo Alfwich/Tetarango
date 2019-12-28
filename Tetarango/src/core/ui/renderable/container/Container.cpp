@@ -35,9 +35,9 @@ namespace AW
 		isAutoLayingOut = true;
 
 		Rect childrenBounds{ childBoundLimit, childBoundLimit, -childBoundLimit, -childBoundLimit };
+		const auto r = getRect();
 		for (const auto renderable : getChildrenOfType<Renderable>())
 		{
-			const auto r = getRect();
 			const auto rC = renderable->getRect();
 
 			if (rC.x - rC.w / 2.0 < childrenBounds.x)

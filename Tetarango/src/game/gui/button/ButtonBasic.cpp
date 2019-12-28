@@ -122,7 +122,7 @@ namespace AWGame
 
 	void ButtonBasic::onLayoutChildren()
 	{
-		background->matchSizeAndCenter(this);
+		background->setSizeAndCenter(this);
 		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
 	}
 

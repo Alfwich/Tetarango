@@ -515,11 +515,7 @@ namespace AW
 			break;
 
 		case RenderMode::ChildrenOnly:
-			renderUpdateRect(rend, computed, renderPackage);
-
-			rend->setWorldRect(computed);
-			rend->updateScreenRect(renderPackage, renderPositionModeStack.top());
-
+			renderUpdateRenderableRects(rend, computed, renderPackage);
 			renderRecursiveRenderChildren(rend, computed, renderPackage);
 			break;
 		}
@@ -634,7 +630,7 @@ namespace AW
 		}
 	}
 
-	void Renderer::renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
+	void Renderer::renderUpdateRenderableRects(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage)
 	{
 		const auto scale = renderPackage->zoom * rend->getScale();
 		const auto rect = rend->getRect() * Rect(renderPackage->zoom, renderPackage->zoom, scale, scale);
@@ -678,6 +674,9 @@ namespace AW
 		renderPackage->zoom *= rend->getScale();
 		renderPackage->rotation += rend->getRotation();
 		renderPackage->alpha *= rend->getAlpha();
+
+		rend->setWorldRect(computed);
+		rend->setScreenRect(computed);
 	}
 
 	void Renderer::renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, const Rect* computed, RenderPackage* renderPackage)
@@ -740,10 +739,7 @@ namespace AW
 			return;
 		}
 
-		renderUpdateRect(ele, computed, renderPackage);
-
-		ele->setWorldRect(computed);
-		ele->updateScreenRect(renderPackage, renderPositionModeStack.top());
+		renderUpdateRenderableRects(ele, computed, renderPackage);
 
 		if (ele->getHasClipRect())
 		{
@@ -761,10 +757,8 @@ namespace AW
 			return;
 		}
 
-		renderUpdateRect(prim, computed, renderPackage);
+		renderUpdateRenderableRects(prim, computed, renderPackage);
 		prim->preUpdateRender(computed, renderPackage);
-		prim->setWorldRect(computed);
-		prim->updateScreenRect(renderPackage, renderPositionModeStack.top());
 		prim->preRender(computed, renderPackage);
 
 		if (prim->getHasClipRect())
@@ -794,10 +788,7 @@ namespace AW
 
 		container->performAutoLayoutIfNeeded();
 
-		renderUpdateRect(container, computed, renderPackage);
-
-		container->setWorldRect(computed);
-		container->updateScreenRect(renderPackage, renderPositionModeStack.top());
+		renderUpdateRenderableRects(container, computed, renderPackage);
 
 		if (container->getHasClipRect())
 		{

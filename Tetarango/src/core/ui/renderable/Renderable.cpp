@@ -89,12 +89,9 @@ namespace AW
 		worldRect.h = r->h;
 	}
 
-	void Renderable::updateScreenRect(const RenderPackage* renderPackage, RenderPositionMode mode)
+	void Renderable::setScreenRect(Rect* r)
 	{
-		if (renderPackage != nullptr)
-		{
-			screenRect = worldRect;
-		}
+		screenRect = r;
 	}
 
 	Rect* Renderable::getWorldRect()
@@ -406,7 +403,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSize(Renderable* other, double wOffset, double hOffset)
+	void Renderable::setSize(Renderable* other, double wOffset, double hOffset)
 	{
 		if (other != nullptr)
 		{
@@ -414,7 +411,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSizeAndCenter(Renderable* other, double xOffset, double yOffset, double wOffset, double hOffset)
+	void Renderable::setSizeAndCenter(Renderable* other, double xOffset, double yOffset, double wOffset, double hOffset)
 	{
 		if (other != nullptr)
 		{
@@ -557,21 +554,21 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchSize(std::shared_ptr<Renderable> other, double wOffset, double hOffset)
+	void Renderable::setSize(std::shared_ptr<Renderable> other, double wOffset, double hOffset)
 	{
 		if (other != nullptr)
 		{
 			const auto otherPtr = other.get();
-			matchSize(otherPtr, wOffset, hOffset);
+			setSize(otherPtr, wOffset, hOffset);
 		}
 	}
 
-	void Renderable::matchSizeAndCenter(std::shared_ptr<Renderable> other, double xOffset, double yOffset, double wOffset, double hOffset)
+	void Renderable::setSizeAndCenter(std::shared_ptr<Renderable> other, double xOffset, double yOffset, double wOffset, double hOffset)
 	{
 		if (other != nullptr)
 		{
 			const auto otherPtr = other.get();
-			matchSizeAndCenter(otherPtr, xOffset, yOffset, wOffset, hOffset);
+			setSizeAndCenter(otherPtr, xOffset, yOffset, wOffset, hOffset);
 		}
 	}
 

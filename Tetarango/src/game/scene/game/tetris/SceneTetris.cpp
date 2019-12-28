@@ -126,7 +126,7 @@ namespace AWGame
 		blockParticleSystem = std::make_shared<AW::ParticleSystem>();
 		blockParticleSystem->zIndex = -5;
 		blockParticleSystem->name = "p-b-system";
-		blockParticleSystem->matchSizeAndCenter(board, modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		blockParticleSystem->setSizeAndCenter(board, modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		cached->add(blockParticleSystem);
 	}
 

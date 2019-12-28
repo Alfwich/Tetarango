@@ -60,7 +60,7 @@ namespace AW
 		void renderRecursivePopStencilBuffer(const std::shared_ptr<Renderable>& rend, RenderPackage* renderPackage);
 		void renderRecursiveRenderChildren(const std::shared_ptr<Renderable>& rend, const Rect* rect, RenderPackage* renderPackage);
 
-		void renderUpdateRect(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
+		void renderUpdateRenderableRects(std::shared_ptr<Renderable> rend, Rect* computed, RenderPackage* renderPackage);
 
 		void pushColorStack(const Color* color);
 		void setColorModParam(RenderPackage* renderPackage);

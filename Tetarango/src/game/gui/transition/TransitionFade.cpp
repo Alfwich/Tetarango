@@ -35,7 +35,7 @@ namespace AWGame
 
 	void TransitionFade::onLayoutChildren()
 	{
-		fadeRectangle->matchSizeAndCenter(this);
+		fadeRectangle->setSizeAndCenter(this);
 	}
 
 	void TransitionFade::onTransitionCompleted(int transitionId)

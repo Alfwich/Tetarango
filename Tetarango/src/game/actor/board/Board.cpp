@@ -17,7 +17,7 @@ namespace AWGame
 		if (background != nullptr)
 		{
 			setSize(boardWidth * cellWidth + cellWidth, boardHeight * cellHeight + cellHeight);
-			background->matchSizeAndCenter(this, -(cellWidth / 2.0), -(cellHeight / 2.0));
+			background->setSizeAndCenter(this, -(cellWidth / 2.0), -(cellHeight / 2.0));
 		}
 	}
 
