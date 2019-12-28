@@ -60,7 +60,6 @@ namespace AWGame
 	{
 		const auto contentContainer = std::make_shared<AW::Rectangle>();
 		contentContainer->renderColorMode = AW::RenderColorMode::Absolute;
-		contentContainer->setColor(255, 0, 255);
 		contentContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
@@ -76,7 +75,6 @@ namespace AWGame
 
 		const auto cached = std::make_shared<AW::DisplayBuffer>();
 		cached->setClearColor(128, 128, 128);
-		cached->setColor(AW::Color::white());
 		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		cached->centerWithin(contentContainer, 30.0, 30.0);
 		cached->zIndex = -1;
@@ -85,10 +83,9 @@ namespace AWGame
 
 		const auto background = std::make_shared<AW::Rectangle>();
 		background->setVertexShader(modules->shader->getShader({ "v-default" }));
-		background->setFragmentShader(modules->shader->getShader({ "f-mandelbrot" }));
+		background->setFragmentShader(modules->shader->getShader({ "f-color", "f-mandelbrot" }));
 		background->getFragmentShader()->setFloatIUParam("iter", currentIters);
 		background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
-		background->setColor(AW::Color::blue());
 		background->setSize(1200, 800);
 		background->centerWithin(cached, 100.0);
 		background->zIndex = -1;
