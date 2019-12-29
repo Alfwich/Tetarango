@@ -87,9 +87,7 @@ namespace AWGame
 		modules->time->createTimeScope(AW::TimeScope::Camera, 1.0);
 
 		screenBuffer = std::make_shared<AW::DisplayBuffer>();
-		screenBuffer->setFragmentShader(modules->shader->getShader({ "f-cached", "f-texture", "f-color", "f-scanline-retro", "f-blur" }));
-		screenBuffer->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 0.25);
-		screenBuffer->getFragmentShader()->setFloatIUParam("fBlurAmount", 0.25);
+		screenBuffer->setFragmentShader(modules->shader->getShader({ "f-cached", "f-texture", "f-color" }));
 		screenBuffer->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
 		screenBuffer->renderPositionMode = AW::RenderPositionMode::AbsoluteSelfOnly;
 		screenBuffer->setClearColor(0, 0, 0);

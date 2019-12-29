@@ -1,30 +1,26 @@
 #pragma once
 
-#include "ui/renderable/container/Container.h"
+#include <vector>
 #include "ui/scene/Scene.h"
-#include "engine/module/event/EnterFrameListener.h"
-#include "gui/button/ButtonBasic.h"
-#include "gui/IGuiListener.h"
-#include "ui/scene/SceneTransitionBundle.h"
 #include "gui/camera/GameCamera.h"
 #include "gui/IGuiListener.h"
-#include "gui/scrollbar/ScrollBarBasic.h"
-#include "ui/camera/ICameraListener.h"
+#include "box2d/b2_world.h"
+#include "box2d/box2d.h"
+#include "ui/renderable/primitive/Rectangle.h"
 
 namespace AWGame
 {
 
 	class TestScene2 : public AW::Scene, public AW::ICameraListener, public IGuiListener
 	{
-		double currentIters = 15;
-		bool itersIncPressed = false, itersDecPressed = false;
+
 		std::shared_ptr<GameCamera> camera;
 
-		std::shared_ptr<ScrollBarBasic> red, green, blue;
-		std::shared_ptr<AW::Text> infoLabel;
-		std::shared_ptr<Renderable> obj1, obj2, obj3, obj4, contentContainer;
+		b2World* world;
+		b2Body* groundBody;
 
-		std::shared_ptr<AW::Timer> iterTimer, updateTimer;
+		std::shared_ptr<Renderable> obj1, obj2;
+		std::vector<std::pair<b2Body*, std::shared_ptr<AW::Renderable>>> objs;
 
 	public:
 		TestScene2();
@@ -34,7 +30,9 @@ namespace AWGame
 		void onInitialAttach();
 		void onAttach();
 		void onCreateChildren();
+		void onLayoutChildren();
 		void onChildrenHydrated();
+		void onTimeoutCalled();
 
 		void onEnterFrame(const double& deltaTime);
 		void onKeyPressed(SDL_Scancode key);

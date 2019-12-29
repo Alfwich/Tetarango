@@ -43,12 +43,6 @@ namespace AWGame
 			}
 		, weak_from_this());
 		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
-
-		iterTimer = modules->time->createTimer();
-		iterTimer->start();
-
-		updateTimer = modules->time->createTimer();
-		updateTimer->start();
 	}
 
 	void TestScene2::onAttach()
@@ -63,7 +57,6 @@ namespace AWGame
 		contentContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
-		this->contentContainer = contentContainer;
 
 		camera = std::make_shared<GameCamera>();
 		camera->name = "camera";
@@ -72,6 +65,76 @@ namespace AWGame
 		camera->setTimeScope(AW::TimeScope::Camera);
 		camera->listener = shared_from_this();
 		contentContainer->add(camera);
+
+		b2Vec2 g(0, -10);
+		world = new b2World(g);
+
+		b2BodyDef groundBodyDef;
+		groundBodyDef.position.Set(0.0, -10.0);
+		groundBody = world->CreateBody(&groundBodyDef);
+
+		b2PolygonShape groundBox;
+		groundBox.SetAsBox(100.0, 10.0);
+
+		groundBody->CreateFixture(&groundBox, 0.0f);
+
+		for (int x = 0; x < 500; ++x)
+		{
+			b2BodyDef bodyDef;
+			bodyDef.type = b2_dynamicBody;
+			bodyDef.position.Set(AW::NumberHelper::random(-30.0, 30.0), AW::NumberHelper::random(10.0, 50.0));
+			auto bdy = world->CreateBody(&bodyDef);
+
+			b2PolygonShape dynamicBox;
+			dynamicBox.SetAsBox(1.0f, 1.0f);
+
+			b2FixtureDef fixtureDef;
+			fixtureDef.shape = &dynamicBox;
+			fixtureDef.density = 20.0;
+			fixtureDef.friction = 0.8f;
+			bdy->CreateFixture(&fixtureDef);
+
+			auto dynamicRect = std::make_shared<AW::Rectangle>();
+			dynamicRect->setSize(20.0, 20.0);
+			dynamicRect->setColor(AW::Color::random());
+			contentContainer->add(dynamicRect);
+
+			objs.push_back(std::make_pair(bdy, dynamicRect));
+		}
+
+		const auto groundRect = std::make_shared<AW::Rectangle>();
+		groundRect->setSize(2000.0, 200.0);
+		groundRect->setColor(64, 64, 64);
+		contentContainer->add(groundRect);
+		obj1 = groundRect;
+
+		modules->event->registerTimeoutCallback(shared_from_this(), 16);
+	}
+
+	void TestScene2::onLayoutChildren()
+	{
+		const auto xOffset = modules->screen->getWidth() / 2.0;
+		const auto yOffset = modules->screen->getWidth() / 2.0;
+		const auto groundPos = groundBody->GetPosition();
+		const auto dynamicRot = groundBody->GetAngle();
+		obj1->setPosition(groundPos.x * 10.0 + xOffset, groundPos.y * -10.0 + yOffset);
+
+		for (const auto bodyToRect : objs)
+		{
+			const auto dynamicPos = bodyToRect.first->GetPosition();
+			const auto dynamicRot = bodyToRect.first->GetAngle();
+
+			bodyToRect.second->setPosition(dynamicPos.x * 10.0 + xOffset, dynamicPos.y * -10.0 + yOffset);
+			bodyToRect.second->setRotation(dynamicRot * -AW::NumberHelper::PI);
+
+		}
+	}
+
+	void TestScene2::onTimeoutCalled()
+	{
+		world->Step(16 / 1000.0f, 8, 3);
+		modules->event->registerTimeoutCallback(shared_from_this(), 16);
+		layout();
 	}
 
 	void TestScene2::onChildrenHydrated()
@@ -81,25 +144,6 @@ namespace AWGame
 
 	void TestScene2::onEnterFrame(const double& deltaTime)
 	{
-		if ((itersIncPressed || itersDecPressed) && iterTimer->isAboveThresholdAndRestart(10))
-		{
-			if (itersIncPressed)
-			{
-				currentIters = AW::NumberHelper::clamp(currentIters + 1.0, 0.0, 1000.0);
-				obj1->getFragmentShader()->setFloatIUParam("iter", currentIters);
-				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
-				obj2->markDirty();
-			}
-			else if (itersDecPressed)
-			{
-				currentIters = AW::NumberHelper::clamp(currentIters - 1.0, 0.0, 1000.0);
-				obj1->getFragmentShader()->setFloatIUParam("iter", currentIters);
-				infoLabel->setText("Iters: " + std::to_string((int)currentIters));
-				obj2->markDirty();
-			}
-		}
-
-		contentContainer->rotate((deltaTime / 1000.0) * 15.0);
 	}
 
 	void TestScene2::onKeyPressed(SDL_Scancode key)
@@ -109,25 +153,23 @@ namespace AWGame
 			const auto applicationSceneContainer = findFirstInParentChain<AW::SceneContainer>();
 			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 		}
+
+		if (key == SDL_SCANCODE_1)
+		{
+			for (const auto bodyToRect : objs)
+			{
+				bodyToRect.first->ApplyForce(
+					b2Vec2(AW::NumberHelper::random(-1000.0, 1000.0), AW::NumberHelper::random(-1000.0, 1000.0)),
+					b2Vec2(0.0, 0.0),
+					true
+				);
+			}
+
+		}
 	}
 
 	void TestScene2::onKey(SDL_Scancode key, bool isPressed)
 	{
-		if (key == SDL_SCANCODE_1)
-		{
-			itersDecPressed = isPressed;
-		}
-
-		if (key == SDL_SCANCODE_2)
-		{
-			itersIncPressed = isPressed;
-		}
-
-		if (key == SDL_SCANCODE_3 && isPressed)
-		{
-			obj2->renderMode = obj2->renderMode == AW::RenderMode::CachedElement ? AW::RenderMode::ChildrenOnly : AW::RenderMode::CachedElement;
-			obj2->markDirty();
-		}
 	}
 
 	void TestScene2::onScrollBarScroll(int id, double pos)
