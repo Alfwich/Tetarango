@@ -267,8 +267,8 @@
     <ClCompile Include="src\game\scene\test\TestScene.cpp" />
     <ClCompile Include="src\core\ui\renderable\Zone.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\trace\Trace.cpp" />
-    <ClCompile Include="src\game\scene\test\TestScene2.cpp" />
     <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
+    <ClCompile Include="src\game\scene\test\TestScene2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -397,6 +397,7 @@
     <ClInclude Include="src\game\gui\IGuiListener.h" />
     <ClInclude Include="src\game\scene\Scenes.h" />
     <ClInclude Include="src\game\scene\game\tetris\SceneTetris.h" />
+    <ClInclude Include="src\game\scene\test\TestScene2.h" />
     <ClInclude Include="src\test\Tests.h" />
     <ClInclude Include="src\test\TestActor.h" />
     <ClInclude Include="src\core\engine\module\time\Time.h" />
@@ -412,7 +413,6 @@
     <ClInclude Include="src\game\scene\test\TestScene.h" />
     <ClInclude Include="src\core\ui\renderable\Zone.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\trace\Trace.h" />
-    <ClInclude Include="src\game\scene\test\TestScene2.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="favicon.ico" />

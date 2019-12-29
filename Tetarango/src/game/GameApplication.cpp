@@ -127,7 +127,7 @@ namespace AWGame
 			if (gameConfig->getConfigBool(Config::Param::enableTestScenes))
 			{
 				masterSceneContainer->add(std::make_shared<TestScene>());
-				masterSceneContainer->add(std::make_shared<TestSpace2>());
+				masterSceneContainer->add(std::make_shared<TestScene2>());
 			}
 
 			masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Splash));

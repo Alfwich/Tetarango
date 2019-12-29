@@ -177,7 +177,7 @@ namespace AWGame
 		}
 		else if (id == testSpaceSceneButton->getId())
 		{
-			transitionToScene("test_space_scene");
+			transitionToScene("test_scene_2");
 		}
 	}
 
