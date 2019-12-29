@@ -2,13 +2,14 @@
 
 #include <SDL.h>
 #include <string>
-#include "engine/module/IBaseModule.h"
+#include <vector>
+#include <algorithm>
 #include "ScreenConfig.h"
-#include "engine/module/collision/Collision.h"
+#include "engine/module/IBaseModule.h"
+#include "util/StringHelper.h"
 
 namespace AW
 {
-	class Collision;
 	class Renderable;
 	class Renderer;
 	class Element;
@@ -16,6 +17,7 @@ namespace AW
 	class Camera;
 	class ShaderContainer;
 	class TextureContainer;
+	class Time;
 
 	class DisplayModeInfo
 	{
@@ -95,6 +97,6 @@ namespace AW
 #include "ui/renderable/Renderable.h"
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Primitive.h"
-#include "engine/module/collision/Collision.h"
 #include "engine/module/shader/ShaderContainer.h"
 #include "engine/module/display/TextureContainer.h"
+#include "engine/module/time/Time.h"

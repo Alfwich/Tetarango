@@ -10,6 +10,7 @@ namespace AW
 			b2PolygonShape shape;
 
 	public:
+		virtual ~RigidBody() = 0 {};
 		virtual void onPhysicUpdate(const b2Body* body) { /* NO-OP */ };
 
 		virtual b2BodyDef onDefineBody() { return b2BodyDef(); };

@@ -7,14 +7,15 @@
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/container/Container.h"
+#include "engine/module/physic/RigidBody.h"
 #include "box2d/b2_world.h"
 #include "box2d/box2d.h"
 
 namespace AWGame
 {
-	class dBlock : public AW::Element, public AW::RigidBody
+	class dBlock : public AW::RigidBody, public AW::Element
 	{
-		unsigned int aliveTicks = 600;
+		int aliveTicks = 600;
 	public:
 		void onInitialAttach()
 		{
@@ -44,7 +45,7 @@ namespace AWGame
 			auto def = RigidBody::onDefineBody();
 
 			def.type = b2_dynamicBody;
-			def.position.Set(AW::NumberHelper::random(-30.0, 30.0), AW::NumberHelper::random(60.0, 120.0));
+			def.position.Set(AW::NumberHelper::random(-30.0, 30.0), AW::NumberHelper::random(120.0, 180.0));
 
 			return def;
 		}
@@ -70,7 +71,6 @@ namespace AWGame
 			if (--aliveTicks <= 0)
 			{
 				removeFromParent();
-				return;
 			}
 
 			if (aliveTicks > 60)
@@ -92,7 +92,7 @@ namespace AWGame
 		};
 	};
 
-	class sBlock : public AW::Rectangle, public AW::RigidBody
+	class sBlock : public AW::RigidBody, public AW::Rectangle
 	{
 	public:
 		b2BodyDef onDefineBody()

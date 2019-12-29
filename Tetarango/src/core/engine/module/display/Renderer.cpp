@@ -193,9 +193,9 @@ namespace AW
 
 	void Renderer::render(std::shared_ptr<Renderable> root, Screen* screen, double frameTimestamp)
 	{
-		prepareRender(screen, frameTimestamp);
-
+		preRender(screen, frameTimestamp);
 		renderOpenGL(root);
+		postRender();
 
 		SDL_GL_SwapWindow(screen->getWindow());
 	}
@@ -470,13 +470,21 @@ namespace AW
 		generateBackgroundRenderBuffer();
 	}
 
-	void Renderer::prepareRender(Screen* screen, double frameTimestamp)
+	void Renderer::preRender(Screen* screen, double frameTimestamp)
 	{
 		currentFrameTimestamp = frameTimestamp;
 		screenWidth = screen->getWidth();
 		screenHeight = screen->getHeight();
 		setViewport(screenWidth, screenHeight);
 		nextPackage = renderList.begin();
+	}
+
+	void Renderer::postRender()
+	{
+		for (auto& pkg : renderList)
+		{
+			pkg.obj = std::shared_ptr<Renderable>();
+		}
 	}
 
 	RenderPackage* Renderer::nextRenderPackage(std::shared_ptr<Renderable> obj, RenderPackage* previous)

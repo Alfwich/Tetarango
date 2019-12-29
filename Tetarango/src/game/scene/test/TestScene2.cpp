@@ -10,7 +10,7 @@ namespace
 	const char* backButtonId = "back_button";
 	const std::string player = "player";
 	AWGame::GeneratorBlock blockColorGenerator;
-	const auto spawnMs = 75;
+	const auto spawnMs = 1;
 }
 
 namespace AWGame
@@ -52,7 +52,10 @@ namespace AWGame
 	{
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
-		modules->physic->setWorldFps(0, 120);
+		modules->physic->setWorldFps(0, 60);
+
+		modules->physic->registerWorld(1);
+		modules->physic->setWorldFps(1, 20);
 	}
 
 	void TestScene2::onCreateChildren()
@@ -89,10 +92,20 @@ namespace AWGame
 		if (isAttached())
 		{
 			const auto b = std::make_shared<dBlock>();
-			b->setColor(blockColorGenerator.getBlockColor());
-			modules->physic->registerRigidBodyForWorld(0, b);
-			contentContainer->add(b);
 
+			if (true || AW::NumberHelper::chance(50))
+			{
+				modules->physic->registerRigidBodyForWorld(0, b);
+				b->setColor(blockColorGenerator.getBlockColor());
+			}
+			else
+			{
+				modules->physic->registerRigidBodyForWorld(1, b);
+				b->setColor(255, 255, 255);
+				b->zIndex = -1;
+			}
+
+			contentContainer->add(b);
 			modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
 		}
 	}
@@ -111,6 +124,7 @@ namespace AWGame
 
 		if (key == SDL_SCANCODE_1)
 		{
+			contentContainer->destroyChildren();
 		}
 	}
 

@@ -52,7 +52,6 @@ namespace AW
 		font = createModule<FontContainer>();
 		event = createModule<Event>();
 		sound = createModule<Sound>();
-		collision = createModule<Collision>();
 		logger = createModule<Logger>();
 		asset = createModule<Asset>();
 		shader = createModule<ShaderContainer>();

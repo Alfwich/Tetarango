@@ -40,28 +40,4 @@ namespace AW
 
 		requestReconciliation = serializationClient->getBool("rqR");
 	}
-
-	bool Zone::onCollision(std::shared_ptr<ICollidable> you, int yourScope, std::weak_ptr<ICollidable> other, int otherScope)
-	{
-		const auto callback = notifyOnCollision.lock();
-
-		if (callback != nullptr)
-		{
-			return callback->onCollision(you, yourScope, other, otherScope);
-		}
-
-		return requestReconciliation;
-	}
-
-	bool Zone::onReconcileCollision(std::shared_ptr<ICollidable> you, std::shared_ptr<ICollidable> other)
-	{
-		const auto callback = notifyOnReconcileCollision.lock();
-
-		if (callback != nullptr)
-		{
-			return callback->onReconcileCollision(you, other);
-		}
-
-		return false;
-	}
 }

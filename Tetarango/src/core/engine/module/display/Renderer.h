@@ -13,7 +13,6 @@
 #include "ui/renderable/primitive/Primitive.h"
 #include "RenderPackage.h"
 #include "util/linmath.h"
-#include "util/QuadMap.h"
 #include "util/Color.h"
 
 namespace AW
@@ -54,7 +53,8 @@ namespace AW
 		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
 		void releaseOpenGLObjects();
 
-		void prepareRender(Screen* screen, double renderTimestamp);
+		void preRender(Screen* screen, double renderTimestamp);
+		void postRender();
 
 		RenderPackage* nextRenderPackage(std::shared_ptr<Renderable> obj, RenderPackage* previous = nullptr);
 

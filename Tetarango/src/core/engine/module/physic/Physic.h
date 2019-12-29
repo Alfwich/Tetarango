@@ -14,8 +14,8 @@ namespace AW
 		class RigidBodyBundle
 		{
 		public:
-			RigidBodyBundle(std::shared_ptr<RigidBody> object, b2Body *body) : object(object), body(body) {}
-			const std::weak_ptr<RigidBody> object;
+			RigidBodyBundle(std::weak_ptr<RigidBody> object, b2Body *body) : object(object), body(body) {}
+			std::weak_ptr<RigidBody> object;
 			b2Body *body;
 		};
 
@@ -38,8 +38,8 @@ namespace AW
 
 		void bindTime(std::shared_ptr<Time> time);
 
-		void registerWorld(unsigned int worldId, double gravityX, double gravityY);
-		void setWorldFps(unsigned int worldId, unsigned int fps);
+		void registerWorld(unsigned int worldId, double gravityX = 0.0, double gravityY = -20.0);
+		void setWorldFps(unsigned int worldId, unsigned int timestepMS);
 
 		void registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> body);
 

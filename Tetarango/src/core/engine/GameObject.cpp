@@ -338,11 +338,6 @@ namespace AW
 			setTag(GTags::Loaded, true);
 		}
 
-		for (const auto collisionScope : collisionScopes)
-		{
-			modules->collision->registerObjectForCollisionScope(collisionScope, shared_from_this());
-		}
-
 		if (enterFrameActivated)
 		{
 			modules->event->registerOnEnterFrame(shared_from_this(), enterFramePriority);
@@ -368,7 +363,6 @@ namespace AW
 			setInputMode(InputMode::Unspecified);
 		}
 
-		modules->collision->unregisterObject(shared_from_this());
 		modules->event->unregisterOnEnterFrame(shared_from_this());
 
 		auto parentPointer = parent.lock();
@@ -415,22 +409,8 @@ namespace AW
 
 		switch (hint)
 		{
-		case SerializationHint::SERIALIZE:
-		{
-			auto cScopes = std::vector<int>();
-			for (const auto scope : collisionScopes) { cScopes.push_back((int)scope); }
-			client->setString("c-scopes", VectorHelper::intVectorToString(cScopes));
-		}
-		break;
 		case SerializationHint::HYDRATE:
 		{
-			auto scopes = client->getString("c-scopes");
-
-			for (const auto scope : VectorHelper::stringToIntVector(scopes))
-			{
-				addCollisionScope((CollisionScope)scope);
-			}
-
 			setTag(GTags::IsCurrentActive, false);
 			setTag(GTags::DidInitialAttach, false);
 			setTag(GTags::HasHydratedChildren, false);
@@ -473,22 +453,6 @@ namespace AW
 	void GameObject::setSerializationEnabled(bool flag)
 	{
 		setTag(GTags::SerializationEnabled, flag);
-	}
-
-	bool GameObject::collisionEnabled()
-	{
-		return getTag(GTags::IsCurrentActive);
-	}
-
-	void GameObject::addCollisionScope(CollisionScope scope)
-	{
-		collisionScopes.insert(scope);
-		modules->collision->registerObjectForCollisionScope(scope, shared_from_this());
-	}
-
-	void GameObject::removeCollisionScope(CollisionScope scope)
-	{
-		collisionScopes.erase(scope);
 	}
 
 	int GameObject::getObjectIdEnterFrame()

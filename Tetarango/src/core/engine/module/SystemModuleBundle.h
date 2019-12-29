@@ -8,7 +8,6 @@
 #include "serialization/Serialization.h"
 #include "animation/AnimationContainer.h"
 #include "storage/Storage.h"
-#include "time/Time.h"
 #include "logger/Logger.h"
 #include "event/Event.h"
 #include "sound/Sound.h"
@@ -21,8 +20,8 @@ namespace AW
 {
 	class TextureContainer;
 	class AnimationContainer;
-	class Collision;
 	class Screen;
+	class Time;
 
 	enum class ModuleBundleStatus
 	{
@@ -61,7 +60,6 @@ namespace AW
 		std::shared_ptr<FontContainer> font;
 		std::shared_ptr<Event> event;
 		std::shared_ptr<Sound> sound;
-		std::shared_ptr<Collision> collision;
 		std::shared_ptr<Thread> thread;
 		std::shared_ptr<Asset> asset;
 		std::shared_ptr<ShaderContainer> shader;
@@ -86,5 +84,5 @@ namespace AW
 
 #include "display/TextureContainer.h"
 #include "animation/AnimationContainer.h"
-#include "collision/Collision.h"
 #include "display/Screen.h"
+#include "time/Time.h"

@@ -9,7 +9,7 @@
 #include "engine/module/input/IInputListener.h"
 #include "engine/module/serialization/ISerializable.h"
 #include "engine/module/event/EnterFrameListener.h"
-#include "engine/module/collision/ICollidable.h"
+#include "engine/module/physic/RigidBody.h"
 
 namespace AW
 {
@@ -36,7 +36,7 @@ namespace AW
 		HasBoundShaders
 	};
 
-	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ICollidable, public std::enable_shared_from_this<GameObject>
+	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public std::enable_shared_from_this<GameObject>
 	{
 		static std::unordered_map<std::string, bool> resourcesLoadedMap;
 		int id = 0;
@@ -147,10 +147,6 @@ namespace AW
 		virtual bool shouldSerializeChildren();
 		virtual bool shouldSerializeSelf();
 		void setSerializationEnabled(bool flag = true);
-
-		virtual bool collisionEnabled();
-		virtual void addCollisionScope(CollisionScope scope);
-		virtual void removeCollisionScope(CollisionScope scope);
 
 		int getObjectIdEnterFrame();
 		virtual void enableEnterFrame(int priority = 0);

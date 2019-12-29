@@ -64,7 +64,7 @@ namespace AW
 
 	void Physic::onEnterFrame(const double& deltaTime)
 	{
-		for (const auto worldIdToWorldBundle : worlds)
+		for (const auto& worldIdToWorldBundle : worlds)
 		{
 			const auto& worldBundle = worldIdToWorldBundle.second;
 			const auto threshold = (unsigned int)(worldBundle->timestep * 1000.0);
@@ -77,6 +77,7 @@ namespace AW
 				{
 					const auto body = (*rigidBodyBundle)->body;
 					const auto rigidBodyPtr = (*rigidBodyBundle)->object.lock();
+					const auto expired = (*rigidBodyBundle)->object.expired();
 					if (rigidBodyPtr != nullptr)
 					{
 						rigidBodyPtr->onPhysicUpdate(body);
