@@ -481,15 +481,18 @@ namespace AW
 
 	RenderPackage* Renderer::nextRenderPackage(std::shared_ptr<Renderable> obj, RenderPackage* previous)
 	{
+		auto pkg = &(*nextPackage);
 		if (previous != nullptr)
 		{
 			(*nextPackage) = *previous;
 		}
+		else
+		{
+			*pkg = RenderPackage();
+		}
 
-		auto pkg = &(*nextPackage);
-		nextPackage++;
 
-		if (nextPackage == renderList.end())
+		if (++nextPackage == renderList.end())
 		{
 			renderList.push_back(RenderPackage());
 			nextPackage = (--renderList.end());
