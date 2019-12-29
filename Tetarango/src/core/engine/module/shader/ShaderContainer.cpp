@@ -138,8 +138,6 @@ namespace AW
 			shader->setFloatIUParam("random", (GLfloat)AW::NumberHelper::random());
 		}
 
-		shaderReferences.push_back(shader);
-
 		return shader;
 	}
 
@@ -148,61 +146,6 @@ namespace AW
 		const auto result = getShader(names, assignDefaultParams);
 		result->lock();
 		return result;
-	}
-
-	void ShaderContainer::releaseAllShaders()
-	{
-		Logger::instance()->log("ShaderContainer::Releasing " + std::to_string(shaders.size()) + " shaders");
-		for (const auto nameToShader : shaders)
-		{
-			nameToShader.second->releaseShader();
-		}
-
-		for (const auto nameToShaderLoader : loaderShaders)
-		{
-			nameToShaderLoader.second->releaseShader();
-		}
-
-		for (auto it = shaderReferences.begin(); it != shaderReferences.end();)
-		{
-			const auto shaderReferencePtr = (*it).lock();
-
-			if (shaderReferencePtr != nullptr)
-			{
-				shaderReferencePtr->resetCache();
-				++it;
-			}
-			else
-			{
-				it = shaderReferences.erase(it);
-			}
-		}
-	}
-
-	void ShaderContainer::rebindAllShaders()
-	{
-		Logger::instance()->log("ShaderContainer::Rebinding " + std::to_string(shaders.size()) + " shaders");
-		for (const auto nameToShader : shaders)
-		{
-			nameToShader.second->compileShader();
-		}
-	}
-
-	void ShaderContainer::purgeWeakRefs()
-	{
-		for (auto it = shaderReferences.begin(); it != shaderReferences.end();)
-		{
-			const auto shaderReferencePtr = (*it).lock();
-			if (shaderReferencePtr != nullptr)
-			{
-				++it;
-			}
-			else
-			{
-				it = shaderReferences.erase(it);
-			}
-		}
-
 	}
 
 	void ShaderContainer::onLoadResources()

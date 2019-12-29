@@ -22,7 +22,6 @@ namespace AW
 		std::string defaultShaderLoaderName;
 		std::unordered_map<std::string, std::shared_ptr<Shader>> loaderShaders;
 
-		std::list<std::weak_ptr<ShaderReference>> shaderReferences;
 		std::unordered_map<std::string, std::vector<std::string>> shaderComps;
 
 		ShaderType getShaderTypeFromPath(const std::string& path);
@@ -40,11 +39,6 @@ namespace AW
 		std::shared_ptr<ShaderReference> getShader(std::vector<std::string> names, std::string loaderName, bool assignDefaultParams = false);
 
 		std::shared_ptr<ShaderReference> getLockedShader(std::vector<std::string> names, bool assignDefaultParams = false);
-
-		void releaseAllShaders();
-		void rebindAllShaders();
-
-		void purgeWeakRefs();
 
 		void onLoadResources();
 	};

@@ -88,7 +88,6 @@ namespace AW
 
 		void onReady();
 		void onCleanup();
-		void onEnterFrame();
 	};
 }
 

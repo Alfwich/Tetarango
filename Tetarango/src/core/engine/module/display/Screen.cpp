@@ -346,12 +346,4 @@ namespace AW
 	{
 		renderer->reportOpenGLErrors();
 	}
-
-	void Screen::onEnterFrame()
-	{
-		if (currentConfig.visualizeClipRects || currentConfig.visualizeContainers)
-		{
-			shader->purgeWeakRefs();
-		}
-	}
 }

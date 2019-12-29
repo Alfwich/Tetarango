@@ -45,7 +45,7 @@ namespace AWGame
 			auto def = RigidBody::onDefineBody();
 
 			def.type = b2_dynamicBody;
-			def.position.Set(AW::NumberHelper::random(-30.0, 30.0), AW::NumberHelper::random(120.0, 180.0));
+			def.position.Set(screenToWorldPosition(getX()), -screenToWorldPosition(getY()));
 
 			return def;
 		}
@@ -54,10 +54,7 @@ namespace AWGame
 		{
 			auto def = RigidBody::onDefineFixture();
 
-			const auto size = AW::NumberHelper::random(1.0, 2.0);
-			shape.SetAsBox(size, size);
-			setSize(size * 20.0, size * 20.0);
-			setAlpha(0.0);
+			shape.SetAsBox(screenToWorldPosition(getWidth()) / 2.f, screenToWorldPosition(getHeight()) / 2.f);
 
 			def.shape = &shape;
 			def.density = 1.0;
@@ -71,6 +68,7 @@ namespace AWGame
 			if (--aliveTicks <= 0)
 			{
 				removeFromParent();
+				return;
 			}
 
 			if (aliveTicks > 60)
@@ -82,13 +80,9 @@ namespace AWGame
 				setAlpha(getAlpha() - 1 / 60.0);
 			}
 
-			const auto xOffset = modules->screen->getWidth() / 2.0;
-			const auto yOffset = modules->screen->getHeight() / 2.0;
 			const auto pos = body->GetPosition();
-			setPosition(pos.x * 10.0 + xOffset, pos.y * -10.0 + yOffset);
-
-			const auto rotation = body->GetAngle() * (180 / AW::NumberHelper::PI);
-			setRotation(-rotation);
+			setPosition(worldToScreenPosition(pos.x), -worldToScreenPosition(pos.y));
+			setRotation(worldToScreenRotation(body->GetAngle()));
 		};
 	};
 
@@ -99,7 +93,7 @@ namespace AWGame
 		{
 			auto def = RigidBody::onDefineBody();
 
-			def.position.Set(0.0, -10.0);
+			def.position.Set(screenToWorldPosition(getX()), -screenToWorldPosition(getY()));
 
 			return def;
 		}
@@ -108,10 +102,8 @@ namespace AWGame
 		{
 			auto def = RigidBody::onDefineFixture();
 
-			shape.SetAsBox(100.0, 10.0);
-			setSize(2000.0, 200.0);
-			setColor(AW::Color(64, 64, 64));
-
+			shape.SetAsBox(screenToWorldPosition(getWidth()) / 2.f, screenToWorldPosition(getHeight()) / 2.f);
+				
 			def.shape = &shape;
 			def.density = 1.0;
 			def.friction = 1.0;
@@ -121,13 +113,9 @@ namespace AWGame
 
 		void onPhysicUpdate(const b2Body* body)
 		{
-			const auto xOffset = modules->screen->getWidth() / 2.0;
-			const auto yOffset = modules->screen->getHeight() / 2.0;
 			const auto pos = body->GetPosition();
-			setPosition(pos.x * 10.0 + xOffset, pos.y * -10.0 + yOffset);
-
-			const auto rotation = body->GetAngle() * (180 / AW::NumberHelper::PI);
-			setRotation(-rotation);
+			setPosition(worldToScreenPosition(pos.x), -worldToScreenPosition(pos.y));
+			setRotation(worldToScreenRotation(body->GetAngle()));
 		};
 	};
 

@@ -10,7 +10,7 @@ namespace
 	const char* backButtonId = "back_button";
 	const std::string player = "player";
 	AWGame::GeneratorBlock blockColorGenerator;
-	const auto spawnMs = 1;
+	const auto spawnMs = 75;
 }
 
 namespace AWGame
@@ -53,9 +53,6 @@ namespace AWGame
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
 		modules->physic->setWorldFps(0, 60);
-
-		modules->physic->registerWorld(1);
-		modules->physic->setWorldFps(1, 20);
 	}
 
 	void TestScene2::onCreateChildren()
@@ -74,6 +71,9 @@ namespace AWGame
 		contentContainer->add(camera);
 
 		const auto b = std::make_shared<sBlock>();
+		b->setColor(64, 64, 64);
+		b->setSize(1000.0, 100.0);
+		b->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		modules->physic->registerRigidBodyForWorld(0, b);
 		contentContainer->add(b);
 	}
@@ -92,18 +92,11 @@ namespace AWGame
 		if (isAttached())
 		{
 			const auto b = std::make_shared<dBlock>();
+			b->setSize(30.0, 30.0);
+			b->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-500.0, 500.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-500.0, -1000.0));
+			b->setColor(blockColorGenerator.getBlockColor());
 
-			if (true || AW::NumberHelper::chance(50))
-			{
-				modules->physic->registerRigidBodyForWorld(0, b);
-				b->setColor(blockColorGenerator.getBlockColor());
-			}
-			else
-			{
-				modules->physic->registerRigidBodyForWorld(1, b);
-				b->setColor(255, 255, 255);
-				b->zIndex = -1;
-			}
+			modules->physic->registerRigidBodyForWorld(0, b);
 
 			contentContainer->add(b);
 			modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
