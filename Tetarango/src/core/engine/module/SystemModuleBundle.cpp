@@ -20,6 +20,7 @@ namespace AW
 		animation->bindTime(time);
 		screen->bindTime(time);
 		shader->bindTime(time);
+		physic->bindTime(time);
 		animation->bindEvent(event);
 		event->bindInput(input);
 		event->bindThread(thread);
@@ -55,6 +56,7 @@ namespace AW
 		logger = createModule<Logger>();
 		asset = createModule<Asset>();
 		shader = createModule<ShaderContainer>();
+		physic = createModule<Physic>();
 
 		bindModules();
 	}

@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
+    <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
     <ClCompile Include="src\core\engine\module\shader\Shader.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderContainer.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderReference.cpp" />
@@ -275,6 +276,8 @@
     <ClInclude Include="src\core\debug\monitor\DebugMonitor.h" />
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
+    <ClInclude Include="src\core\engine\module\physic\RigidBody.h" />
+    <ClInclude Include="src\core\engine\module\physic\Physic.h" />
     <ClInclude Include="src\core\engine\module\shader\Shader.h" />
     <ClInclude Include="src\core\engine\module\shader\ShaderContainer.h" />
     <ClInclude Include="src\core\engine\module\shader\ShaderReference.h" />

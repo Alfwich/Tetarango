@@ -179,7 +179,7 @@ namespace AW
 
 	void Renderable::setAlpha(double newAlpha)
 	{
-		alpha = newAlpha;
+		alpha = AW::NumberHelper::clamp(newAlpha, 0.0, 1.0);
 	}
 
 	void Renderable::onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId)
