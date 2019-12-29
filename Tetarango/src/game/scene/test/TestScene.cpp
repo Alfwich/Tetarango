@@ -119,7 +119,17 @@ namespace AWGame
 		red->scrollListener = shared_from_this();
 		red->setColor(192, 0, 0);
 		red->toInnerLeftIn(contentContainer);
-		add(red);
+		contentContainer->add(red);
+
+		for (int i = 0; i < 100; ++i)
+		{
+			const auto btn = std::make_shared<ButtonBasic>();
+			btn->setText("Hello World!");
+			btn->setPosition(AW::NumberHelper::random(-2000.0, 2000.0), AW::NumberHelper::random(-2000.0, 2000.0));
+			btn->setScale(AW::NumberHelper::random(0.05, 10.0));
+			btn->setColor(AW::Color::random());
+			contentContainer->add(btn);
+		}
 
 		green = std::make_shared<ScrollBarBasic>();
 		green->renderPositionMode = AW::RenderPositionMode::Absolute;

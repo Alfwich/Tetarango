@@ -21,7 +21,7 @@ namespace AW
 		void add(std::shared_ptr<GameObject> ao);
 		void remove(std::shared_ptr<GameObject> ao);
 
-		Rect* getScreenRect();
+		const Rect* getScreenRect();
 		double getWidth();
 		double getHeight();
 

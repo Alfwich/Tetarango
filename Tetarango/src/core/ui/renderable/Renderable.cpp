@@ -83,10 +83,7 @@ namespace AW
 
 	void Renderable::setWorldRect(Rect* r)
 	{
-		worldRect.x = r->x;
-		worldRect.y = r->y;
-		worldRect.w = r->w;
-		worldRect.h = r->h;
+		worldRect = r;
 	}
 
 	void Renderable::setScreenRect(Rect* r)
@@ -94,12 +91,12 @@ namespace AW
 		screenRect = r;
 	}
 
-	Rect* Renderable::getWorldRect()
+	const Rect* Renderable::getWorldRect()
 	{
 		return &worldRect;
 	}
 
-	Rect* Renderable::getScreenRect()
+	const Rect* Renderable::getScreenRect()
 	{
 		return &screenRect;
 	}

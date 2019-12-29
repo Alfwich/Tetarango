@@ -49,7 +49,8 @@ namespace AW
 			return;
 		}
 
-		auto tD = first.distance(*getWorldRect());
+		auto wr = Rect(getWorldRect());
+		auto tD = first.distance(&wr);
 		const auto d = length / numSegments;
 		const auto yOffset = getHeight() / 2.0;
 		const auto h = getHeight();

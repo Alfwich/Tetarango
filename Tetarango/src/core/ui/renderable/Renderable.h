@@ -120,8 +120,8 @@ namespace AW
 
 		virtual void setWorldRect(Rect* r);
 		virtual void setScreenRect(Rect* r);
-		virtual Rect* getWorldRect();
-		virtual Rect* getScreenRect();
+		virtual const Rect* getWorldRect();
+		virtual const Rect* getScreenRect();
 
 		virtual Rect* getCollisionRect();
 

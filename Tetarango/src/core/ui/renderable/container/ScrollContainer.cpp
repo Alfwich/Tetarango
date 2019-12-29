@@ -84,7 +84,7 @@ namespace AW
 		}
 	}
 
-	Rect* ScrollContainer::getScreenRect()
+	const Rect* ScrollContainer::getScreenRect()
 	{
 		return scrollContainer->getScreenRect();
 	}

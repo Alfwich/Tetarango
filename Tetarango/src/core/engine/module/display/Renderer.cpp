@@ -704,7 +704,12 @@ namespace AW
 		renderPackage->rotation += rend->getRotation();
 		renderPackage->alpha *= rend->getAlpha();
 
-		rend->setWorldRect(&renderPackage->computed);
+		renderPackage->world.x = renderPackage->world.x - (originW / 2.0) + rend->getX();
+		renderPackage->world.y = renderPackage->world.y - (originH / 2.0) + rend->getY();
+		renderPackage->world.w = rend->getWidth();
+		renderPackage->world.h = rend->getHeight();
+
+		rend->setWorldRect(&renderPackage->world);
 		rend->setScreenRect(&renderPackage->computed);
 	}
 
