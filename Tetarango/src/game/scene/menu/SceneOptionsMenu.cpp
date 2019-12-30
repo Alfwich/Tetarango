@@ -156,30 +156,6 @@ namespace AWGame
 		windowedCheckbox->clickListener = weak_from_this();
 		centeringContainer->add(windowedCheckbox);
 
-		msaaOffCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaaOffCheckbox->setText("Off");
-		msaaOffCheckbox->setChecked(config.msaaSamples == 0);
-		msaaOffCheckbox->clickListener = weak_from_this();
-		centeringContainer->add(msaaOffCheckbox);
-
-		msaa4xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaa4xCheckbox->setText("4x");
-		msaa4xCheckbox->setChecked(config.msaaSamples == 4);
-		msaa4xCheckbox->clickListener = weak_from_this();
-		centeringContainer->add(msaa4xCheckbox);
-
-		msaa8xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaa8xCheckbox->setText("8x");
-		msaa8xCheckbox->setChecked(config.msaaSamples == 8);
-		msaa8xCheckbox->clickListener = weak_from_this();
-		centeringContainer->add(msaa8xCheckbox);
-
-		msaa16xCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
-		msaa16xCheckbox->setText("16x");
-		msaa16xCheckbox->setChecked(config.msaaSamples == 16);
-		msaa16xCheckbox->clickListener = weak_from_this();
-		centeringContainer->add(msaa16xCheckbox);
-
 		vsyncOffCheckbox = std::make_shared<CheckBoxBasic>(GuiButton::RadioBoxBasic);
 		vsyncOffCheckbox->setText("Off");
 		vsyncOffCheckbox->setChecked(config.vMode == AW::VsyncModes::Disabled);
@@ -245,11 +221,6 @@ namespace AWGame
 		resolutionsLabel->setFont("medium", headerFontSize);
 		resolutionsLabel->setText("Resolutions");
 		centeringContainer->add(resolutionsLabel);
-
-		msaaLabel = std::make_shared<AW::Text>();
-		msaaLabel->setFont("medium", headerFontSize);
-		msaaLabel->setText("Multisample Anti-Aliasing");
-		centeringContainer->add(msaaLabel);
 
 		vsyncLabel = std::make_shared<AW::Text>();
 		vsyncLabel->setFont("medium", headerFontSize);
@@ -336,13 +307,7 @@ namespace AWGame
 		fullscreenDesktopCheckbox->toBottomLeftOf(fullscreenCheckbox, 0.0, checkboxYOffset);
 		windowedCheckbox->toBottomLeftOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
 
-		msaaLabel->toBottomLeftOf(windowedCheckbox, 0.0, checkboxYGroupOffset);
-		msaaOffCheckbox->toBottomLeftOf(msaaLabel, 0.0, checkboxYOffset);
-		msaa4xCheckbox->toRightOf(msaaOffCheckbox, checkboxYOffset);
-		msaa8xCheckbox->toRightOf(msaa4xCheckbox, checkboxYOffset);
-		msaa16xCheckbox->toRightOf(msaa8xCheckbox, checkboxYOffset);
-
-		vsyncLabel->toBottomLeftOf(msaaOffCheckbox, 0.0, checkboxYGroupOffset);
+		vsyncLabel->toBottomLeftOf(windowedCheckbox, 0.0, checkboxYGroupOffset);
 		vsyncOffCheckbox->toBottomRightOf(vsyncLabel, 0.0, checkboxYOffset);
 		vsyncOnCheckbox->toRightOf(vsyncOffCheckbox, checkboxYOffset);
 		vsyncAdaptiveCheckbox->toRightOf(vsyncOnCheckbox, checkboxYOffset);
@@ -351,7 +316,7 @@ namespace AWGame
 		frameLimiterLabelValue->toRightOf(frameLimiterLabelPrefix);
 		frameLimiterScrollBar->toBottomLeftOf(frameLimiterLabelPrefix, 0.0, checkboxYOffset);
 
-		miscLabel->toRightOf(displayModeLabel, std::floor(optionsXOffset + (msaa16xCheckbox->getRight() - msaaOffCheckbox->getLeft()) - displayModeLabel->getWidth()), 0.0);
+		miscLabel->toRightOf(displayModeLabel, fullscreenDesktopCheckbox->getWidth() - displayModeLabel->getWidth() + optionsXOffset + 40);
 		wireframeModeCheckbox->toBottomLeftOf(miscLabel, 0.0, checkboxYOffset);
 		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
 		debugOverlayCheckbox->toBottomLeftOf(debugRenderingCheckbox, 0.0, checkboxYOffset);
@@ -430,26 +395,6 @@ namespace AWGame
 		if (id == fullscreenDesktopCheckbox->getId())
 		{
 			shouldEnableApply = setScreenMode(AW::ScreenModes::FullscreenDesktop);
-		}
-
-		if (id == msaaOffCheckbox->getId())
-		{
-			shouldEnableApply = setMsaaMode(0);
-		}
-
-		if (id == msaa4xCheckbox->getId())
-		{
-			shouldEnableApply = setMsaaMode(4);
-		}
-
-		if (id == msaa8xCheckbox->getId())
-		{
-			shouldEnableApply = setMsaaMode(8);
-		}
-
-		if (id == msaa16xCheckbox->getId())
-		{
-			shouldEnableApply = setMsaaMode(16);
 		}
 
 		if (id == vsyncOffCheckbox->getId())

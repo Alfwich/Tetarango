@@ -25,7 +25,7 @@ namespace AW
 		bool openGlWireframeMode = false, visualizeContainers = false, visualizeClipRects = false, debugOverlayEnabled = false;
 		// TODO: These need to maintain these values or bad things happen on other machines
 		bool openGLCompatibilityMode = true, useDoubleBuffer = true;
-		int openGLMajorVersion = 3, openGLMinorVersion = 1, msaaSamples = 4, frameLimiter = 0;
+		int openGLMajorVersion = 3, openGLMinorVersion = 1, msaaSamples = 0, frameLimiter = 0;
 	};
 }
 

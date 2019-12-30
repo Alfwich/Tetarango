@@ -76,13 +76,14 @@ namespace AWGame
 			contentContainer->add(b);
 		}
 
-		const auto yOff = 165.0;
+		const auto xOff = 700.0;
+		const auto yOff = 0.0;
 		{
 			const auto b = std::make_shared<sBlock>();
 			b->setColor(64, 64, 64);
 			b->setSize(500.0, 100.0);
 			b->setRotation(45.0);
-			b->setPosition(modules->screen->getWidth() / 2.0 - 350.0, modules->screen->getHeight() / 2.0 - yOff);
+			b->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 - yOff);
 			modules->physic->registerRigidBodyForWorld(0, b);
 			contentContainer->add(b);
 		}
@@ -92,7 +93,7 @@ namespace AWGame
 			b->setColor(64, 64, 64);
 			b->setSize(500.0, 100.0);
 			b->setRotation(-45.0);
-			b->setPosition(modules->screen->getWidth() / 2.0 + 350.0, modules->screen->getHeight() / 2.0 - yOff);
+			b->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 - yOff);
 			modules->physic->registerRigidBodyForWorld(0, b);
 			contentContainer->add(b);
 		}
@@ -100,7 +101,7 @@ namespace AWGame
 		{
 			follower = std::make_shared<dBlock>();
 			follower->setColor(255, 255, 255);
-			follower->setSize(50, 200);
+			follower->setSize(200, 200);
 			follower->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 230.0);
 			modules->physic->registerRigidBodyForWorld(0, follower);
 			//follower->setFixedRotation(true);
@@ -127,7 +128,7 @@ namespace AWGame
 			{
 				const auto b = std::make_shared<dBlock>();
 				b->setAlpha(0.0);
-				b->setSize(20.0, 20.0);
+				b->setSize(32.0, 32.0);
 				b->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-500.0, -1000.0));
 				b->setColor(blockColorGenerator.getBlockColor());
 

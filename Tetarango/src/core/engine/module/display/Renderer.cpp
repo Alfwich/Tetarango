@@ -264,7 +264,7 @@ namespace AW
 			glEnable(GL_MULTISAMPLE);
 			msaaEnabled = true;
 		}
-		else if (msaaEnabled)
+		else if (msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Disabled)
 		{
 			glDisable(GL_MULTISAMPLE);
 			msaaEnabled = false;
@@ -318,6 +318,8 @@ namespace AW
 		glGenRenderbuffers(1, &backgroundRenderBuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
+		// TODO: If MSAA is needed
+		//glRenderbufferStorageMultisample(GL_RENDERBUFFER, currentScreenConfig.msaaSamples, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
@@ -866,11 +868,11 @@ namespace AW
 		{
 			glGenTextures(1, &texColorBuffer);
 			glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, cached->getWidth(), cached->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-			// TODO: Consider if needed
-			//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, currentScreenConfig.msaaSamples, GL_RGBA, cached->getHeight(), cached->getWidth(), false);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, cached->getWidth(), cached->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+			// TODO: If MSAA is needed
+			// glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, currentScreenConfig.msaaSamples, GL_RGB, cached->getHeight(), cached->getWidth(), false);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, cached->getWidth(), cached->getHeight());
@@ -897,7 +899,7 @@ namespace AW
 		if (cColor != nullptr && cColor->a > 0)
 		{
 			glClearColor(cColor->r / 255.0, cColor->g / 255.0, cColor->b / 255.0, cColor->a / 255.0);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 		renderTargetStack.push(RenderTarget::Background);
