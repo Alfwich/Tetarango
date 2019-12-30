@@ -6,10 +6,20 @@
 
 namespace AW
 {
+	enum class BodyType
+	{
+		Box,
+		Circle,
+		Custom
+	};
 	class Body : public Element, public RigidBody
 	{
+		BodyType bodyType = BodyType::Box;
+
 	public:
 		Body();
+
+		virtual void setBodyType(BodyType type);
 
 		virtual void setX(double x);
 		virtual void setY(double y);

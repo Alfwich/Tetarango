@@ -9,6 +9,11 @@ namespace AW
 		registerGameObject<Body>();
 	}
 
+	void Body::setBodyType(BodyType type)
+	{
+		bodyType = type;
+	}
+
 	void Body::setX(double x)
 	{
 		Element::setX(x);
@@ -57,12 +62,18 @@ namespace AW
 
 	void Body::onAttach()
 	{
-		modules->physic->registerRigidBodyForWorld(getWorldId(), std::dynamic_pointer_cast<RigidBody>(shared_from_this()));
+		if (!hasBody())
+		{
+			modules->physic->registerRigidBodyForWorld(getWorldId(), std::dynamic_pointer_cast<RigidBody>(shared_from_this()));
+		}
 	}
 
 	void Body::onDetach()
 	{
-		modules->physic->unregisterRigidBodyForWorld(getWorldId(), bodyReference);
+		if (hasBody())
+		{
+			modules->physic->unregisterRigidBodyForWorld(getWorldId(), bodyReference);
+		}
 	}
 
 	void Body::onBindShaders()
@@ -75,11 +86,33 @@ namespace AW
 		bodyDef.position.Set(screenToWorldPosition(getX()), -screenToWorldPosition(getY()));
 		bodyDef.angle = screenToWorldRotation(getRotation());
 
-		shape.SetAsBox(screenToWorldPosition(getWidth()) / 2.f, screenToWorldPosition(getHeight()) / 2.f);
-		fixtureDef.shape = &shape;
-
 		bodyReference = world->CreateBody(&bodyDef);
-		bodyReference->CreateFixture(&fixtureDef);
+		switch (bodyType)
+		{
+		case AW::BodyType::Box:
+		{
+			auto shape = b2PolygonShape();
+			shape.SetAsBox(screenToWorldPosition(getWidth()) / 2.f, screenToWorldPosition(getHeight()) / 2.f);
+			fixtureDef.shape = &shape;
+			bodyReference->CreateFixture(&fixtureDef);
+		}
+		break;
+
+		case AW::BodyType::Circle:
+		{
+			auto shape = b2CircleShape();
+			shape.m_radius = screenToWorldPosition((float)std::max(getWidth(), getHeight()) / 2.f);
+			fixtureDef.shape = &shape;
+			bodyReference->CreateFixture(&fixtureDef);
+		}
+		break;
+
+		case AW::BodyType::Custom:
+		default:
+			// Do nothing - expect user to create fixtures
+			break;
+		}
+
 
 		return bodyReference;
 	}

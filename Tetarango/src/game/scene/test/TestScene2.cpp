@@ -36,6 +36,7 @@ namespace AWGame
 				SDL_SCANCODE_1,
 				SDL_SCANCODE_2,
 				SDL_SCANCODE_3,
+				SDL_SCANCODE_4,
 				SDL_SCANCODE_UP,
 				SDL_SCANCODE_DOWN,
 				SDL_SCANCODE_LEFT,
@@ -51,7 +52,7 @@ namespace AWGame
 	{
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
-		modules->physic->setWorldFps(0, 60);
+		modules->physic->setWorldFps(0, 120);
 	}
 
 	void TestScene2::onCreateChildren()
@@ -125,25 +126,35 @@ namespace AWGame
 			if (contentContainer->getChildren().size() < 400)
 			{
 				const auto b = std::make_shared<AW::Body>();
+				b->setAlpha(0.0);
 
-				const auto shader = modules->shader->getShader({ "block" }, true);
-				shader->setFloatIUParam("clipX", 32.0);
-				shader->setFloatIUParam("clipY", 0.0);
-				shader->setFloatIUParam("clipWidth", 64.0);
-				shader->setFloatIUParam("clipHeight", 64.0);
-				shader->setFloatIUParam("blockBorderSize", 2.0);
-				shader->setFloatIUParam("blockEffect", 0.5);
-				shader->setFloatIUParam("blockEffectP", 0.25);
-				shader->setFloatIUParam("blockEffectG", 0.4);
-				shader->setFloatIUParam("blockCenterFill", AW::NumberHelper::random(0.5, 1.0));
-				shader->setFloatIUParam("fScanlineRetroAmount", 0.25);
-
-				b->setTexture("prop-blocks");
-				b->setFragmentShader(shader);
+				if (AW::NumberHelper::chance(50))
+				{
+					const auto shader = modules->shader->getShader({ "block" }, true);
+					shader->setFloatIUParam("clipX", 32.0);
+					shader->setFloatIUParam("clipY", 0.0);
+					shader->setFloatIUParam("clipWidth", 64.0);
+					shader->setFloatIUParam("clipHeight", 64.0);
+					shader->setFloatIUParam("blockBorderSize", 2.0);
+					shader->setFloatIUParam("blockEffect", 0.5);
+					shader->setFloatIUParam("blockEffectP", 0.25);
+					shader->setFloatIUParam("blockEffectG", 0.4);
+					shader->setFloatIUParam("blockCenterFill", AW::NumberHelper::random(0.5, 1.0));
+					shader->setFloatIUParam("fScanlineRetroAmount", 0.25);
+					b->setTexture("prop-blocks");
+					b->setFragmentShader(shader);
+				}
+				else
+				{
+					b->setBodyType(AW::BodyType::Circle);
+					const auto shader = modules->shader->getShader({ "f-color", "f-circle" }, true);
+					shader->setFloatIUParam("fCircleEdge", 0.1);
+					b->setFragmentShader(shader);
+				}
 
 				b->setDynamicBody();
 				b->setSize(50, 50);
-				b->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-500.0, -1000.0));
+				b->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
 				b->setColor(blockColorGenerator.getBlockColor());
 				b->setFriction(0.1);
 				b->setDensity(0.1);
@@ -177,7 +188,18 @@ namespace AWGame
 		{
 			if (c->getY() > 4000)
 			{
-				c->removeFromParent();
+				if (c->getAlpha() <= 0.0)
+				{
+					c->removeFromParent();
+				}
+				else
+				{
+					c->setAlpha(c->getAlpha() - deltaTime / 1000.0);
+				}
+			}
+			else
+			{
+				c->setAlpha(c->getAlpha() + deltaTime / 1000.0);
 			}
 		}
 	}
@@ -202,6 +224,17 @@ namespace AWGame
 		{
 			tran->stop();
 		}
+
+		if (key == SDL_SCANCODE_3)
+		{
+			modules->physic->setWorldGravity(0, 0.0, 0.0);
+		}
+
+		if (key == SDL_SCANCODE_4)
+		{
+			modules->physic->setWorldGravity(0);
+		}
+
 	}
 
 	void TestScene2::onKey(SDL_Scancode key, bool isPressed)

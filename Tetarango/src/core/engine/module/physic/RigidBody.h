@@ -15,7 +15,6 @@ namespace AW
 
 		bool doingPhysicUpdate = false;
 		float massFactor = 1.0;
-		b2PolygonShape shape;
 		b2BodyDef bodyDef;
 		b2FixtureDef fixtureDef;
 		b2MassData massData;

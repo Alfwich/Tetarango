@@ -47,6 +47,17 @@ namespace AW
 		worlds.at(worldId)->positionIterations = position;
 	}
 
+	void Physic::setWorldGravity(unsigned int worldId, double gravityX, double gravityY)
+	{
+		if (worlds.count(worldId) == 0)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to set world gravity for world id: " + std::to_string(worldId) + ", that does not exist");
+			return;
+		}
+
+		worlds.at(worldId)->world->SetGravity(b2Vec2((float)gravityX, (float)gravityY));
+	}
+
 	void Physic::registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> obj)
 	{
 		if (worlds.count(worldId) == 0)
