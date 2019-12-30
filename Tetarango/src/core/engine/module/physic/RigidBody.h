@@ -7,32 +7,56 @@ namespace AW
 {
 	class RigidBody
 	{
+		float originalMass = 0.0;
+		unsigned int worldId = 0;
+
 	protected:
-		const float scalingFactor = 50.0;
+		const float scalingFactor = 200.0;
+
+		bool doingPhysicUpdate = false;
+		float massFactor = 1.0;
 		b2PolygonShape shape;
+		b2BodyDef bodyDef;
+		b2FixtureDef fixtureDef;
+		b2MassData massData;
 
 		b2Body* bodyReference = nullptr;
 
-		float screenToWorldPosition(float pixel);
+		float screenToWorldPosition(float screen);
 		float worldToScreenPosition(float world);
 
 		float screenToWorldRotation(float degrees);
 		float worldToScreenRotation(float radians);
 
-
 	public:
-		virtual ~RigidBody() = 0 {};
 
-		void onBindBody(b2Body* bodyReference);
+		b2Body* createBody(const std::shared_ptr<b2World>& world);
+		virtual b2Body* onCreateBody(const std::shared_ptr<b2World>& world) { return nullptr; };
+		bool hasBody();
+
 		void physicUpdate();
 		virtual void onPhysicUpdate() { /* NO-OP */ };
 
-		virtual b2BodyDef onDefineBody() { return b2BodyDef(); };
-		virtual b2FixtureDef onDefineFixture() { return b2FixtureDef(); };
+		void physicDetach(const std::shared_ptr<b2World>& world);
+		virtual void onPhysicDetach(const std::shared_ptr<b2World>& world) { /* NO-OP */ };
 
-		void setMass(float m);
+		void setWorldId(unsigned int worldId);
+		unsigned int getWorldId();
+
+		void setMass(double m);
+		double getMass();
+
+		void setDensity(double d);
+		double getDensity();
+
+		void setFriction(double f);
+		double getFriction();
+
 		void setFixedRotation(bool flag);
 
-		void applyForce(float vX, float vY, float amount);
+		void setDynamicBody();
+		void setStaticBody();
+
+		void applyForce(double vX, double vY, double amount);
 	};
 }

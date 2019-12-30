@@ -782,15 +782,9 @@ namespace AW
 
 	void Renderer::renderElement(RenderPackage* renderPackage)
 	{
-		auto ele = std::dynamic_pointer_cast<Element>(renderPackage->obj);
-		if (ele == nullptr)
-		{
-			return;
-		}
-
 		renderUpdateRenderableRects(renderPackage);
 
-		if (ele->getHasClipRect())
+		if (renderPackage->obj->getHasClipRect())
 		{
 			updateClipRectOpenGL(renderPackage);
 		}
@@ -937,11 +931,6 @@ namespace AW
 	void Renderer::renderElementOpenGL(RenderPackage* renderPackage)
 	{
 		const auto ele = std::dynamic_pointer_cast<Element>(renderPackage->obj);
-		const auto texture = ele->getTexture();
-		if (texture == nullptr)
-		{
-			return;
-		}
 
 		changeProgram(renderPackage);
 
@@ -981,7 +970,8 @@ namespace AW
 
 		setColorModParam(renderPackage);
 
-		bindGLTexture(texture->openGlTextureId());
+		const auto texture = ele->getTexture();
+		bindGLTexture(texture == nullptr ? 0 : texture->openGlTextureId());
 
 		openGLDrawArrays(renderPackage);
 

@@ -43,6 +43,8 @@ namespace AWGame
 			}
 		, weak_from_this());
 		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
+
+		tran = modules->animation->createGameTransition();
 	}
 
 	void TestScene2::onAttach()
@@ -68,44 +70,40 @@ namespace AWGame
 		contentContainer->add(camera);
 
 		{
-			const auto b = std::make_shared<sBlock>();
-			b->setColor(64, 64, 64);
-			b->setSize(600.0, 100.0);
-			b->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-			modules->physic->registerRigidBodyForWorld(0, b);
-			contentContainer->add(b);
+			platform = std::make_shared<AW::Body>();
+			platform->setColor(64, 64, 64);
+			platform->setSize(600.0, 100.0);
+			platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+			contentContainer->add(platform);
 		}
 
 		const auto xOff = 700.0;
 		const auto yOff = 0.0;
 		{
-			const auto b = std::make_shared<sBlock>();
+			const auto b = std::make_shared<AW::Body>();
 			b->setColor(64, 64, 64);
 			b->setSize(500.0, 100.0);
 			b->setRotation(45.0);
 			b->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 - yOff);
-			modules->physic->registerRigidBodyForWorld(0, b);
 			contentContainer->add(b);
 		}
 
 		{
-			const auto b = std::make_shared<sBlock>();
+			const auto b = std::make_shared<AW::Body>();
 			b->setColor(64, 64, 64);
 			b->setSize(500.0, 100.0);
 			b->setRotation(-45.0);
 			b->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 - yOff);
-			modules->physic->registerRigidBodyForWorld(0, b);
 			contentContainer->add(b);
 		}
 
 		{
-			follower = std::make_shared<dBlock>();
+			follower = std::make_shared<AW::Body>();
+			follower->setDynamicBody();
 			follower->setColor(255, 255, 255);
 			follower->setSize(200, 200);
 			follower->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 230.0);
-			modules->physic->registerRigidBodyForWorld(0, follower);
-			//follower->setFixedRotation(true);
-			follower->setMass(50.0);
+			follower->setFriction(0.1);
 			contentContainer->add(follower);
 		}
 
@@ -126,13 +124,29 @@ namespace AWGame
 		{
 			if (contentContainer->getChildren().size() < 400)
 			{
-				const auto b = std::make_shared<dBlock>();
-				b->setAlpha(0.0);
-				b->setSize(32.0, 32.0);
+				const auto b = std::make_shared<AW::Body>();
+
+				const auto shader = modules->shader->getShader({ "block" }, true);
+				shader->setFloatIUParam("clipX", 32.0);
+				shader->setFloatIUParam("clipY", 0.0);
+				shader->setFloatIUParam("clipWidth", 64.0);
+				shader->setFloatIUParam("clipHeight", 64.0);
+				shader->setFloatIUParam("blockBorderSize", 2.0);
+				shader->setFloatIUParam("blockEffect", 0.5);
+				shader->setFloatIUParam("blockEffectP", 0.25);
+				shader->setFloatIUParam("blockEffectG", 0.4);
+				shader->setFloatIUParam("blockCenterFill", AW::NumberHelper::random(0.5, 1.0));
+				shader->setFloatIUParam("fScanlineRetroAmount", 0.25);
+
+				b->setTexture("prop-blocks");
+				b->setFragmentShader(shader);
+
+				b->setDynamicBody();
+				b->setSize(50, 50);
 				b->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-500.0, -1000.0));
 				b->setColor(blockColorGenerator.getBlockColor());
-
-				modules->physic->registerRigidBodyForWorld(0, b);
+				b->setFriction(0.1);
+				b->setDensity(0.1);
 
 				contentContainer->add(b);
 			}
@@ -143,6 +157,7 @@ namespace AWGame
 
 	void TestScene2::onEnterFrame(const double& deltaTime)
 	{
+		float impulse = 2000.0;
 		if (followButtonPressed)
 		{
 			const auto x1 = follower->getWorldRect()->x, y1 = follower->getWorldRect()->y, x2 = (double)modules->input->mouse->X(), y2 = (double)modules->input->mouse->Y();
@@ -150,13 +165,21 @@ namespace AWGame
 			const auto vX = x2 - x1;
 			const auto vY = y1 - y2;
 			const auto mag = std::sqrt(vX * vX + vY * vY);
-			follower->applyForce(vX / mag, vY / mag, 160000.0 * (deltaTime / 1000.0));
+			follower->applyForce(vX / mag, vY / mag, impulse * (deltaTime / 1000.0));
 		}
 
-		if (upPressed) follower->applyForce(0.0, 1.0, 160000.0 * (deltaTime / 1000.0));
-		else if (downPressed) follower->applyForce(0.0, -1.0, 160000.0 * (deltaTime / 1000.0));
-		else if (leftPressed) follower->applyForce(-1.0, 0.0, 160000.0 * (deltaTime / 1000.0));
-		else if (rightPressed) follower->applyForce(1.0, 0.0, 160000.0 * (deltaTime / 1000.0));
+		if (upPressed) follower->applyForce(0.0, 1.0, impulse * (deltaTime / 1000.0));
+		else if (downPressed) follower->applyForce(0.0, -1.0, impulse * (deltaTime / 1000.0));
+		else if (leftPressed) follower->applyForce(-1.0, 0.0, impulse * (deltaTime / 1000.0));
+		else if (rightPressed) follower->applyForce(1.0, 0.0, impulse * (deltaTime / 1000.0));
+
+		for (const auto c : contentContainer->getChildrenOfType<AW::Body>())
+		{
+			if (c->getY() > 4000)
+			{
+				c->removeFromParent();
+			}
+		}
 	}
 
 	void TestScene2::onKeyPressed(SDL_Scancode key)
@@ -169,7 +192,15 @@ namespace AWGame
 
 		if (key == SDL_SCANCODE_1)
 		{
-			contentContainer->destroyChildren();
+			auto targetR = platform->getRect();
+			targetR.y += 50.0;
+			tran->setLooping(true);
+			tran->startTransition(platform, 500, targetR);
+		}
+
+		if (key == SDL_SCANCODE_2)
+		{
+			tran->stop();
 		}
 	}
 

@@ -17,6 +17,7 @@
 #include "ui/renderable/element/ScreenImage.h"
 #include "debug/monitor/DebugMonitor.h"
 #include "ui/renderable/element/DisplayBuffer.h"
+#include "ui/renderable/element/physic/body/Body.h"
 
 #include "Tests.h"
 
@@ -147,6 +148,7 @@ namespace AW
 		std::make_unique<ScreenImage>();
 		std::make_unique<DebugMonitor>();
 		std::make_unique<DisplayBuffer>();
+		std::make_unique<Body>();
 	}
 
 	void Application::run(int argc, char* args[])

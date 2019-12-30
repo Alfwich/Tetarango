@@ -173,6 +173,7 @@
     <ClCompile Include="src\core\ui\renderable\element\DisplayBuffer.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\ScreenImage.cpp" />
+    <ClCompile Include="src\core\ui\renderable\element\physic\body\Body.cpp" />
     <ClCompile Include="src\game\actor\board\Board.cpp" />
     <ClCompile Include="src\game\gui\button\CheckBoxBasic.cpp" />
     <ClCompile Include="src\game\gui\scrollarea\ScrollArea.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="src\core\ui\renderable\element\DisplayBuffer.h" />
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />
     <ClInclude Include="src\core\ui\renderable\element\ScreenImage.h" />
+    <ClInclude Include="src\core\ui\renderable\element\physic\body\Body.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
     <ClInclude Include="src\game\gui\button\CheckBoxBasic.h" />
     <ClInclude Include="src\game\gui\scrollarea\ScrollArea.h" />
