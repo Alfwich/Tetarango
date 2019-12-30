@@ -8,21 +8,31 @@ namespace AW
 	class RigidBody
 	{
 	protected:
-		const float scalingFactor = 10.0;
+		const float scalingFactor = 50.0;
 		b2PolygonShape shape;
 
-		float screenToWorldPosition(double pixel) { return (float)pixel / scalingFactor; };
-		double worldToScreenPosition(float world) { return (double)world * (float)scalingFactor; };
+		b2Body* bodyReference = nullptr;
 
-		float screenToWorldRotation(double degrees) { return (float)degrees * -(float)(AW::NumberHelper::PI / 180.0); };
-		double worldToScreenRotation(float radians) { return (double)radians * -(180.0 / AW::NumberHelper::PI); };
+		float screenToWorldPosition(float pixel);
+		float worldToScreenPosition(float world);
+
+		float screenToWorldRotation(float degrees);
+		float worldToScreenRotation(float radians);
 
 
 	public:
 		virtual ~RigidBody() = 0 {};
-		virtual void onPhysicUpdate(const b2Body* body) { /* NO-OP */ };
+
+		void onBindBody(b2Body* bodyReference);
+		void physicUpdate();
+		virtual void onPhysicUpdate() { /* NO-OP */ };
 
 		virtual b2BodyDef onDefineBody() { return b2BodyDef(); };
 		virtual b2FixtureDef onDefineFixture() { return b2FixtureDef(); };
+
+		void setMass(float m);
+		void setFixedRotation(bool flag);
+
+		void applyForce(float vX, float vY, float amount);
 	};
 }

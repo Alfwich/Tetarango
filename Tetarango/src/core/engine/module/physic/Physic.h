@@ -26,7 +26,7 @@ namespace AW
 			const std::shared_ptr<b2World> world;
 			const std::shared_ptr<Timer> worldTimer;
 			double timestep = 1 / 60.0;
-			int velocityIterations = 8, positionIterations = 3;
+			int velocityIterations = 6, positionIterations = 2;
 			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
 		};
 
@@ -39,7 +39,9 @@ namespace AW
 		void bindTime(std::shared_ptr<Time> time);
 
 		void registerWorld(unsigned int worldId, double gravityX = 0.0, double gravityY = -20.0);
+
 		void setWorldFps(unsigned int worldId, unsigned int timestepMS);
+		void setWorldVelocityAndPositionIterations(unsigned int worldId, unsigned int velocity = 6, unsigned int position = 2);
 
 		void registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> body);
 

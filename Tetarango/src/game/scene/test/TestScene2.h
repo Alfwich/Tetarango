@@ -15,7 +15,6 @@ namespace AWGame
 {
 	class dBlock : public AW::RigidBody, public AW::Element
 	{
-		int aliveTicks = 600;
 	public:
 		void onInitialAttach()
 		{
@@ -46,6 +45,7 @@ namespace AWGame
 
 			def.type = b2_dynamicBody;
 			def.position.Set(screenToWorldPosition(getX()), -screenToWorldPosition(getY()));
+			def.angle = screenToWorldRotation(getRotation());
 
 			return def;
 		}
@@ -63,26 +63,20 @@ namespace AWGame
 			return def;
 		}
 
-		void onPhysicUpdate(const b2Body* body)
+		void onPhysicUpdate()
 		{
-			if (--aliveTicks <= 0)
+
+			const auto pos = bodyReference->GetPosition();
+			if (pos.y < -200.0)
 			{
 				removeFromParent();
 				return;
 			}
 
-			if (aliveTicks > 60)
-			{
-				setAlpha(getAlpha() + 1 / 60.0);
-			}
-			else
-			{
-				setAlpha(getAlpha() - 1 / 60.0);
-			}
-
-			const auto pos = body->GetPosition();
 			setPosition(worldToScreenPosition(pos.x), -worldToScreenPosition(pos.y));
-			setRotation(worldToScreenRotation(body->GetAngle()));
+			setRotation(worldToScreenRotation(bodyReference->GetAngle()));
+
+			setAlpha(getAlpha() + 1 / 60.0);
 		};
 	};
 
@@ -94,6 +88,7 @@ namespace AWGame
 			auto def = RigidBody::onDefineBody();
 
 			def.position.Set(screenToWorldPosition(getX()), -screenToWorldPosition(getY()));
+			def.angle = screenToWorldRotation(getRotation());
 
 			return def;
 		}
@@ -103,7 +98,7 @@ namespace AWGame
 			auto def = RigidBody::onDefineFixture();
 
 			shape.SetAsBox(screenToWorldPosition(getWidth()) / 2.f, screenToWorldPosition(getHeight()) / 2.f);
-				
+
 			def.shape = &shape;
 			def.density = 1.0;
 			def.friction = 1.0;
@@ -111,11 +106,11 @@ namespace AWGame
 			return def;
 		}
 
-		void onPhysicUpdate(const b2Body* body)
+		void onPhysicUpdate()
 		{
-			const auto pos = body->GetPosition();
+			const auto pos = bodyReference->GetPosition();
 			setPosition(worldToScreenPosition(pos.x), -worldToScreenPosition(pos.y));
-			setRotation(worldToScreenRotation(body->GetAngle()));
+			setRotation(worldToScreenRotation(bodyReference->GetAngle()));
 		};
 	};
 
@@ -124,8 +119,12 @@ namespace AWGame
 
 		std::shared_ptr<GameCamera> camera;
 
+		std::shared_ptr<dBlock> follower;
+
 		std::shared_ptr<AW::Container> contentContainer;
 		std::shared_ptr<AW::Renderable> obj1, obj2;
+
+		bool followButtonPressed = false, upPressed = false, downPressed = false, leftPressed = false, rightPressed = false;
 
 	public:
 		TestScene2();
@@ -143,6 +142,7 @@ namespace AWGame
 		void onEnterFrame(const double& deltaTime);
 		void onKeyPressed(SDL_Scancode key);
 		void onKey(SDL_Scancode key, bool isPressed);
+		void onMouseButton(AW::MouseButton button, bool isPressed);
 
 		void onScrollBarScroll(int id, double pos);
 		void onCameraUpdate();

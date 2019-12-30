@@ -28,11 +28,23 @@ namespace AW
 	{
 		if (worlds.count(worldId) == 0)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to set world timestamp for world id: " + std::to_string(worldId) + ", that does not exist");
+			Logger::instance()->logCritical("Physic::Attempted to set world fps for world id: " + std::to_string(worldId) + ", that does not exist");
 			return;
 		}
 
-		worlds[worldId]->timestep = 1.0 / (fps / 1.0);
+		worlds.at(worldId)->timestep = 1.0 / (fps / 1.0);
+	}
+
+	void Physic::setWorldVelocityAndPositionIterations(unsigned int worldId, unsigned int velocity, unsigned int position)
+	{
+		if (worlds.count(worldId) == 0)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to set world iterations for world id: " + std::to_string(worldId) + ", that does not exist");
+			return;
+		}
+
+		worlds.at(worldId)->velocityIterations = velocity;
+		worlds.at(worldId)->positionIterations = position;
 	}
 
 	void Physic::registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> obj)
@@ -52,7 +64,8 @@ namespace AW
 		auto body = world->CreateBody(&bodyDef);
 		body->CreateFixture(&fixtureDef);
 
-		obj->onPhysicUpdate(body);
+		obj->onBindBody(body);
+		obj->onPhysicUpdate();
 
 		worldBundle->bodies.push_back(std::make_shared<RigidBodyBundle>(obj, body));
 	}
@@ -75,16 +88,15 @@ namespace AW
 
 				for (auto rigidBodyBundle = worldBundle->bodies.begin(); rigidBodyBundle != worldBundle->bodies.end();)
 				{
-					const auto body = (*rigidBodyBundle)->body;
 					const auto rigidBodyPtr = (*rigidBodyBundle)->object.lock();
-					const auto expired = (*rigidBodyBundle)->object.expired();
 					if (rigidBodyPtr != nullptr)
 					{
-						rigidBodyPtr->onPhysicUpdate(body);
+						rigidBodyPtr->physicUpdate();
 						rigidBodyBundle++;
 					}
 					else
 					{
+						const auto body = (*rigidBodyBundle)->body;
 						world->DestroyBody(body);
 						rigidBodyBundle = worldBundle->bodies.erase(rigidBodyBundle);
 					}

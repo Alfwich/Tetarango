@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
     <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
+    <ClCompile Include="src\core\engine\module\physic\RigidBody.cpp" />
     <ClCompile Include="src\core\engine\module\shader\Shader.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderContainer.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderReference.cpp" />

@@ -169,7 +169,7 @@ namespace AW
 
 	void Renderable::setRotation(double newRotation)
 	{
-		rot = NumberHelper::clampWrap(newRotation, 0.0, 359.0);
+		rot = newRotation;
 	}
 
 	double Renderable::getAlpha()
