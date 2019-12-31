@@ -515,6 +515,11 @@ namespace AW
 
 	void Renderer::renderRecursive(RenderPackage* renderPackage)
 	{
+		if (!renderPackage->obj->visible)
+		{
+			return;
+		}
+
 		renderRecursivePushStacks(renderPackage);
 		renderRecursivePushStencilBuffer(renderPackage);
 		renderRecursiveDoRender(renderPackage);
@@ -525,7 +530,7 @@ namespace AW
 	void Renderer::renderRecursiveDoRender(RenderPackage* renderPackage)
 	{
 		const auto& rend = renderPackage->obj;
-		switch (renderPackage->obj->renderMode)
+		switch (rend->renderMode)
 		{
 		case RenderMode::Element:
 			renderElement(renderPackage);

@@ -47,14 +47,9 @@ namespace AWGame
 
 	void SceneSplash::onCreateChildren()
 	{
-		blockContainer = std::make_shared<AW::Container>();
-		blockContainer->setColor(225, 225, 225);
-		blockContainer->zIndex = -1;
-		add(blockContainer);
-
 		splashImage = std::make_shared<AW::Element>();
 		splashImage->setFragmentShader(modules->shader->getShader({ "element", "f-scanline-retro" }));
-		//splashImage->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 1.0);
+		splashImage->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 1.0);
 		splashImage->setTexture(sdlLogoTextureName);
 		splashImage->setMatchSizeToTexture(true);
 		add(splashImage);
@@ -68,6 +63,10 @@ namespace AWGame
 		titleGame = std::make_shared<TitleGame>();
 		titleGame->setFontSize(150);
 		add(titleGame);
+
+		titleGameCollider = std::make_shared<Box>();
+		titleGameCollider->visible = false;
+		titleGameCollider->setDynamic(false);
 
 		loadingProgressBar = std::make_shared<AW::Element>();
 		loadingProgressBar->setTexture(loadingPattenTextureName);
@@ -86,13 +85,13 @@ namespace AWGame
 	void SceneSplash::onAttach()
 	{
 		state = 0;
-		blocks.clear();
 		splashText->setAlpha(0.0);
 		splashImage->setAlpha(0.0);
 		titleGame->setAlpha(0.0);
 		loadingProgressBar->setColor(150, 150, 150);
 		loadingProgressBar->setHeight(loadingBarHeight);
 		splashTransition->startTargetlessTransition(splashTransitionTimeInSeconds * 1000.0);
+		modules->physic->setWorldGravity(0, 0.0, -2.0);
 	}
 
 	void SceneSplash::onTransitionAnimationFrame(double position)
@@ -179,19 +178,19 @@ namespace AWGame
 			{
 				for (auto i = 0; i < numBlocksToMake; ++i)
 				{
-					for (auto block : blockColorGenerator.getTetromino())
-					{
-						const auto randomX = AW::NumberHelper::random(blockHeightGenerationLimit, -100);
-						const auto randomY = AW::NumberHelper::random(blockHeightGenerationLimit, -100);
-						block->setX(randomX);
-						block->setY(randomY);
-						blocks.push_back(block);
-						blockContainer->add(block);
-					}
+					const auto box = std::make_shared<Box>();
+					box->setColor(blockColorGenerator.getBlockColor());
+					box->setPosition(AW::NumberHelper::random(-100, modules->screen->getWidth() + 100), AW::NumberHelper::random(-100, -1000));
+					add(box);
 				}
 
+				bottomCollider = std::make_shared<Box>();
+				bottomCollider->visible = false;
+				bottomCollider->setDynamic(false);
+				bottomCollider->setSizeAndPosition(0.0, modules->screen->getHeight(), 8000.0, 20.0);
+				add(bottomCollider);
+
 				titleGame->visible = true;
-				enableEnterFrame();
 			}
 		}
 		else if (state == 6)
@@ -199,26 +198,29 @@ namespace AWGame
 			titleGame->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0);
 			titleGame->setAlpha(scaledMainPositionIn);
 
+			titleGameCollider->matchPosition(titleGame, 0.0, 50.0);
+			titleGameCollider->setX(getScreenWidth() / 2.0 - ((1.0 - 1.0) * fadeInHorMovement));
+
+			titleGameCollider->setSize(titleGame);
+
+			if (!titleGameCollider->isAttached())
+			{
+				add(titleGameCollider);
+			}
+
 			tryToGotoNextState(position, 6.0);
 		}
 		else if (state == 7)
 		{
 			titleGame->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * 0.0), getScreenHeight() / 2.0);
-			titleGame->setAlpha(1.0 - scaledMainPositionOut);
-		}
-	}
 
-	void SceneSplash::onEnterFrame(const double& frameTime)
-	{
-		const auto deltaTime = frameTime / 1000.0;
-		const auto movePos = 600.0 * deltaTime;
-		for (const auto block : blocks)
-		{
-			block->movePosition(movePos, movePos);
+			setAlpha(1.0 - scaledMainPositionOut);
 
-			if (state == 7)
+			if (titleGameCollider->isAttached())
 			{
-				block->setScale(AW::NumberHelper::clamp<double>(block->getScale() - deltaTime, 0.0, 1.0));
+				titleGameCollider->removeFromParent();
+				bottomCollider->removeFromParent();
+				modules->physic->setWorldGravity(0);
 			}
 		}
 	}
@@ -240,16 +242,7 @@ namespace AWGame
 
 	void SceneSplash::onTransitionCompleted()
 	{
-		for (const auto block : blocks)
-		{
-			block->removeFromParent();
-		}
-		blocks.clear();
-
-		disableEnterFrame();
-
 		destroyChildren();
-
 		transitionToScene(SceneGame::MainMenu);
 	}
 

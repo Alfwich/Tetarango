@@ -5,6 +5,7 @@
 #include "engine/module/time/Timer.h"
 #include "scene/BaseScene.h"
 #include "prop/block/Block.h"
+#include "prop/physic/Box.h"
 #include "prop/title/TitleGame.h"
 
 namespace AWGame
@@ -16,11 +17,11 @@ namespace AWGame
 		int state = 0;
 		double animationOffset = 0.0;
 
-		std::shared_ptr<AW::Container> blockContainer;
 		std::shared_ptr<AW::Text> splashText;
 		std::shared_ptr<AW::Element> splashImage;
-		std::vector<std::shared_ptr<Block>> blocks;
 		std::shared_ptr<TitleGame> titleGame;
+
+		std::shared_ptr<Box> titleGameCollider, bottomCollider;
 
 		std::shared_ptr<AW::Element> loadingProgressBar;
 
@@ -34,8 +35,6 @@ namespace AWGame
 		void onCreateChildren();
 		void onInitialAttach();
 		void onAttach();
-
-		void onEnterFrame(const double& frameTime);
 
 		void onTransitionAnimationFrame(double position);
 		void onTransitionCompleted();

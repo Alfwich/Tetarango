@@ -57,6 +57,7 @@ namespace AWGame
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
 		modules->physic->setWorldFps(0, 60);
+		modules->physic->setWorldGravity(0);
 	}
 
 	void TestScene2::onCreateChildren()
