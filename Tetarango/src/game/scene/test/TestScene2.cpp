@@ -37,6 +37,10 @@ namespace AWGame
 				SDL_SCANCODE_2,
 				SDL_SCANCODE_3,
 				SDL_SCANCODE_4,
+				SDL_SCANCODE_5,
+				SDL_SCANCODE_6,
+				SDL_SCANCODE_7,
+				SDL_SCANCODE_8,
 				SDL_SCANCODE_UP,
 				SDL_SCANCODE_DOWN,
 				SDL_SCANCODE_LEFT,
@@ -52,7 +56,7 @@ namespace AWGame
 	{
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
-		modules->physic->setWorldFps(0, 120);
+		modules->physic->setWorldFps(0, 60);
 	}
 
 	void TestScene2::onCreateChildren()
@@ -79,13 +83,13 @@ namespace AWGame
 		}
 
 		const auto xOff = 700.0;
-		const auto yOff = 0.0;
+		const auto yOff = -250.0;
 		{
 			const auto b = std::make_shared<AW::Body>();
 			b->setColor(64, 64, 64);
 			b->setSize(500.0, 100.0);
 			b->setRotation(45.0);
-			b->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 - yOff);
+			b->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 + yOff);
 			contentContainer->add(b);
 		}
 
@@ -94,17 +98,21 @@ namespace AWGame
 			b->setColor(64, 64, 64);
 			b->setSize(500.0, 100.0);
 			b->setRotation(-45.0);
-			b->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 - yOff);
+			b->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
 			contentContainer->add(b);
 		}
 
 		{
 			follower = std::make_shared<AW::Body>();
 			follower->setDynamicBody();
+			follower->setBodyType(AW::BodyType::Circle);
 			follower->setColor(255, 255, 255);
 			follower->setSize(200, 200);
 			follower->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 230.0);
 			follower->setFriction(0.1);
+			const auto shader = modules->shader->getShader({ "f-color", "f-circle" });
+			shader->setFloatIUParam("fCircleEdge", 0.1);
+			follower->setFragmentShader(shader);
 			contentContainer->add(follower);
 		}
 
@@ -128,7 +136,7 @@ namespace AWGame
 				const auto b = std::make_shared<AW::Body>();
 				b->setAlpha(0.0);
 
-				if (AW::NumberHelper::chance(50))
+				if (AW::NumberHelper::chance(1))
 				{
 					const auto shader = modules->shader->getShader({ "block" }, true);
 					shader->setFloatIUParam("clipX", 32.0);
@@ -147,7 +155,7 @@ namespace AWGame
 				else
 				{
 					b->setBodyType(AW::BodyType::Circle);
-					const auto shader = modules->shader->getShader({ "f-color", "f-circle" }, true);
+					const auto shader = modules->shader->getShader({ "f-color", "f-circle" });
 					shader->setFloatIUParam("fCircleEdge", 0.1);
 					b->setFragmentShader(shader);
 				}
@@ -180,9 +188,9 @@ namespace AWGame
 		}
 
 		if (upPressed) follower->applyForce(0.0, 1.0, impulse * (deltaTime / 1000.0));
-		else if (downPressed) follower->applyForce(0.0, -1.0, impulse * (deltaTime / 1000.0));
-		else if (leftPressed) follower->applyForce(-1.0, 0.0, impulse * (deltaTime / 1000.0));
-		else if (rightPressed) follower->applyForce(1.0, 0.0, impulse * (deltaTime / 1000.0));
+		if (downPressed) follower->applyForce(0.0, -1.0, impulse * (deltaTime / 1000.0));
+		if (leftPressed) follower->applyForce(-1.0, 0.0, impulse * (deltaTime / 1000.0));
+		if (rightPressed) follower->applyForce(1.0, 0.0, impulse * (deltaTime / 1000.0));
 
 		for (const auto c : contentContainer->getChildrenOfType<AW::Body>())
 		{
@@ -217,7 +225,8 @@ namespace AWGame
 			auto targetR = platform->getRect();
 			targetR.y += 50.0;
 			tran->setLooping(true);
-			tran->startTransition(platform, 500, targetR);
+			//tran->startTransition(platform, 500, targetR);
+			platform->movePosition(0.0, 10.0);
 		}
 
 		if (key == SDL_SCANCODE_2)
@@ -233,6 +242,21 @@ namespace AWGame
 		if (key == SDL_SCANCODE_4)
 		{
 			modules->physic->setWorldGravity(0);
+		}
+
+		if (key == SDL_SCANCODE_5)
+		{
+			follower = std::make_shared<AW::Body>();
+			follower->setDynamicBody();
+			follower->setBodyType(AW::BodyType::Circle);
+			follower->setColor(255, 255, 255);
+			follower->setSize(200, 200);
+			follower->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 230.0);
+			follower->setFriction(0.1);
+			const auto shader = modules->shader->getShader({ "f-color", "f-circle" });
+			shader->setFloatIUParam("fCircleEdge", 0.1);
+			follower->setFragmentShader(shader);
+			contentContainer->add(follower);
 		}
 
 	}
