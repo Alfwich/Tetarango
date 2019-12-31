@@ -104,6 +104,10 @@ namespace AWGame
 			platform->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
 			contentContainer->add(platform);
 		}
+
+		player = std::make_shared<Player>();
+		player->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
+		contentContainer->add(player);
 	}
 
 	void TestScene2::onLayoutChildren()

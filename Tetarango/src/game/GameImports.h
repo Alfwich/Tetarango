@@ -30,6 +30,7 @@
 
 // Actor
 #include "actor/board/Board.h"
+#include "actor/player/Player.h"
 
 // Particles
 #include "prop/particles/projectile/bullet/ParticleBulletTrailFactory.h"

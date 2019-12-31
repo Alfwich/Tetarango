@@ -1,0 +1,27 @@
+#pragma once
+
+#include "ui/renderable/primitive/Rectangle.h"
+#include "ui/physic/body/Body.h"
+#include "ui/physic/body/IBodyListener.h"
+
+namespace AWGame
+{
+	class Player : public AW::Rectangle, public AW::IBodyListener
+	{
+		std::shared_ptr<AW::Body> body;
+
+		bool down = false, left = false, right = false, up = false;
+	public:
+		Player();
+
+		void onBindShaders();
+
+		void onInitialAttach();
+		void onCreateChildren();
+		void onChildrenHydrated();
+
+		void onEnterFrame(const double& deltaTime);
+
+		void onKey(SDL_Scancode key, bool isPressed);
+	};
+}

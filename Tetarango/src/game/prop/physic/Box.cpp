@@ -21,6 +21,7 @@ namespace AWGame
 	void Box::onCreateChildren()
 	{
 		body = std::make_shared<AW::Body>();
+		body->name = "body";
 		if (getDynamic())
 		{
 			body->setDynamicBody();
@@ -30,6 +31,11 @@ namespace AWGame
 			body->setStaticBody();
 		}
 		add(body);
+	}
+
+	void Box::onChildrenHydrated()
+	{
+		body = findChildWithName<AW::Body>("body");
 	}
 
 	void Box::onBindShaders()

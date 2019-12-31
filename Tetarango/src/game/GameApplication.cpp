@@ -71,6 +71,7 @@ namespace AWGame
 		BaseProp::primeProps();
 
 		std::make_unique<Board>();
+		std::make_unique<Player>();
 	}
 
 	void GameApplication::onLoadResources()

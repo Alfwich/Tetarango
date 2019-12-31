@@ -8,12 +8,14 @@
 #include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/container/Container.h"
 #include "prop/physic/Box.h"
+#include "actor/player/Player.h"
 
 namespace AWGame
 {
 	class TestScene2 : public AW::Scene, public AW::ICameraListener, public IGuiListener
 	{
 		std::shared_ptr<GameCamera> camera;
+		std::shared_ptr<Player> player;
 		std::shared_ptr<AW::Container> contentContainer;
 		std::shared_ptr<AW::Renderable> obj1, obj2;
 		std::shared_ptr<AW::Transition> tran;

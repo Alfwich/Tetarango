@@ -17,6 +17,7 @@ namespace AWGame
 		void onBindShaders();
 		void onInitialAttach();
 		void onCreateChildren();
+		void onChildrenHydrated();
 
 		void setDynamic(bool flag);
 		bool getDynamic();
