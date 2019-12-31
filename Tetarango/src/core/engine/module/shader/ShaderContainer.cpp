@@ -134,8 +134,8 @@ namespace AW
 
 		if (assignDefaultParams)
 		{
-			shader->setFloatIUParam("frameStartTime", (GLfloat)time->getFrameStartTime());
 			shader->setFloatIUParam("random", (GLfloat)AW::NumberHelper::random());
+			updateShaderFrameStartTime(shader);
 		}
 
 		return shader;
@@ -146,6 +146,11 @@ namespace AW
 		const auto result = getShader(names, assignDefaultParams);
 		result->lock();
 		return result;
+	}
+
+	void ShaderContainer::updateShaderFrameStartTime(const std::shared_ptr<ShaderReference>& shader)
+	{
+		shader->setFloatIUParam("frameStartTime", (GLfloat)(time->getFrameStartTime() / 1000.0));
 	}
 
 	void ShaderContainer::onLoadResources()
@@ -169,6 +174,7 @@ namespace AW
 		loadShader("res/shader/fragment/scanline.glsl", "f-scanline");
 		loadShader("res/shader/fragment/scanline-retro.glsl", "f-scanline-retro");
 		loadShader("res/shader/fragment/circle.glsl", "f-circle");
+		loadShader("res/shader/fragment/repeat.glsl", "f-repeat");
 
 		loadShader("res/shader/fragment/mandelbrot.glsl", "f-mandelbrot");
 	}

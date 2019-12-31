@@ -8,7 +8,7 @@
 
 namespace AWGame
 {
-	class Board : public AW::Element
+	class Board : public AW::Container
 	{
 		bool isFastFalling = false, hasFailedToPlacePiece = false, isFallingEnabled = true, energyShiftEnabled = false;
 		unsigned int boardWidth = 10, boardHeight = 10, cellWidth = 32, cellHeight = 32;

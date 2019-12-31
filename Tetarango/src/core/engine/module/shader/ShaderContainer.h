@@ -40,6 +40,8 @@ namespace AW
 
 		std::shared_ptr<ShaderReference> getLockedShader(std::vector<std::string> names, bool assignDefaultParams = false);
 
+		void updateShaderFrameStartTime(const std::shared_ptr<ShaderReference>& shader);
+
 		void onLoadResources();
 	};
 

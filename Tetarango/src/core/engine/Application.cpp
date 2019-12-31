@@ -243,7 +243,7 @@ namespace AW
 	void Application::provisionScreen()
 	{
 		const auto isFullscreen = screenConfig.mode == ScreenModes::Fullscreen || screenConfig.mode == ScreenModes::FullscreenDesktop;
-		Logger::instance()->log("Application::Provisioning screen width=" + std::to_string(screenConfig.width) + ", height= " + std::to_string(screenConfig.height) + ", fullscreen=" + std::to_string(isFullscreen));
+		Logger::instance()->log("Application::Provisioning screen width=" + std::to_string(screenConfig.width) + ", height=" + std::to_string(screenConfig.height) + ", fullscreen=" + std::to_string(isFullscreen));
 		if (modules->screen->init(screenConfig, gameConfig->getConfigString(Config::Param::gameName)))
 		{
 			if (screenConfig.frameLimiter > 0)

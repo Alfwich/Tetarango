@@ -12,7 +12,7 @@ namespace AW
 	{
 		if (worlds.count(worldId) == 1)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to register world which already exists for worldId: " + std::to_string(worldId));
+			Logger::instance()->logCritical("Physic::Attempted to register world which already exists for worldId=" + std::to_string(worldId));
 			return;
 		}
 
@@ -21,14 +21,14 @@ namespace AW
 		worldTimer->start();
 
 		worlds[worldId] = std::make_shared<WorldBundle>(world, worldTimer);
-		Logger::instance()->log("Physic::Created world worldId: " + std::to_string(worldId));
+		Logger::instance()->log("Physic::Created world worldId=" + std::to_string(worldId));
 	}
 
 	void Physic::setWorldFps(unsigned int worldId, unsigned int fps)
 	{
 		if (worlds.count(worldId) == 0)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to set world fps for world id: " + std::to_string(worldId) + ", that does not exist");
+			Logger::instance()->logCritical("Physic::Attempted to set world fps for worldId=" + std::to_string(worldId) + ", that does not exist");
 			return;
 		}
 
@@ -39,7 +39,7 @@ namespace AW
 	{
 		if (worlds.count(worldId) == 0)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to set world iterations for world id: " + std::to_string(worldId) + ", that does not exist");
+			Logger::instance()->logCritical("Physic::Attempted to set world iterations for worldId=" + std::to_string(worldId) + ", that does not exist");
 			return;
 		}
 
@@ -51,7 +51,7 @@ namespace AW
 	{
 		if (worlds.count(worldId) == 0)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to set world gravity for world id: " + std::to_string(worldId) + ", that does not exist");
+			Logger::instance()->logCritical("Physic::Attempted to set world gravity for worldId=" + std::to_string(worldId) + ", that does not exist");
 			return;
 		}
 
@@ -62,19 +62,19 @@ namespace AW
 	{
 		if (worlds.count(worldId) == 0)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to register object for world id: " + std::to_string(worldId) + ", that does not exist");
+			Logger::instance()->logCritical("Physic::Attempted to register object for worldId=" + std::to_string(worldId) + ", that does not exist");
 			return;
 		}
 
 		if (obj == nullptr)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to register null object for world id: " + std::to_string(worldId));
+			Logger::instance()->logCritical("Physic::Attempted to register null object for worldId=" + std::to_string(worldId));
 			return;
 		}
 
 		if (obj->hasBody())
 		{
-			Logger::instance()->logCritical("Physic::Attempted to register object for world id: " + std::to_string(worldId) + ", that already has a body");
+			Logger::instance()->logCritical("Physic::Attempted to register object for worldId=" + std::to_string(worldId) + ", that already has a body");
 			return;
 		}
 
@@ -88,13 +88,13 @@ namespace AW
 	{
 		if (worlds.count(worldId) == 0)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to unregister body for world id: " + std::to_string(worldId) + ", that does not exist");
+			Logger::instance()->logCritical("Physic::Attempted to unregister body for worldId=" + std::to_string(worldId) + ", that does not exist");
 			return;
 		}
 
 		if (body == nullptr)
 		{
-			Logger::instance()->logCritical("Physic::Attempted to unregister null body for world id: " + std::to_string(worldId));
+			Logger::instance()->logCritical("Physic::Attempted to unregister null body for worldId=" + std::to_string(worldId));
 			return;
 		}
 

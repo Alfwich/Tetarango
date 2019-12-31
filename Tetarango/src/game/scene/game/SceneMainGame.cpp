@@ -92,8 +92,7 @@ namespace AWGame
 
 		globalTransition = std::make_shared<TransitionFade>();
 		globalTransition->name = globalTransitionId;
-		globalTransition->setDuration(350.0);
-		globalTransition->setColor(0, 0, 0);
+		globalTransition->setDuration(450.0);
 		globalTransition->zIndex = 20;
 		globalTransition->listener = std::dynamic_pointer_cast<INotifyOnFade>(shared_from_this());
 		globalTransition->setSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());

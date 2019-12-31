@@ -3,7 +3,7 @@
 #include <memory>
 #include "gui/BaseGui.h"
 #include "ui/renderable/container/Container.h"
-#include "ui/renderable/primitive/Rectangle.h"
+#include "ui/renderable/element/Element.h"
 #include "engine/module/animation/Animation.h"
 #include "engine/module/animation/INotifyOnTransition.h"
 #include "INotifyOnFade.h"
@@ -14,11 +14,17 @@ namespace AWGame
 	class TransitionFade : public BaseGui, public AW::Container, public AW::INotifyOnTransition
 	{
 		std::shared_ptr<AW::Transition> fadeTransition;
-		std::shared_ptr<AW::Rectangle> fadeRectangle;
+		std::shared_ptr<AW::Element> fadeRectangle;
+
+		bool shouldFadeIn = false;
+
+		void setTransitionShader();
 
 	public:
 
 		TransitionFade();
+
+		void onLoadResources();
 
 		void onInitialAttach();
 		void onCreateChildren();
@@ -37,6 +43,7 @@ namespace AWGame
 		void fadeInImmediately();
 
 		void onTransitionCompleted(int transitionId);
+		void onTransitionAnimationFrame(double p);
 	};
 
 }

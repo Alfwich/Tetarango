@@ -24,6 +24,7 @@ namespace AWGame
 		std::shared_ptr<GameCamera> camera;
 
 		void updateScoreText();
+		void captureScreen();
 
 	public:
 		SceneTetris();
@@ -39,7 +40,6 @@ namespace AWGame
 		virtual std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 
 		void onEnterFrame(const double& deltaTime);
-		void onTimeoutCalled(int id);
 		void onKeyPressed(SDL_Scancode key);
 		void onKeyReleased(SDL_Scancode key);
 		void onAboutToSave();

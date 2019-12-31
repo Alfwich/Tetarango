@@ -153,11 +153,11 @@ namespace AWGame
 
 			blockMap[mapOffset] = blockPtr;
 			positionBlock(blockPtr);
-			Element::add(blockPtr);
+			Container::add(blockPtr);
 		}
 		else
 		{
-			Element::add(ao);
+			Container::add(ao);
 		}
 	}
 
@@ -341,7 +341,7 @@ namespace AWGame
 		hasFailedToPlacePiece = client->serializeBool("board-has-failed-to-place-piece", hasFailedToPlacePiece);
 		energyShiftEnabled = client->serializeBool("board-energy-shift-enabled", energyShiftEnabled);
 
-		return AW::Element::doSerialize(hint);
+		return Container::doSerialize(hint);
 	}
 
 	void Board::onEnterFrame(const double& frameTime)

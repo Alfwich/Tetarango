@@ -77,11 +77,9 @@ namespace AWGame
 
 	void SceneTetris::onCreateChildren()
 	{
-		const auto cached = std::make_shared<AW::DisplayBuffer>();
+		const auto cached = std::make_shared<AW::Container>();
 		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		cached->topLeftAlignSelf();
-		cached->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
-		cached->renderMode = AW::RenderMode::ChildrenOnly;
 		add(cached);
 
 		const auto testBlock = std::make_shared<Block>();
@@ -205,36 +203,33 @@ namespace AWGame
 		}
 	}
 
-	void SceneTetris::onTimeoutCalled(int id)
+	void SceneTetris::captureScreen()
 	{
-		if (id == saveScreenshotTimeoutId)
+		auto imageCatcher = std::make_shared<AW::ScreenImage>();
+		imageCatcher->setShouldSerializeImage(true);
+		imageCatcher->captureWholeScreen();
+
+		const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
+		std::string path;
+		switch (currentSaveSlotId)
 		{
-			auto imageCatcher = std::make_shared<AW::ScreenImage>();
-			imageCatcher->setShouldSerializeImage(true);
-			imageCatcher->captureWholeScreen();
-
-			const auto currentSaveSlotId = std::stoi(modules->storage->getClient()->readSring(storagePath(StorePaths::System_CurrentSaveSlot)));
-			std::string path;
-			switch (currentSaveSlotId)
-			{
-			case 1:
-				path = storagePath(StorePaths::System_SaveSlot1_Image);
-				break;
-			case 2:
-				path = storagePath(StorePaths::System_SaveSlot2_Image);
-				break;
-			case 3:
-				path = storagePath(StorePaths::System_SaveSlot3_Image);
-				break;
-			}
-
-			if (!path.empty())
-			{
-				modules->storage->getClient()->writeString(path, modules->serialization->serialize(imageCatcher));
-			}
-
-			saveScreenshotTimeoutId = 0;
+		case 1:
+			path = storagePath(StorePaths::System_SaveSlot1_Image);
+			break;
+		case 2:
+			path = storagePath(StorePaths::System_SaveSlot2_Image);
+			break;
+		case 3:
+			path = storagePath(StorePaths::System_SaveSlot3_Image);
+			break;
 		}
+
+		if (!path.empty())
+		{
+			modules->storage->getClient()->writeString(path, modules->serialization->serialize(imageCatcher));
+		}
+
+		saveScreenshotTimeoutId = 0;
 	}
 
 	void SceneTetris::onKeyPressed(SDL_Scancode key)
@@ -304,7 +299,6 @@ namespace AWGame
 
 	void SceneTetris::onAboutToSave()
 	{
-		setTimeout(100.0, &saveScreenshotTimeoutId);
 	}
 
 	void SceneTetris::onCameraUpdate()

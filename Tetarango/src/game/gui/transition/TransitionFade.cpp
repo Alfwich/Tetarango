@@ -4,6 +4,9 @@ namespace
 {
 	const auto fadeRectName = "fade-rect";
 	const auto fadeDurationParam = "t-fade-duration";
+	const auto fadeTextureName = "fade-loading-texture";
+	const auto loadingTransitionShaderName = "f-fade-loading";
+	const auto loadingTransitionTranslateShaderName = "f-fade-loading-translate";
 }
 
 namespace AWGame
@@ -14,6 +17,13 @@ namespace AWGame
 		registerGameObject<TransitionFade>();
 	}
 
+	void TransitionFade::onLoadResources()
+	{
+		modules->texture->loadTexture("res/image/loading/loading.png", fadeTextureName);
+		modules->shader->loadShader("res/shader/fragment/loading-transition.glsl", loadingTransitionShaderName);
+		modules->shader->loadShader("res/shader/fragment/loading-transition-translate.glsl", loadingTransitionTranslateShaderName);
+	}
+
 	void TransitionFade::onInitialAttach()
 	{
 		fadeTransition = modules->animation->createTransition();
@@ -22,15 +32,27 @@ namespace AWGame
 
 	void TransitionFade::onCreateChildren()
 	{
-		fadeRectangle = std::make_shared<AW::Rectangle>();
+		fadeRectangle = std::make_shared<AW::Element>();
+		fadeRectangle->renderTextureMode = AW::RenderTextureMode::LinearWrapping;
 		fadeRectangle->name = fadeRectName;
-		fadeRectangle->setColor(AW::Color::black());
+		fadeRectangle->setTexture(fadeTextureName);
+		setTransitionShader();
 		add(fadeRectangle);
 	}
 
 	void TransitionFade::onChildrenHydrated()
 	{
-		fadeRectangle = findChildWithName<AW::Rectangle>(fadeRectName);
+		fadeRectangle = findChildWithName<AW::Element>(fadeRectName);
+		setTransitionShader();
+	}
+
+	void TransitionFade::setTransitionShader()
+	{
+		if (fadeRectangle != nullptr)
+		{
+			fadeRectangle->setFragmentShader(modules->shader->getShader({ "f-repeat", loadingTransitionTranslateShaderName, "element", loadingTransitionShaderName }, true));
+			fadeRectangle->getFragmentShader()->setFloatIUParam("fRepeat", 64.0);
+		}
 	}
 
 	void TransitionFade::onLayoutChildren()
@@ -42,9 +64,8 @@ namespace AWGame
 	{
 		const auto listenerPtr = listener.lock();
 
-		if (this->getAlpha() == 0.0)
+		if (!shouldFadeIn)
 		{
-			visible = false;
 			if (listenerPtr != nullptr)
 			{
 				listenerPtr->onFadeOut();
@@ -71,25 +92,33 @@ namespace AWGame
 
 	void TransitionFade::fadeIn()
 	{
-		visible = true;
-		fadeTransition->startTransition(std::dynamic_pointer_cast<AW::Renderable>(shared_from_this()), getDuration(), getRect(), 1.0);
+		shouldFadeIn = true;
+		fadeTransition->startTargetlessTransition(getDuration());
 	}
 
 	void TransitionFade::fadeInImmediately()
 	{
-		visible = true;
-		setAlpha(1.0);
+		shouldFadeIn = true;
+		fadeRectangle->getFragmentShader()->setFloatIUParam("fLoadingP", 1.0);
+		onTransitionCompleted(-1);
 	}
 
 	void TransitionFade::fadeOut()
 	{
-		fadeTransition->startTransition(std::dynamic_pointer_cast<AW::Renderable>(shared_from_this()), getDuration(), getRect(), 0.0);
+		shouldFadeIn = false;
+		fadeTransition->startTargetlessTransition(getDuration());
 	}
 
 	void TransitionFade::fadeOutImmediately()
 	{
-		visible = false;
-		setAlpha(0.0);
+		shouldFadeIn = false;
+		fadeRectangle->getFragmentShader()->setFloatIUParam("fLoadingP", 0.0);
+		onTransitionCompleted(-1);
 	}
 
+	void TransitionFade::onTransitionAnimationFrame(double p)
+	{
+		const auto fP = shouldFadeIn ? p : (1 - p);
+		fadeRectangle->getFragmentShader()->setFloatIUParam("fLoadingP", fP);
+	}
 }
