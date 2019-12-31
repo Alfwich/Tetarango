@@ -43,6 +43,7 @@ namespace AW
 		void setWorldFps(unsigned int worldId, unsigned int timestepMS);
 		void setWorldVelocityAndPositionIterations(unsigned int worldId, unsigned int velocity = 6, unsigned int position = 2);
 		void setWorldGravity(unsigned int worldId, double gravityX = 0.0, double gravityY = -9.807);
+		void setWorldAllowSleeping(unsigned int worldId, bool flag);
 
 		void registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> body);
 		void unregisterRigidBodyForWorld(unsigned int worldId, b2Body* body);

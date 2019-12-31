@@ -58,6 +58,17 @@ namespace AW
 		worlds.at(worldId)->world->SetGravity(b2Vec2((float)gravityX, (float)gravityY));
 	}
 
+	void Physic::setWorldAllowSleeping(unsigned int worldId, bool flag)
+	{
+		if (worlds.count(worldId) == 0)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to set allow sleeping for worldId=" + std::to_string(worldId) + ", that does not exist");
+			return;
+		}
+
+		worlds.at(worldId)->world->SetAllowSleeping(flag);
+	}
+
 	void Physic::registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> obj)
 	{
 		if (worlds.count(worldId) == 0)
