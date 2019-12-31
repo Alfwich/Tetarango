@@ -7,19 +7,16 @@
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/container/Container.h"
-#include "ui/renderable/element/physic/body/Body.h"
+#include "prop/physic/Box.h"
 
 namespace AWGame
 {
 	class TestScene2 : public AW::Scene, public AW::ICameraListener, public IGuiListener
 	{
 		std::shared_ptr<GameCamera> camera;
-		std::shared_ptr<AW::Body> platform, follower;
 		std::shared_ptr<AW::Container> contentContainer;
 		std::shared_ptr<AW::Renderable> obj1, obj2;
 		std::shared_ptr<AW::Transition> tran;
-
-		bool followButtonPressed = false, upPressed = false, downPressed = false, leftPressed = false, rightPressed = false;
 
 	public:
 		TestScene2();

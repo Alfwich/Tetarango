@@ -173,7 +173,7 @@
     <ClCompile Include="src\core\ui\renderable\element\DisplayBuffer.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\ScreenImage.cpp" />
-    <ClCompile Include="src\core\ui\renderable\element\physic\body\Body.cpp" />
+    <ClCompile Include="src\core\ui\physic\body\Body.cpp" />
     <ClCompile Include="src\game\actor\board\Board.cpp" />
     <ClCompile Include="src\game\gui\button\CheckBoxBasic.cpp" />
     <ClCompile Include="src\game\gui\scrollarea\ScrollArea.cpp" />
@@ -201,6 +201,7 @@
     <ClCompile Include="src\game\prop\BaseProp.cpp" />
     <ClCompile Include="src\game\gui\BaseGui.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\Backdrop.cpp" />
+    <ClCompile Include="src\game\prop\physic\Box.cpp" />
     <ClCompile Include="src\game\prop\title\TitleGame.cpp" />
     <ClCompile Include="src\game\scene\BaseScene.cpp" />
     <ClCompile Include="src\core\engine\module\serialization\SerializationClient.cpp" />
@@ -283,11 +284,12 @@
     <ClInclude Include="src\core\engine\module\shader\ShaderReference.h" />
     <ClInclude Include="src\core\engine\module\sound\Music.h" />
     <ClInclude Include="src\core\ui\camera\ICameraListener.h" />
+    <ClInclude Include="src\core\ui\physic\body\IBodyListener.h" />
     <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
     <ClInclude Include="src\core\ui\renderable\element\DisplayBuffer.h" />
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />
     <ClInclude Include="src\core\ui\renderable\element\ScreenImage.h" />
-    <ClInclude Include="src\core\ui\renderable\element\physic\body\Body.h" />
+    <ClInclude Include="src\core\ui\physic\body\Body.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
     <ClInclude Include="src\game\gui\button\CheckBoxBasic.h" />
     <ClInclude Include="src\game\gui\scrollarea\ScrollArea.h" />
@@ -319,6 +321,7 @@
     <ClInclude Include="src\game\prop\BaseProp.h" />
     <ClInclude Include="src\game\gui\BaseGui.h" />
     <ClInclude Include="src\game\gui\Guis.h" />
+    <ClInclude Include="src\game\prop\physic\Box.h" />
     <ClInclude Include="src\game\prop\Props.h" />
     <ClInclude Include="src\core\ui\scene\SceneTransitionBundle.h" />
     <ClInclude Include="src\core\ui\renderable\element\Backdrop.h" />

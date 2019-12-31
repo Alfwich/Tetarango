@@ -69,6 +69,7 @@ namespace AWGame
 		BaseGui::primeGuis();
 		BaseScene::primeScenes();
 		BaseProp::primeProps();
+
 		std::make_unique<Board>();
 	}
 

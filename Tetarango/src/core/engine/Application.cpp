@@ -17,7 +17,7 @@
 #include "ui/renderable/element/ScreenImage.h"
 #include "debug/monitor/DebugMonitor.h"
 #include "ui/renderable/element/DisplayBuffer.h"
-#include "ui/renderable/element/physic/body/Body.h"
+#include "ui/physic/body/Body.h"
 
 #include "Tests.h"
 

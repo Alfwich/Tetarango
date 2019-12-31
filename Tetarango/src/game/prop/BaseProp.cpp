@@ -22,6 +22,7 @@ namespace AWGame
 		std::make_unique<BlockParticleFactory>();
 		std::make_unique<Block>();
 		std::make_unique<TitleGame>();
+		std::make_unique<Box>();
 	}
 
 	const Props& BaseProp::getProps()

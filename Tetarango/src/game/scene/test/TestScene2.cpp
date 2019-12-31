@@ -75,7 +75,8 @@ namespace AWGame
 		contentContainer->add(camera);
 
 		{
-			platform = std::make_shared<AW::Body>();
+			const auto platform = std::make_shared<Box>();
+			platform->setDynamic(false);
 			platform->setColor(64, 64, 64);
 			platform->setSize(600.0, 100.0);
 			platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
@@ -85,37 +86,24 @@ namespace AWGame
 		const auto xOff = 700.0;
 		const auto yOff = -250.0;
 		{
-			const auto b = std::make_shared<AW::Body>();
-			b->setColor(64, 64, 64);
-			b->setSize(500.0, 100.0);
-			b->setRotation(45.0);
-			b->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 + yOff);
-			contentContainer->add(b);
+			const auto platform = std::make_shared<Box>();
+			platform->setDynamic(false);
+			platform->setColor(64, 64, 64);
+			platform->setSize(500.0, 100.0);
+			platform->setRotation(45.0);
+			platform->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 + yOff);
+			contentContainer->add(platform);
 		}
 
 		{
-			const auto b = std::make_shared<AW::Body>();
-			b->setColor(64, 64, 64);
-			b->setSize(500.0, 100.0);
-			b->setRotation(-45.0);
-			b->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
-			contentContainer->add(b);
+			const auto platform = std::make_shared<Box>();
+			platform->setDynamic(false);
+			platform->setColor(64, 64, 64);
+			platform->setSize(500.0, 100.0);
+			platform->setRotation(-45.0);
+			platform->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
+			contentContainer->add(platform);
 		}
-
-		{
-			follower = std::make_shared<AW::Body>();
-			follower->setDynamicBody();
-			follower->setBodyType(AW::BodyType::Circle);
-			follower->setColor(255, 255, 255);
-			follower->setSize(200, 200);
-			follower->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 230.0);
-			follower->setFriction(0.1);
-			const auto shader = modules->shader->getShader({ "f-color", "f-circle" });
-			shader->setFloatIUParam("fCircleEdge", 0.1);
-			follower->setFragmentShader(shader);
-			contentContainer->add(follower);
-		}
-
 	}
 
 	void TestScene2::onLayoutChildren()
@@ -133,39 +121,13 @@ namespace AWGame
 		{
 			if (contentContainer->getChildren().size() < 400)
 			{
-				const auto b = std::make_shared<AW::Body>();
+				const auto b = std::make_shared<Box>();
 				b->setAlpha(0.0);
 
-				if (AW::NumberHelper::chance(1))
-				{
-					const auto shader = modules->shader->getShader({ "block" }, true);
-					shader->setFloatIUParam("clipX", 32.0);
-					shader->setFloatIUParam("clipY", 0.0);
-					shader->setFloatIUParam("clipWidth", 64.0);
-					shader->setFloatIUParam("clipHeight", 64.0);
-					shader->setFloatIUParam("blockBorderSize", 2.0);
-					shader->setFloatIUParam("blockEffect", 0.5);
-					shader->setFloatIUParam("blockEffectP", 0.25);
-					shader->setFloatIUParam("blockEffectG", 0.4);
-					shader->setFloatIUParam("blockCenterFill", AW::NumberHelper::random(0.5, 1.0));
-					shader->setFloatIUParam("fScanlineRetroAmount", 0.25);
-					b->setTexture("prop-blocks");
-					b->setFragmentShader(shader);
-				}
-				else
-				{
-					b->setBodyType(AW::BodyType::Circle);
-					const auto shader = modules->shader->getShader({ "f-color", "f-circle" });
-					shader->setFloatIUParam("fCircleEdge", 0.1);
-					b->setFragmentShader(shader);
-				}
-
-				b->setDynamicBody();
+				b->setDynamic(true);
 				b->setSize(50, 50);
 				b->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
 				b->setColor(blockColorGenerator.getBlockColor());
-				b->setFriction(0.1);
-				b->setDensity(0.1);
 
 				contentContainer->add(b);
 			}
@@ -176,23 +138,7 @@ namespace AWGame
 
 	void TestScene2::onEnterFrame(const double& deltaTime)
 	{
-		float impulse = 2000.0;
-		if (followButtonPressed)
-		{
-			const auto x1 = follower->getWorldRect()->x, y1 = follower->getWorldRect()->y, x2 = (double)modules->input->mouse->X(), y2 = (double)modules->input->mouse->Y();
-			const auto v = std::atan2(y1 - y2, x1 - x2);
-			const auto vX = x2 - x1;
-			const auto vY = y1 - y2;
-			const auto mag = std::sqrt(vX * vX + vY * vY);
-			follower->applyForce(vX / mag, vY / mag, impulse * (deltaTime / 1000.0));
-		}
-
-		if (upPressed) follower->applyForce(0.0, 1.0, impulse * (deltaTime / 1000.0));
-		if (downPressed) follower->applyForce(0.0, -1.0, impulse * (deltaTime / 1000.0));
-		if (leftPressed) follower->applyForce(-1.0, 0.0, impulse * (deltaTime / 1000.0));
-		if (rightPressed) follower->applyForce(1.0, 0.0, impulse * (deltaTime / 1000.0));
-
-		for (const auto c : contentContainer->getChildrenOfType<AW::Body>())
+		for (const auto c : contentContainer->getChildrenOfType<Box>())
 		{
 			if (c->getY() > 4000)
 			{
@@ -222,11 +168,6 @@ namespace AWGame
 
 		if (key == SDL_SCANCODE_1)
 		{
-			auto targetR = platform->getRect();
-			targetR.y += 50.0;
-			tran->setLooping(true);
-			//tran->startTransition(platform, 500, targetR);
-			platform->movePosition(0.0, 10.0);
 		}
 
 		if (key == SDL_SCANCODE_2)
@@ -246,34 +187,16 @@ namespace AWGame
 
 		if (key == SDL_SCANCODE_5)
 		{
-			follower = std::make_shared<AW::Body>();
-			follower->setDynamicBody();
-			follower->setBodyType(AW::BodyType::Circle);
-			follower->setColor(255, 255, 255);
-			follower->setSize(200, 200);
-			follower->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 230.0);
-			follower->setFriction(0.1);
-			const auto shader = modules->shader->getShader({ "f-color", "f-circle" });
-			shader->setFloatIUParam("fCircleEdge", 0.1);
-			follower->setFragmentShader(shader);
-			contentContainer->add(follower);
 		}
 
 	}
 
 	void TestScene2::onKey(SDL_Scancode key, bool isPressed)
 	{
-		if (key == SDL_SCANCODE_SPACE) followButtonPressed = isPressed;
-
-		if (key == SDL_SCANCODE_UP) upPressed = isPressed;
-		if (key == SDL_SCANCODE_DOWN) downPressed = isPressed;
-		if (key == SDL_SCANCODE_LEFT) leftPressed = isPressed;
-		if (key == SDL_SCANCODE_RIGHT) rightPressed = isPressed;
 	}
 
 	void TestScene2::onMouseButton(AW::MouseButton button, bool isPressed)
 	{
-		if (button == AW::MouseButton::Left) followButtonPressed = isPressed;
 	}
 
 	void TestScene2::onScrollBarScroll(int id, double pos)
