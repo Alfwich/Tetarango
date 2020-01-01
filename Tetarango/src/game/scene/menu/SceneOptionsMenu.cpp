@@ -31,7 +31,7 @@ namespace AWGame
 	SceneOptionsMenu::SceneOptionsMenu() : BaseScene(SceneGame::OptionsMenu)
 	{
 		setShouldRebuildOnLoad();
-		registerGameObject<SceneOptionsMenu>("scene-options-menu");
+		registerGameObject<SceneOptionsMenu>(__FUNCTION__);
 	}
 
 	void SceneOptionsMenu::onInitialAttach()

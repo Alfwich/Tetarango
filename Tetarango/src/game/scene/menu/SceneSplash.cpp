@@ -34,7 +34,7 @@ namespace AWGame
 	SceneSplash::SceneSplash() : BaseScene(SceneGame::Splash)
 	{
 		setShouldRebuildOnLoad();
-		registerGameObject<SceneSplash>("scene-splash");
+		registerGameObject<SceneSplash>(__FUNCTION__);
 	}
 
 	void SceneSplash::onLoadResources()

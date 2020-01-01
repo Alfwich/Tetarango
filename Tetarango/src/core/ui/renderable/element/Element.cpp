@@ -11,7 +11,7 @@ namespace AW
 	Element::Element()
 	{
 		renderMode = RenderMode::Element;
-		registerGameObject<Element>("element");
+		registerGameObject<Element>(__FUNCTION__);
 	}
 
 	void Element::onLoadResources()

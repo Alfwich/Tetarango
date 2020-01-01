@@ -14,7 +14,7 @@ namespace AWGame
 		this->g = g;
 		this->b = b;
 
-		registerGameObject<TestParticleFactory>("test-particle-factory");
+		registerGameObject<TestParticleFactory>(__FUNCTION__);
 	}
 
 	std::shared_ptr<AW::Particle> TestParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)

@@ -16,7 +16,7 @@ namespace AWGame
 	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{
 		setSize(180, 80);
-		registerGameObject<ButtonBasic>("button-basic");
+		registerGameObject<ButtonBasic>(__FUNCTION__);
 	}
 
 	void ButtonBasic::onLoadResources()

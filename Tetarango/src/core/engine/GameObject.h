@@ -253,7 +253,7 @@ namespace AW
 
 		if (this->modules->status == ModuleBundleStatus::READY || this->modules->status == ModuleBundleStatus::CLEANED_UP)
 		{
-			this->modules->logger->logFatal("GameObject::Added type=" + this->typeName + " after the application was started. Call registerGameObject<T>() from the constructor to register this type");
+			this->modules->logger->logFatal("GameObject::Added type=" + this->typeName + " after the application was started. Call registerGameObject<T>(__FUNCTION__)");
 		}
 
 		this->schematic = std::make_shared<Schematic>(this->typeName, []() -> std::shared_ptr<ISerializable> { return std::make_shared<T>(); });

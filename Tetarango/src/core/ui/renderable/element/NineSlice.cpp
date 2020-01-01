@@ -11,7 +11,7 @@ namespace AW
 	NineSlice::NineSlice()
 	{
 		sizeToAnimation = false;
-		registerGameObject<NineSlice>("nine-slice");
+		registerGameObject<NineSlice>(__FUNCTION__);
 	}
 
 	void NineSlice::onBindShaders()

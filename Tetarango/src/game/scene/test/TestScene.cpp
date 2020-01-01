@@ -16,7 +16,7 @@ namespace AWGame
 	TestScene::TestScene() : AW::Scene("test_scene")
 	{
 		setShouldRebuildOnLoad();
-		registerGameObject<TestScene>("test-scene");
+		registerGameObject<TestScene>(__FUNCTION__);
 	}
 
 	void TestScene::onLoadResources()

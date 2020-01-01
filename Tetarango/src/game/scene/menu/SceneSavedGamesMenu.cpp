@@ -14,7 +14,7 @@ namespace AWGame
 	SceneSavedGamesMenu::SceneSavedGamesMenu() : BaseScene(SceneGame::SavedGamesMenu)
 	{
 		setShouldRebuildOnLoad();
-		registerGameObject<SceneSavedGamesMenu>("scene-saved-games-menu");
+		registerGameObject<SceneSavedGamesMenu>(__FUNCTION__);
 	}
 
 	void SceneSavedGamesMenu::onCreateChildren()

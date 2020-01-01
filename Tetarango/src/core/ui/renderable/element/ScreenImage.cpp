@@ -108,7 +108,7 @@ namespace AW
 	ScreenImage::ScreenImage()
 	{
 		textureBindingKey = "__cached_image__" + std::to_string(getId());
-		registerGameObject<ScreenImage>("screen-image");
+		registerGameObject<ScreenImage>(__FUNCTION__);
 	}
 
 	ScreenImage::~ScreenImage()
