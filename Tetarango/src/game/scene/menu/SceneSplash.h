@@ -40,7 +40,7 @@ namespace AWGame
 		void onTransitionCompleted();
 
 		void onMouseButtonLeftDown();
-		void onKeyPressed(SDL_Scancode key);
+		void onKeyPressed(AWKey key);
 	};
 
 }

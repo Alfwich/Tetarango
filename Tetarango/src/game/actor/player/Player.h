@@ -22,6 +22,6 @@ namespace AWGame
 
 		void onEnterFrame(const double& deltaTime);
 
-		void onKey(SDL_Scancode key, bool isPressed);
+		void onKey(AWKey key, bool isPressed);
 	};
 }

@@ -127,7 +127,7 @@ namespace AWGame
 	{
 		enableEnterFrame();
 
-		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWMouseButton::Left, weak_from_this());
 	}
 
 	void ButtonBasic::onDetach()
@@ -145,7 +145,7 @@ namespace AWGame
 			y < r.y + r.h && y > r.y;
 	}
 
-	void ButtonBasic::onMouseButton(AW::MouseButton button, bool pressed)
+	void ButtonBasic::onMouseButton(AWMouseButton button, bool pressed)
 	{
 		const auto isEnabled = getEnabled();
 		if (!isEnabled)
@@ -155,7 +155,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case AW::MouseButton::Left:
+		case AWMouseButton::Left:
 			if (!pressed)
 			{
 				const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());

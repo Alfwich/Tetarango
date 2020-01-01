@@ -13,7 +13,7 @@ namespace AWGame
 	{
 		Camera::onInitialAttach();
 
-		modules->input->keyboard->registerKeys(std::vector<SDL_Scancode>{ SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_2, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_6, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_PLUS, SDL_SCANCODE_KP_MINUS, SDL_SCANCODE_E, SDL_SCANCODE_C, SDL_SCANCODE_I, SDL_SCANCODE_J, SDL_SCANCODE_K, SDL_SCANCODE_L}, weak_from_this());
+		modules->input->keyboard->registerKeys(std::vector<AWKey>{ AWKey::KP_8, AWKey::KP_2, AWKey::KP_5, AWKey::KP_6, AWKey::KP_4, AWKey::KP_PLUS, AWKey::KP_MINUS, AWKey::E, AWKey::C, AWKey::I, AWKey::J, AWKey::K, AWKey::L}, weak_from_this());
 		modules->input->gamepad->registerAxis(0, AW::GamepadAxisMapping::RIGHT, weak_from_this());
 
 		setTimeScope(AW::TimeScope::Camera);
@@ -57,47 +57,47 @@ namespace AWGame
 		}
 	}
 
-	void GameCamera::onKey(SDL_Scancode code, bool pressed)
+	void GameCamera::onKey(AWKey code, bool pressed)
 	{
 		switch (code)
 		{
-		case SDL_SCANCODE_KP_8:
-		case SDL_SCANCODE_I:
+		case AWKey::KP_8:
+		case AWKey::I:
 			upDown = pressed;
 			break;
 
-		case SDL_SCANCODE_KP_4:
-		case SDL_SCANCODE_J:
+		case AWKey::KP_4:
+		case AWKey::J:
 			leftDown = pressed;
 			break;
 
-		case SDL_SCANCODE_KP_2:
-		case SDL_SCANCODE_K:
+		case AWKey::KP_2:
+		case AWKey::K:
 			downDown = pressed;
 			break;
 
-		case SDL_SCANCODE_KP_6:
-		case SDL_SCANCODE_L:
+		case AWKey::KP_6:
+		case AWKey::L:
 			rightDown = pressed;
 			break;
 
-		case SDL_SCANCODE_KP_PLUS:
-		case SDL_SCANCODE_C:
+		case AWKey::KP_PLUS:
+		case AWKey::C:
 			if (pressed)
 			{
 				setZoom(getZoom() * 2);
 			}
 			break;
 
-		case SDL_SCANCODE_KP_MINUS:
-		case SDL_SCANCODE_E:
+		case AWKey::KP_MINUS:
+		case AWKey::E:
 			if (pressed)
 			{
 				setZoom(getZoom() / 2);
 			}
 			break;
 
-		case SDL_SCANCODE_KP_5:
+		case AWKey::KP_5:
 			reset();
 			break;
 		}

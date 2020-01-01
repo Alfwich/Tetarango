@@ -16,7 +16,7 @@ namespace AWGame
 
 		void onInitialAttach();
 		void onEnterFrame(const double& frameTime);
-		void onKey(SDL_Scancode code, bool pressed);
+		void onKey(AWKey code, bool pressed);
 		void onGamepadAxisChanged(int gamepadIndex, AW::GamepadAxisMapping axis, double value);
 	};
 }

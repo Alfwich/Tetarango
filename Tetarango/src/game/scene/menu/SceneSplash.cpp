@@ -78,8 +78,8 @@ namespace AWGame
 		splashTransition = modules->animation->createTransitionForTimeScope(AW::TimeScope::Menu);
 		splashTransition->listener = weak_from_this();
 
-		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, baseSceneWeakThisRef());
-		modules->input->keyboard->registerKey(SDL_SCANCODE_SPACE, baseSceneWeakThisRef());
+		modules->input->mouse->registerMouseButton(AWMouseButton::Left, baseSceneWeakThisRef());
+		modules->input->keyboard->registerKey(AWKey::SPACE, baseSceneWeakThisRef());
 	}
 
 	void SceneSplash::onAttach()
@@ -251,7 +251,7 @@ namespace AWGame
 		splashTransition->finish();
 	}
 
-	void SceneSplash::onKeyPressed(SDL_Scancode key)
+	void SceneSplash::onKeyPressed(AWKey key)
 	{
 		splashTransition->finish();
 	}

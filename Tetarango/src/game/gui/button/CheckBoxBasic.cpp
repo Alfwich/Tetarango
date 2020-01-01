@@ -134,7 +134,7 @@ namespace AWGame
 	void CheckBoxBasic::onInitialAttach()
 	{
 		enableEnterFrame();
-		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWMouseButton::Left, weak_from_this());
 	}
 
 	void CheckBoxBasic::onLayoutChildren()
@@ -158,7 +158,7 @@ namespace AWGame
 			y < r.y + r.h && y > r.y;
 	}
 
-	void CheckBoxBasic::onMouseButton(AW::MouseButton button, bool pressed)
+	void CheckBoxBasic::onMouseButton(AWMouseButton button, bool pressed)
 	{
 		const auto isLocked = serializationClient->getBool(isLockedParamName, false);
 		if (isLocked)
@@ -168,7 +168,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case AW::MouseButton::Left:
+		case AWMouseButton::Left:
 			if (!pressed)
 			{
 				if (isHovering && isPressed)

@@ -23,10 +23,10 @@ namespace AWGame
 	void Player::onInitialAttach()
 	{
 		modules->input->keyboard->registerKeys({
-			SDL_SCANCODE_UP,
-			SDL_SCANCODE_DOWN,
-			SDL_SCANCODE_LEFT,
-			SDL_SCANCODE_RIGHT
+			AWKey::UP,
+			AWKey::DOWN,
+			AWKey::LEFT,
+			AWKey::RIGHT
 			}, weak_from_this());
 
 		enableEnterFrame();
@@ -61,11 +61,11 @@ namespace AWGame
 		if (right) body->applyForce(1.0, 0.0, impulse * (deltaTime / 1000.0));
 	}
 
-	void Player::onKey(SDL_Scancode key, bool isPressed)
+	void Player::onKey(AWKey key, bool isPressed)
 	{
-		if (key == SDL_SCANCODE_UP) up = isPressed;
-		if (key == SDL_SCANCODE_DOWN) down = isPressed;
-		if (key == SDL_SCANCODE_LEFT) left = isPressed;
-		if (key == SDL_SCANCODE_RIGHT) right = isPressed;
+		if (key == AWKey::UP) up = isPressed;
+		if (key == AWKey::DOWN) down = isPressed;
+		if (key == AWKey::LEFT) left = isPressed;
+		if (key == AWKey::RIGHT) right = isPressed;
 	}
 }

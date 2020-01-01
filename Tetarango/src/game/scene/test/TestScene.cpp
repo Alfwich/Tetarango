@@ -29,20 +29,20 @@ namespace AWGame
 		setTimeScope(AW::TimeScope::Game);
 
 		modules->input->keyboard->registerKeys({
-				SDL_SCANCODE_ESCAPE,
-				SDL_SCANCODE_1,
-				SDL_SCANCODE_2,
-				SDL_SCANCODE_3,
-				SDL_SCANCODE_LEFT,
-				SDL_SCANCODE_RIGHT,
-				SDL_SCANCODE_UP,
-				SDL_SCANCODE_LEFTBRACKET,
-				SDL_SCANCODE_RIGHTBRACKET,
-				SDL_SCANCODE_UP,
-				SDL_SCANCODE_DOWN
+				AWKey::ESCAPE,
+				AWKey::ONE,
+				AWKey::TWO,
+				AWKey::THREE,
+				AWKey::LEFT,
+				AWKey::RIGHT,
+				AWKey::UP,
+				AWKey::LEFTBRACKET,
+				AWKey::RIGHTBRACKET,
+				AWKey::UP,
+				AWKey::DOWN
 			}
 		, weak_from_this());
-		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWMouseButton::Left, weak_from_this());
 
 		iterTimer = modules->time->createTimer();
 		iterTimer->start();
@@ -119,14 +119,14 @@ namespace AWGame
 		red->scrollListener = shared_from_this();
 		red->setColor(192, 0, 0);
 		red->toInnerLeftIn(contentContainer);
-		contentContainer->add(red);
+		add(red);
 
 		for (int i = 0; i < 100; ++i)
 		{
 			const auto btn = std::make_shared<ButtonBasic>();
 			btn->setText("Hello World!");
-			btn->setPosition(AW::NumberHelper::random(-2000.0, 2000.0), AW::NumberHelper::random(-2000.0, 2000.0));
-			btn->setScale(AW::NumberHelper::random(0.05, 10.0));
+			btn->setPosition(AW::NumberHelper::random(-1000.0, -2000.0), AW::NumberHelper::random(-1000.0, -2000.0));
+			btn->setScale(AW::NumberHelper::random(0.5, 2.0));
 			btn->setColor(AW::Color::random());
 			contentContainer->add(btn);
 		}
@@ -172,32 +172,30 @@ namespace AWGame
 				obj2->markDirty();
 			}
 		}
-
-		contentContainer->rotate((deltaTime / 1000.0) * 15.0);
 	}
 
-	void TestScene::onKeyPressed(SDL_Scancode key)
+	void TestScene::onKeyPressed(AWKey key)
 	{
-		if (key == SDL_SCANCODE_ESCAPE)
+		if (key == AWKey::ESCAPE)
 		{
 			const auto applicationSceneContainer = findFirstInParentChain<AW::SceneContainer>();
 			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 		}
 	}
 
-	void TestScene::onKey(SDL_Scancode key, bool isPressed)
+	void TestScene::onKey(AWKey key, bool isPressed)
 	{
-		if (key == SDL_SCANCODE_1)
+		if (key == AWKey::ONE)
 		{
 			itersDecPressed = isPressed;
 		}
 
-		if (key == SDL_SCANCODE_2)
+		if (key == AWKey::TWO)
 		{
 			itersIncPressed = isPressed;
 		}
 
-		if (key == SDL_SCANCODE_3 && isPressed)
+		if (key == AWKey::THREE && isPressed)
 		{
 			obj2->renderMode = obj2->renderMode == AW::RenderMode::CachedElement ? AW::RenderMode::ChildrenOnly : AW::RenderMode::CachedElement;
 			obj2->markDirty();

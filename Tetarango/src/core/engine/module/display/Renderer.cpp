@@ -217,8 +217,8 @@ namespace AW
 
 		double lowerDepthLayer = -(maxLayers / 2) * layerFactor;
 		double upperDepthLayer = (maxLayers / 2) * layerFactor;
-		mat4x4_ortho(p, 0.0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
-		mat4x4_ortho(pAbs, 0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
+		LM::mat4x4_ortho(p, 0.0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
+		LM::mat4x4_ortho(pAbs, 0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -891,7 +891,7 @@ namespace AW
 			return;
 		}
 
-		mat4x4_ortho(pBackground, 0, cached->getWidth(), cached->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+		LM::mat4x4_ortho(pBackground, 0, cached->getWidth(), cached->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 		setViewport(cached->getWidth(), cached->getHeight());
 
 		const auto cColor = cached->getClearColor();
@@ -929,7 +929,7 @@ namespace AW
 			glBindFramebuffer(GL_FRAMEBUFFER, std::get<2>(previous));
 			glBindRenderbuffer(GL_RENDERBUFFER, std::get<3>(previous));
 			setViewport(std::get<0>(previous), std::get<1>(previous));
-			mat4x4_ortho(pBackground, 0, std::get<0>(previous), std::get<1>(previous), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+			LM::mat4x4_ortho(pBackground, 0, std::get<0>(previous), std::get<1>(previous), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
 		}
 	}
 
@@ -945,31 +945,31 @@ namespace AW
 		const auto cX = computed->x + cW;
 		const auto cY = computed->y + cH;
 
-		mat4x4_identity(m);
+		LM::mat4x4_identity(m);
 
 		if (renderPackage->rotation != 0.0)
 		{
-			mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+			LM::mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
 		}
-		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
-		mat4x4_translate(t, cX, cY, cY + (ele->zIndex + renderPackage->depth) * layerFactor);
+		LM::mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+		LM::mat4x4_translate(t, cX, cY, cY + (ele->zIndex + renderPackage->depth) * layerFactor);
 
-		mat4x4_mul(m, t, m);
+		LM::mat4x4_mul(m, t, m);
 
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute || ele->renderPositionMode == RenderPositionMode::AbsoluteSelfOnly)
 		{
-			mat4x4_dup(tP, pAbs);
+			LM::mat4x4_dup(tP, pAbs);
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, pBackground);
+			LM::mat4x4_dup(tP, pBackground);
 		}
 		else
 		{
-			mat4x4_dup(tP, p);
+			LM::mat4x4_dup(tP, p);
 		}
 
-		mat4x4_mul(mvp, tP, m);
+		LM::mat4x4_mul(mvp, tP, m);
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
@@ -994,31 +994,31 @@ namespace AW
 		const auto cX = computed->x + clipRect->x + computed->w / 2.0;
 		const auto cY = computed->y + clipRect->y + computed->h / 2.0;
 
-		mat4x4_identity(m);
+		LM::mat4x4_identity(m);
 
 		if (renderPackage->rotation != 0.0)
 		{
-			mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+			LM::mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
 		}
-		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
-		mat4x4_translate(t, cX, cY, cY + (20 + renderPackage->depth) * layerFactor);
+		LM::mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+		LM::mat4x4_translate(t, cX, cY, cY + (20 + renderPackage->depth) * layerFactor);
 
-		mat4x4_mul(m, t, m);
+		LM::mat4x4_mul(m, t, m);
 
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
-			mat4x4_dup(tP, pAbs);
+			LM::mat4x4_dup(tP, pAbs);
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, pBackground);
+			LM::mat4x4_dup(tP, pBackground);
 		}
 		else
 		{
-			mat4x4_dup(tP, p);
+			LM::mat4x4_dup(tP, p);
 		}
 
-		mat4x4_mul(mvp, tP, m);
+		LM::mat4x4_mul(mvp, tP, m);
 
 		auto vertexShader = rend->getClipRectVertexShader();
 		if (vertexShader == nullptr)
@@ -1094,31 +1094,31 @@ namespace AW
 		const auto cX = computed->x + cW;
 		const auto cY = computed->y + cH;
 
-		mat4x4_identity(m);
+		LM::mat4x4_identity(m);
 
 		if (renderPackage->rotation != 0.0)
 		{
-			mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+			LM::mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
 		}
-		mat4x4_scale_aniso(m, m, cW, cH, 1.0);
-		mat4x4_translate(t, cX, cY, cY + (prim->zIndex + renderPackage->depth) * layerFactor);
+		LM::mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+		LM::mat4x4_translate(t, cX, cY, cY + (prim->zIndex + renderPackage->depth) * layerFactor);
 
-		mat4x4_mul(m, t, m);
+		LM::mat4x4_mul(m, t, m);
 
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
-			mat4x4_dup(tP, pAbs);
+			LM::mat4x4_dup(tP, pAbs);
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, pBackground);
+			LM::mat4x4_dup(tP, pBackground);
 		}
 		else
 		{
-			mat4x4_dup(tP, p);
+			LM::mat4x4_dup(tP, p);
 		}
 
-		mat4x4_mul(mvp, tP, m);
+		LM::mat4x4_mul(mvp, tP, m);
 
 		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
 
@@ -1140,15 +1140,15 @@ namespace AW
 
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{
-			mat4x4_dup(tP, pAbs);
+			LM::mat4x4_dup(tP, pAbs);
 		}
 		else if (renderTargetStack.top() == RenderTarget::Background)
 		{
-			mat4x4_dup(tP, pBackground);
+			LM::mat4x4_dup(tP, pBackground);
 		}
 		else
 		{
-			mat4x4_dup(tP, p);
+			LM::mat4x4_dup(tP, p);
 		}
 
 		const auto computed = &renderPackage->computed;
@@ -1162,16 +1162,17 @@ namespace AW
 			const auto cY = computed->y + particle->y + cH;
 			const auto rotation = (renderPackage->rotation + particle->r) * AW::NumberHelper::degToRad;
 
-			mat4x4_identity(m);
+			LM::mat4x4_identity(m);
 
 			if (rotation != 0.0)
 			{
-				mat4x4_rotate_Z(m, m, rotation);
+				LM::mat4x4_rotate_Z(m, m, rotation);
 			}
-			mat4x4_scale_aniso(m, m, cW, cH, 1.0);
-			mat4x4_translate(t, cX, cY, cY + (particleSystem->zIndex + particle->zIndex + renderPackage->depth) * layerFactor);
-			mat4x4_mul(m, t, m);
-			mat4x4_mul(mvp, tP, m);
+
+			LM::mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+			LM::mat4x4_translate(t, cX, cY, cY + (particleSystem->zIndex + particle->zIndex + renderPackage->depth) * layerFactor);
+			LM::mat4x4_mul(m, t, m);
+			LM::mat4x4_mul(mvp, tP, m);
 
 			const auto clipRect = particle->clip;
 			double scaleX, scaleY, xOffset, yOffset;

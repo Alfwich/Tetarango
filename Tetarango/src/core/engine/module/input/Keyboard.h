@@ -5,19 +5,20 @@
 #include <unordered_map>
 #include <SDL.h>
 #include "engine/module/input/IInputListener.h"
+#include "util/Key.h"
 
 namespace AW
 {
 
 	class Keyboard
 	{
-		std::unordered_map<SDL_Scancode, std::list<std::weak_ptr<IInputListener>>> onKeyListeners;
-		std::unordered_map<SDL_Scancode, Uint8> oldKeyValues;
+		std::unordered_map<AWKey, std::list<std::weak_ptr<IInputListener>>> onKeyListeners;
+		std::unordered_map<AWKey, Uint8> oldKeyValues;
 	public:
 
-		void registerKey(SDL_Scancode code, std::weak_ptr<IInputListener> listener);
-		void registerKeys(std::vector<SDL_Scancode> codes, std::weak_ptr<IInputListener> listener);
-		void unregisterKey(SDL_Scancode code, std::weak_ptr<IInputListener> listener);
+		void registerKey(AWKey code, std::weak_ptr<IInputListener> listener);
+		void registerKeys(std::vector<AWKey> codes, std::weak_ptr<IInputListener> listener);
+		void unregisterKey(AWKey code, std::weak_ptr<IInputListener> listener);
 		void unregisterObject(std::weak_ptr<IInputListener> listener);
 
 		void updateKeyStates(SDL_Event* event);

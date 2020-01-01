@@ -24,7 +24,7 @@ namespace AW
 		SDL_GLContext glContext;
 		Color clearColor;
 
-		mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
+		LM::mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
 		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
 
 		std::list<RenderPackage>::iterator nextPackage;

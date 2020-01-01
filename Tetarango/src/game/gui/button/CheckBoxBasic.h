@@ -28,7 +28,7 @@ namespace AWGame
 		void onLayoutChildren();
 		void onDetach();
 		void checkIsHovering(int x, int y);
-		void onMouseButton(AW::MouseButton button, bool pressed);
+		void onMouseButton(AWMouseButton button, bool pressed);
 		void onEnterFrame(const double& frameTime);
 
 		std::weak_ptr<GameObject> clickListener;

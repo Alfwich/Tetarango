@@ -40,8 +40,8 @@ namespace AWGame
 		virtual std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint);
 
 		void onEnterFrame(const double& deltaTime);
-		void onKeyPressed(SDL_Scancode key);
-		void onKeyReleased(SDL_Scancode key);
+		void onKeyPressed(AWKey key);
+		void onKeyReleased(AWKey key);
 		void onAboutToSave();
 		void onCameraUpdate();
 	};

@@ -48,7 +48,7 @@ namespace AWGame
 			gameScene->enableMenu();
 		}
 
-		modules->input->keyboard->registerKeys({ SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_DOWN, SDL_SCANCODE_UP, SDL_SCANCODE_BACKSPACE, SDL_SCANCODE_0 }, weak_from_this());
+		modules->input->keyboard->registerKeys({ AWKey::ONE, AWKey::TWO, AWKey::THREE, AWKey::FOUR, AWKey::FIVE, AWKey::LEFT, AWKey::RIGHT, AWKey::DOWN, AWKey::UP, AWKey::BACKSPACE, AWKey::ZERO }, weak_from_this());
 
 		keyRepeatTimer = modules->time->createTimer(AW::TimeScope::Game);
 		keyRepeatTimer->start();
@@ -232,11 +232,11 @@ namespace AWGame
 		saveScreenshotTimeoutId = 0;
 	}
 
-	void SceneTetris::onKeyPressed(SDL_Scancode key)
+	void SceneTetris::onKeyPressed(AWKey key)
 	{
 		switch (key)
 		{
-		case SDL_SCANCODE_0:
+		case AWKey::ZERO:
 		{
 			for (const auto cached : getChildrenOfType<AW::DisplayBuffer>())
 			{
@@ -252,23 +252,23 @@ namespace AWGame
 		}
 		break;
 
-		case SDL_SCANCODE_LEFT:
+		case AWKey::LEFT:
 			isLeftDown = true;
 			break;
 
-		case SDL_SCANCODE_RIGHT:
+		case AWKey::RIGHT:
 			isRightDown = true;
 			break;
 
-		case SDL_SCANCODE_DOWN:
+		case AWKey::DOWN:
 			board->enableFastFall();
 			break;
 
-		case SDL_SCANCODE_UP:
+		case AWKey::UP:
 			board->rotatePiece();
 			break;
 
-		case SDL_SCANCODE_BACKSPACE:
+		case AWKey::BACKSPACE:
 			score = 0;
 			updateScoreText();
 			board->resetBoard();
@@ -279,19 +279,19 @@ namespace AWGame
 		}
 	}
 
-	void SceneTetris::onKeyReleased(SDL_Scancode key)
+	void SceneTetris::onKeyReleased(AWKey key)
 	{
 		switch (key)
 		{
-		case SDL_SCANCODE_LEFT:
+		case AWKey::LEFT:
 			isLeftDown = false;
 			break;
 
-		case SDL_SCANCODE_RIGHT:
+		case AWKey::RIGHT:
 			isRightDown = false;
 			break;
 
-		case SDL_SCANCODE_DOWN:
+		case AWKey::DOWN:
 			board->disableFastFall();
 			break;
 		}

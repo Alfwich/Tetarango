@@ -1,15 +1,17 @@
 #include "Keyboard.h"
 
+#include "SDL_keycode.h"
+
 namespace AW
 {
 
-	void Keyboard::registerKey(SDL_Scancode code, std::weak_ptr<IInputListener> listener)
+	void Keyboard::registerKey(AWKey code, std::weak_ptr<IInputListener> listener)
 	{
 		onKeyListeners[code].push_back(listener);
 		oldKeyValues[code] = 0;
 	}
 
-	void Keyboard::registerKeys(std::vector<SDL_Scancode> codes, std::weak_ptr<IInputListener> listener)
+	void Keyboard::registerKeys(std::vector<AWKey> codes, std::weak_ptr<IInputListener> listener)
 	{
 		for (auto code : codes)
 		{
@@ -17,7 +19,7 @@ namespace AW
 		}
 	}
 
-	void Keyboard::unregisterKey(SDL_Scancode code, std::weak_ptr<IInputListener> listener)
+	void Keyboard::unregisterKey(AWKey code, std::weak_ptr<IInputListener> listener)
 	{
 		const auto objectToRemovePtr = listener.lock();
 		for (auto it = onKeyListeners[code].begin(); it != onKeyListeners[code].end();)
@@ -54,14 +56,14 @@ namespace AW
 		const Uint8* keyStates = SDL_GetKeyboardState(NULL);
 		for (auto listenerKeyPair : onKeyListeners)
 		{
-			if (oldKeyValues[listenerKeyPair.first] != keyStates[listenerKeyPair.first])
+			if (oldKeyValues[listenerKeyPair.first] != keyStates[(SDL_Scancode)listenerKeyPair.first])
 			{
 				for (auto listener : listenerKeyPair.second)
 				{
 					const auto ptr = listener.lock();
 					if (ptr != nullptr)
 					{
-						ptr->key(listenerKeyPair.first, keyStates[listenerKeyPair.first]);
+						ptr->key(listenerKeyPair.first, keyStates[(SDL_Scancode)listenerKeyPair.first]);
 					}
 				}
 			}
@@ -69,7 +71,7 @@ namespace AW
 
 		for (auto keyValuePair : oldKeyValues)
 		{
-			oldKeyValues[keyValuePair.first] = keyStates[keyValuePair.first];
+			oldKeyValues[keyValuePair.first] = keyStates[(SDL_Scancode)keyValuePair.first];
 		}
 	}
 

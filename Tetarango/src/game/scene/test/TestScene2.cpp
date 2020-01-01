@@ -32,22 +32,22 @@ namespace AWGame
 		setTimeScope(AW::TimeScope::Game);
 
 		modules->input->keyboard->registerKeys({
-				SDL_SCANCODE_ESCAPE,
-				SDL_SCANCODE_1,
-				SDL_SCANCODE_2,
-				SDL_SCANCODE_3,
-				SDL_SCANCODE_4,
-				SDL_SCANCODE_5,
-				SDL_SCANCODE_6,
-				SDL_SCANCODE_7,
-				SDL_SCANCODE_8,
-				SDL_SCANCODE_UP,
-				SDL_SCANCODE_DOWN,
-				SDL_SCANCODE_LEFT,
-				SDL_SCANCODE_RIGHT
+				AWKey::ESCAPE,
+				AWKey::ONE,
+				AWKey::TWO,
+				AWKey::THREE,
+				AWKey::FOUR,
+				AWKey::FIVE,
+				AWKey::SIX,
+				AWKey::SEVEN,
+				AWKey::EIGHT,
+				AWKey::UP,
+				AWKey::DOWN,
+				AWKey::LEFT,
+				AWKey::RIGHT
 			}
 		, weak_from_this());
-		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWMouseButton::Left, weak_from_this());
 
 		tran = modules->animation->createGameTransition();
 	}
@@ -163,44 +163,44 @@ namespace AWGame
 		}
 	}
 
-	void TestScene2::onKeyPressed(SDL_Scancode key)
+	void TestScene2::onKeyPressed(AWKey key)
 	{
-		if (key == SDL_SCANCODE_ESCAPE)
+		if (key == AWKey::ESCAPE)
 		{
 			const auto applicationSceneContainer = findFirstInParentChain<AW::SceneContainer>();
 			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
 		}
 
-		if (key == SDL_SCANCODE_1)
+		if (key == AWKey::ONE)
 		{
 		}
 
-		if (key == SDL_SCANCODE_2)
+		if (key == AWKey::TWO)
 		{
 			tran->stop();
 		}
 
-		if (key == SDL_SCANCODE_3)
+		if (key == AWKey::THREE)
 		{
 			modules->physic->setWorldGravity(0, 0.0, 0.0);
 		}
 
-		if (key == SDL_SCANCODE_4)
+		if (key == AWKey::FOUR)
 		{
 			modules->physic->setWorldGravity(0);
 		}
 
-		if (key == SDL_SCANCODE_5)
+		if (key == AWKey::FIVE)
 		{
 		}
 
 	}
 
-	void TestScene2::onKey(SDL_Scancode key, bool isPressed)
+	void TestScene2::onKey(AWKey key, bool isPressed)
 	{
 	}
 
-	void TestScene2::onMouseButton(AW::MouseButton button, bool isPressed)
+	void TestScene2::onMouseButton(AWMouseButton button, bool isPressed)
 	{
 	}
 

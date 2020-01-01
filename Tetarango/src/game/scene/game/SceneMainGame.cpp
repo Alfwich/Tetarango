@@ -44,7 +44,7 @@ namespace AWGame
 
 	void SceneMainGame::onInitialAttach()
 	{
-		modules->input->keyboard->registerKey(SDL_SCANCODE_ESCAPE, baseSceneWeakThisRef());
+		modules->input->keyboard->registerKey(AWKey::ESCAPE, baseSceneWeakThisRef());
 
 		setTimeScope(AW::TimeScope::Game);
 		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 0.0);
@@ -305,11 +305,11 @@ namespace AWGame
 		return BaseScene::doSerialize(hint);
 	}
 
-	void SceneMainGame::onKeyPressed(SDL_Scancode key)
+	void SceneMainGame::onKeyPressed(AWKey key)
 	{
 		switch (key)
 		{
-		case SDL_SCANCODE_ESCAPE:
+		case AWKey::ESCAPE:
 			if (!menuEnabled)
 			{
 				return;

@@ -36,7 +36,7 @@ namespace AWGame
 
 	void SceneOptionsMenu::onInitialAttach()
 	{
-		modules->input->keyboard->registerKeys({ SDL_SCANCODE_RETURN, SDL_SCANCODE_BACKSPACE }, weak_from_this());
+		modules->input->keyboard->registerKeys({ AWKey::RETURN, AWKey::BACKSPACE }, weak_from_this());
 	}
 
 	void SceneOptionsMenu::onDetach()
@@ -505,11 +505,11 @@ namespace AWGame
 		}
 	}
 
-	void SceneOptionsMenu::onKeyPressed(SDL_Scancode key)
+	void SceneOptionsMenu::onKeyPressed(AWKey key)
 	{
 		switch (key)
 		{
-		case SDL_SCANCODE_RETURN:
+		case AWKey::RETURN:
 			if (applyButton->getEnabled() == true)
 			{
 				modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
@@ -517,7 +517,7 @@ namespace AWGame
 			}
 			break;
 
-		case SDL_SCANCODE_BACKSPACE:
+		case AWKey::BACKSPACE:
 			config = AW::ScreenConfig();
 			modules->sound->setMasterVolume(1.0);
 			modules->sound->setEffectVolume(0.8);

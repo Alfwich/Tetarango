@@ -83,7 +83,7 @@ namespace AWGame
 
 		void onTimeoutCalled(int id);
 		void onButtonClicked(int id);
-		void onKeyPressed(SDL_Scancode key);
+		void onKeyPressed(AWKey key);
 		void onScrollBarScroll(int id, double position);
 	};
 

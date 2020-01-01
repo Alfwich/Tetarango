@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include "gamepad/GamepadMappings.h"
+#include "util/Key.h"
 
 namespace AW
 {
@@ -12,11 +13,6 @@ namespace AW
 		Disabled
 	};
 
-	enum class MouseButton {
-		Left,
-		Right,
-		Middle
-	};
 
 	class IInputListener {
 		InputMode inputMode = InputMode::Unspecified;
@@ -30,13 +26,13 @@ namespace AW
 		virtual bool getInputEnabled() { return inputMode == InputMode::Enabled || inputMode == InputMode::ParentEnabled; }
 
 		virtual int inputListenerObjectId() { return 0; };
-		virtual void onKey(SDL_Scancode code, bool pressed) { /* NO-OP */ };
-		virtual void onKeyPressed(SDL_Scancode code) { /* NO-OP */ };
-		virtual void onKeyReleased(SDL_Scancode code) { /* NO-OP */ };
+		virtual void onKey(AWKey code, bool pressed) { /* NO-OP */ };
+		virtual void onKeyPressed(AWKey code) { /* NO-OP */ };
+		virtual void onKeyReleased(AWKey code) { /* NO-OP */ };
 
 		virtual void onMouseMove(int x, int y) { /* NO-OP */ };
 		virtual void onMouseWheel(int x, int y) { /* NO-OP */ };
-		virtual void onMouseButton(MouseButton, bool pressed) { /* NO-OP */ };
+		virtual void onMouseButton(AWMouseButton, bool pressed) { /* NO-OP */ };
 		virtual void onMouseButtonLeftDown() { /* NO-OP */ };
 		virtual void onMouseButtonLeftUp() { /* NO-OP */ };
 		virtual void onMouseButtonRightDown() { /* NO-OP */ };
@@ -50,7 +46,7 @@ namespace AW
 		virtual void onGamepadButtonDown(int gamepadIndex, GamepadButtonMapping button) { /* NO-OP */ };
 		virtual void onGamepadButtonUp(int gamepadIndex, GamepadButtonMapping button) { /* NO-OP */ };
 
-		void key(SDL_Scancode code, bool pressed)
+		void key(AWKey code, bool pressed)
 		{
 			if (!getInputEnabled()) return;
 
@@ -58,22 +54,22 @@ namespace AW
 			if (pressed) this->onKeyPressed(code); else this->onKeyReleased(code);
 		}
 
-		void mouseButton(MouseButton button, bool pressed)
+		void mouseButton(AWMouseButton button, bool pressed)
 		{
 			if (!getInputEnabled()) return;
 
 			this->onMouseButton(button, pressed);
 			switch (button)
 			{
-			case MouseButton::Left:
+			case AWMouseButton::Left:
 				if (pressed) this->onMouseButtonLeftDown(); else this->onMouseButtonLeftUp();
 				break;
 
-			case MouseButton::Right:
+			case AWMouseButton::Right:
 				if (pressed) this->onMouseButtonRightDown(); else this->onMouseButtonRightUp();
 				break;
 
-			case MouseButton::Middle:
+			case AWMouseButton::Middle:
 				if (pressed) this->onMouseButtonMiddleDown(); else this->onMouseButtonMiddleUp();
 				break;
 			}

@@ -186,7 +186,7 @@ namespace AWGame
 	void ScrollBarBasic::onInitialAttach()
 	{
 		scrollerTransition = modules->animation->createTransition();
-		modules->input->mouse->registerMouseButton(AW::MouseButton::Left, weak_from_this());
+		modules->input->mouse->registerMouseButton(AWMouseButton::Left, weak_from_this());
 		enableEnterFrame();
 	}
 
@@ -225,7 +225,7 @@ namespace AWGame
 			y < rect.y + rect.h && y > rect.y;
 	}
 
-	void ScrollBarBasic::onMouseButton(AW::MouseButton button, bool pressed)
+	void ScrollBarBasic::onMouseButton(AWMouseButton button, bool pressed)
 	{
 		const auto isEnabled = serializationClient->getBool(enabledParamName, true);
 		if (!isEnabled)
@@ -235,7 +235,7 @@ namespace AWGame
 
 		switch (button)
 		{
-		case AW::MouseButton::Left:
+		case AWMouseButton::Left:
 			if (!pressed)
 			{
 				const auto listenerPtr = std::dynamic_pointer_cast<IGuiListener>(clickListener.lock());

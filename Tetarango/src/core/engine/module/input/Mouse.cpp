@@ -26,19 +26,19 @@ namespace AW
 		isProcessing = true;
 		if (this->leftDown != leftDown)
 		{
-			fireMouseButtonEvent(MouseButton::Left, leftDown);
+			fireMouseButtonEvent(AWMouseButton::Left, leftDown);
 			this->leftDown = leftDown;
 		}
 
 		if (this->rightDown != rightDown)
 		{
-			fireMouseButtonEvent(MouseButton::Right, rightDown);
+			fireMouseButtonEvent(AWMouseButton::Right, rightDown);
 			this->rightDown = rightDown;
 		}
 
 		if (this->middleDown != middleDown)
 		{
-			fireMouseButtonEvent(MouseButton::Middle, middleDown);
+			fireMouseButtonEvent(AWMouseButton::Middle, middleDown);
 			this->middleDown = middleDown;
 		}
 		isProcessing = false;
@@ -72,7 +72,7 @@ namespace AW
 		wheelRemoves.clear();
 	}
 
-	void Mouse::fireMouseButtonEvent(MouseButton button, bool pressed)
+	void Mouse::fireMouseButtonEvent(AWMouseButton button, bool pressed)
 	{
 		for (auto& listenerVtr : mouseButtonListeners)
 		{
@@ -88,7 +88,7 @@ namespace AW
 		}
 	}
 
-	void Mouse::registerMouseButton(MouseButton button, std::weak_ptr<IInputListener> listener)
+	void Mouse::registerMouseButton(AWMouseButton button, std::weak_ptr<IInputListener> listener)
 	{
 		mouseButtonListeners[button].push_back(listener);
 	}
@@ -165,7 +165,7 @@ namespace AW
 		}
 	}
 
-	void Mouse::unregisterMouseButton(MouseButton button, std::shared_ptr<IInputListener> obj)
+	void Mouse::unregisterMouseButton(AWMouseButton button, std::shared_ptr<IInputListener> obj)
 	{
 		if (isProcessing)
 		{

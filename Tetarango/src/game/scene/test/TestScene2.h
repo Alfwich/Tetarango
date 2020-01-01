@@ -34,9 +34,9 @@ namespace AWGame
 		void onTimeoutCalled();
 
 		void onEnterFrame(const double& deltaTime);
-		void onKeyPressed(SDL_Scancode key);
-		void onKey(SDL_Scancode key, bool isPressed);
-		void onMouseButton(AW::MouseButton button, bool isPressed);
+		void onKeyPressed(AWKey key);
+		void onKey(AWKey key, bool isPressed);
+		void onMouseButton(AWMouseButton button, bool isPressed);
 
 		void onScrollBarScroll(int id, double pos);
 		void onCameraUpdate();
