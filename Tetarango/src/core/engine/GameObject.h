@@ -62,7 +62,7 @@ namespace AW
 		std::shared_ptr<T> findChildWithName(std::string name, bool checkChildren = true);
 
 		template<typename T>
-		void registerGameObject();
+		void registerGameObject(const std::string& typeName);
 
 	public:
 		static int nextId();
@@ -242,9 +242,9 @@ namespace AW
 	}
 
 	template<typename T>
-	inline void GameObject::registerGameObject()
+	inline void GameObject::registerGameObject(const std::string& typeName)
 	{
-		this->typeName = std::string(typeid(T).name());
+		this->typeName = typeName;
 		if (this->modules->serialization->hasSchematic(this->typeName))
 		{
 			this->schematic = this->modules->serialization->getSchematic(this->typeName);

@@ -26,8 +26,6 @@ namespace AWGame
 		const std::string guiBaseName;
 
 	public:
-		static void primeGuis();
-
 		BaseGui(GuiButton button);
 		BaseGui(GuiCamera camera);
 		BaseGui(GuiMenu menu);

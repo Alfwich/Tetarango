@@ -17,7 +17,7 @@ namespace AWGame
 	TitleGame::TitleGame()
 	{
 		setShouldRebuildOnLoad();
-		registerGameObject<TitleGame>();
+		registerGameObject<TitleGame>("title-game");
 	}
 
 	void TitleGame::setFontSize(int fontSize)

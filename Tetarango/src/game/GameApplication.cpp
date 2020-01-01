@@ -64,16 +64,6 @@ namespace AWGame
 		}
 	}
 
-	void GameApplication::onPrimeSerialization()
-	{
-		BaseGui::primeGuis();
-		BaseScene::primeScenes();
-		BaseProp::primeProps();
-
-		std::make_unique<Board>();
-		std::make_unique<Player>();
-	}
-
 	void GameApplication::onLoadResources()
 	{
 		modules->font->loadFont("res/font/Roboto-Medium.ttf", "medium");

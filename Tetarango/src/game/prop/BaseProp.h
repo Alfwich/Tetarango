@@ -29,8 +29,6 @@ namespace AWGame
 		const std::string propBaseName;
 
 	public:
-		static void primeProps();
-
 		PropInfo info;
 
 		BaseProp();

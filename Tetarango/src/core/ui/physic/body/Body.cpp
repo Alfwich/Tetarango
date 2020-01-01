@@ -7,7 +7,7 @@ namespace AW
 	{
 		fixtureDef.friction = 1.0;
 		fixtureDef.density = 1.0;
-		registerGameObject<Body>();
+		registerGameObject<Body>("p-body");
 	}
 
 	void Body::notifyListenerOnPhysicUpdate()

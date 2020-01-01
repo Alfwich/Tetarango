@@ -7,7 +7,7 @@ namespace AW
 	{
 		disableCulling = true;
 		renderMode = RenderMode::ParticleSystem;
-		registerGameObject<ParticleSystem>();
+		registerGameObject<ParticleSystem>("particle-system");
 	}
 
 	void ParticleSystem::onBindShaders()

@@ -17,20 +17,6 @@ namespace AWGame
 		return config;
 	}
 
-	void BaseScene::primeScenes()
-	{
-		std::make_unique<TestScene>();
-		std::make_unique<TestScene2>();
-
-		std::make_unique<SceneSplash>();
-		std::make_unique<SceneMainMenu>();
-		std::make_unique<SceneOptionsMenu>();
-		std::make_unique<SceneSavedGamesMenu>();
-		std::make_unique<SceneMainGame>();
-
-		std::make_unique<SceneTetris>();
-	}
-
 	std::string BaseScene::sceneToStr(SceneGame scene)
 	{
 		return config.game.at(scene);

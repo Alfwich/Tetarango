@@ -17,7 +17,7 @@ namespace AWGame
 
 	BlockParticleFactory::BlockParticleFactory()
 	{
-		registerGameObject<BlockParticleFactory>();
+		registerGameObject<BlockParticleFactory>("block-particle-factory");
 	}
 
 	void BlockParticleFactory::setModColor(const AW::Color* color)

@@ -11,7 +11,7 @@ namespace AWGame
 	Block::Block()
 	{
 		setSize(32, 32);
-		registerGameObject<Block>();
+		registerGameObject<Block>("block");
 	}
 
 	double Block::addEnergy(double amount)

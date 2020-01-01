@@ -1,25 +1,12 @@
 #include "Application.h"
 
-#include "engine/GameObject.h"
-#include "ui/camera/Camera.h"
-#include "ui/scene/Scene.h"
-#include "ui/scene/SceneContainer.h"
-#include "ui/renderable/primitive/particle/ParticleSystem.h"
-#include "ui/renderable/primitive/Rectangle.h"
-#include "ui/renderable/element/Backdrop.h"
-#include "ui/renderable/element/tilemap/TileMap.h"
-#include "ui/renderable/element/Text.h"
-#include "ui/renderable/container/Container.h"
-#include "ui/renderable/container/ScrollContainer.h"
-#include "ui/renderable/Zone.h"
-#include "ui/renderable/primitive/trace/Trace.h"
-#include "ui/renderable/element/NineSlice.h"
-#include "ui/renderable/element/ScreenImage.h"
-#include "debug/monitor/DebugMonitor.h"
-#include "ui/renderable/element/DisplayBuffer.h"
-#include "ui/physic/body/Body.h"
-
+#include "serialization-list.generated.h"
 #include "Tests.h"
+
+namespace
+{
+	GeneratedPrimeList primeList;
+}
 
 namespace AW
 {
@@ -130,25 +117,7 @@ namespace AW
 
 	void Application::primeSerialization()
 	{
-		std::make_unique<GameObject>();
-		std::make_unique<Rectangle>();
-		std::make_unique<Scene>();
-		std::make_unique<SceneContainer>();
-		std::make_unique<Text>();
-		std::make_unique<ParticleSystem>();
-		std::make_unique<TileMap>();
-		std::make_unique<Container>();
-		std::make_unique<ScrollContainer>();
-		std::make_unique<Backdrop>();
-		std::make_unique<Zone>();
-		std::make_unique<Animated>();
-		std::make_unique<Element>();
-		std::make_unique<Trace>();
-		std::make_unique<NineSlice>();
-		std::make_unique<ScreenImage>();
-		std::make_unique<DebugMonitor>();
-		std::make_unique<DisplayBuffer>();
-		std::make_unique<Body>();
+		primeList.prime();
 	}
 
 	void Application::run(int argc, char* args[])

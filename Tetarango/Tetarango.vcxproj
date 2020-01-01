@@ -86,6 +86,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;$(SolutionDir)Tetarango\lib\libpng\lib\x64\debug;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>cd ..
+python scripts/generateSerializationList.py .</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='PROD_DEBUG|x64'">
     <ClCompile>
@@ -110,6 +114,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\Release\x64;$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>cd ..
+python scripts/generateSerializationList.py .</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='PROD|x64'">
     <ClCompile>
@@ -138,6 +146,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
+    <PreBuildEvent>
+      <Command>cd ..
+python scripts/generateSerializationList.py .</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd ..
+bash ./make.sh</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="asset.pack" />
@@ -284,6 +300,7 @@
     <ClInclude Include="src\core\engine\module\shader\ShaderContainer.h" />
     <ClInclude Include="src\core\engine\module\shader\ShaderReference.h" />
     <ClInclude Include="src\core\engine\module\sound\Music.h" />
+    <ClInclude Include="src\core\serialization-list.generated.h" />
     <ClInclude Include="src\core\ui\camera\ICameraListener.h" />
     <ClInclude Include="src\core\ui\physic\body\IBodyListener.h" />
     <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />

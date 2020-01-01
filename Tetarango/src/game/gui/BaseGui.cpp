@@ -16,17 +16,6 @@ namespace AWGame
 		return config;
 	}
 
-	void BaseGui::primeGuis()
-	{
-		std::make_unique<ButtonBasic>();
-		std::make_unique<CheckBoxBasic>();
-		std::make_unique<GameCamera>();
-		std::make_unique<GameMainMenu>();
-		std::make_unique<TransitionFade>();
-		std::make_unique<ScrollBarBasic>();
-		std::make_unique<ScrollArea>();
-	}
-
 	BaseGui::BaseGui(GuiButton button) :
 		guiBaseName(config.buttons.at(button)),
 		guiType(GuiType::Button) {}

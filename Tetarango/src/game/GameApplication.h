@@ -5,11 +5,9 @@
 #include <algorithm>
 #include "GameImports.h"
 #include "GameConfig.h"
-#include "ui/renderable/primitive/Rectangle.h"
 #include "engine/module/display/DisplayRoot.h"
 #include "engine/Application.h"
 #include "ui/renderable/element/DisplayBuffer.h"
-
 #include "debug/monitor/DebugMonitor.h"
 
 namespace AWGame
@@ -23,7 +21,6 @@ namespace AWGame
 
 	public:
 		void onInit();
-		void onPrimeSerialization();
 		void onLoadResources();
 		void onReady();
 		void onCleanup();

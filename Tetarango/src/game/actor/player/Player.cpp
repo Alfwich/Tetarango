@@ -11,7 +11,7 @@ namespace AWGame
 	{
 		setColor(AW::Color(255, 64, 32));
 		setSize(200.0, 200.0);
-		registerGameObject<Player>();
+		registerGameObject<Player>("player");
 	}
 
 	void Player::onBindShaders()

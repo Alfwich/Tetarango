@@ -13,7 +13,7 @@ namespace AW
 		renderTextureMode = RenderTextureMode::LinearWrapping;
 		disableCulling = true;
 
-		registerGameObject<Backdrop>();
+		registerGameObject<Backdrop>("backdrop");
 	}
 
 	void Backdrop::setSizeToEffectiveInfinity()

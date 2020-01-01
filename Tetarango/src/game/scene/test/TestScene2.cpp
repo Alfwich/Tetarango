@@ -19,7 +19,7 @@ namespace AWGame
 	TestScene2::TestScene2() : AW::Scene("test_scene_2")
 	{
 		setShouldRebuildOnLoad();
-		registerGameObject<TestScene2>();
+		registerGameObject<TestScene2>("test-scene-2");
 	}
 
 	void TestScene2::onLoadResources()

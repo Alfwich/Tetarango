@@ -17,7 +17,7 @@ namespace AW
 {
 	ScrollContainer::ScrollContainer()
 	{
-		registerGameObject<ScrollContainer>();
+		registerGameObject<ScrollContainer>("scroll-container");
 	}
 
 	void ScrollContainer::onInitialAttach()

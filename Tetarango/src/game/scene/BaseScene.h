@@ -15,8 +15,6 @@ namespace AWGame
 
 	public:
 
-		static void primeScenes();
-
 		static std::string sceneToStr(SceneGame scene);
 
 		static std::string storagePath(StorePaths path);

@@ -14,7 +14,7 @@ namespace AWGame
 
 	TransitionFade::TransitionFade() : BaseGui(GuiTransition::TransitionFade)
 	{
-		registerGameObject<TransitionFade>();
+		registerGameObject<TransitionFade>("transition-fade");
 	}
 
 	void TransitionFade::onLoadResources()

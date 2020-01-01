@@ -10,21 +10,6 @@ namespace
 
 namespace AWGame
 {
-	void BaseProp::primeProps()
-	{
-		std::make_unique<TestParticleFactory>();
-		std::make_unique<ParticleFiringFactory>();
-		std::make_unique<ParticleBulletTrailParticleFactory>();
-		std::make_unique<ParticleHitFleshFactory>();
-		std::make_unique<ParticleHitHardFactory>();
-		std::make_unique<ParticleHitSoftFactory>();
-		std::make_unique<ParticleSpaceBackgroundParticleFactory>();
-		std::make_unique<BlockParticleFactory>();
-		std::make_unique<Block>();
-		std::make_unique<TitleGame>();
-		std::make_unique<Box>();
-	}
-
 	const Props& BaseProp::getProps()
 	{
 		return config;

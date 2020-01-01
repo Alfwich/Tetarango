@@ -20,7 +20,7 @@ namespace AW
 		setBackgroundColor(0x00, 0x00, 0x00);
 		renderMode = RenderMode::Container;
 		renderTextureMode = RenderTextureMode::BilinearNoWrap;
-		registerGameObject<Text>();
+		registerGameObject<Text>("text");
 	}
 
 	Text::~Text()

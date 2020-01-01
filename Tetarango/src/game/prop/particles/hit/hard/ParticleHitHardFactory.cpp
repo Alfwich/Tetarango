@@ -8,7 +8,7 @@ namespace AWGame
 {
 	ParticleHitHardFactory::ParticleHitHardFactory()
 	{
-		registerGameObject<ParticleHitHardFactory>();
+		registerGameObject<ParticleHitHardFactory>("particle-hit-hard-factory");
 	}
 
 	std::shared_ptr<AW::Particle> ParticleHitHardFactory::makeParticle(AW::ParticleCreationBundle& bundle)

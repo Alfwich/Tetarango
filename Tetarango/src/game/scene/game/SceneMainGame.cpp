@@ -39,7 +39,7 @@ namespace AWGame
 
 	SceneMainGame::SceneMainGame() : BaseScene(SceneGame::MainGame)
 	{
-		registerGameObject<SceneMainGame>();
+		registerGameObject<SceneMainGame>("scene-main-game");
 	}
 
 	void SceneMainGame::onInitialAttach()

@@ -18,7 +18,7 @@ namespace AWGame
 	ScrollBarBasic::ScrollBarBasic() : BaseGui(GuiScrollBar::ScrollBarBasic)
 	{
 		renderTextureMode = AW::RenderTextureMode::BilinearNoWrap;
-		registerGameObject<ScrollBarBasic>();
+		registerGameObject<ScrollBarBasic>("scroll-bar-basic");
 	}
 
 	void ScrollBarBasic::onLoadResources()

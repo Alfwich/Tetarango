@@ -5,7 +5,7 @@ namespace AW
 
 	TileMap::TileMap()
 	{
-		registerGameObject<TileMap>();
+		registerGameObject<TileMap>("tile-map");
 	}
 
 	int TileMap::getTileWidth()

@@ -10,7 +10,7 @@ namespace AWGame
 	Box::Box()
 	{
 		setSize(32, 32);
-		registerGameObject<Box>();
+		registerGameObject<Box>("box");
 	}
 
 	void Box::onInitialAttach()
