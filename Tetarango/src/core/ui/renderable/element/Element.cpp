@@ -3,7 +3,6 @@
 namespace
 {
 	const auto elementAutoSizeToTextureParam = "element-a-s-t-t";
-	auto hasLoadedClassResources = false;
 }
 
 namespace AW
@@ -17,11 +16,7 @@ namespace AW
 
 	void Element::onLoadResources()
 	{
-		if (!hasLoadedClassResources)
-		{
-			modules->shader->registerShaderComposition({ "f-texture", "f-color" }, "element");
-			hasLoadedClassResources = true;
-		}
+		modules->shader->registerShaderComposition({ "f-texture", "f-color" }, "element");
 	}
 
 	void Element::onBindShaders()

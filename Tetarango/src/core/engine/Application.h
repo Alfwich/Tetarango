@@ -38,8 +38,7 @@ namespace AW
 		std::shared_ptr<Config::GameConfig> gameConfig;
 
 		bool init();
-		void loadResources();
-		void primeSerialization();
+		void primeSerializationAndLoadResources();
 		void ready();
 		void cleanup();
 		void exit();

@@ -4,7 +4,7 @@ from distutils.dir_util import copy_tree
 
 resource_folders = ["Tetarango/src"]
 resource_include_files = [".cpp"]
-namespaces_to_use = ["AW", "AWGame"]
+namespaces_to_use = ["AWGame"]
 
 output_file = "Tetarango/src/core/serialization-list.generated.h"
 output_file_template = """#pragma once
@@ -19,21 +19,25 @@ namespace
     bool hasPrimed = false;
 }
 
-class GeneratedPrimeList
+namespace AW
 {
-    friend class Application;
-    void prime()
+    class GeneratedPrimeList
     {
-        if (hasPrimed) return;
-        hasPrimed = true;
-        
+        friend class Application;
+        void prime()
+        {
+            if (hasPrimed) return;
+            hasPrimed = true;
+
 {{MAKE_SHARED}}
-    }
-};
+        }
+    };
+}
 """
 include_template = "#include \"{{SOURCE_FILE}}\""
 namespace_template = "using namespace {{NAMESPACE}};"
-make_shared_template = "        std::make_unique<{{TYPE}}>();"
+make_shared_template = "            std::make_unique<{{TYPE}}>();"
+make_shared_load_template = "            std::make_unique<{{TYPE}}>()->onLoadResources();"
 
 def main():
     if len(sys.argv) == 1:
@@ -54,10 +58,17 @@ def main():
 
     objectsToAdd = []
     for rf in resourceFiles:
+        hasResources = False;
+        hasInserted = False
         for line in open(rf):
+            if "::onLoadResources" in line:
+                if hasInserted:
+                    objectsToAdd[-1][2] = True
+                hasResources = True
             if "registerGameObject<" in line:
+                hasInserted = True
                 pathInfo = rf.split("src/game") if "src/game" in rf else rf.split("src/core")
-                objectsToAdd.append((pathInfo[1][1:].replace(".cpp", ".h"), line.split("<")[1].split(">")[0]))
+                objectsToAdd.append([pathInfo[1][1:].replace(".cpp", ".h"), line.split("<")[1].split(">")[0], hasResources])
 
     namespaces = []
     for namespace in namespaces_to_use:
@@ -67,7 +78,7 @@ def main():
     make_shareds = []
     for obj in objectsToAdd:
         includes.append(include_template.replace("{{SOURCE_FILE}}", obj[0]))
-        make_shareds.append(make_shared_template.replace("{{TYPE}}", obj[1].strip()))
+        make_shareds.append((make_shared_load_template if obj[2] else make_shared_template).replace("{{TYPE}}", obj[1].strip()))
 
     source = output_file_template.replace("{{INCLUDES}}", "\n".join(includes)).replace("{{NAMESPACES}}", "\n".join(namespaces)).replace("{{MAKE_SHARED}}", "\n".join(make_shareds))
 

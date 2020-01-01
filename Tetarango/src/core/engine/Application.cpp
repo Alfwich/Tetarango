@@ -5,7 +5,7 @@
 
 namespace
 {
-	GeneratedPrimeList primeList;
+	AW::GeneratedPrimeList primeList;
 }
 
 namespace AW
@@ -73,14 +73,11 @@ namespace AW
 
 	void Application::ready()
 	{
-		modules->logger->log("Application::Load resources");
-		loadResources();
-
 		modules->logger->log("Application::Modules load resources");
 		modules->onLoadResources();
 
-		modules->logger->log("Application::Priming system serialization pool");
-		primeSerialization();
+		modules->logger->log("Application::Priming system serialization pool and loading resources");
+		primeSerializationAndLoadResources();
 
 		modules->logger->log("Application::onLoadResources");
 		onLoadResources();
@@ -111,11 +108,7 @@ namespace AW
 		frameTimer->start();
 	}
 
-	void Application::loadResources()
-	{
-	}
-
-	void Application::primeSerialization()
+	void Application::primeSerializationAndLoadResources()
 	{
 		primeList.prime();
 	}
