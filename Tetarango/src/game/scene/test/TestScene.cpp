@@ -3,6 +3,7 @@
 #include <random>
 #include "GameImports.h"
 #include "ui/renderable/element/DisplayBuffer.h"
+#include "ui/renderable/primitive/Polygon.h"
 
 namespace
 {
@@ -146,6 +147,21 @@ namespace AWGame
 		blue->setColor(0, 0, 192);
 		blue->toRightOf(green, 2.0);
 		add(blue);
+
+		const auto poly = std::make_shared<AW::Polygon>();
+		poly->setColor(AW::Color::red());
+		poly->setPoint(-50.0, 0.0);
+		poly->setPoint(50.0, -50.0);
+		poly->setPoint(50.0, 50.0);
+		/*
+		poly->setPoint(0.0, 0.0);
+		poly->setPoint(modules->screen->getWidth(), 0.0);
+		poly->setPoint(modules->screen->getWidth(), modules->screen->getHeight());
+		poly->setPoint(0.0, modules->screen->getHeight());
+		*/
+		poly->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		contentContainer->add(poly);
+		obj4 = poly;
 	}
 
 	void TestScene::onChildrenHydrated()
@@ -172,6 +188,8 @@ namespace AWGame
 				obj2->markDirty();
 			}
 		}
+
+		obj4->rotate(deltaTime / 1000.0 * 45.0);
 	}
 
 	void TestScene::onKeyPressed(AWKey key)

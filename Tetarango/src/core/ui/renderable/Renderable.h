@@ -18,7 +18,8 @@ namespace AW
 		CachedElement,
 		Primitive,
 		ParticleSystem,
-		Container
+		Container,
+		Polygon
 	};
 
 	enum class RenderPositionProcessing

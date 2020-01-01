@@ -6,6 +6,7 @@
 #include "ui/renderable/primitive/trace/Trace.h"
 #include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/element/DisplayBuffer.h"
+#include "ui/renderable/primitive/Polygon.h"
 
 namespace
 {
@@ -271,6 +272,44 @@ namespace AW
 		}
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
+	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, const std::vector<AWVec2<double>>& points)
+	{
+		if (renderPackage->stencilDepth > 0)
+		{
+			glStencilFunc(GL_EQUAL, 1, 0xFF);
+		}
+
+		if (!depthEnabled && renderDepthStack.top() == RenderDepthTest::Enabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+			depthEnabled = true;
+		}
+		else if (depthEnabled)
+		{
+			glDisable(GL_DEPTH_TEST);
+			depthEnabled = false;
+		}
+
+		if (!msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Enabled)
+		{
+			glEnable(GL_MULTISAMPLE);
+			msaaEnabled = true;
+		}
+		else if (msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Disabled)
+		{
+			glDisable(GL_MULTISAMPLE);
+			msaaEnabled = false;
+		}
+
+		glBegin(GL_POLYGON);
+		for (const auto p : points)
+		{
+			glVertex2d(p.x, p.y);
+		}
+		glEnd();
+
 	}
 
 	void Renderer::openGLDrawArraysStencil(RenderPackage* renderPackage)
@@ -548,6 +587,7 @@ namespace AW
 
 		case RenderMode::Primitive:
 		case RenderMode::ParticleSystem:
+		case RenderMode::Polygon:
 			renderPrimitive(renderPackage);
 			renderRecursiveRenderChildren(renderPackage);
 			break;
@@ -818,6 +858,10 @@ namespace AW
 		{
 		case RenderMode::ParticleSystem:
 			renderParticleSystemOpenGL(renderPackage);
+			break;
+
+		case RenderMode::Polygon:
+			renderPolygonOpenGL(renderPackage);
 			break;
 
 		default:
@@ -1129,14 +1173,59 @@ namespace AW
 		prim->markClean();
 	}
 
+	void Renderer::renderPolygonOpenGL(RenderPackage * renderPackage)
+	{
+		const auto poly = std::dynamic_pointer_cast<Polygon>(renderPackage->obj);
+		if (poly == nullptr) return;
+
+		changeProgram(renderPackage);
+
+		const auto computed = &renderPackage->computed;
+		const auto cW = computed->w / 2.0;
+		const auto cH = computed->h / 2.0;
+		const auto cX = computed->x + cW;
+		const auto cY = computed->y + cH;
+
+		LM::mat4x4_identity(m);
+
+		if (renderPackage->rotation != 0.0)
+		{
+			LM::mat4x4_rotate_Z(m, m, renderPackage->rotation * AW::NumberHelper::degToRad);
+		}
+		LM::mat4x4_scale_aniso(m, m, cW, cH, 1.0);
+		LM::mat4x4_translate(t, cX, cY, cY + (poly->zIndex + renderPackage->depth) * layerFactor);
+
+		LM::mat4x4_mul(m, t, m);
+
+		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
+		{
+			LM::mat4x4_dup(tP, pAbs);
+		}
+		else if (renderTargetStack.top() == RenderTarget::Background)
+		{
+			LM::mat4x4_dup(tP, pBackground);
+		}
+		else
+		{
+			LM::mat4x4_dup(tP, p);
+		}
+
+		LM::mat4x4_mul(mvp, tP, m);
+
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+
+		setColorModParam(renderPackage);
+
+		openGLDrawPoints(renderPackage, poly->getNormalizedPoints());
+
+		poly->markClean();
+	}
+
 	void Renderer::renderParticleSystemOpenGL(RenderPackage* renderPackage)
 	{
 		const auto prim = std::dynamic_pointer_cast<Primitive>(renderPackage->obj);
 		const auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(prim);
-		if (particleSystem == nullptr)
-		{
-			return;
-		}
+		if (particleSystem == nullptr) return;
 
 		if (renderPositionModeStack.top() == RenderPositionMode::Absolute)
 		{

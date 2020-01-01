@@ -8,12 +8,13 @@
 #include "GL/glew.h"
 #include "engine/GameObject.h"
 #include "ui/camera/Camera.h"
-#include "util/Rect.h"
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Primitive.h"
 #include "RenderPackage.h"
 #include "util/linmath.h"
 #include "util/Color.h"
+#include "util/Rect.h"
+#include "util/Vec.h"
 
 namespace AW
 {
@@ -84,9 +85,11 @@ namespace AW
 
 		void renderElementOpenGL(RenderPackage* renderPackage);
 		void renderPrimitiveOpenGL(RenderPackage* renderPackage);
+		void renderPolygonOpenGL(RenderPackage* renderPackage);
 		void renderParticleSystemOpenGL(RenderPackage* renderPackage);
 
 		void openGLDrawArrays(RenderPackage* renderPackage);
+		void openGLDrawPoints(RenderPackage* renderPackage, const std::vector<AWVec2<double>>& points);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
 		void changeProgram(GLuint programId);

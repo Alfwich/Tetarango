@@ -311,6 +311,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\ui\physic\body\Body.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\Polygon.h" />
     <ClInclude Include="src\core\util\Key.h" />
+    <ClInclude Include="src\core\util\Vec.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
     <ClInclude Include="src\game\actor\player\Player.h" />
     <ClInclude Include="src\game\gui\button\CheckBoxBasic.h" />
