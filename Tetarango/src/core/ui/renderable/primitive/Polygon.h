@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui/renderable/primitive/Primitive.h"
+#include "engine/module/display/VertexBufferProxy.h"
 #include "util/Vec.h"
 
 namespace AW
@@ -14,6 +15,8 @@ namespace AW
 
 	public:
 		Polygon();
+
+		std::unique_ptr<VertexBufferProxy> vertexBuffer;
 
 		void setPoint(AWVec2<double> p);
 		void setPoint(double x, double y);

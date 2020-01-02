@@ -3,8 +3,8 @@
 uniform float frameTime;
 uniform float frameStartTime;
 
-uniform float pulsateMin;
-uniform float pulsateMax;
+uniform float fPulsateMin;
+uniform float fPulsateMax;
 
 vec4 pColor;
 
@@ -13,5 +13,5 @@ const float PI_2 = PI * 2.0;
 
 void main() 
 {
-	pColor = vec4(pColor.rgb * (pulsateMin + (pulsateMax - pulsateMin) * abs(sin((frameTime - frameStartTime) * PI))), pColor.a);
+	pColor = vec4(pColor.rgb * (fPulsateMin + (fPulsateMax - fPulsateMin) * abs(sin((frameTime - frameStartTime) * PI))), pColor.a);
 };

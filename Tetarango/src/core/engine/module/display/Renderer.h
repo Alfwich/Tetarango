@@ -89,7 +89,7 @@ namespace AW
 		void renderParticleSystemOpenGL(RenderPackage* renderPackage);
 
 		void openGLDrawArrays(RenderPackage* renderPackage);
-		void openGLDrawPoints(RenderPackage* renderPackage, const std::vector<AWVec2<double>>& points);
+		void openGLDrawPoints(RenderPackage* renderPackage, GLuint vertexArray, unsigned int numPoints);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
 		void changeProgram(GLuint programId);
@@ -104,6 +104,8 @@ namespace AW
 		GLuint getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId);
 
 		void generateBackgroundRenderBuffer();
+
+		GLuint generateVertexBuffer(const std::vector<AWVec2<double>>& points);
 
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);

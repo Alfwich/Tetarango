@@ -274,44 +274,6 @@ namespace AW
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 
-	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, const std::vector<AWVec2<double>>& points)
-	{
-		if (renderPackage->stencilDepth > 0)
-		{
-			glStencilFunc(GL_EQUAL, 1, 0xFF);
-		}
-
-		if (!depthEnabled && renderDepthStack.top() == RenderDepthTest::Enabled)
-		{
-			glEnable(GL_DEPTH_TEST);
-			depthEnabled = true;
-		}
-		else if (depthEnabled)
-		{
-			glDisable(GL_DEPTH_TEST);
-			depthEnabled = false;
-		}
-
-		if (!msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Enabled)
-		{
-			glEnable(GL_MULTISAMPLE);
-			msaaEnabled = true;
-		}
-		else if (msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Disabled)
-		{
-			glDisable(GL_MULTISAMPLE);
-			msaaEnabled = false;
-		}
-
-		glBegin(GL_POLYGON);
-		for (const auto p : points)
-		{
-			glVertex2d(p.x, p.y);
-		}
-		glEnd();
-
-	}
-
 	void Renderer::openGLDrawArraysStencil(RenderPackage* renderPackage)
 	{
 		if (renderPackage->stencilDepth > 0)
@@ -360,6 +322,68 @@ namespace AW
 		// TODO: If MSAA is needed
 		//glRenderbufferStorageMultisample(GL_RENDERBUFFER, currentScreenConfig.msaaSamples, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+
+	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, GLuint vBuffer, unsigned int numPoints)
+	{
+		if (renderPackage->stencilDepth > 0)
+		{
+			glStencilFunc(GL_EQUAL, 1, 0xFF);
+		}
+
+		if (!depthEnabled && renderDepthStack.top() == RenderDepthTest::Enabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+			depthEnabled = true;
+		}
+		else if (depthEnabled)
+		{
+			glDisable(GL_DEPTH_TEST);
+			depthEnabled = false;
+		}
+
+		if (!msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Enabled)
+		{
+			glEnable(GL_MULTISAMPLE);
+			msaaEnabled = true;
+		}
+		else if (msaaEnabled && renderMultiSampleModeStack.top() == RenderMultiSampleMode::Disabled)
+		{
+			glDisable(GL_MULTISAMPLE);
+			msaaEnabled = false;
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, vBuffer);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vBuffer);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+		glDrawArrays(GL_TRIANGLE_FAN, 0, numPoints);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	}
+
+	GLuint Renderer::generateVertexBuffer(const std::vector<AWVec2<double>>& points)
+	{
+		std::vector<float> pts;
+		for (const auto p : points)
+		{
+			pts.push_back(p.x);
+			pts.push_back(p.y);
+			pts.push_back(0.f);
+		}
+
+		GLuint buffer;
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, pts.size() * 4, &pts[0], GL_STATIC_DRAW);
+
+		return buffer;
 	}
 
 	void Renderer::changeProgram(RenderPackage* renderPackage)
@@ -1216,7 +1240,15 @@ namespace AW
 
 		setColorModParam(renderPackage);
 
-		openGLDrawPoints(renderPackage, poly->getNormalizedPoints());
+		if (poly->vertexBuffer == nullptr)
+		{
+			const auto normalizedPoints = poly->getNormalizedPoints();
+			poly->vertexBuffer = std::make_unique<VertexBufferProxy>(generateVertexBuffer(normalizedPoints), (unsigned int)normalizedPoints.size());
+		}
+
+		const auto vertexBufferId = poly->vertexBuffer->id;
+		const auto vertexBufferSize = poly->vertexBuffer->size;
+		openGLDrawPoints(renderPackage, vertexBufferId, vertexBufferSize);
 
 		poly->markClean();
 	}

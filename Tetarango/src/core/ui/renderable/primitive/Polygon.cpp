@@ -1,5 +1,10 @@
 #include "Polygon.h"
 
+namespace
+{
+	const auto sizeLimit = DBL_MAX;
+}
+
 namespace AW
 {
 
@@ -13,7 +18,7 @@ namespace AW
 	{
 		if (points.size() < 2) return;
 
-		double minX = -10000, maxX = 100000, minY = -100000, maxY = 100000;
+		double minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
 		for (const auto& p : points)
 		{
 			if (p.x > minX) minX = p.x;
@@ -32,8 +37,10 @@ namespace AW
 		double w = getWidth(), h = getHeight();
 		for (const auto p : points)
 		{
-			normalPoints.push_back(AWVec2<double>((p.x / w) * 2.0, (p.y / h) * 2.0));
+			normalPoints.push_back(AWVec2<double>(((p.x / w) * 2.0) - 1.0, ((p.y / h) * 2.0) - 1.0));
 		}
+
+		vertexBuffer = nullptr;
 	}
 
 	void Polygon::setPoint(AWVec2<double> p)

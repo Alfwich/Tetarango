@@ -295,6 +295,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\debug\monitor\DebugMonitor.h" />
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
+    <ClInclude Include="src\core\engine\module\display\VertexBufferProxy.h" />
     <ClInclude Include="src\core\engine\module\physic\RigidBody.h" />
     <ClInclude Include="src\core\engine\module\physic\Physic.h" />
     <ClInclude Include="src\core\engine\module\shader\Shader.h" />

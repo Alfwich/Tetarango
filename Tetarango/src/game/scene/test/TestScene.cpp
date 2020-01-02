@@ -148,20 +148,31 @@ namespace AWGame
 		blue->toRightOf(green, 2.0);
 		add(blue);
 
-		const auto poly = std::make_shared<AW::Polygon>();
-		poly->setColor(AW::Color::red());
-		poly->setPoint(-50.0, 0.0);
-		poly->setPoint(50.0, -50.0);
-		poly->setPoint(50.0, 50.0);
-		/*
-		poly->setPoint(0.0, 0.0);
-		poly->setPoint(modules->screen->getWidth(), 0.0);
-		poly->setPoint(modules->screen->getWidth(), modules->screen->getHeight());
-		poly->setPoint(0.0, modules->screen->getHeight());
-		*/
-		poly->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		contentContainer->add(poly);
-		obj4 = poly;
+		{
+			const auto poly = std::make_shared<AW::Polygon>();
+
+			poly->setColor(AW::Color::red());
+			poly->setPoint(0.0, 0.0);
+			poly->setPoint(100.0, 0.0);
+			poly->setPoint(100.0, 500.0);
+			poly->setPoint(0.0, 500.0);
+
+			contentContainer->add(poly);
+			obj4 = poly;
+		}
+
+		for (auto i = 0; i < 100; ++i)
+		{
+			const auto poly = std::make_shared<AW::Polygon>();
+			poly->setColor(AW::Color::random());
+			const auto numP = AW::NumberHelper::randomInt(3, 20);
+			for (auto j = 0; j < numP; ++j)
+			{
+				poly->setPoint(AW::NumberHelper::random(-50, 50), AW::NumberHelper::random(-50, 50));
+			}
+			poly->setPosition(AW::NumberHelper::random(-1000.0, 1000.0), AW::NumberHelper::random(-1000.0, 1000.0));
+			contentContainer->add(poly);
+		}
 	}
 
 	void TestScene::onChildrenHydrated()
