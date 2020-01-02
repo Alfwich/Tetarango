@@ -2,7 +2,7 @@
 
 namespace
 {
-	const auto dynamicPropName = "poly-d-";
+	const auto dynamicPropName = "poly-d";
 }
 
 namespace AWGame

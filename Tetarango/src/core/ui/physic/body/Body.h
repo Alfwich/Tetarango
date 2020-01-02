@@ -37,6 +37,8 @@ namespace AW
 		virtual void onAttach();
 		virtual void onDetach();
 
+		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
+
 		virtual b2Body* onCreateBody(const std::shared_ptr<b2World>& world);
 		virtual void onPhysicUpdate();
 

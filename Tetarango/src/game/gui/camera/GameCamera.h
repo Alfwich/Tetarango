@@ -18,5 +18,7 @@ namespace AWGame
 		void onEnterFrame(const double& frameTime);
 		void onKey(AWKey code, bool pressed);
 		void onGamepadAxisChanged(int gamepadIndex, AW::GamepadAxisMapping axis, double value);
+
+		std::weak_ptr<AW::Renderable> target;
 	};
 }

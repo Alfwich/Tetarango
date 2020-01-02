@@ -50,12 +50,14 @@ namespace AW
 		animation = createModule<AnimationContainer>();
 		texture = createModule<TextureContainer>();
 		font = createModule<FontContainer>();
-		event = createModule<Event>();
 		sound = createModule<Sound>();
 		logger = createModule<Logger>();
 		asset = createModule<Asset>();
 		shader = createModule<ShaderContainer>();
 		physic = createModule<Physic>();
+
+		// Process Event module last
+		event = createModule<Event>();
 
 		bindModules();
 	}

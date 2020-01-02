@@ -39,7 +39,7 @@ namespace Config
 		const std::map<Param, std::string> getConfig() {
 			std::map<Param, std::string> base
 			{
-					{ Param::version, "v0.13" },
+					{ Param::version, "v0.14" },
 					{ Param::saveVersion, "v1.00" },
 					{ Param::gameName, "Tetarango" },
 					{ Param::organizationName, "AW Games" },
@@ -72,15 +72,18 @@ namespace Config
 				base[Param::immediateDebugOutput] = TRUE;
 				base[Param::launchToLastScene] = TRUE;
 				base[Param::enableTestScenes] = TRUE;
+				//base[Param::saveReadableStoreFiles] = TRUE;
 				//base[Param::runTests] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
-				//base[Param::saveReadableStoreFiles] = TRUE;
 				//base[Param::visualizeContainers] = TRUE;
 				//base[Param::visualizeClipRects] = TRUE;
 			}
 			else if (GAME_ENVIRONMENT == "PROD")
 			{
 				base[Param::enableTestScenes] = TRUE;
+				//base[Param::launchToLastScene] = TRUE;
+				//base[Param::saveWholeSceneOnClose] = TRUE;
+				//base[Param::saveReadableStoreFiles] = TRUE;
 				//base[ConfigParam::throwOnFatalLog] = TRUE;
 				//base[Param::visualizeZones] = TRUE;
 			}

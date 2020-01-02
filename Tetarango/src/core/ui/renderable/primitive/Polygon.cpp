@@ -57,6 +57,42 @@ namespace AW
 		return screenPoints;
 	}
 
+	std::shared_ptr<SerializationClient> Polygon::doSerialize(SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__polygon__", hint);
+
+		switch (hint)
+		{
+		case AW::SerializationHint::SERIALIZE:
+			for (unsigned int i = 0; i < screenPoints.size(); ++i)
+			{
+				const auto iStr = std::to_string(i);
+				const auto screenPoint = screenPoints[i];
+				client->setDouble("pt_x_" + iStr, screenPoint.x);
+				client->setDouble("pt_y_" + iStr, screenPoint.y);
+			}
+			client->setInt("numPts", (int)screenPoints.size());
+			break;
+
+		case AW::SerializationHint::HYDRATE:
+			screenPoints.clear();
+			for (unsigned int i = 0, limit = client->getInt("numPts", 0); i < limit; ++i)
+			{
+				const auto iStr = std::to_string(i);
+				const auto pt = AWVec2<double>(client->getDouble("pt_x_" + iStr), client->getDouble("pt_y_" + iStr));
+				screenPoints.push_back(pt);
+			}
+			updateSize();
+			break;
+
+		case AW::SerializationHint::UNSPECIFIED:
+		default:
+			break;
+		}
+
+		return Primitive::doSerialize(hint);
+	}
+
 	std::vector<AWVec2<double>> Polygon::getRenderPoints()
 	{
 		auto result = std::vector<AWVec2<double>>();

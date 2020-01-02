@@ -86,6 +86,17 @@ namespace AW
 		}
 	}
 
+	std::shared_ptr<SerializationClient> Body::doSerialize(SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__body__", hint);
+
+		bodyType = (BodyType)client->serializeInt("body-type", (int)bodyType);
+
+		RigidBody::doManualSerialize(hint, client);
+
+		return GameObject::doSerialize(hint);
+	}
+
 	b2Body* Body::onCreateBody(const std::shared_ptr<b2World>& world)
 	{
 		const auto rend = getRenderableFromListener();
@@ -100,7 +111,7 @@ namespace AW
 		bodyReference = world->CreateBody(&bodyDef);
 		switch (bodyType)
 		{
-		case AW::BodyType::Box:
+		case BodyType::Box:
 		{
 			auto shape = b2PolygonShape();
 			shape.SetAsBox(screenToWorldPosition(rend->getWidth()) / 2.f, screenToWorldPosition(rend->getHeight()) / 2.f);
@@ -109,7 +120,7 @@ namespace AW
 		}
 		break;
 
-		case AW::BodyType::Circle:
+		case BodyType::Circle:
 		{
 			auto shape = b2CircleShape();
 			shape.m_radius = screenToWorldPosition((float)std::max(rend->getWidth(), rend->getHeight()) / 2.f);
@@ -118,7 +129,7 @@ namespace AW
 		}
 		break;
 
-		case AW::BodyType::Polygon:
+		case BodyType::Polygon:
 		{
 			const auto listenerPtr = listener.lock();
 			if (listenerPtr != nullptr)
@@ -133,7 +144,7 @@ namespace AW
 		}
 		break;
 
-		case AW::BodyType::Custom:
+		case BodyType::Custom:
 		default:
 			// Do nothing - expect user to create fixtures
 			break;

@@ -16,7 +16,6 @@ namespace AWGame
 		void onCreateChildren();
 		void onChildrenHydrated();
 
-
 		void setDynamic(bool flag);
 		bool getDynamic();
 

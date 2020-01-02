@@ -23,6 +23,8 @@ namespace AW
 
 		const std::vector<AWVec2<double>>& getScreenPoints();
 
+		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
+
 		std::vector<AWVec2<double>> getRenderPoints();
 	};
 }

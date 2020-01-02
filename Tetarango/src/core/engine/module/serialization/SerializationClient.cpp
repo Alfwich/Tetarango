@@ -16,7 +16,12 @@ namespace AW
 			return parentClient->getValue(scope + name);
 		}
 
-		return data[scope + name];
+		if (data.count(scope + name))
+		{
+			return data[scope + name];
+		}
+
+		return "";
 	}
 
 	void SerializationClient::setValue(std::string name, std::string value)

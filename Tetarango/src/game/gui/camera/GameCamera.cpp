@@ -18,42 +18,50 @@ namespace AWGame
 
 		setTimeScope(AW::TimeScope::Camera);
 
-		enableEnterFrame(1);
+		enableEnterFrame(5);
 	}
 
 	void GameCamera::onEnterFrame(const double& frameTime)
 	{
-		const auto deltaTime = frameTime / 1000.0;
-		if (xAxis || yAxis)
+		const auto targetPtr = target.lock();
+		if (targetPtr != nullptr)
 		{
-			setScreenAnchorPoint(getScreenAnchorX() + xAxis * deltaTime, getScreenAnchorY() + yAxis * deltaTime);
+			setScreenAnchorPoint(targetPtr->getX(), targetPtr->getY());
 		}
-
-		double xDelta = 0.0, yDelta = 0.0;
-		double speed = -1000.0 * deltaTime;
-		if (upDown)
+		else
 		{
-			yDelta = speed;
-		}
+			const auto deltaTime = frameTime / 1000.0;
+			if (xAxis || yAxis)
+			{
+				setScreenAnchorPoint(getScreenAnchorX() + xAxis * deltaTime, getScreenAnchorY() + yAxis * deltaTime);
+			}
 
-		if (downDown)
-		{
-			yDelta = -speed;
-		}
+			double xDelta = 0.0, yDelta = 0.0;
+			double speed = -1000.0 * deltaTime;
+			if (upDown)
+			{
+				yDelta = speed;
+			}
 
-		if (leftDown)
-		{
-			xDelta = speed;
-		}
+			if (downDown)
+			{
+				yDelta = -speed;
+			}
 
-		if (rightDown)
-		{
-			xDelta = -speed;
-		}
+			if (leftDown)
+			{
+				xDelta = speed;
+			}
 
-		if (xDelta != 0.0 || yDelta != 0.0)
-		{
-			setScreenAnchorPoint(getScreenAnchorX() + xDelta, getScreenAnchorY() + yDelta);
+			if (rightDown)
+			{
+				xDelta = -speed;
+			}
+
+			if (xDelta != 0.0 || yDelta != 0.0)
+			{
+				setScreenAnchorPoint(getScreenAnchorX() + xDelta, getScreenAnchorY() + yDelta);
+			}
 		}
 	}
 

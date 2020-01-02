@@ -19,7 +19,7 @@ namespace AWGame
 
 	TestScene2::TestScene2() : AW::Scene("test_scene_2")
 	{
-		setShouldRebuildOnLoad();
+		//setShouldRebuildOnLoad();
 		registerGameObject<TestScene2>(__FUNCTION__);
 	}
 
@@ -64,6 +64,7 @@ namespace AWGame
 	void TestScene2::onCreateChildren()
 	{
 		contentContainer = std::make_shared<AW::Container>();
+		contentContainer->name = "cc";
 		contentContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
@@ -80,7 +81,7 @@ namespace AWGame
 			const auto platform = std::make_shared<Box>();
 			platform->setDynamic(false);
 			platform->setColor(64, 64, 64);
-			platform->setSize(8000.0, 100.0);
+			platform->setSize(80000.0, 100.0);
 			platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() - 150);
 			contentContainer->add(platform);
 		}
@@ -108,11 +109,14 @@ namespace AWGame
 		}
 
 		player = std::make_shared<Player>();
+		player->name = "player";
 		player->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
 		contentContainer->add(player);
 
+		camera->target = player;
+
 		const auto dim = 100.0;
-		for (auto i = 0; i < 100; ++i)
+		for (auto i = 0; i < 500; ++i)
 		{
 			const auto poly = std::make_shared<Poly>();
 			poly->setColor(AW::Color::random());
@@ -139,6 +143,9 @@ namespace AWGame
 	void TestScene2::onChildrenHydrated()
 	{
 		camera = findChildWithName<GameCamera>("camera");
+		player = findChildWithName<Player>("player");
+		camera->target = player;
+		contentContainer = findChildWithName<AW::Container>("cc");
 	}
 
 	void TestScene2::onTimeoutCalled()

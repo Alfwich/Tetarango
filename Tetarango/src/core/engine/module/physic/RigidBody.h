@@ -3,13 +3,16 @@
 #include "box2d/box2d.h"
 #include "util/NumberHelper.h"
 #include "util/Vec.h"
+#include "engine/module/serialization/ISerializable.h"
 
 namespace AW
 {
-	class RigidBody
+	class RigidBody : public ISerializableDataSubscriber
 	{
-		float originalMass = 0.0;
+		float originalMass = 0.f, cachedAV = 0.f, cachedAD = 0.f;
 		unsigned int worldId = 0;
+
+		b2Vec2 cachedLV;
 
 	protected:
 		const float scalingFactor = 200.0;
@@ -35,6 +38,7 @@ namespace AW
 		AWVec2<float> screenToWorld(const AWVec2<double>& screen);
 
 	public:
+		RigidBody();
 
 		b2Body* createBody(const std::shared_ptr<b2World>& world);
 		virtual b2Body* onCreateBody(const std::shared_ptr<b2World>& world) { return nullptr; };
@@ -64,5 +68,8 @@ namespace AW
 		void setStaticBody();
 
 		void applyForce(double vX, double vY, double amount);
+
+		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint) { return nullptr; };
+		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
 	};
 }

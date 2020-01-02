@@ -44,6 +44,11 @@ namespace AW
 		return AWVec2<float>(screenToWorldPosition((float)screen.x), -screenToWorldPosition((float)screen.y));
 	}
 
+	RigidBody::RigidBody()
+	{
+		cachedLV.SetZero();
+	}
+
 	b2Body* RigidBody::createBody(const std::shared_ptr<b2World>& world)
 	{
 		bodyReference = onCreateBody(world);
@@ -54,6 +59,24 @@ namespace AW
 			originalMass = massData.mass;
 			massData.mass = originalMass * massFactor;
 			bodyReference->SetMassData(&massData);
+
+			if (cachedLV.x != 0.f || cachedLV.y != 0.f)
+			{
+				bodyReference->SetLinearVelocity(cachedLV);
+				cachedLV.SetZero();
+			}
+
+			if (cachedAV != 0.f)
+			{
+				bodyReference->SetAngularVelocity(cachedAV);
+				cachedAV = 0.f;
+			}
+
+			if (cachedAD != 0.f)
+			{
+				bodyReference->SetAngularDamping(cachedAD);
+				cachedAD = 0.f;
+			}
 
 			physicUpdate();
 		}
@@ -101,6 +124,31 @@ namespace AW
 		if (hasBody())
 		{
 			bodyReference->ApplyForceToCenter(b2Vec2((float)(vX * amount), (float)(vY * amount)), true);
+		}
+	}
+
+	void RigidBody::doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient)
+	{
+		auto client = injectedClient->getClient("__rigid_body__", hint);
+
+		bodyDef.type = (b2BodyType)client->serializeInt("body_type", (int)bodyDef.type);
+		massFactor = (float)client->serializeDouble("massFactor", massFactor);
+		fixtureDef.density = (float)client->serializeDouble("density", fixtureDef.density);
+
+		if (hint == SerializationHint::SERIALIZE && hasBody())
+		{
+			const auto lVelocity = bodyReference->GetLinearVelocity();
+			client->setDouble("body-lv.x", lVelocity.x);
+			client->setDouble("body-lv.y", lVelocity.y);
+			client->setDouble("body-av", bodyReference->GetAngularVelocity());
+			client->setDouble("body-ad", bodyReference->GetAngularDamping());
+		}
+		else
+		{
+			cachedLV.x = (float)client->getDouble("body-lv.x", 0.0);
+			cachedLV.y = (float)client->getDouble("body-lv.y", 0.0);
+			cachedAV = (float)client->getDouble("body-av", 0.0);
+			cachedAD = (float)client->getDouble("body-ad", 0.0);
 		}
 	}
 
