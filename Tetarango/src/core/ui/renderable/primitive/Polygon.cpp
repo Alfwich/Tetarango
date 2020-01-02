@@ -16,10 +16,10 @@ namespace AW
 
 	void Polygon::updateSize()
 	{
-		if (points.size() < 2) return;
+		if (screenPoints.size() < 2) return;
 
 		double minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
-		for (const auto& p : points)
+		for (const auto& p : screenPoints)
 		{
 			if (p.x > minX) minX = p.x;
 			if (p.x < maxX) maxX = p.x;
@@ -28,30 +28,18 @@ namespace AW
 		}
 
 		setSize(std::abs(maxX - minX), std::abs(maxY - minY));
-		updateNormalizedPoints();
-	}
-
-	void Polygon::updateNormalizedPoints()
-	{
-		normalPoints.clear();
-		double w = getWidth(), h = getHeight();
-		for (const auto p : points)
-		{
-			normalPoints.push_back(AWVec2<double>(((p.x / w) * 2.0) - 1.0, ((p.y / h) * 2.0) - 1.0));
-		}
-
 		vertexBuffer = nullptr;
 	}
 
 	void Polygon::setPoint(AWVec2<double> p)
 	{
-		points.push_back(p);
+		screenPoints.push_back(p);
 		updateSize();
 	}
 
 	void Polygon::setPoint(double x, double y)
 	{
-		points.push_back(AWVec2<double>(x, y));
+		screenPoints.push_back(AWVec2<double>(x, y));
 		updateSize();
 	}
 
@@ -59,18 +47,26 @@ namespace AW
 	{
 		for (const auto& p : points)
 		{
-			this->points.push_back(p);
+			this->screenPoints.push_back(p);
 		}
 		updateSize();
 	}
 
-	const std::vector<AWVec2<double>>& Polygon::getPoints()
+	const std::vector<AWVec2<double>>& Polygon::getScreenPoints()
 	{
-		return points;
+		return screenPoints;
 	}
 
-	const std::vector<AWVec2<double>>& Polygon::getNormalizedPoints()
+	std::vector<AWVec2<double>> Polygon::getRenderPoints()
 	{
-		return normalPoints;
+		auto result = std::vector<AWVec2<double>>();
+
+		auto w = getWidth(), h = getHeight();
+		for (const auto p : screenPoints)
+		{
+			result.push_back(AWVec2<double>(((p.x / w) * 2.0) - 1.0, ((p.y / h) * 2.0) - 1.0));
+		}
+
+		return result;
 	}
 }

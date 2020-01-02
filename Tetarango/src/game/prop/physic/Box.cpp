@@ -74,4 +74,9 @@ namespace AWGame
 	{
 		return serializationClient->getBool(dynamicPropName, true);
 	}
+
+	std::shared_ptr<AW::Renderable> Box::getRenderableBody()
+	{
+		return std::dynamic_pointer_cast<Renderable>(shared_from_this());
+	}
 }

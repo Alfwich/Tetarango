@@ -1,28 +1,27 @@
 #pragma once
 
+#include "ui/renderable/primitive/Polygon.h"
 #include "ui/physic/body/Body.h"
 #include "ui/physic/body/IBodyListener.h"
-#include "ui/renderable/element/Element.h"
 
 namespace AWGame
 {
-	class Box : public AW::Element, public AW::IBodyListener
+	class Poly : public AW::Polygon, public AW::IBodyListener
 	{
 		std::shared_ptr<AW::Body> body;
-		bool dynamic = true;
 
 	public:
-		Box();
+		Poly();
 
-		void onBindShaders();
-		void onInitialAttach();
 		void onCreateChildren();
 		void onChildrenHydrated();
+
 
 		void setDynamic(bool flag);
 		bool getDynamic();
 
 		// Inherited via IBodyListener
-		virtual std::shared_ptr<Renderable> getRenderableBody() override;
+		virtual std::shared_ptr<AW::Renderable> getRenderableBody() override;
+		const std::vector<AWVec2<double>>& getBodyScreenPoints();
 	};
 }

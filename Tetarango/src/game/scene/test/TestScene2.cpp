@@ -4,6 +4,7 @@
 #include "GameImports.h"
 #include "ui/renderable/element/DisplayBuffer.h"
 #include "generator/block/GeneratorBlock.h"
+#include "prop/physic/Poly.h"
 
 namespace
 {
@@ -79,8 +80,8 @@ namespace AWGame
 			const auto platform = std::make_shared<Box>();
 			platform->setDynamic(false);
 			platform->setColor(64, 64, 64);
-			platform->setSize(600.0, 100.0);
-			platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+			platform->setSize(8000.0, 100.0);
+			platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() - 150);
 			contentContainer->add(platform);
 		}
 
@@ -109,6 +110,26 @@ namespace AWGame
 		player = std::make_shared<Player>();
 		player->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
 		contentContainer->add(player);
+
+		const auto dim = 100.0;
+		for (auto i = 0; i < 100; ++i)
+		{
+			const auto poly = std::make_shared<Poly>();
+			poly->setColor(AW::Color::random());
+
+			const auto pts = AW::NumberHelper::randomInt(3, 8);
+			const auto d = (AW::NumberHelper::PI * 2.0) / pts;
+			for (auto i = 0; i < pts; ++i)
+			{
+				const auto x = std::cos(i * d) * dim;
+				const auto y = std::sin(i * d) * dim;
+				poly->setPoint(x, y);
+			}
+			poly->setRotation(AW::NumberHelper::random(360));
+
+			poly->setPosition((modules->screen->getWidth() / 2.0) +  AW::NumberHelper::random(-3000.0, 3000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0));
+			contentContainer->add(poly);
+		}
 	}
 
 	void TestScene2::onLayoutChildren()

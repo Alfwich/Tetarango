@@ -1,5 +1,7 @@
 #include "Body.h"
 
+#include "ui/renderable/primitive/Polygon.h"
+
 namespace AW
 {
 
@@ -21,7 +23,30 @@ namespace AW
 
 	std::shared_ptr<Renderable> Body::getRenderableFromListener()
 	{
-		return std::dynamic_pointer_cast<Renderable>(listener.lock());
+		const auto listenerPtr = listener.lock();
+		if (listenerPtr != nullptr)
+		{
+			return listenerPtr->getRenderableBody();
+		}
+
+		return nullptr;
+	}
+
+	std::vector<b2Vec2> Body::translateScreenPointsToWorldPoints(const std::shared_ptr<Renderable>& rend, const std::vector<AWVec2<double>>& screenPoints)
+	{
+		const auto widthFactor = screenToWorldPosition(rend->getWidth());
+		const auto heightFactor = screenToWorldPosition(rend->getHeight());
+		const auto translate = AWVec2<float>(-widthFactor / 2.0, heightFactor / 2.0);
+		const auto scaleFactor = AWVec2<double>(1.0 / widthFactor, 1.0 / heightFactor);
+		auto b2Pts = std::vector<b2Vec2>();
+
+		for (const auto pt : screenPoints)
+		{
+			auto world = screenToWorld(pt).add(translate);
+			b2Pts.push_back(world.asB2());
+		}
+
+		return b2Pts;
 	}
 
 	void Body::setAutoUpdate(bool flag)
@@ -93,6 +118,21 @@ namespace AW
 		}
 		break;
 
+		case AW::BodyType::Polygon:
+		{
+			const auto listenerPtr = listener.lock();
+			if (listenerPtr != nullptr)
+			{
+				auto shape = b2PolygonShape();
+				const auto screenPoints = translateScreenPointsToWorldPoints(rend, listenerPtr->getBodyScreenPoints());
+
+				shape.Set(&screenPoints[0], (unsigned int)screenPoints.size());
+				fixtureDef.shape = &shape;
+				bodyReference->CreateFixture(&fixtureDef);
+			}
+		}
+		break;
+
 		case AW::BodyType::Custom:
 		default:
 			// Do nothing - expect user to create fixtures
@@ -120,8 +160,14 @@ namespace AW
 		}
 	}
 
-	void Body::updateBodyForRenderable(const std::shared_ptr<Renderable>& rend)
+	void Body::updateBodyForRenderable()
 	{
+		const auto rend = getRenderableFromListener();
+		if (rend == nullptr)
+		{
+			return;
+		}
+
 		const auto pos = b2Vec2(screenToWorldPosition(rend->getX()), -screenToWorldPosition(rend->getY()));
 		const auto rotation = screenToWorldRotation(rend->getRotation());
 		bodyReference->SetTransform(pos, rotation);

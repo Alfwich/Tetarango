@@ -2,6 +2,7 @@
 
 #include "box2d/box2d.h"
 #include "util/NumberHelper.h"
+#include "util/Vec.h"
 
 namespace AW
 {
@@ -26,6 +27,12 @@ namespace AW
 
 		float screenToWorldRotation(float degrees);
 		float worldToScreenRotation(float radians);
+
+		AWVec2<float> worldToScreen(const AWVec2<float>& world);
+		AWVec2<float> screenToWorld(const AWVec2<float>& screen);
+
+		AWVec2<float> worldToScreen(const AWVec2<double>& world);
+		AWVec2<float> screenToWorld(const AWVec2<double>& screen);
 
 	public:
 

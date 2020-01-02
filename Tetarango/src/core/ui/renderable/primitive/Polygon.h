@@ -8,10 +8,9 @@ namespace AW
 {
 	class Polygon : public Primitive
 	{
-		std::vector<AWVec2<double>> points, normalPoints;
+		std::vector<AWVec2<double>> screenPoints;
 
 		void updateSize();
-		void updateNormalizedPoints();
 
 	public:
 		Polygon();
@@ -22,7 +21,8 @@ namespace AW
 		void setPoint(double x, double y);
 		void setPoints(const std::vector<AWVec2<double>>& points);
 
-		const std::vector<AWVec2<double>>& getPoints();
-		const std::vector<AWVec2<double>>& getNormalizedPoints();
+		const std::vector<AWVec2<double>>& getScreenPoints();
+
+		std::vector<AWVec2<double>> getRenderPoints();
 	};
 }

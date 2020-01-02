@@ -11,8 +11,10 @@ namespace AW
 	{
 		Box,
 		Circle,
+		Polygon,
 		Custom
 	};
+
 	class Body : public GameObject, public RigidBody
 	{
 		BodyType bodyType = BodyType::Box;
@@ -21,6 +23,8 @@ namespace AW
 		void notifyListenerOnPhysicUpdate();
 		std::shared_ptr<Renderable> getRenderableFromListener();
 
+		std::vector<b2Vec2> translateScreenPointsToWorldPoints(const std::shared_ptr<Renderable>& rend, const std::vector<AWVec2<double>>& screenPoints);
+
 	public:
 		Body();
 
@@ -28,7 +32,7 @@ namespace AW
 		void setBodyType(BodyType type);
 
 		std::weak_ptr<IBodyListener> listener;
-		virtual void updateBodyForRenderable(const std::shared_ptr<Renderable>& rend);
+		virtual void updateBodyForRenderable();
 
 		virtual void onAttach();
 		virtual void onDetach();

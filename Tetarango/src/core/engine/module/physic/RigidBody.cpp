@@ -24,6 +24,26 @@ namespace AW
 		return radians * -(float)(180.0 / AW::NumberHelper::PI);
 	}
 
+	AWVec2<float> RigidBody::worldToScreen(const AWVec2<float>& world)
+	{
+		return AWVec2<float>(worldToScreenPosition(world.x), -worldToScreenPosition(world.y));
+	}
+
+	AWVec2<float> RigidBody::screenToWorld(const AWVec2<float>& screen)
+	{
+		return AWVec2<float>(screenToWorldPosition(screen.x), -screenToWorldPosition(screen.y));
+	}
+
+	AWVec2<float> RigidBody::worldToScreen(const AWVec2<double>& world)
+	{
+		return AWVec2<float>(worldToScreenPosition((float)world.x), -worldToScreenPosition((float)world.y));
+	}
+
+	AWVec2<float> RigidBody::screenToWorld(const AWVec2<double>& screen)
+	{
+		return AWVec2<float>(screenToWorldPosition((float)screen.x), -screenToWorldPosition((float)screen.y));
+	}
+
 	b2Body* RigidBody::createBody(const std::shared_ptr<b2World>& world)
 	{
 		bodyReference = onCreateBody(world);

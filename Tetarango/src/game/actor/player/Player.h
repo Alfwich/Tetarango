@@ -23,5 +23,8 @@ namespace AWGame
 		void onEnterFrame(const double& deltaTime);
 
 		void onKey(AWKey key, bool isPressed);
+
+		// Inherited via IBodyListener
+		virtual std::shared_ptr<Renderable> getRenderableBody() override;
 	};
 }

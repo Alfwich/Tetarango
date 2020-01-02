@@ -1242,7 +1242,7 @@ namespace AW
 
 		if (poly->vertexBuffer == nullptr)
 		{
-			const auto normalizedPoints = poly->getNormalizedPoints();
+			const auto normalizedPoints = poly->getRenderPoints();
 			poly->vertexBuffer = std::make_unique<VertexBufferProxy>(generateVertexBuffer(normalizedPoints), (unsigned int)normalizedPoints.size());
 		}
 

@@ -2,7 +2,7 @@
 
 namespace
 {
-	const auto impulse = 2000;
+	const auto impulse = 10000;
 }
 
 namespace AWGame
@@ -36,6 +36,7 @@ namespace AWGame
 	{
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
+		body->setDensity(5.0);
 		body->setBodyType(AW::BodyType::Circle);
 		body->setDynamicBody();
 		add(body);
@@ -67,5 +68,10 @@ namespace AWGame
 		if (key == AWKey::DOWN) down = isPressed;
 		if (key == AWKey::LEFT) left = isPressed;
 		if (key == AWKey::RIGHT) right = isPressed;
+	}
+
+	std::shared_ptr<AW::Renderable> Player::getRenderableBody()
+	{
+		return std::dynamic_pointer_cast<AW::Renderable>(shared_from_this());
 	}
 }
