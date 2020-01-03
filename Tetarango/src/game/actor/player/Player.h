@@ -26,5 +26,8 @@ namespace AWGame
 
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<Renderable> getRenderableBody() override;
+
+		// Inherited via IBodyListener
+		virtual std::shared_ptr<AW::Body> getBodyObject() override;
 	};
 }

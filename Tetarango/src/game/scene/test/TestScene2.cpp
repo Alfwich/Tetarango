@@ -113,10 +113,27 @@ namespace AWGame
 		player->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
 		contentContainer->add(player);
 
+		{
+			for (auto i = 0; i < 50; ++i)
+			{
+				const auto platform = std::make_shared<Box>();
+				platform->setDynamic(true);
+				platform->setColor(128, 128, 128);
+				platform->setSize(50.0, 50.0);
+				platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
+				contentContainer->add(platform);
+
+				const auto joint = std::make_shared<AW::Joint>();
+				joint->bodyA = player;
+				joint->bodyB = platform;
+				contentContainer->add(joint);
+			}
+		}
+
 		camera->target = player;
 
 		const auto dim = 100.0;
-		for (auto i = 0; i < 500; ++i)
+		for (auto i = 0; i < 10; ++i)
 		{
 			const auto poly = std::make_shared<Poly>();
 			poly->setColor(AW::Color::random());
@@ -131,7 +148,7 @@ namespace AWGame
 			}
 			poly->setRotation(AW::NumberHelper::random(360));
 
-			poly->setPosition((modules->screen->getWidth() / 2.0) +  AW::NumberHelper::random(-3000.0, 3000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0));
+			poly->setPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-3000.0, 3000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0));
 			contentContainer->add(poly);
 		}
 	}

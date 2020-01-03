@@ -1,6 +1,10 @@
 #include "GameObject.h"
 
+#include <chrono>
+#include <ctime>
+
 #include "util/VectorHelper.h"
+
 
 namespace
 {
@@ -10,16 +14,22 @@ namespace
 
 namespace AW
 {
+
 	int GameObject::nextId()
 	{
 		return nextGameObjectId++;
 	}
 
-	GameObject::GameObject()
+	int GameObject::currentBindingId()
 	{
-		id = nextId();
-		modules = SystemModuleBundle::getModuleBundle();
+		auto now = std::chrono::system_clock::now();
+		auto time = now.time_since_epoch().count();
 
+		return (int) std::chrono::nanoseconds(time).count();
+	}
+
+	GameObject::GameObject() : id(nextId()), bindingId(currentBindingId()), modules(SystemModuleBundle::getModuleBundle())
+	{
 		setTag(GTags::IsActive, true);
 		setTag(GTags::LayoutOnLoad, true);
 		setTag(GTags::SerializationEnabled, true);
@@ -132,6 +142,11 @@ namespace AW
 	int GameObject::getId()
 	{
 		return id;
+	}
+
+	int GameObject::getBindingId()
+	{
+		return bindingId;
 	}
 
 	void GameObject::setTimeScope(TimeScope newScope)
@@ -398,10 +413,11 @@ namespace AW
 		}
 
 		const auto client = serializationClient->getClient("__application_object__", hint);
+		name = client->serializeString("name", name);
+		bindingId = client->serializeInt("binding-id", bindingId);
 		tags = std::bitset<32>(client->serializeString("tags", tags.to_string()));
 		timeScope = (TimeScope)client->serializeInt("timescope", (int)timeScope);
 		zIndex = client->serializeInt("z-index", zIndex);
-		name = client->serializeString("name", name);
 
 		enterFrameActivated = client->serializeBool("e-f-a", enterFrameActivated);
 		enterFramePriority = client->serializeInt("e-f-p", enterFramePriority);
@@ -492,5 +508,24 @@ namespace AW
 		}
 
 		*timeoutIdLocation = setTimeout(timeoutMS);
+	}
+
+	std::shared_ptr<GameObject> GameObject::findChildWithBindingId(int bindingId)
+	{
+		// Check children first
+		for (const auto child : children)
+		{
+			if (child->getBindingId() == bindingId) return child;
+		}
+
+		// Check children's children recursive
+		for (const auto child : children)
+		{
+			const auto obj = child->findChildWithBindingId(bindingId);
+			if (obj != nullptr) return obj;
+		}
+
+		// Not found
+		return nullptr;
 	}
 }

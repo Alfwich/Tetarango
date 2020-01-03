@@ -22,5 +22,8 @@ namespace AWGame
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Renderable> getRenderableBody() override;
 		const std::vector<AWVec2<double>>& getBodyScreenPoints();
+
+		// Inherited via IBodyListener
+		virtual std::shared_ptr<AW::Body> getBodyObject() override;
 	};
 }

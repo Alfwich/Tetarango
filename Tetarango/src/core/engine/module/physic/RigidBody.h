@@ -4,11 +4,13 @@
 #include "util/NumberHelper.h"
 #include "util/Vec.h"
 #include "engine/module/serialization/ISerializable.h"
+#include "RigidBodyJoint.h"
 
 namespace AW
 {
 	class RigidBody : public ISerializableDataSubscriber
 	{
+
 		float originalMass = 0.f, cachedAV = 0.f, cachedAD = 0.f;
 		unsigned int worldId = 0;
 
@@ -42,6 +44,7 @@ namespace AW
 
 		b2Body* createBody(const std::shared_ptr<b2World>& world);
 		virtual b2Body* onCreateBody(const std::shared_ptr<b2World>& world) { return nullptr; };
+		b2Body* getBody();
 		bool hasBody();
 
 		void physicUpdate();

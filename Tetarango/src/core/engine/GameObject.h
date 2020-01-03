@@ -39,7 +39,8 @@ namespace AW
 	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public std::enable_shared_from_this<GameObject>
 	{
 		static std::unordered_map<std::string, bool> resourcesLoadedMap;
-		int id = 0;
+		const int id;
+		int bindingId;
 
 		std::bitset<32> tags;
 
@@ -61,14 +62,18 @@ namespace AW
 		template <typename T>
 		std::shared_ptr<T> findChildWithName(std::string name, bool checkChildren = true);
 
+
 		template<typename T>
 		void registerGameObject(const std::string& typeName);
 
 	public:
 		static int nextId();
+		static int currentBindingId();
+
 		GameObject();
 
 		int getId();
+		int getBindingId();
 
 		std::string name;
 		int zIndex = 0;
@@ -97,7 +102,7 @@ namespace AW
 
 		int inputListenerObjectId() { return getId(); };
 
-		std::shared_ptr<SystemModuleBundle> modules;
+		const std::shared_ptr<SystemModuleBundle> modules;
 
 		void setTimeScope(TimeScope newScope);
 		TimeScope getTimeScope();
@@ -155,6 +160,7 @@ namespace AW
 		int setTimeout(double timeoutMS);
 		void setTimeout(double timeoutMS, int* timeoutIdLocation);
 
+		std::shared_ptr<GameObject> findChildWithBindingId(int bindingId);
 	};
 
 	template<typename T>

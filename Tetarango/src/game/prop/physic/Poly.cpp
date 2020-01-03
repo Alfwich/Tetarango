@@ -64,4 +64,9 @@ namespace AWGame
 		return getScreenPoints();
 	}
 
+	std::shared_ptr<AW::Body> Poly::getBodyObject()
+	{
+		return body;
+	}
+
 }

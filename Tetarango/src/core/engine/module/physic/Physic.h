@@ -6,6 +6,7 @@
 #include "engine/module/IBaseModule.h"
 #include "engine/module/time/Time.h"
 #include "RigidBody.h"
+#include "RigidBodyJoint.h"
 
 namespace AW
 {
@@ -19,6 +20,15 @@ namespace AW
 			b2Body *body;
 		};
 
+		class RigidBodyJointBundle
+		{
+		public:
+			RigidBodyJointBundle(std::weak_ptr<RigidBodyJoint> object, b2Joint *joint) : object(object), joint(joint) {}
+			std::weak_ptr<RigidBodyJoint> object;
+			b2Joint *joint;
+		};
+
+
 		class WorldBundle
 		{
 		public:
@@ -27,6 +37,7 @@ namespace AW
 			const std::shared_ptr<Timer> worldTimer;
 			double timestep = 1 / 60.0;
 			int velocityIterations = 6, positionIterations = 2;
+
 			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
 		};
 
@@ -45,8 +56,10 @@ namespace AW
 		void setWorldGravity(unsigned int worldId, double gravityX = 0.0, double gravityY = -9.807);
 		void setWorldAllowSleeping(unsigned int worldId, bool flag);
 
-		void registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> body);
+		void registerRigidBodyForWorld(unsigned int worldId, const std::shared_ptr<RigidBody>& body);
 		void unregisterRigidBodyForWorld(unsigned int worldId, b2Body* body);
+
+		void registerRigidBodyJointForWorld(unsigned int worldId, const std::shared_ptr<RigidBodyJoint>& joint);
 
 		void onInit();
 		void onEnterFrame(const double& deltaTime);

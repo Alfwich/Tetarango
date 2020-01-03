@@ -9,6 +9,7 @@
 #include "ui/renderable/container/Container.h"
 #include "prop/physic/Box.h"
 #include "actor/player/Player.h"
+#include "ui/physic/joint/Joint.h"
 
 namespace AWGame
 {

@@ -181,10 +181,12 @@ bash ./make.sh</Command>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
     <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
     <ClCompile Include="src\core\engine\module\physic\RigidBody.cpp" />
+    <ClCompile Include="src\core\engine\module\physic\RigidBodyJoint.cpp" />
     <ClCompile Include="src\core\engine\module\shader\Shader.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderContainer.cpp" />
     <ClCompile Include="src\core\engine\module\shader\ShaderReference.cpp" />
     <ClCompile Include="src\core\engine\module\sound\Music.cpp" />
+    <ClCompile Include="src\core\ui\physic\joint\Joint.cpp" />
     <ClCompile Include="src\core\ui\renderable\container\ScrollContainer.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\DisplayBuffer.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\NineSlice.cpp" />
@@ -299,6 +301,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\engine\module\display\VertexBufferProxy.h" />
     <ClInclude Include="src\core\engine\module\physic\RigidBody.h" />
     <ClInclude Include="src\core\engine\module\physic\Physic.h" />
+    <ClInclude Include="src\core\engine\module\physic\RigidBodyJoint.h" />
     <ClInclude Include="src\core\engine\module\shader\Shader.h" />
     <ClInclude Include="src\core\engine\module\shader\ShaderContainer.h" />
     <ClInclude Include="src\core\engine\module\shader\ShaderReference.h" />
@@ -306,6 +309,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\serialization-list.generated.h" />
     <ClInclude Include="src\core\ui\camera\ICameraListener.h" />
     <ClInclude Include="src\core\ui\physic\body\IBodyListener.h" />
+    <ClInclude Include="src\core\ui\physic\joint\Joint.h" />
     <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
     <ClInclude Include="src\core\ui\renderable\element\DisplayBuffer.h" />
     <ClInclude Include="src\core\ui\renderable\element\NineSlice.h" />

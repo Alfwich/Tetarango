@@ -69,7 +69,7 @@ namespace AW
 		worlds.at(worldId)->world->SetAllowSleeping(flag);
 	}
 
-	void Physic::registerRigidBodyForWorld(unsigned int worldId, std::shared_ptr<RigidBody> obj)
+	void Physic::registerRigidBodyForWorld(unsigned int worldId, const std::shared_ptr<RigidBody>& obj)
 	{
 		if (worlds.count(worldId) == 0)
 		{
@@ -90,7 +90,6 @@ namespace AW
 		}
 
 		auto worldBundle = worlds.at(worldId);
-
 		const auto body = obj->createBody(worldBundle->world);
 		worldBundle->bodies.push_back(std::make_shared<RigidBodyBundle>(obj, body));
 	}
@@ -135,9 +134,33 @@ namespace AW
 		}
 	}
 
+	void Physic::registerRigidBodyJointForWorld(unsigned int worldId, const std::shared_ptr<RigidBodyJoint>& obj)
+	{
+		if (worlds.count(worldId) == 0)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to register joint for worldId=" + std::to_string(worldId) + ", that does not exist");
+			return;
+		}
+
+		if (obj == nullptr)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to register null joint for worldId=" + std::to_string(worldId));
+			return;
+		}
+
+		if (obj->hasJoint())
+		{
+			Logger::instance()->logCritical("Physic::Attempted to register joint for worldId=" + std::to_string(worldId) + ", that already has a joint");
+			return;
+		}
+
+		auto worldBundle = worlds.at(worldId);
+		obj->createJoint(worldBundle->world);
+	}
+
 	void Physic::onInit()
 	{
-		registerWorld(0, 0.0, -20.0);
+		registerWorld(0);
 	}
 
 	void Physic::onEnterFrame(const double& deltaTime)

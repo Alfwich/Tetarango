@@ -4,7 +4,6 @@
 
 namespace AW
 {
-
 	Body::Body()
 	{
 		fixtureDef.friction = 1.0;

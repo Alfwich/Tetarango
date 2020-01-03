@@ -84,6 +84,11 @@ namespace AW
 		return bodyReference;
 	}
 
+	b2Body * RigidBody::getBody()
+	{
+		return bodyReference;
+	}
+
 	bool RigidBody::hasBody()
 	{
 		return bodyReference != nullptr;

@@ -7,13 +7,20 @@ namespace
 
 namespace AW
 {
+	class Body;
+
 	class IBodyListener
 	{
 	public:
 		virtual std::shared_ptr<Renderable> getRenderableBody() = 0;
+		virtual std::shared_ptr<Body> getBodyObject() = 0;
 
 		virtual void onBodyUpdated() { /* NO-OP*/ };
 		virtual void onBodyUpdated(int id) { onBodyUpdated(); };
+
 		virtual const std::vector<AWVec2<double>>& getBodyScreenPoints() { return noop; }
 	};
 }
+
+#include "Body.h"
+

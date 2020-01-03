@@ -79,4 +79,9 @@ namespace AWGame
 	{
 		return std::dynamic_pointer_cast<Renderable>(shared_from_this());
 	}
+
+	std::shared_ptr<AW::Body> Box::getBodyObject()
+	{
+		return body;
+	}
 }
