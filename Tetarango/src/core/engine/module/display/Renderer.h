@@ -28,8 +28,11 @@ namespace AW
 		LM::mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
 		unsigned int vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
 
-		std::list<RenderPackage>::iterator nextPackage;
-		std::list<RenderPackage> renderList;
+		std::vector<RenderPackage>::iterator nextPackage;
+		std::vector<RenderPackage> renderBuffer;
+
+		std::list<RenderPackage>::iterator nextPackageFallbackList;
+		std::list<RenderPackage> renderBufferFallbackList;
 
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
 		std::unordered_map<std::string, unsigned int> programs;
@@ -48,7 +51,7 @@ namespace AW
 
 		unsigned int screenWidth = 0, screenHeight = 0;
 		int layerFactor = 1, maxLayers = 60, cullingOffset = 500;
-		bool depthEnabled = false, msaaEnabled = false, clearEnabled = true;
+		bool depthEnabled = false, msaaEnabled = false, clearEnabled = true, hasFallenBackToRenderList = false;
 		double currentFrameTimestamp = 0.0;
 
 		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
@@ -57,7 +60,8 @@ namespace AW
 		void preRender(Screen* screen, double renderTimestamp);
 		void postRender();
 
-		RenderPackage* nextRenderPackage(std::shared_ptr<Renderable> obj, RenderPackage* previous = nullptr);
+		RenderPackage* getNextRenderPackageForObj(std::shared_ptr<Renderable> obj, RenderPackage* previous = nullptr);
+		void updateNextBufferPackageIterator();
 
 		void renderOpenGL(std::shared_ptr<Renderable> obj);
 

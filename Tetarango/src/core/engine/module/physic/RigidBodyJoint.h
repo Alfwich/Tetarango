@@ -20,6 +20,7 @@ namespace AW
 		virtual b2Joint* onCreateJoint(const std::shared_ptr<b2World>& world) { return nullptr; };
 		b2Joint* getJoint();
 		bool hasJoint();
+		virtual bool hasValidBodyReferences() = 0;
 
 		void setWorldId(unsigned int worldId);
 		unsigned int getWorldId();

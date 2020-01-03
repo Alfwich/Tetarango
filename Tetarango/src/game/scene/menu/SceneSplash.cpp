@@ -8,8 +8,10 @@ namespace
 {
 	const auto sdlLogoTextureName = "splash-sdl-logo";
 	const auto openGLLogoTextureName = "splash-opengl-logo";
+	const auto box2dLogoTextureName = "splash-box2d-logo";
 	const auto loadingPattenTextureName = "splash-loading-pattern";
 	const auto awGamesLogoTextureName = "splash-aw-games-logo";
+
 	const auto verticalOffset = -128.0;
 	const auto splashTransitionTimeInSeconds = 16.5;
 	const auto fadeInHorMovement = 250.0;
@@ -41,6 +43,7 @@ namespace AWGame
 	{
 		modules->texture->loadTexture("res/image/splash/sdl-logo.png", sdlLogoTextureName);
 		modules->texture->loadTexture("res/image/splash/opengl-logo.png", openGLLogoTextureName);
+		modules->texture->loadTexture("res/image/splash/box2d-logo.png", box2dLogoTextureName);
 		modules->texture->loadTexture("res/image/splash/loading-pattern.png", loadingPattenTextureName);
 		modules->texture->loadTexture("res/image/splash/aw-games-logo.png", awGamesLogoTextureName);
 	}
@@ -126,7 +129,7 @@ namespace AWGame
 
 			if (tryToGotoNextState(position, 1.0))
 			{
-				splashImage->setTexture(openGLLogoTextureName);
+				splashImage->setTexture(box2dLogoTextureName);
 			}
 		}
 		else if (state == 2)

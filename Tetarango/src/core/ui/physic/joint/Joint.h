@@ -42,5 +42,8 @@ namespace AW
 		double getJointDistance();
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
+
+		// Inherited via RigidBodyJoint
+		virtual bool hasValidBodyReferences() override;
 	};
 }

@@ -166,4 +166,9 @@ namespace AW
 
 		return GameObject::doSerialize(hint);
 	}
+
+	bool Joint::hasValidBodyReferences()
+	{
+		return getBodyA() != nullptr && getBodyB() != nullptr;
+	}
 }

@@ -7,14 +7,16 @@ namespace AW
 		return onCreateJoint(world);
 	}
 
-	b2Joint * RigidBodyJoint::getJoint()
+	b2Joint* RigidBodyJoint::getJoint()
 	{
+		if (!hasValidBodyReferences()) jointReference = nullptr;
+
 		return jointReference;
 	}
 
 	bool RigidBodyJoint::hasJoint()
 	{
-		return jointReference != nullptr;
+		return getJoint() != nullptr;
 	}
 
 	void RigidBodyJoint::setWorldId(unsigned int worldId)

@@ -27,6 +27,8 @@ namespace
 		0, 1,
 		1, 1
 	};
+
+	const auto bufferExpandFactor = 50;
 }
 
 namespace AW
@@ -41,8 +43,10 @@ namespace AW
 		renderTargetStack.push(RenderTarget::Screen);
 		renderColorMode.push(RenderColorMode::Multiplicative);
 
-		renderList.push_back(RenderPackage());
-		nextPackage = renderList.begin();
+		for (auto i = 0; i < bufferExpandFactor; ++i)
+		{
+			renderBuffer.push_back(RenderPackage());
+		}
 
 		if (oldRenderer != nullptr)
 		{
@@ -233,7 +237,7 @@ namespace AW
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		renderRecursive(nextRenderPackage(root));
+		renderRecursive(getNextRenderPackageForObj(root));
 
 		glDisable(GL_BLEND);
 		glDisableVertexAttribArray(1);
@@ -541,39 +545,72 @@ namespace AW
 		screenWidth = screen->getWidth();
 		screenHeight = screen->getHeight();
 		setViewport(screenWidth, screenHeight);
-		nextPackage = renderList.begin();
+		nextPackage = renderBuffer.begin();
+		hasFallenBackToRenderList = false;
 	}
 
 	void Renderer::postRender()
 	{
-		for (auto& pkg : renderList)
+		if (!renderBufferFallbackList.empty())
+		{
+			for (auto& pkg : renderBufferFallbackList)
+			{
+				renderBuffer.push_back(pkg);
+			}
+
+			renderBufferFallbackList.clear();
+		}
+
+		for (auto& pkg : renderBuffer)
 		{
 			pkg.obj = std::shared_ptr<Renderable>();
 		}
 	}
 
-	RenderPackage* Renderer::nextRenderPackage(std::shared_ptr<Renderable> obj, RenderPackage* previous)
+	RenderPackage* Renderer::getNextRenderPackageForObj(std::shared_ptr<Renderable> obj, RenderPackage* previous)
 	{
-		auto pkg = &(*nextPackage);
+		auto pkg = !hasFallenBackToRenderList ? &(*nextPackage) : &(*nextPackageFallbackList);
+
 		if (previous != nullptr)
 		{
-			(*nextPackage) = *previous;
+			(*pkg) = *previous;
 		}
 		else
 		{
 			*pkg = RenderPackage();
 		}
 
-
-		if (++nextPackage == renderList.end())
-		{
-			renderList.push_back(RenderPackage());
-			nextPackage = (--renderList.end());
-		}
-
 		pkg->obj = obj;
 
+		updateNextBufferPackageIterator();
+
 		return pkg;
+	}
+
+	void Renderer::updateNextBufferPackageIterator()
+	{
+		if (hasFallenBackToRenderList)
+		{
+			renderBufferFallbackList.push_back(RenderPackage());
+			++nextPackageFallbackList;
+		}
+		else
+		{
+			if (++nextPackage == renderBuffer.end())
+			{
+				hasFallenBackToRenderList = true;
+
+				renderBufferFallbackList.push_back(RenderPackage());
+				nextPackageFallbackList = --renderBufferFallbackList.end();
+
+				// Increase fallback buffer by a fixed amount to prevent thrashing
+				for (auto i = 0; i < bufferExpandFactor - 1; ++i)
+				{
+					renderBufferFallbackList.push_back(RenderPackage());
+				}
+			}
+		}
+
 	}
 
 	void Renderer::renderRecursive(RenderPackage* renderPackage)
@@ -806,7 +843,7 @@ namespace AW
 					const auto renderableChildPtr = std::dynamic_pointer_cast<Renderable>(child);
 					if (renderableChildPtr != nullptr)
 					{
-						renderRecursive(nextRenderPackage(renderableChildPtr, currentRenderPackage));
+						renderRecursive(getNextRenderPackageForObj(renderableChildPtr, currentRenderPackage));
 					}
 				}
 			}
@@ -971,7 +1008,7 @@ namespace AW
 
 		renderTargetStack.push(RenderTarget::Background);
 
-		auto childRenderPackage = nextRenderPackage(renderPackage->obj);
+		auto childRenderPackage = getNextRenderPackageForObj(renderPackage->obj);
 
 		childRenderPackage->alpha = renderPackage->alpha * cached->getAlpha();
 		childRenderPackage->depth = renderPackage->depth;
