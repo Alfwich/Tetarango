@@ -96,6 +96,11 @@ namespace AW
 		return GameObject::doSerialize(hint);
 	}
 
+	void Body::applyForce(double vX, double vY, double amount)
+	{
+		RigidBody::applyForce(vX, vY, amount * (modules->physic->getPhysicFrameDeltaTime() / 1000.0));
+	}
+
 	b2Body* Body::onCreateBody(const std::shared_ptr<b2World>& world)
 	{
 		const auto rend = getRenderableFromListener();

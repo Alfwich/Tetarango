@@ -69,6 +69,22 @@ namespace AW
 		worlds.at(worldId)->world->SetAllowSleeping(flag);
 	}
 
+	void Physic::setWorldTimescope(unsigned int worldId, TimeScope timescope)
+	{
+		if (worlds.count(worldId) == 0)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to set timescope for worldId=" + std::to_string(worldId) + ", that does not exist");
+			return;
+		}
+
+		worlds.at(worldId)->timescope = timescope;
+	}
+
+	double Physic::getPhysicFrameDeltaTime()
+	{
+		return time->getDeltaTime();
+	}
+
 	void Physic::registerRigidBodyForWorld(unsigned int worldId, const std::shared_ptr<RigidBody>& obj)
 	{
 		if (worlds.count(worldId) == 0)
@@ -168,11 +184,15 @@ namespace AW
 		for (const auto& worldIdToWorldBundle : worlds)
 		{
 			const auto& worldBundle = worldIdToWorldBundle.second;
+
+			const auto timefactor = time->getComputedTimeFactor(worldBundle->timescope);
+			if (timefactor <= 0.0) continue;
+
 			const auto threshold = (unsigned int)(worldBundle->timestep * 1000.0);
 			if (threshold > 0 && worldBundle->worldTimer->isAboveThresholdAndRestart(threshold))
 			{
 				const auto& world = worldBundle->world;
-				world->Step(worldBundle->timestep, worldBundle->velocityIterations, worldBundle->positionIterations);
+				world->Step(worldBundle->timestep * timefactor, worldBundle->velocityIterations, worldBundle->positionIterations);
 
 				for (auto rigidBodyBundle = worldBundle->bodies.begin(); rigidBodyBundle != worldBundle->bodies.end();)
 				{

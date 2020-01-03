@@ -56,10 +56,10 @@ namespace AWGame
 
 	void Player::onEnterFrame(const double& deltaTime)
 	{
-		if (up) body->applyForce(0.0, 1.0, impulse * (deltaTime / 1000.0));
-		if (down) body->applyForce(0.0, -1.0, impulse * (deltaTime / 1000.0));
-		if (left) body->applyForce(-1.0, 0.0, impulse * (deltaTime / 1000.0));
-		if (right) body->applyForce(1.0, 0.0, impulse * (deltaTime / 1000.0));
+		if (up) body->applyForce(0.0, 1.0, impulse);
+		if (down) body->applyForce(0.0, -1.0, impulse);
+		if (left) body->applyForce(-1.0, 0.0, impulse);
+		if (right) body->applyForce(1.0, 0.0, impulse);
 	}
 
 	void Player::onKey(AWKey key, bool isPressed)

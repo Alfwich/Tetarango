@@ -36,6 +36,7 @@ namespace AW
 			const std::shared_ptr<b2World> world;
 			const std::shared_ptr<Timer> worldTimer;
 			float timestep = 1 / 60.f;
+			TimeScope timescope = TimeScope::Global;
 			int velocityIterations = 6, positionIterations = 2;
 
 			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
@@ -55,6 +56,9 @@ namespace AW
 		void setWorldVelocityAndPositionIterations(unsigned int worldId, unsigned int velocity = 6, unsigned int position = 2);
 		void setWorldGravity(unsigned int worldId, float gravityX = 0.f, float gravityY = -9.807f);
 		void setWorldAllowSleeping(unsigned int worldId, bool flag);
+		void setWorldTimescope(unsigned int worldId, TimeScope timescope = TimeScope::Global);
+
+		double getPhysicFrameDeltaTime();
 
 		void registerRigidBodyForWorld(unsigned int worldId, const std::shared_ptr<RigidBody>& body);
 		void unregisterRigidBodyForWorld(unsigned int worldId, b2Body* body);

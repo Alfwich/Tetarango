@@ -78,6 +78,11 @@ namespace AW
 		return (SDL_GetPerformanceCounter() - startHighPerformancePosition) / (double)SDL_GetPerformanceFrequency() * 1000.0;
 	}
 
+	double Time::getDeltaTime()
+	{
+		return frameTime;
+	}
+
 	void Time::delay(Uint32 ms)
 	{
 		SDL_Delay(ms);
@@ -112,7 +117,9 @@ namespace AW
 
 	void Time::onEnterFrame()
 	{
-		frameStartTime = getHighResolutionTicks();
+		const auto currentFrameTime = getHighResolutionTicks();
+		frameTime = currentFrameTime - frameStartTime;
+		frameStartTime = currentFrameTime;
 	}
 
 }

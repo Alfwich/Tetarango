@@ -119,8 +119,6 @@ namespace AW
 			const auto anchor = bodyA->getBody()->GetWorldCenter();
 			b2RevoluteJointDef jointDef;
 			jointDef.Initialize(bodyA->getBody(), bodyB->getBody(), anchor);
-			jointDef.localAnchorB.x = (float)jointDistance;
-			jointDef.localAnchorB.y = (float)jointDistance;
 			jointReference = world->CreateJoint(&jointDef);
 		}
 		break;

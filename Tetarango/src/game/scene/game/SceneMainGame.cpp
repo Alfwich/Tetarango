@@ -1,6 +1,7 @@
 #include "SceneMainGame.h"
 
 #include "GameImports.h"
+#include "scene/world/WorldTetarango.h"
 
 namespace
 {
@@ -80,6 +81,16 @@ namespace AWGame
 		}
 	}
 
+	void SceneMainGame::onAttach()
+	{
+		modules->physic->setWorldTimescope(0, AW::TimeScope::Game);
+	}
+
+	void SceneMainGame::onDetach()
+	{
+		modules->physic->setWorldTimescope(0);
+	}
+
 	void SceneMainGame::onCreateChildren()
 	{
 		gameMainMenu = std::make_shared<GameMainMenu>();
@@ -104,7 +115,7 @@ namespace AWGame
 		masterSceneContainer->notifyOnTransition = weak_from_this();
 		add(masterSceneContainer);
 
-		masterSceneContainer->add(std::make_shared<SceneTetris>());
+		masterSceneContainer->add(std::make_shared<SceneWorldTetarango>());
 		masterSceneContainer->add(std::make_shared<SceneOptionsMenu>());
 
 		globalParticleSystem = std::make_shared<AW::ParticleSystem>();
@@ -112,7 +123,7 @@ namespace AWGame
 		globalParticleSystem->setGlobalReceiver(true);
 		add(globalParticleSystem);
 
-		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Tetris));
+		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::WorldTetarango));
 		globalTransition->fadeOut();
 	}
 
@@ -280,14 +291,19 @@ namespace AWGame
 	{
 		disableMenu();
 		gameMainMenu->hide();
+		optionsReturnSceneName = masterSceneContainer->getCurrentSceneName();
 		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::OptionsMenu));
 	}
 
 	void SceneMainGame::hideOptions()
 	{
-		masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Tetris));
+		if (optionsReturnSceneName.empty()) return;
+
+		masterSceneContainer->transitionToScene(optionsReturnSceneName);
 		enableMenu();
 		gameMainMenu->show();
+
+		optionsReturnSceneName.clear();
 	}
 
 	std::shared_ptr<AW::SerializationClient> SceneMainGame::doSerialize(AW::SerializationHint hint)
@@ -301,6 +317,7 @@ namespace AWGame
 
 		const auto client = serializationClient->getClient("scene_main_game", hint);
 		menuEnabled = client->serializeBool("menu_enabled", menuEnabled);
+		optionsReturnSceneName = client->serializeString("return-scene", optionsReturnSceneName);
 
 		return BaseScene::doSerialize(hint);
 	}

@@ -13,9 +13,9 @@ namespace AWGame
 		registerGameObject<Box>(__FUNCTION__);
 	}
 
-	void Box::onInitialAttach()
+	void Box::onBindShaders()
 	{
-		setTexture("prop-blocks");
+		fragmentShader = modules->shader->getShader({ "f-color" });
 	}
 
 	void Box::onCreateChildren()
@@ -36,22 +36,6 @@ namespace AWGame
 	void Box::onChildrenHydrated()
 	{
 		body = findChildWithName<AW::Body>("body");
-	}
-
-	void Box::onBindShaders()
-	{
-		fragmentShader = modules->shader->getShader({ "block" }, true);
-
-		fragmentShader->setFloatIUParam("clipX", 32.0);
-		fragmentShader->setFloatIUParam("clipY", 0.0);
-		fragmentShader->setFloatIUParam("clipWidth", 64.0);
-		fragmentShader->setFloatIUParam("clipHeight", 64.0);
-		fragmentShader->setFloatIUParam("blockBorderSize", 2.0);
-		fragmentShader->setFloatIUParam("blockEffect", 0.5);
-		fragmentShader->setFloatIUParam("blockEffectP", 0.25);
-		fragmentShader->setFloatIUParam("blockEffectG", 0.4);
-		fragmentShader->setFloatIUParam("blockCenterFill", AW::NumberHelper::random(0.5, 1.0));
-		fragmentShader->setFloatIUParam("fScanlineRetroAmount", 0.25);
 	}
 
 	void Box::setDynamic(bool flag)

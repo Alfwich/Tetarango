@@ -9,13 +9,13 @@ namespace AWGame
 	class Box : public AW::Element, public AW::IBodyListener
 	{
 		std::shared_ptr<AW::Body> body;
-		bool dynamic = true;
+		bool dynamic = false;
 
 	public:
 		Box();
 
 		void onBindShaders();
-		void onInitialAttach();
+
 		void onCreateChildren();
 		void onChildrenHydrated();
 

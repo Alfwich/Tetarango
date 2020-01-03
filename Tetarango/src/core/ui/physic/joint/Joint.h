@@ -7,8 +7,8 @@ namespace AW
 {
 	enum class JointType
 	{
-		Revolute,
-		Distant
+		Distant,
+		Revolute
 	};
 
 	class Joint : public GameObject, public RigidBodyJoint
@@ -16,7 +16,7 @@ namespace AW
 		int bodyABindingId = 0, bodyBBindingId = 0;
 		float jointDistance = 0.f;
 
-		JointType jointType = JointType::Revolute;
+		JointType jointType = JointType::Distant;
 
 		void updateBindingReferences(const std::shared_ptr<IBodyListener>& bodyAObj, const std::shared_ptr<IBodyListener>& bodyBObj);
 		void ensureBodysAreAttached(const std::shared_ptr<IBodyListener>& bodyA, const std::shared_ptr<IBodyListener>& bodyB);

@@ -19,6 +19,7 @@ namespace AWGame
 
 	TestScene2::TestScene2() : AW::Scene("test_scene_2")
 	{
+		setTimeScope(AW::TimeScope::Game);
 		setShouldRebuildOnLoad();
 		registerGameObject<TestScene2>(__FUNCTION__);
 	}
@@ -59,6 +60,7 @@ namespace AWGame
 		modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
 		modules->physic->setWorldFps(0, 60);
 		modules->physic->setWorldGravity(0);
+		modules->physic->setWorldTimescope(0, AW::TimeScope::Game);
 	}
 
 	void TestScene2::onCreateChildren()
@@ -122,6 +124,7 @@ namespace AWGame
 				contentContainer->add(binder);
 
 				const auto joint = std::make_shared<AW::Joint>();
+				joint->setJointType(AW::JointType::Distant);
 				if (AW::NumberHelper::chance(50))
 				{
 					joint->bodyA = platformA;
@@ -140,7 +143,7 @@ namespace AWGame
 		camera->target = player;
 
 		const auto dim = 100.0;
-		for (auto i = 0; i < 10; ++i)
+		for (auto i = 0; i < 50; ++i)
 		{
 			const auto poly = std::make_shared<Poly>();
 			poly->setColor(AW::Color::random());
@@ -226,27 +229,33 @@ namespace AWGame
 
 		if (key == AWKey::ONE)
 		{
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 		}
 
 		if (key == AWKey::TWO)
 		{
-			tran->stop();
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 2.0);
 		}
 
 		if (key == AWKey::THREE)
 		{
-			modules->physic->setWorldGravity(0, 0.0, 0.0);
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 0.5);
 		}
 
 		if (key == AWKey::FOUR)
 		{
-			modules->physic->setWorldGravity(0);
+			modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 0.1);
 		}
 
 		if (key == AWKey::FIVE)
 		{
+			modules->physic->setWorldGravity(0, 0.0, 0.0);
 		}
 
+		if (key == AWKey::FIVE)
+		{
+			modules->physic->setWorldGravity(0);
+		}
 	}
 
 	void TestScene2::onKey(AWKey key, bool isPressed)

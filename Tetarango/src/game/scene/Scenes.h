@@ -13,23 +13,28 @@ namespace AWGame
 		OptionsMenu,
 		SavedGamesMenu,
 
+		// Test
+		Tetris,
+
 		// Game
 		MainGame,
-		Tetris
+		WorldTetarango
 	};
 
 	class Scenes
 	{
 	public:
-		const std::map<SceneGame, std::string> game 
+		const std::map<SceneGame, std::string> game
 		{
 			{ SceneGame::Splash, "menu-splash" },
 			{ SceneGame::MainMenu, "menu-main" },
 			{ SceneGame::OptionsMenu, "menu-options" },
 			{ SceneGame::SavedGamesMenu, "menu-saved-games" },
 
+			{ SceneGame::Tetris, "game-tetris" },
+
 			{ SceneGame::MainGame, "game-main" },
-			{ SceneGame::Tetris, "game-tetris" }
+			{ SceneGame::WorldTetarango, "world-tetarango"}
 		};
 	};
 }

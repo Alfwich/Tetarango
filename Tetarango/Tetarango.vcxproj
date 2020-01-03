@@ -292,6 +292,7 @@ bash ./make.sh</Command>
     <ClCompile Include="src\core\ui\renderable\primitive\trace\Trace.cpp" />
     <ClCompile Include="src\game\scene\test\tetris\SceneTetris.cpp" />
     <ClCompile Include="src\game\scene\test\TestScene2.cpp" />
+    <ClCompile Include="src\game\scene\world\WorldTetarango.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -432,6 +433,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\game\scene\Scenes.h" />
     <ClInclude Include="src\game\scene\test\tetris\SceneTetris.h" />
     <ClInclude Include="src\game\scene\test\TestScene2.h" />
+    <ClInclude Include="src\game\scene\world\WorldTetarango.h" />
     <ClInclude Include="src\test\Tests.h" />
     <ClInclude Include="src\test\TestActor.h" />
     <ClInclude Include="src\core\engine\module\time\Time.h" />

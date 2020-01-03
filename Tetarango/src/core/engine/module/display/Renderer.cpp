@@ -29,6 +29,9 @@ namespace
 	};
 
 	const auto bufferExpandFactor = 50;
+	const auto commonVertexStride = sizeof(float) * 3;
+	const auto commonUVStride = sizeof(float) * 2;
+	const auto commonOffset = 0;
 }
 
 namespace AW
@@ -50,7 +53,6 @@ namespace AW
 
 		if (oldRenderer != nullptr)
 		{
-			harvestFromPreviousRenderer(oldRenderer);
 			oldRenderer->releaseOpenGLObjects();
 		}
 		else
@@ -98,17 +100,17 @@ namespace AW
 			glBindVertexArray(vao);
 		}
 
-		if (vertexBuffer == 0)
+		if (defaultVertexBuffer == 0)
 		{
-			glGenBuffers(1, &vertexBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+			glGenBuffers(1, &defaultVertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, defaultVertexBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(inlineVerticies), inlineVerticies, GL_STATIC_DRAW);
 		}
 
-		if (textureUVBuffer == 0)
+		if (defaultTextureUVBuffer == 0)
 		{
-			glGenBuffers(1, &textureUVBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
+			glGenBuffers(1, &defaultTextureUVBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, defaultTextureUVBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(inlineUVCoords), inlineUVCoords, GL_STATIC_DRAW);
 		}
 
@@ -123,11 +125,6 @@ namespace AW
 	{
 		defaultVertexShader = vertexShader;
 		defaultFragmentShader = fragmentShader;
-	}
-
-	void Renderer::harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous)
-	{
-		clearColor = previous->clearColor;
 	}
 
 	Renderer::~Renderer()
@@ -149,16 +146,16 @@ namespace AW
 			vao = 0;
 		}
 
-		if (vertexBuffer != 0)
+		if (defaultVertexBuffer != 0)
 		{
-			glDeleteBuffers(1, &vertexBuffer);
-			vertexBuffer = 0;
+			glDeleteBuffers(1, &defaultVertexBuffer);
+			defaultVertexBuffer = 0;
 		}
 
-		if (textureUVBuffer != 0)
+		if (defaultTextureUVBuffer != 0)
 		{
-			glDeleteBuffers(1, &textureUVBuffer);
-			textureUVBuffer = 0;
+			glDeleteBuffers(1, &defaultTextureUVBuffer);
+			defaultTextureUVBuffer = 0;
 		}
 
 		for (const auto programPairToProgramId : programs)
@@ -217,12 +214,10 @@ namespace AW
 		LM::mat4x4_ortho(pAbs, 0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
 
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		setVertexAttributePointer(defaultVertexBuffer, commonVertexStride, commonOffset);
 
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		setUVAttributePointer(defaultTextureUVBuffer, commonUVStride, commonOffset);
 
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
@@ -231,8 +226,10 @@ namespace AW
 		renderRecursive(getNextRenderPackageForObj(root));
 
 		glDisable(GL_BLEND);
+
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+
 		glUseProgram(0);
 		currentProgramId = 0;
 	}
@@ -289,8 +286,16 @@ namespace AW
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		glDepthMask(GL_TRUE);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+		if (currentScreenConfig.visualizeClipRects)
+		{
+			glUniform4f(inColorModLocation, 1.0, 0, 0, 1.0);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
+
+		glDepthMask(GL_TRUE);
+
 	}
 
 
@@ -354,11 +359,7 @@ namespace AW
 			msaaEnabled = false;
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, vBuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vBuffer);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+		setVertexAttributePointer(vBuffer, commonVertexStride, commonOffset);
 
 		glDrawArrays(GL_TRIANGLE_FAN, 0, numPoints);
 
@@ -368,11 +369,8 @@ namespace AW
 			glDrawArrays(GL_LINE_LOOP, 0, numPoints);
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		setVertexAttributePointer(defaultVertexBuffer, commonVertexStride, commonOffset);
+		setUVAttributePointer(defaultTextureUVBuffer, commonUVStride, commonOffset);
 	}
 
 	unsigned int Renderer::generateVertexBuffer(const std::vector<AWVec2<double>>& points)
@@ -391,6 +389,18 @@ namespace AW
 		glBufferData(GL_ARRAY_BUFFER, pts.size() * 4, &pts[0], GL_STATIC_DRAW);
 
 		return buffer;
+	}
+
+	void Renderer::setVertexAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (const void*)0);
+	}
+
+	void Renderer::setUVAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (const void*)0);
 	}
 
 	void Renderer::changeProgram(RenderPackage* renderPackage)

@@ -19,6 +19,7 @@ namespace AWGame
 	SceneTetris::SceneTetris() : BaseScene(SceneGame::Tetris)
 	{
 		setShouldRebuildOnLoad();
+		setTimeScope(AW::TimeScope::Game);
 		registerGameObject<SceneTetris>(__FUNCTION__);
 	}
 

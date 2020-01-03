@@ -26,7 +26,7 @@ namespace AW
 		Color clearColor;
 
 		LM::mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
-		unsigned int vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
+		unsigned int defaultVertexBuffer = 0, defaultTextureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
 
 		std::vector<RenderPackage>::iterator nextPackage;
 		std::vector<RenderPackage> renderBuffer;
@@ -54,7 +54,6 @@ namespace AW
 		bool depthEnabled = false, msaaEnabled = false, clearEnabled = true, hasFallenBackToRenderList = false;
 		double currentFrameTimestamp = 0.0;
 
-		void harvestFromPreviousRenderer(std::shared_ptr<Renderer> previous);
 		void releaseOpenGLObjects();
 
 		void preRender(Screen* screen, double renderTimestamp);
@@ -110,6 +109,9 @@ namespace AW
 		void generateBackgroundRenderBuffer();
 
 		unsigned int generateVertexBuffer(const std::vector<AWVec2<double>>& points);
+
+		void setVertexAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset);
+		void setUVAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset);
 
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);

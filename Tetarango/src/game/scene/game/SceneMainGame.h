@@ -27,13 +27,17 @@ namespace AWGame
 
 		AW::SceneTransitionBundle transitionBundle;
 		std::string getSaveSlotFilePath();
-		std::string storageScopeName, nextSceneName;
+		std::string storageScopeName, nextSceneName, optionsReturnSceneName;
 		bool isSavingData = false, hasSavedData = false, hasFinishedTransition = false, backOutToMainMenuAfterSave = false, menuEnabled = false;
 
 	public:
 		SceneMainGame();
 
 		void onInitialAttach();
+
+		void onAttach();
+		void onDetach();
+
 		void onCreateChildren();
 		void onDisplayProvisioned();
 		void onChildrenHydrated();
