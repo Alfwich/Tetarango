@@ -2,6 +2,11 @@
 
 #include "gui/Guis.h"
 
+namespace
+{
+	const auto targetRebindingIdName = "gc-rebind-t-id";
+}
+
 namespace AWGame
 {
 	GameCamera::GameCamera() : BaseGui(GuiCamera::CameraBasic)
@@ -19,6 +24,21 @@ namespace AWGame
 		setTimeScope(AW::TimeScope::Camera);
 
 		enableEnterFrame(5);
+	}
+
+	void GameCamera::onAttach()
+	{
+		const auto rebindingId = serializationClient->getInt(targetRebindingIdName);
+		if (target.lock() == nullptr && rebindingId != 0)
+		{
+			target = getRootNode()->findChildWithBindingId<AW::Renderable>(rebindingId);
+		}
+
+		const auto goPtr = std::dynamic_pointer_cast<AW::GameObject>(target.lock());
+		if (goPtr != nullptr)
+		{
+			serializationClient->setInt(targetRebindingIdName, goPtr->getBindingId());
+		}
 	}
 
 	void GameCamera::onEnterFrame(const double& frameTime)
