@@ -20,7 +20,7 @@
 #include "scene/menu/SceneOptionsMenu.h"
 #include "scene/menu/SceneSavedGamesMenu.h"
 #include "scene/game/SceneMainGame.h"
-#include "scene/game/tetris/SceneTetris.h"
+#include "scene/test/tetris/SceneTetris.h"
 
 // Props
 #include "prop/BaseProp.h"

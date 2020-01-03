@@ -122,19 +122,26 @@ namespace AWGame
 
 		if (modules->gameConfig->getConfigBool(Config::Param::enableTestScenes))
 		{
-			testSceneButton = std::make_shared<ButtonBasic>();
-			testSceneButton->setColor(128, 255, 255);
-			testSceneButton->toRightOf(backButton, buttonOffset);
-			testSceneButton->setText("Test 1");
-			testSceneButton->clickListener = baseSceneWeakThisRef();
-			centerContainer->add(testSceneButton);
+			testScene1 = std::make_shared<ButtonBasic>();
+			testScene1->setColor(128, 255, 255);
+			testScene1->toRightOf(backButton, buttonOffset);
+			testScene1->setText("Test 1");
+			testScene1->clickListener = baseSceneWeakThisRef();
+			centerContainer->add(testScene1);
 
-			testSpaceSceneButton = std::make_shared<ButtonBasic>();
-			testSpaceSceneButton->setColor(128, 255, 255);
-			testSpaceSceneButton->toTopOf(testSceneButton, 0, buttonOffset);
-			testSpaceSceneButton->setText("Test 2");
-			testSpaceSceneButton->clickListener = baseSceneWeakThisRef();
-			centerContainer->add(testSpaceSceneButton);
+			testScene2 = std::make_shared<ButtonBasic>();
+			testScene2->setColor(128, 255, 255);
+			testScene2->toTopOf(testScene1, 0, buttonOffset);
+			testScene2->setText("Test 2");
+			testScene2->clickListener = baseSceneWeakThisRef();
+			centerContainer->add(testScene2);
+
+			testScene3 = std::make_shared<ButtonBasic>();
+			testScene3->setColor(128, 255, 255);
+			testScene3->toTopOf(testScene2, 0, buttonOffset);
+			testScene3->setText("Test 3");
+			testScene3->clickListener = baseSceneWeakThisRef();
+			centerContainer->add(testScene3);
 		}
 
 		centerContainer->resizeSelfToChildrenAndCenterChildren();
@@ -171,13 +178,17 @@ namespace AWGame
 		{
 			transitionToScene(SceneGame::MainMenu);
 		}
-		else if (id == testSceneButton->getId())
+		else if (id == testScene1->getId())
 		{
 			transitionToScene("test_scene");
 		}
-		else if (id == testSpaceSceneButton->getId())
+		else if (id == testScene2->getId())
 		{
 			transitionToScene("test_scene_2");
+		}
+		else if (id == testScene3->getId())
+		{
+			transitionToScene(SceneGame::Tetris);
 		}
 	}
 
@@ -186,10 +197,10 @@ namespace AWGame
 		saveSlot1->disableInput();
 		saveSlot2->disableInput();
 		saveSlot3->disableInput();
-		if (testSceneButton != nullptr)
+		if (testScene1 != nullptr)
 		{
-			testSceneButton->disableInput();
-			testSpaceSceneButton->disableInput();
+			testScene1->disableInput();
+			testScene2->disableInput();
 		}
 	}
 
@@ -198,10 +209,10 @@ namespace AWGame
 		saveSlot1->enableInput();
 		saveSlot2->enableInput();
 		saveSlot3->enableInput();
-		if (testSceneButton != nullptr)
+		if (testScene1 != nullptr)
 		{
-			testSceneButton->enableInput();
-			testSpaceSceneButton->enableInput();
+			testScene1->enableInput();
+			testScene2->enableInput();
 		}
 	}
 

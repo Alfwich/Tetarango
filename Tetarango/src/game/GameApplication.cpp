@@ -118,6 +118,7 @@ namespace AWGame
 			{
 				masterSceneContainer->add(std::make_shared<TestScene>());
 				masterSceneContainer->add(std::make_shared<TestScene2>());
+				masterSceneContainer->add(std::make_shared<SceneTetris>());
 			}
 
 			masterSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::Splash));

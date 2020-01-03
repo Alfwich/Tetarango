@@ -112,15 +112,6 @@ namespace AW
 			glBufferData(GL_ARRAY_BUFFER, sizeof(inlineUVCoords), inlineUVCoords, GL_STATIC_DRAW);
 		}
 
-		if (currentScreenConfig.openGlWireframeMode)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-
 		generateBackgroundRenderBuffer();
 
 		layerFactor = (1 << 16) / maxLayers;
@@ -276,6 +267,12 @@ namespace AW
 		}
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		if (currentScreenConfig.openGlWireframeMode)
+		{
+			glUniform4f(inColorModLocation, 1.0, 0, 0, 1.0);
+			glDrawArrays(GL_LINE_LOOP, 0, 6);
+		}
 	}
 
 	void Renderer::openGLDrawArraysStencil(RenderPackage* renderPackage)
@@ -364,6 +361,12 @@ namespace AW
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
 
 		glDrawArrays(GL_TRIANGLE_FAN, 0, numPoints);
+
+		if (currentScreenConfig.openGlWireframeMode)
+		{
+			glUniform4f(inColorModLocation, 1.0, 0, 0, 1.0);
+			glDrawArrays(GL_LINE_LOOP, 0, numPoints);
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -526,15 +529,6 @@ namespace AW
 	void Renderer::updateScreenConfig(const ScreenConfig & config)
 	{
 		currentScreenConfig = config;
-
-		if (currentScreenConfig.openGlWireframeMode)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
 
 		generateBackgroundRenderBuffer();
 	}

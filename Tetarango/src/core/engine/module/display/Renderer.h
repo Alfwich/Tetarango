@@ -117,7 +117,6 @@ namespace AW
 
 		bool initOpenGL(SDL_Window* window);
 		void setDefaultShaders(std::shared_ptr<ShaderReference> vertexShader, std::shared_ptr<ShaderReference> fragmentShader);
-
 		void updateScreenConfig(const ScreenConfig& config);
 
 		void setClearColor(int r, int g, int b, int a);

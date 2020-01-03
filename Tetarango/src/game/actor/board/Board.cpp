@@ -7,9 +7,9 @@ namespace
 
 namespace AWGame
 {
-	std::shared_ptr<AW::Transition> Board::getTransition()
+	std::shared_ptr<AW::Transition> Board::createTransition()
 	{
-		return modules->animation->createGameTransition();
+		return modules->animation->createTransition();
 	}
 
 	void Board::updateBoardIfNeeded()
@@ -235,7 +235,7 @@ namespace AWGame
 				currentPiece->blockY += y;
 				blockMap[calcMapOffset(currentPiece)] = currentPiece;
 
-				const auto t = modules->animation->createGameTransition();
+				const auto t = createTransition();
 				t->startTransition(currentPiece, 50.0, AW::Rect(currentPiece->blockX * cellWidth, currentPiece->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}
@@ -292,7 +292,7 @@ namespace AWGame
 				currentPiece->blockY = rotatedY;
 				blockMap[calcMapOffset(currentPiece)] = currentPiece;
 
-				const auto t = modules->animation->createGameTransition();
+				const auto t = createTransition();
 				t->startTransition(currentPiece, 50.0, AW::Rect(currentPiece->blockX * cellWidth, currentPiece->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}
@@ -301,7 +301,7 @@ namespace AWGame
 
 	void Board::onInitialAttach()
 	{
-		actionTimer = modules->time->createTimer(AW::TimeScope::Game);
+		actionTimer = modules->time->createTimer();
 		actionTimer->start();
 		enableEnterFrame();
 	}
@@ -502,7 +502,7 @@ namespace AWGame
 			{
 				blockMap[calcMapOffset(blockToDrop)] = blockToDrop;
 
-				const auto t = modules->animation->createGameTransition();
+				const auto t = createTransition();
 				t->startTransition(blockToDrop, 50.0, AW::Rect(blockToDrop->blockX * cellWidth, blockToDrop->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}
@@ -573,7 +573,7 @@ namespace AWGame
 			{
 				blockMap[calcMapOffset(blockToDrop)] = blockToDrop;
 
-				const auto t = modules->animation->createGameTransition();
+				const auto t = createTransition();
 				t->startTransition(blockToDrop, 50.0, AW::Rect(blockToDrop->blockX * cellWidth, blockToDrop->blockY * cellHeight, cellHeight, cellWidth));
 				transitions.push_back(t);
 			}

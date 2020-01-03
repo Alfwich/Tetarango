@@ -18,6 +18,7 @@ namespace AWGame
 {
 	SceneTetris::SceneTetris() : BaseScene(SceneGame::Tetris)
 	{
+		setShouldRebuildOnLoad();
 		registerGameObject<SceneTetris>(__FUNCTION__);
 	}
 
@@ -42,17 +43,10 @@ namespace AWGame
 
 	void SceneTetris::onInitialAttach()
 	{
-		const auto gameScene = findFirstInParentChain<SceneMainGame>();
-		if (gameScene != nullptr)
-		{
-			gameScene->enableMenu();
-		}
+		modules->input->keyboard->registerKeys({ AWKey::ESCAPE, AWKey::ONE, AWKey::TWO, AWKey::THREE, AWKey::FOUR, AWKey::FIVE, AWKey::LEFT, AWKey::RIGHT, AWKey::DOWN, AWKey::UP, AWKey::BACKSPACE, AWKey::ZERO }, weak_from_this());
 
-		modules->input->keyboard->registerKeys({ AWKey::ONE, AWKey::TWO, AWKey::THREE, AWKey::FOUR, AWKey::FIVE, AWKey::LEFT, AWKey::RIGHT, AWKey::DOWN, AWKey::UP, AWKey::BACKSPACE, AWKey::ZERO }, weak_from_this());
-
-		keyRepeatTimer = modules->time->createTimer(AW::TimeScope::Game);
+		keyRepeatTimer = modules->time->createTimer();
 		keyRepeatTimer->start();
-
 
 		enableEnterFrame();
 	}
@@ -234,6 +228,13 @@ namespace AWGame
 
 	void SceneTetris::onKeyPressed(AWKey key)
 	{
+		if (key == AWKey::ESCAPE)
+		{
+			destroyChildren();
+			const auto applicationSceneContainer = findFirstInParentChain<AW::SceneContainer>();
+			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::SavedGamesMenu));
+		}
+
 		switch (key)
 		{
 		case AWKey::ZERO:
@@ -295,10 +296,6 @@ namespace AWGame
 			board->disableFastFall();
 			break;
 		}
-	}
-
-	void SceneTetris::onAboutToSave()
-	{
 	}
 
 	void SceneTetris::onCameraUpdate()

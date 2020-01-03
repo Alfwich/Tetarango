@@ -19,7 +19,7 @@ namespace AWGame
 		std::shared_ptr<AW::Timer> actionTimer;
 		std::shared_ptr<AW::NineSlice> background;
 
-		std::shared_ptr<AW::Transition> getTransition();
+		std::shared_ptr<AW::Transition> createTransition();
 		void updateBoardIfNeeded();
 		int calcMapOffset(const std::shared_ptr<Block> blockPtr);
 		int calcMapOffset(unsigned int x, unsigned int y);

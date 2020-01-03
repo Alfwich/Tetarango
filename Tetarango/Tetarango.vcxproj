@@ -290,7 +290,7 @@ bash ./make.sh</Command>
     <ClCompile Include="src\game\scene\test\TestScene.cpp" />
     <ClCompile Include="src\core\ui\renderable\Zone.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\trace\Trace.cpp" />
-    <ClCompile Include="src\game\scene\game\tetris\SceneTetris.cpp" />
+    <ClCompile Include="src\game\scene\test\tetris\SceneTetris.cpp" />
     <ClCompile Include="src\game\scene\test\TestScene2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -430,7 +430,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\engine\module\serialization\SerializationTags.h" />
     <ClInclude Include="src\game\gui\IGuiListener.h" />
     <ClInclude Include="src\game\scene\Scenes.h" />
-    <ClInclude Include="src\game\scene\game\tetris\SceneTetris.h" />
+    <ClInclude Include="src\game\scene\test\tetris\SceneTetris.h" />
     <ClInclude Include="src\game\scene\test\TestScene2.h" />
     <ClInclude Include="src\test\Tests.h" />
     <ClInclude Include="src\test\TestActor.h" />

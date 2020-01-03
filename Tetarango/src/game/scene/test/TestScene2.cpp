@@ -219,8 +219,9 @@ namespace AWGame
 	{
 		if (key == AWKey::ESCAPE)
 		{
+			destroyChildren();
 			const auto applicationSceneContainer = findFirstInParentChain<AW::SceneContainer>();
-			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::MainMenu));
+			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::SavedGamesMenu));
 		}
 
 		if (key == AWKey::ONE)

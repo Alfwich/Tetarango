@@ -9,13 +9,9 @@ namespace AWGame
 	class SceneSavedGamesMenu : public BaseScene
 	{
 		std::shared_ptr<AW::Text> savedGamesMenuTitle;
-		std::shared_ptr<ButtonBasic> saveSlot1;
-		std::shared_ptr<ButtonBasic> saveSlot2;
-		std::shared_ptr<ButtonBasic> saveSlot3;
-		std::shared_ptr<ButtonBasic> backButton;
 
-		std::shared_ptr<ButtonBasic> testSceneButton;
-		std::shared_ptr<ButtonBasic> testSpaceSceneButton;
+		std::shared_ptr<ButtonBasic> saveSlot1, saveSlot2, saveSlot3, backButton;
+		std::shared_ptr<ButtonBasic> testScene1, testScene2, testScene3;
 
 		void disableButtons();
 		void enableButtons();
