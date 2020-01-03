@@ -293,11 +293,11 @@ namespace AW
 	}
 
 
-	GLuint Renderer::getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId)
+	unsigned int Renderer::getUniformLocationForCurrentProgram(const std::string& paramName, unsigned int programId)
 	{
 		if (programIdToProgramUniformMapId.count(programId) == 0)
 		{
-			programIdToProgramUniformMapId[programId] = std::unordered_map<std::string, GLuint>();
+			programIdToProgramUniformMapId[programId] = std::unordered_map<std::string, unsigned int>();
 		}
 
 		if (programIdToProgramUniformMapId.at(programId).count(paramName) == 0)
@@ -324,7 +324,7 @@ namespace AW
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
-	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, GLuint vBuffer, unsigned int numPoints)
+	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, unsigned int vBuffer, unsigned int numPoints)
 	{
 		if (renderPackage->stencilDepth > 0)
 		{
@@ -368,7 +368,7 @@ namespace AW
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	}
 
-	GLuint Renderer::generateVertexBuffer(const std::vector<AWVec2<double>>& points)
+	unsigned int Renderer::generateVertexBuffer(const std::vector<AWVec2<double>>& points)
 	{
 		std::vector<float> pts;
 		for (const auto p : points)
@@ -378,7 +378,7 @@ namespace AW
 			pts.push_back(0.f);
 		}
 
-		GLuint buffer;
+		unsigned int buffer;
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ARRAY_BUFFER, pts.size() * 4, &pts[0], GL_STATIC_DRAW);
@@ -424,7 +424,7 @@ namespace AW
 		}
 	}
 
-	void Renderer::changeProgram(GLuint programId)
+	void Renderer::changeProgram(unsigned int programId)
 	{
 		if (currentProgramId != programId)
 		{
@@ -436,7 +436,7 @@ namespace AW
 		}
 	}
 
-	std::string Renderer::getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds)
+	std::string Renderer::getKeyForShaders(const std::vector<unsigned int> vertexShaderIds, const std::vector<unsigned int> fragmentShaderIds)
 	{
 		auto result = std::string();
 
@@ -455,7 +455,7 @@ namespace AW
 		return result;
 	}
 
-	GLuint Renderer::createAndLinkProgramIfNeeded(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId)
+	unsigned int Renderer::createAndLinkProgramIfNeeded(const std::vector<unsigned int> vertexShaderIds, const std::vector<unsigned int> fragmentShaderIds, unsigned int loaderShaderId)
 	{
 		const auto key = getKeyForShaders(vertexShaderIds, fragmentShaderIds);
 		if (programs.count(key) == 0)
@@ -921,7 +921,7 @@ namespace AW
 		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		GLuint backRenderBuffer;
+		unsigned int backRenderBuffer;
 		glGenFramebuffers(1, &backRenderBuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, backRenderBuffer);
 
@@ -930,7 +930,7 @@ namespace AW
 
 		frameBufferStack.push(std::make_tuple(cached->getWidth(), cached->getHeight(), backRenderBuffer, backgroundRenderBuffer));
 
-		GLuint texColorBuffer;
+		unsigned int texColorBuffer;
 		if (!cached->hasTexture())
 		{
 			glGenTextures(1, &texColorBuffer);
@@ -1039,7 +1039,7 @@ namespace AW
 
 		LM::mat4x4_mul(mvp, tP, m);
 
-		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const float*)mvp);
 
 		setColorModParam(renderPackage);
 
@@ -1108,13 +1108,13 @@ namespace AW
 		applyShaderUniforms(vertexShader, renderPackage);
 		applyShaderUniforms(fragmentShader, renderPackage);
 
-		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const float*)mvp);
 		glUniform4f(inColorModLocation, 1.0, 1.0, 1.0, 1.0);
 
 		openGLDrawArraysStencil(renderPackage);
 	}
 
-	void Renderer::bindGLTexture(GLuint textureId)
+	void Renderer::bindGLTexture(unsigned int textureId)
 	{
 		glBindTexture(GL_TEXTURE_2D, textureId);
 
@@ -1188,7 +1188,7 @@ namespace AW
 
 		LM::mat4x4_mul(mvp, tP, m);
 
-		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const float*)mvp);
 
 		setColorModParam(renderPackage);
 
@@ -1236,7 +1236,7 @@ namespace AW
 
 		LM::mat4x4_mul(mvp, tP, m);
 
-		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+		glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const float*)mvp);
 
 		setColorModParam(renderPackage);
 
@@ -1326,7 +1326,7 @@ namespace AW
 				changeProgram(renderPackage);
 			}
 
-			glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const GLfloat*)mvp);
+			glUniformMatrix4fv(inMatrixLocation, 1, GL_FALSE, (const float*)mvp);
 			glUniform4f(inColorModLocation, particle->cModR / 255.0, particle->cModG / 255.0, particle->cModB / 255.0, (particle->alphaMod / 255.0) * renderPackage->alpha);
 
 			bindGLTexture(glTextureId);

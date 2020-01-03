@@ -88,25 +88,23 @@ namespace AWGame
 
 		const auto xOff = 700.0;
 		const auto yOff = -250.0;
-		{
-			const auto platform = std::make_shared<Box>();
-			platform->setDynamic(false);
-			platform->setColor(64, 64, 64);
-			platform->setSize(500.0, 100.0);
-			platform->setRotation(45.0);
-			platform->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 + yOff);
-			contentContainer->add(platform);
-		}
 
-		{
-			const auto platform = std::make_shared<Box>();
-			platform->setDynamic(false);
-			platform->setColor(64, 64, 64);
-			platform->setSize(500.0, 100.0);
-			platform->setRotation(-45.0);
-			platform->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
-			contentContainer->add(platform);
-		}
+		const auto platformA = std::make_shared<Box>();
+		platformA->setDynamic(false);
+		platformA->setColor(64, 64, 64);
+		platformA->setSize(500.0, 100.0);
+		platformA->setRotation(45.0);
+		platformA->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 + yOff);
+		contentContainer->add(platformA);
+
+
+		const auto platformB = std::make_shared<Box>();
+		platformB->setDynamic(false);
+		platformB->setColor(64, 64, 64);
+		platformB->setSize(500.0, 100.0);
+		platformB->setRotation(-45.0);
+		platformB->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
+		contentContainer->add(platformB);
 
 		player = std::make_shared<Player>();
 		player->name = "player";
@@ -114,18 +112,25 @@ namespace AWGame
 		contentContainer->add(player);
 
 		{
-			for (auto i = 0; i < 50; ++i)
+			for (auto i = 0; i < 10; ++i)
 			{
-				const auto platform = std::make_shared<Box>();
-				platform->setDynamic(true);
-				platform->setColor(128, 128, 128);
-				platform->setSize(50.0, 50.0);
-				platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
-				contentContainer->add(platform);
+				const auto binder = std::make_shared<Box>();
+				binder->setDynamic(true);
+				binder->setColor(128, 128, 128);
+				binder->setSize(50.0, 50.0);
+				binder->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
+				contentContainer->add(binder);
 
 				const auto joint = std::make_shared<AW::Joint>();
-				joint->bodyA = player;
-				joint->bodyB = platform;
+				if (AW::NumberHelper::chance(50))
+				{
+					joint->bodyA = platformA;
+				}
+				else
+				{
+					joint->bodyA = platformB;
+				}
+				joint->bodyB = binder;
 				contentContainer->add(joint);
 			}
 		}

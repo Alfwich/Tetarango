@@ -18,7 +18,7 @@ namespace AW
 	{
 		const ShaderType shaderType;
 		std::shared_ptr<ResourceBundle> data;
-		std::map<int, GLuint> locToShaderIds;
+		std::map<int, unsigned int> locToShaderIds;
 
 		std::string getUpdatedShaderProgramForLoc(char* data, int dataSize, int loc);
 
@@ -29,7 +29,7 @@ namespace AW
 		~Shader() { releaseShader(); };
 		const std::string name;
 
-		GLuint getShaderId(unsigned int location = 1);
+		unsigned int getShaderId(unsigned int location = 1);
 		bool shaderIsCompiled();
 
 		bool compileShader();

@@ -17,38 +17,38 @@ namespace AW
 
 	class ShaderReference
 	{
-		GLuint loaderId = 0, cachedProgramId = 0, vTranslateCachedLocation = 0;
+		unsigned int loaderId = 0, cachedProgramId = 0, vTranslateCachedLocation = 0;
 		bool hasSetParams = false, paramsDisabled = false, cachedParamsValid = false;
 
 		const std::vector<std::shared_ptr<Shader>> shaders;
 		const std::shared_ptr<Shader> loader;
 
-		std::unordered_map<std::string, GLfloat> floatIUParams;
-		std::unordered_map<GLuint, GLfloat> cachedFloatIUParams;
-		void setCachedParam(GLuint modLocation, GLfloat v1);
+		std::unordered_map<std::string, float> floatIUParams;
+		std::unordered_map<unsigned int, float> cachedFloatIUParams;
+		void setCachedParam(unsigned int modLocation, float v1);
 
-		std::unordered_map<std::string, std::tuple<GLfloat, GLfloat>> floatV2IUParams;
-		std::unordered_map<GLuint, std::tuple<GLfloat, GLfloat>> cachedFloatV2IUParams;
-		void setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat> values);
+		std::unordered_map<std::string, std::tuple<float, float>> floatV2IUParams;
+		std::unordered_map<unsigned int, std::tuple<float, float>> cachedFloatV2IUParams;
+		void setCachedParam(unsigned int modLocation, std::tuple<float, float> values);
 
-		std::unordered_map<std::string, std::tuple<GLfloat, GLfloat, GLfloat>> floatV3IUParams;
-		std::unordered_map<GLuint, std::tuple<GLfloat, GLfloat, GLfloat>> cachedFloatV3IUParams;
-		void setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat, GLfloat> values);
+		std::unordered_map<std::string, std::tuple<float, float, float>> floatV3IUParams;
+		std::unordered_map<unsigned int, std::tuple<float, float, float>> cachedFloatV3IUParams;
+		void setCachedParam(unsigned int modLocation, std::tuple<float, float, float> values);
 
-		std::unordered_map<std::string, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat>> floatV4IUParams;
-		std::unordered_map<GLuint, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat>> cachedFloatV4IUParams;
-		void setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat> values);
+		std::unordered_map<std::string, std::tuple<float, float, float, float>> floatV4IUParams;
+		std::unordered_map<unsigned int, std::tuple<float, float, float, float>> cachedFloatV4IUParams;
+		void setCachedParam(unsigned int modLocation, std::tuple<float, float, float, float> values);
 
 		void setCachedUniforms(const ShaderUniformInfoBundle& info);
-		void updateUniformCaches(GLuint programId);
+		void updateUniformCaches(unsigned int programId);
 
-		void setVTranslate(GLuint location, const std::tuple<GLfloat, GLfloat>& value, const ShaderUniformInfoBundle& info);
+		void setVTranslate(unsigned int location, const std::tuple<float, float>& value, const ShaderUniformInfoBundle& info);
 
 	public:
 		ShaderReference(std::vector<std::shared_ptr<Shader>> shaders, std::shared_ptr<Shader> loader);
 
-		std::vector<GLuint> getShaderIds();
-		GLuint getLoaderId();
+		std::vector<unsigned int> getShaderIds();
+		unsigned int getLoaderId();
 
 		void setFloatIUParam(std::string name, double v);
 		void setFloatV2IUParam(std::string name, double v1, double v2);
@@ -60,10 +60,10 @@ namespace AW
 		std::tuple<double, double, double> getFloatV3IUParam(std::string name);
 		std::tuple<double, double, double, double> getFloatV4IUParam(std::string name);
 
-		void setUniforms(GLuint programId, const ShaderUniformInfoBundle& info);
+		void setUniforms(unsigned int programId, const ShaderUniformInfoBundle& info);
 
-		void setCachedProgramId(GLuint programId);
-		GLuint getCachedProgramId();
+		void setCachedProgramId(unsigned int programId);
+		unsigned int getCachedProgramId();
 
 		void lock();
 		void resetCache();

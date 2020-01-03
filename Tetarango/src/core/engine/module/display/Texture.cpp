@@ -6,7 +6,7 @@ namespace AW
 		allowRebindWithRawPixelData = true;
 	}
 
-	Texture::Texture(GLuint textureId, unsigned int width, unsigned int height)
+	Texture::Texture(unsigned int textureId, unsigned int width, unsigned int height)
 	{
 		this->textureId = textureId;
 		this->width = width;
@@ -30,7 +30,7 @@ namespace AW
 		releaseTexture();
 	}
 
-	GLuint Texture::openGlTextureId()
+	unsigned int Texture::openGlTextureId()
 	{
 		return textureId;
 	}

@@ -88,7 +88,7 @@ namespace AW
 		std::shared_ptr<ShaderReference> vertexShader = nullptr, fragmentShader = nullptr, clipRectVertexShader = nullptr, clipRectFragmentShader = nullptr;
 
 	public:
-		GLuint cachedProgramId = 0, cachedClipRectProgram = 0;
+		unsigned int cachedProgramId = 0, cachedClipRectProgram = 0;
 		RenderMode renderMode = RenderMode::ChildrenOnly;
 		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
 		RenderDepthTest renderDepthTest = RenderDepthTest::Unspecified;

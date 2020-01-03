@@ -56,24 +56,28 @@ namespace AW
 		void commandChildren(void(*cmd)(std::shared_ptr<GameObject>));
 		TimeScope timeScope = TimeScope::None;
 
+		template<typename T>
+		void registerGameObject(const std::string& typeName);
+
+	public:
 		template <typename T>
 		std::shared_ptr<T> findFirstInParentChain();
 
 		template <typename T>
 		std::shared_ptr<T> findChildWithName(std::string name, bool checkChildren = true);
 
+		template <typename T>
+		std::shared_ptr<T> findChildWithBindingId(int bindingId);
 
-		template<typename T>
-		void registerGameObject(const std::string& typeName);
+		std::shared_ptr<GameObject> getRootNode();
 
-	public:
 		static int nextId();
 		static int currentBindingId();
 
 		GameObject();
 
 		int getId();
-		int getBindingId();
+		virtual int getBindingId();
 
 		std::string name;
 		int zIndex = 0;
@@ -159,8 +163,6 @@ namespace AW
 
 		int setTimeout(double timeoutMS);
 		void setTimeout(double timeoutMS, int* timeoutIdLocation);
-
-		std::shared_ptr<GameObject> findChildWithBindingId(int bindingId);
 	};
 
 	template<typename T>
@@ -212,6 +214,26 @@ namespace AW
 					}
 				}
 			}
+		}
+
+		// No match
+		return nullptr;
+	}
+
+	template<typename T>
+	inline std::shared_ptr<T> GameObject::findChildWithBindingId(int bindingId)
+	{
+		// Check immediate children
+		for (const auto child : children)
+		{
+			if (child->getBindingId() == bindingId) return std::dynamic_pointer_cast<T>(child);
+		}
+
+		// Check children recursive
+		for (const auto child : children)
+		{
+			const auto obj = child->findChildWithBindingId<T>(bindingId);
+			if (obj != nullptr) return obj;
 		}
 
 		// No match

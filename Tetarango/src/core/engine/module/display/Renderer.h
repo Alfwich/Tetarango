@@ -26,17 +26,17 @@ namespace AW
 		Color clearColor;
 
 		LM::mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
-		GLuint vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
+		unsigned int vertexBuffer = 0, textureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
 
 		std::list<RenderPackage>::iterator nextPackage;
 		std::list<RenderPackage> renderList;
 
 		std::shared_ptr<ShaderReference> defaultVertexShader, defaultFragmentShader;
-		std::unordered_map<std::string, GLuint> programs;
-		std::unordered_map<GLuint, std::unordered_map<std::string, GLuint>> programIdToProgramUniformMapId;
-		GLuint inMatrixLocation = 0, inColorModLocation = 0, currentFrameBufferId = 0;
+		std::unordered_map<std::string, unsigned int> programs;
+		std::unordered_map<unsigned int, std::unordered_map<std::string, unsigned int>> programIdToProgramUniformMapId;
+		unsigned int inMatrixLocation = 0, inColorModLocation = 0, currentFrameBufferId = 0;
 
-		std::stack<std::tuple<double, double, GLuint, GLuint>> frameBufferStack;
+		std::stack<std::tuple<double, double, unsigned int, unsigned int>> frameBufferStack;
 		std::stack<Color> colorStack;
 		std::stack<RenderPositionMode> renderPositionModeStack;
 		std::stack<RenderPositionProcessing> renderProcessingStack;
@@ -81,7 +81,7 @@ namespace AW
 		void renderElementChildrenIntoElementTexture(RenderPackage* renderPackage);
 
 		void updateClipRectOpenGL(RenderPackage* renderPackage);
-		void bindGLTexture(GLuint textureId);
+		void bindGLTexture(unsigned int textureId);
 
 		void renderElementOpenGL(RenderPackage* renderPackage);
 		void renderPrimitiveOpenGL(RenderPackage* renderPackage);
@@ -89,23 +89,23 @@ namespace AW
 		void renderParticleSystemOpenGL(RenderPackage* renderPackage);
 
 		void openGLDrawArrays(RenderPackage* renderPackage);
-		void openGLDrawPoints(RenderPackage* renderPackage, GLuint vertexArray, unsigned int numPoints);
+		void openGLDrawPoints(RenderPackage* renderPackage, unsigned int vertexArray, unsigned int numPoints);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
-		void changeProgram(GLuint programId);
+		void changeProgram(unsigned int programId);
 		void changeProgram(RenderPackage* renderPackage);
 		void changeProgram(const std::shared_ptr<ShaderReference>& vertexShader, const std::shared_ptr<ShaderReference>& fragmentShader);
-		GLuint createAndLinkProgramIfNeeded(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds, GLuint loaderShaderId);
-		std::string getKeyForShaders(const std::vector<GLuint> vertexShaderIds, const std::vector<GLuint> fragmentShaderIds);
+		unsigned int createAndLinkProgramIfNeeded(const std::vector<unsigned int> vertexShaderIds, const std::vector<unsigned int> fragmentShaderIds, unsigned int loaderShaderId);
+		std::string getKeyForShaders(const std::vector<unsigned int> vertexShaderIds, const std::vector<unsigned int> fragmentShaderIds);
 
 		void setViewport(unsigned int width, unsigned int height);
 
 		void applyShaderUniforms(const std::shared_ptr<ShaderReference>& shader, const RenderPackage* renderPackage);
-		GLuint getUniformLocationForCurrentProgram(const std::string& paramName, GLuint programId);
+		unsigned int getUniformLocationForCurrentProgram(const std::string& paramName, unsigned int programId);
 
 		void generateBackgroundRenderBuffer();
 
-		GLuint generateVertexBuffer(const std::vector<AWVec2<double>>& points);
+		unsigned int generateVertexBuffer(const std::vector<AWVec2<double>>& points);
 
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);

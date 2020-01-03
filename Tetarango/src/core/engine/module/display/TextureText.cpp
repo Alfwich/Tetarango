@@ -94,7 +94,7 @@ namespace AW
 		case TextRenderMode::SlowBackground:
 		{
 			// TODO: Look into more efficent method of displaying fast/background text
-			auto data = std::make_unique<GLuint[]>(tempSurface->w * tempSurface->h);
+			auto data = std::make_unique<unsigned int[]>(tempSurface->w * tempSurface->h);
 			auto ptr = data.get();
 			for (int y = 0; y < tempSurface->h; ++y)
 			{

@@ -2,70 +2,87 @@
 
 namespace AW
 {
-
 	Joint::Joint()
 	{
 		registerGameObject<Joint>(__FUNCTION__);
 	}
 
-	std::shared_ptr<IBodyListener> Joint::findBodyListenerWithBindingId(int id)
+	void Joint::updateBindingReferences(const std::shared_ptr<IBodyListener>& bodyAObj, const std::shared_ptr<IBodyListener>& bodyBObj)
 	{
-		const auto parentPtr = parent.lock();
-		if (parentPtr != nullptr)
+		const auto goBodyAPtr = std::dynamic_pointer_cast<GameObject>(bodyAObj);
+		if (goBodyAPtr != nullptr)
 		{
-			return std::dynamic_pointer_cast<IBodyListener>(parentPtr->findChildWithBindingId(id));
+			bodyABindingId = goBodyAPtr->getBindingId();
 		}
 
-		return nullptr;
+		const auto goBodyBPtr = std::dynamic_pointer_cast<GameObject>(bodyBObj);
+		if (goBodyBPtr != nullptr)
+		{
+			bodyBBindingId = goBodyBPtr->getBindingId();
+		}
+	}
+
+	void Joint::ensureBodysAreAttached(const std::shared_ptr<IBodyListener>& bodyAObj, const std::shared_ptr<IBodyListener>& bodyBObj)
+	{
+		const auto bodyA = bodyAObj->getBodyObject();
+		if (bodyA != nullptr && !bodyA->hasBody())
+		{
+			bodyA->onAttach();
+		}
+
+		const auto bodyB = bodyBObj->getBodyObject();
+		if (bodyB != nullptr && !bodyB->hasBody())
+		{
+			bodyB->onAttach();
+		}
+	}
+
+	std::shared_ptr<IBodyListener> Joint::getBodyAObj()
+	{
+		const auto bodyAWeakRefPtr = bodyA.lock();
+		if (bodyAWeakRefPtr != nullptr) return bodyAWeakRefPtr;
+
+		const auto parentPtr = parent.lock();
+		if (parentPtr == nullptr) return nullptr;
+		const auto bodyRef = parentPtr->findChildWithBindingId<IBodyListener>(bodyABindingId);
+
+		bodyA = bodyRef;
+		return bodyRef;
+	}
+
+	std::shared_ptr<IBodyListener> Joint::getBodyBObj()
+	{
+		const auto bodyBWeakRefPtr = bodyB.lock();
+		if (bodyBWeakRefPtr != nullptr) return bodyBWeakRefPtr;
+
+		const auto parentPtr = parent.lock();
+		if (parentPtr == nullptr) return nullptr;
+		const auto bodyRef = parentPtr->findChildWithBindingId<IBodyListener>(bodyBBindingId);
+
+		bodyB = bodyRef;
+		return bodyRef;
 	}
 
 	void Joint::onAttach()
 	{
 		if (!hasJoint())
 		{
-			auto bodyAPtr = bodyA.lock(), bodyBPtr = bodyB.lock();
-			if (bodyAPtr == nullptr && bodyABindingId != 0)
+			const auto bodyAObj = getBodyAObj(), bodyBObj = getBodyBObj();
+
+			if (bodyAObj != nullptr && bodyBObj != nullptr)
 			{
-				auto rebindedA = findBodyListenerWithBindingId(bodyABindingId);
-				bodyA = rebindedA;
-				bodyAPtr = rebindedA;
-			}
-
-			if (bodyBPtr == nullptr && bodyBBindingId != 0)
-			{
-				auto rebindedB = findBodyListenerWithBindingId(bodyBBindingId);
-				bodyB = rebindedB;
-				bodyBPtr = rebindedB;
-			}
-
-			if (bodyAPtr != nullptr && bodyBPtr != nullptr)
-			{
-				const auto bodyAObj = bodyAPtr->getBodyObject();
-				if (!bodyAObj->hasBody())
-				{
-					bodyAObj->onAttach();
-				}
-
-				const auto bodyBObj = bodyBPtr->getBodyObject();
-				if (!bodyBObj->hasBody())
-				{
-					bodyBObj->onAttach();
-				}
-
-				const auto bodyAObjParent = bodyAObj->getParent().lock();
-				if (bodyAObjParent != nullptr)
-				{
-					bodyABindingId = bodyAObj->getParent().lock()->getBindingId();
-				}
-
-				const auto bodyBObjParent = bodyBObj->getParent().lock();
-				if (bodyBObjParent != nullptr)
-				{
-					bodyBBindingId = bodyBObj->getParent().lock()->getBindingId();
-				}
-
+				ensureBodysAreAttached(bodyAObj, bodyBObj);
+				updateBindingReferences(bodyAObj, bodyBObj);
 				modules->physic->registerRigidBodyJointForWorld(getWorldId(), std::dynamic_pointer_cast<RigidBodyJoint>(shared_from_this()));
 			}
+		}
+	}
+
+	void Joint::onDetach()
+	{
+		if (hasJoint())
+		{
+			jointReference = nullptr;
 		}
 	}
 

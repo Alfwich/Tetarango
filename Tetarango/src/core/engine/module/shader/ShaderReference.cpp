@@ -9,9 +9,9 @@ namespace AW
 {
 	ShaderReference::ShaderReference(std::vector<std::shared_ptr<Shader>> shaders, std::shared_ptr<Shader> loader) : shaders(shaders), loader(loader) {}
 
-	std::vector<GLuint> ShaderReference::getShaderIds()
+	std::vector<unsigned int> ShaderReference::getShaderIds()
 	{
-		auto ids = std::vector<GLuint>();
+		auto ids = std::vector<unsigned int>();
 
 		int i = 1;
 		for (const auto shaderPtr : shaders)
@@ -22,7 +22,7 @@ namespace AW
 		return ids;
 	}
 
-	GLuint ShaderReference::getLoaderId()
+	unsigned int ShaderReference::getLoaderId()
 	{
 		if (loaderId == 0 && loader != nullptr)
 		{
@@ -36,7 +36,7 @@ namespace AW
 	{
 		if (!paramsDisabled)
 		{
-			const auto fVal = (GLfloat)v;
+			const auto fVal = (float)v;
 			if (floatIUParams.count(name) == 1 && floatIUParams.at(name) == fVal)
 			{
 				return;
@@ -52,8 +52,8 @@ namespace AW
 	{
 		if (!paramsDisabled)
 		{
-			const auto fVal1 = (GLfloat)v1;
-			const auto fVal2 = (GLfloat)v2;
+			const auto fVal1 = (float)v1;
+			const auto fVal2 = (float)v2;
 			if (floatV2IUParams.count(name) == 1)
 			{
 				const auto t = floatV2IUParams.at(name);
@@ -73,9 +73,9 @@ namespace AW
 	{
 		if (!paramsDisabled)
 		{
-			const auto fVal1 = (GLfloat)v1;
-			const auto fVal2 = (GLfloat)v2;
-			const auto fVal3 = (GLfloat)v3;
+			const auto fVal1 = (float)v1;
+			const auto fVal2 = (float)v2;
+			const auto fVal3 = (float)v3;
 			if (floatV3IUParams.count(name) == 1)
 			{
 				const auto t = floatV3IUParams.at(name);
@@ -95,10 +95,10 @@ namespace AW
 	{
 		if (!paramsDisabled)
 		{
-			const auto fVal1 = (GLfloat)v1;
-			const auto fVal2 = (GLfloat)v2;
-			const auto fVal3 = (GLfloat)v3;
-			const auto fVal4 = (GLfloat)v4;
+			const auto fVal1 = (float)v1;
+			const auto fVal2 = (float)v2;
+			const auto fVal3 = (float)v3;
+			const auto fVal4 = (float)v4;
 			if (floatV4IUParams.count(name) == 1)
 			{
 				const auto t = floatV4IUParams.at(name);
@@ -114,25 +114,25 @@ namespace AW
 		}
 	}
 
-	void ShaderReference::setCachedParam(GLuint modLocation, GLfloat val)
+	void ShaderReference::setCachedParam(unsigned int modLocation, float val)
 	{
 		cachedParamsValid = true;
 		cachedFloatIUParams[modLocation] = val;
 	}
 
-	void ShaderReference::setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat> values)
+	void ShaderReference::setCachedParam(unsigned int modLocation, std::tuple<float, float> values)
 	{
 		cachedParamsValid = true;
 		cachedFloatV2IUParams[modLocation] = values;
 	}
 
-	void ShaderReference::setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat, GLfloat> values)
+	void ShaderReference::setCachedParam(unsigned int modLocation, std::tuple<float, float, float> values)
 	{
 		cachedParamsValid = true;
 		cachedFloatV3IUParams[modLocation] = values;
 	}
 
-	void ShaderReference::setCachedParam(GLuint modLocation, std::tuple<GLfloat, GLfloat, GLfloat, GLfloat> values)
+	void ShaderReference::setCachedParam(unsigned int modLocation, std::tuple<float, float, float, float> values)
 	{
 		cachedParamsValid = true;
 		cachedFloatV4IUParams[modLocation] = values;
@@ -186,7 +186,7 @@ namespace AW
 		return result;
 	}
 
-	void ShaderReference::setUniforms(GLuint programId, const ShaderUniformInfoBundle& info)
+	void ShaderReference::setUniforms(unsigned int programId, const ShaderUniformInfoBundle& info)
 	{
 		if (paramsDisabled || !hasSetParams)
 		{
@@ -203,7 +203,7 @@ namespace AW
 		const auto position = glGetUniformLocation(programId, "frameTime");
 		if (position != -1)
 		{
-			glUniform1f(position, (GLfloat)info.currentFrameTimestamp);
+			glUniform1f(position, (float)info.currentFrameTimestamp);
 		}
 	}
 
@@ -249,7 +249,7 @@ namespace AW
 		}
 	}
 
-	void ShaderReference::updateUniformCaches(GLuint programId)
+	void ShaderReference::updateUniformCaches(unsigned int programId)
 	{
 		for (const auto paramNameToValue : floatIUParams)
 		{
@@ -281,19 +281,19 @@ namespace AW
 		}
 	}
 
-	void ShaderReference::setVTranslate(GLuint location, const std::tuple<GLfloat, GLfloat>& value, const ShaderUniformInfoBundle& info)
+	void ShaderReference::setVTranslate(unsigned int location, const std::tuple<float, float>& value, const ShaderUniformInfoBundle& info)
 	{
 		const double xTranslate = (std::get<0>(value) / (double)info.screenWidth) * 2.0;
 		const double yTranslate = -(std::get<1>(value) / (double)info.screenHeight) * 2.0;
-		glUniform2f(location, (GLfloat)xTranslate, (GLfloat)yTranslate);
+		glUniform2f(location, (float)xTranslate, (float)yTranslate);
 	}
 
-	void ShaderReference::setCachedProgramId(GLuint programId)
+	void ShaderReference::setCachedProgramId(unsigned int programId)
 	{
 		cachedProgramId = programId;
 	}
 
-	GLuint ShaderReference::getCachedProgramId()
+	unsigned int ShaderReference::getCachedProgramId()
 	{
 		return cachedProgramId;
 	}

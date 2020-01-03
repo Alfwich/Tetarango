@@ -134,7 +134,7 @@ namespace AW
 
 		if (assignDefaultParams)
 		{
-			shader->setFloatIUParam("random", (GLfloat)AW::NumberHelper::random());
+			shader->setFloatIUParam("random", (float)AW::NumberHelper::random());
 			updateShaderFrameStartTime(shader);
 		}
 
@@ -150,7 +150,7 @@ namespace AW
 
 	void ShaderContainer::updateShaderFrameStartTime(const std::shared_ptr<ShaderReference>& shader)
 	{
-		shader->setFloatIUParam("frameStartTime", (GLfloat)(time->getFrameStartTime() / 1000.0));
+		shader->setFloatIUParam("frameStartTime", (float)(time->getFrameStartTime() / 1000.0));
 	}
 
 	void ShaderContainer::onLoadResources()

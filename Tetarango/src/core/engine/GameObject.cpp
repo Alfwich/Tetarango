@@ -15,6 +15,7 @@ namespace
 namespace AW
 {
 
+
 	int GameObject::nextId()
 	{
 		return nextGameObjectId++;
@@ -510,22 +511,11 @@ namespace AW
 		*timeoutIdLocation = setTimeout(timeoutMS);
 	}
 
-	std::shared_ptr<GameObject> GameObject::findChildWithBindingId(int bindingId)
+	std::shared_ptr<GameObject> GameObject::getRootNode()
 	{
-		// Check children first
-		for (const auto child : children)
-		{
-			if (child->getBindingId() == bindingId) return child;
-		}
+		const auto parentPtr = getParent().lock();
+		if (parentPtr == nullptr || parentPtr->getTag(GTags::IsRootElement)) return parentPtr;
 
-		// Check children's children recursive
-		for (const auto child : children)
-		{
-			const auto obj = child->findChildWithBindingId(bindingId);
-			if (obj != nullptr) return obj;
-		}
-
-		// Not found
-		return nullptr;
+		return parentPtr->getRootNode();
 	}
 }

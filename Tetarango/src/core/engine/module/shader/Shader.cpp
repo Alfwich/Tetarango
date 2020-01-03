@@ -116,7 +116,7 @@ namespace AW
 		locToShaderIds.clear();
 	}
 
-	GLuint Shader::getShaderId(unsigned int location)
+	unsigned int Shader::getShaderId(unsigned int location)
 	{
 		const auto locationId = AW::NumberHelper::clamp<unsigned int>(location, 1, INT_MAX);
 		if (locToShaderIds.count(locationId) == 0)
