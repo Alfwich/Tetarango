@@ -7,6 +7,11 @@ namespace AW
 		registerGameObject<Joint>(__FUNCTION__);
 	}
 
+	void Joint::setJointType(JointType type)
+	{
+		jointType = type;
+	}
+
 	void Joint::updateBindingReferences(const std::shared_ptr<IBodyListener>& bodyAObj, const std::shared_ptr<IBodyListener>& bodyBObj)
 	{
 		const auto goBodyAPtr = std::dynamic_pointer_cast<GameObject>(bodyAObj);
@@ -37,7 +42,7 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<IBodyListener> Joint::getBodyAObj()
+	std::shared_ptr<IBodyListener> Joint::getBodyAListener()
 	{
 		const auto bodyAWeakRefPtr = bodyA.lock();
 		if (bodyAWeakRefPtr != nullptr) return bodyAWeakRefPtr;
@@ -50,7 +55,7 @@ namespace AW
 		return bodyRef;
 	}
 
-	std::shared_ptr<IBodyListener> Joint::getBodyBObj()
+	std::shared_ptr<IBodyListener> Joint::getBodyBListener()
 	{
 		const auto bodyBWeakRefPtr = bodyB.lock();
 		if (bodyBWeakRefPtr != nullptr) return bodyBWeakRefPtr;
@@ -60,14 +65,27 @@ namespace AW
 		const auto bodyRef = parentPtr->findChildWithBindingId<IBodyListener>(bodyBBindingId);
 
 		bodyB = bodyRef;
+
 		return bodyRef;
+	}
+
+	std::shared_ptr<Body> Joint::getBodyA()
+	{
+		const auto bodyAObj = getBodyAListener();
+		return bodyAObj != nullptr ? bodyAObj->getBodyObject() : nullptr;
+	}
+
+	std::shared_ptr<Body> Joint::getBodyB()
+	{
+		const auto bodyBObj = getBodyBListener();
+		return bodyBObj != nullptr ? bodyBObj->getBodyObject() : nullptr;
 	}
 
 	void Joint::onAttach()
 	{
 		if (!hasJoint())
 		{
-			const auto bodyAObj = getBodyAObj(), bodyBObj = getBodyBObj();
+			const auto bodyAObj = getBodyAListener(), bodyBObj = getBodyBListener();
 
 			if (bodyAObj != nullptr && bodyBObj != nullptr)
 			{
@@ -88,26 +106,59 @@ namespace AW
 
 	b2Joint * Joint::onCreateJoint(const std::shared_ptr<b2World>& world)
 	{
-		const auto bodyAPtr = bodyA.lock(), bodyBPtr = bodyB.lock();
-		if (bodyAPtr != nullptr && bodyBPtr != nullptr)
+		const auto bodyA = getBodyA(), bodyB = getBodyB();
+		if (bodyA == nullptr || bodyB == nullptr)
 		{
-			const auto bodyAObj = bodyAPtr->getBodyObject(), bodyBObj = bodyBPtr->getBodyObject();
+			return nullptr;
+		}
 
-			const auto anchor = bodyAObj->getBody()->GetWorldCenter();
+		switch (jointType)
+		{
+		case JointType::Revolute:
+		{
+			const auto anchor = bodyA->getBody()->GetWorldCenter();
 			b2RevoluteJointDef jointDef;
-			jointDef.Initialize(bodyAObj->getBody(), bodyBObj->getBody(), anchor);
-			jointDef.localAnchorB.x = 2.0;
-			jointDef.localAnchorB.y = 2.0;
+			jointDef.Initialize(bodyA->getBody(), bodyB->getBody(), anchor);
+			jointDef.localAnchorB.x = (float)jointDistance;
+			jointDef.localAnchorB.y = (float)jointDistance;
 			jointReference = world->CreateJoint(&jointDef);
+		}
+		break;
+
+		case JointType::Distant:
+		{
+			const auto anchorA = bodyA->getBody()->GetWorldCenter();
+			const auto anchorB = bodyB->getBody()->GetWorldCenter();
+			b2DistanceJointDef jointDef;
+			jointDef.Initialize(bodyA->getBody(), bodyB->getBody(), anchorA, anchorB);
+			jointReference = world->CreateJoint(&jointDef);
+		}
+		break;
+
+		default:
+			break;
+
 		}
 
 		return jointReference;
+	}
+
+	void Joint::setJointDistance(float distance)
+	{
+		jointDistance = RigidBody::screenToWorldPosition(distance);
+	}
+
+	double Joint::getJointDistance()
+	{
+		return RigidBody::worldToScreenPosition(jointDistance);
 	}
 
 	std::shared_ptr<SerializationClient> Joint::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__joint__", hint);
 
+		jointType = (JointType)client->serializeInt("joint-t", (int)jointType);
+		jointDistance = (float)client->serializeDouble("joint-d", jointDistance);
 		bodyABindingId = client->serializeInt("b-a-b-i", bodyABindingId);
 		bodyBBindingId = client->serializeInt("b-b-b-i", bodyBBindingId);
 

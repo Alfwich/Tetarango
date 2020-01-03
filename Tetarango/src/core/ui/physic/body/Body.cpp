@@ -142,11 +142,6 @@ namespace AW
 			}
 		}
 		break;
-
-		case BodyType::Custom:
-		default:
-			// Do nothing - expect user to create fixtures
-			break;
 		}
 
 		return bodyReference;

@@ -4,6 +4,8 @@
 
 namespace AW
 {
+	const float RigidBody::scalingFactor = 200.f;
+
 	float RigidBody::screenToWorldPosition(float screen)
 	{
 		return screen / scalingFactor;

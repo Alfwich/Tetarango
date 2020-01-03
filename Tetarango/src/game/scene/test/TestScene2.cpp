@@ -19,7 +19,7 @@ namespace AWGame
 
 	TestScene2::TestScene2() : AW::Scene("test_scene_2")
 	{
-		//setShouldRebuildOnLoad();
+		setShouldRebuildOnLoad();
 		registerGameObject<TestScene2>(__FUNCTION__);
 	}
 
@@ -130,7 +130,9 @@ namespace AWGame
 				{
 					joint->bodyA = platformB;
 				}
+
 				joint->bodyB = binder;
+				joint->setJointDistance(AW::NumberHelper::random(50, 200));
 				contentContainer->add(joint);
 			}
 		}

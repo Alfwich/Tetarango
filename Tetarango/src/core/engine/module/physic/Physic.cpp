@@ -32,7 +32,7 @@ namespace AW
 			return;
 		}
 
-		worlds.at(worldId)->timestep = 1.0 / (fps / 1.0);
+		worlds.at(worldId)->timestep = 1.f / (fps / 1.f);
 	}
 
 	void Physic::setWorldVelocityAndPositionIterations(unsigned int worldId, unsigned int velocity, unsigned int position)
@@ -47,7 +47,7 @@ namespace AW
 		worlds.at(worldId)->positionIterations = position;
 	}
 
-	void Physic::setWorldGravity(unsigned int worldId, double gravityX, double gravityY)
+	void Physic::setWorldGravity(unsigned int worldId, float gravityX, float gravityY)
 	{
 		if (worlds.count(worldId) == 0)
 		{
@@ -55,7 +55,7 @@ namespace AW
 			return;
 		}
 
-		worlds.at(worldId)->world->SetGravity(b2Vec2((float)gravityX, (float)gravityY));
+		worlds.at(worldId)->world->SetGravity(b2Vec2(gravityX, gravityY));
 	}
 
 	void Physic::setWorldAllowSleeping(unsigned int worldId, bool flag)
@@ -172,7 +172,7 @@ namespace AW
 			if (threshold > 0 && worldBundle->worldTimer->isAboveThresholdAndRestart(threshold))
 			{
 				const auto& world = worldBundle->world;
-				world->Step((float)worldBundle->timestep, worldBundle->velocityIterations, worldBundle->positionIterations);
+				world->Step(worldBundle->timestep, worldBundle->velocityIterations, worldBundle->positionIterations);
 
 				for (auto rigidBodyBundle = worldBundle->bodies.begin(); rigidBodyBundle != worldBundle->bodies.end();)
 				{
