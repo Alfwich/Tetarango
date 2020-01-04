@@ -8,7 +8,7 @@ namespace AW
 	{
 		frame = 0;
 		fpsOffset = 0;
-		registerGameObject<Animated>(__FUNCTION__);
+		GORegister(Animated);
 	}
 
 	void Animated::updateFrame(double frameTime)

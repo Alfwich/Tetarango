@@ -36,7 +36,7 @@ namespace AW
 		setTag(GTags::SerializationEnabled, true);
 		setTag(GTags::ChildrenSorted, true);
 
-		registerGameObject<GameObject>(__FUNCTION__);
+		GORegister(GameObject);
 	}
 
 	void GameObject::setTag(GTags tag, bool value)

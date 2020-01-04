@@ -10,7 +10,7 @@ namespace AWGame
 	Box::Box()
 	{
 		setSize(32, 32);
-		registerGameObject<Box>(__FUNCTION__);
+		GORegister(Box);
 	}
 
 	void Box::onBindShaders()

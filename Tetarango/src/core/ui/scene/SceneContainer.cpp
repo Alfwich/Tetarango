@@ -5,7 +5,7 @@ namespace AW
 
 	SceneContainer::SceneContainer()
 	{
-		registerGameObject<SceneContainer>(__FUNCTION__);
+		GORegister(SceneContainer);
 	}
 
 	SceneContainer::SceneContainer(std::vector<std::shared_ptr<Scene>> scenes)

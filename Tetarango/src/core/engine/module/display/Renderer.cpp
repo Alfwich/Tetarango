@@ -32,7 +32,16 @@ namespace
 	const auto commonVertexStride = sizeof(float) * 3;
 	const auto commonUVStride = sizeof(float) * 2;
 	const auto commonOffset = 0;
+
+	static void GLClearError() { while (glGetError() != GL_NO_ERROR); }
+	static void GLBreakError() { while (auto error = glGetError()) { __debugbreak(); } }
 }
+
+#ifdef _DEBUG
+#define GLDbg(x) GLClearError(); x; GLBreakError();
+#else
+#define GLDbg(x) x;
+#endif // _DEBUG
 
 namespace AW
 {
@@ -96,22 +105,22 @@ namespace AW
 
 		if (vao == 0)
 		{
-			glGenVertexArrays(1, &vao);
-			glBindVertexArray(vao);
+			GLDbg(glGenVertexArrays(1, &vao));
+			GLDbg(glBindVertexArray(vao));
 		}
 
 		if (defaultVertexBuffer == 0)
 		{
-			glGenBuffers(1, &defaultVertexBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, defaultVertexBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(inlineVerticies), inlineVerticies, GL_STATIC_DRAW);
+			GLDbg(glGenBuffers(1, &defaultVertexBuffer));
+			GLDbg(glBindBuffer(GL_ARRAY_BUFFER, defaultVertexBuffer));
+			GLDbg(glBufferData(GL_ARRAY_BUFFER, sizeof(inlineVerticies), inlineVerticies, GL_STATIC_DRAW));
 		}
 
 		if (defaultTextureUVBuffer == 0)
 		{
-			glGenBuffers(1, &defaultTextureUVBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, defaultTextureUVBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(inlineUVCoords), inlineUVCoords, GL_STATIC_DRAW);
+			GLDbg(glGenBuffers(1, &defaultTextureUVBuffer));
+			GLDbg(glBindBuffer(GL_ARRAY_BUFFER, defaultTextureUVBuffer));
+			GLDbg(glBufferData(GL_ARRAY_BUFFER, sizeof(inlineUVCoords), inlineUVCoords, GL_STATIC_DRAW));
 		}
 
 		generateBackgroundRenderBuffer();
@@ -214,10 +223,10 @@ namespace AW
 		LM::mat4x4_ortho(pAbs, 0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
 
 		glEnableVertexAttribArray(0);
-		setVertexAttributePointer(defaultVertexBuffer, commonVertexStride, commonOffset);
+		GLDbg(setVertexAttributePointer(defaultVertexBuffer, commonVertexStride, commonOffset));
 
 		glEnableVertexAttribArray(1);
-		setUVAttributePointer(defaultTextureUVBuffer, commonUVStride, commonOffset);
+		GLDbg(setUVAttributePointer(defaultTextureUVBuffer, commonUVStride, commonOffset));
 
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
@@ -268,7 +277,7 @@ namespace AW
 		if (currentScreenConfig.openGlWireframeMode)
 		{
 			glUniform4f(inColorModLocation, 1.0, 0, 0, 1.0);
-			glDrawArrays(GL_LINE_LOOP, 0, 6);
+			GLDbg(glDrawArrays(GL_LINE_LOOP, 0, 6));
 		}
 	}
 
@@ -291,11 +300,10 @@ namespace AW
 		if (currentScreenConfig.visualizeClipRects)
 		{
 			glUniform4f(inColorModLocation, 1.0, 0, 0, 1.0);
-			glDrawArrays(GL_TRIANGLES, 0, 6);
+			GLDbg(glDrawArrays(GL_TRIANGLES, 0, 6));
 		}
 
 		glDepthMask(GL_TRUE);
-
 	}
 
 
@@ -324,7 +332,7 @@ namespace AW
 
 		glGenRenderbuffers(1, &backgroundRenderBuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
+		GLDbg(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height));
 		// TODO: If MSAA is needed
 		//glRenderbufferStorageMultisample(GL_RENDERBUFFER, currentScreenConfig.msaaSamples, GL_DEPTH24_STENCIL8, currentScreenConfig.width, currentScreenConfig.height);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -359,14 +367,14 @@ namespace AW
 			msaaEnabled = false;
 		}
 
-		setVertexAttributePointer(vBuffer, commonVertexStride, commonOffset);
+		GLDbg(setVertexAttributePointer(vBuffer, commonVertexStride, commonOffset));
 
-		glDrawArrays(GL_TRIANGLE_FAN, 0, numPoints);
+		GLDbg(glDrawArrays(GL_TRIANGLE_FAN, 0, numPoints));
 
 		if (currentScreenConfig.openGlWireframeMode)
 		{
 			glUniform4f(inColorModLocation, 1.0, 0, 0, 1.0);
-			glDrawArrays(GL_LINE_LOOP, 0, numPoints);
+			GLDbg(glDrawArrays(GL_LINE_LOOP, 0, numPoints));
 		}
 
 		setVertexAttributePointer(defaultVertexBuffer, commonVertexStride, commonOffset);
@@ -478,13 +486,13 @@ namespace AW
 		if (programs.count(key) == 0)
 		{
 			const auto programId = glCreateProgram();
-			glAttachShader(programId, vertexShaderIds[0]);
+			GLDbg(glAttachShader(programId, vertexShaderIds[0]));
 			for (const auto fragmentShaderId : fragmentShaderIds)
 			{
-				glAttachShader(programId, fragmentShaderId);
+				GLDbg(glAttachShader(programId, fragmentShaderId));
 			}
-			glAttachShader(programId, loaderShaderId);
-			glLinkProgram(programId);
+			GLDbg(glAttachShader(programId, loaderShaderId));
+			GLDbg(glLinkProgram(programId));
 
 			GLint programLinkSuccess = GL_TRUE;
 			glGetProgramiv(programId, GL_LINK_STATUS, &programLinkSuccess);
@@ -967,7 +975,7 @@ namespace AW
 		glBindFramebuffer(GL_FRAMEBUFFER, backRenderBuffer);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, backgroundRenderBuffer);
+		GLDbg(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, backgroundRenderBuffer));
 
 		frameBufferStack.push(std::make_tuple(cached->getWidth(), cached->getHeight(), backRenderBuffer, backgroundRenderBuffer));
 
@@ -991,7 +999,7 @@ namespace AW
 			texColorBuffer = cached->getTexture()->openGlTextureId();
 		}
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+		GLDbg(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0));
 
 		const auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)

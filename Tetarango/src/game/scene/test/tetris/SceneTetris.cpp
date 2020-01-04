@@ -20,7 +20,8 @@ namespace AWGame
 	{
 		setShouldRebuildOnLoad();
 		setTimeScope(AW::TimeScope::Game);
-		registerGameObject<SceneTetris>(__FUNCTION__);
+		//GORegister(SceneTetris);
+		GORegister(SceneTetris);
 	}
 
 	void SceneTetris::onLoadResources()
@@ -63,6 +64,7 @@ namespace AWGame
 			modules->sound->stopMusic(musicName);
 		}
 		particleSystem->start();
+		modules->time->changeTimeFactorForScope(AW::TimeScope::Game, 1.0);
 	}
 
 	void SceneTetris::onDetach()

@@ -11,6 +11,8 @@
 #include "engine/module/event/EnterFrameListener.h"
 #include "engine/module/physic/RigidBody.h"
 
+#define GORegister(x) registerGameObject<x>(__FUNCTION__);
+
 namespace AW
 {
 	class SystemModuleBundle;
@@ -281,7 +283,7 @@ namespace AW
 
 		if (this->modules->status == ModuleBundleStatus::READY || this->modules->status == ModuleBundleStatus::CLEANED_UP)
 		{
-			this->modules->logger->logFatal("GameObject::Added type=" + this->typeName + " after the application was started. Call registerGameObject<T>(__FUNCTION__); in the ctor");
+			this->modules->logger->logFatal("GameObject::Added type=" + this->typeName + " after the application was started. Call GORegister(T); in the ctor");
 		}
 
 		this->schematic = std::make_shared<Schematic>(this->typeName, []() -> std::shared_ptr<ISerializable> { return std::make_shared<T>(); });

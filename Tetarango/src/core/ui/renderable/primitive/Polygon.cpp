@@ -11,7 +11,7 @@ namespace AW
 	Polygon::Polygon()
 	{
 		renderMode = RenderMode::Polygon;
-		registerGameObject<Polygon>(__FUNCTION__);
+		GORegister(Polygon);
 	}
 
 	void Polygon::updateSize()

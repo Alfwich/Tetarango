@@ -8,7 +8,7 @@ namespace AW
 		enableInput();
 		setIsRootElement();
 		timeScope = TimeScope::Global;
-		registerGameObject<DisplayRoot>(__FUNCTION__);
+		GORegister(DisplayRoot);
 	}
 
 	void DisplayRoot::onLayoutChildren()

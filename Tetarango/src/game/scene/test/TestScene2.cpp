@@ -21,7 +21,7 @@ namespace AWGame
 	{
 		setTimeScope(AW::TimeScope::Game);
 		//setShouldRebuildOnLoad();
-		registerGameObject<TestScene2>(__FUNCTION__);
+		GORegister(TestScene2);
 	}
 
 	void TestScene2::onLoadResources()

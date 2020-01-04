@@ -40,7 +40,7 @@ namespace AWGame
 
 	SceneMainGame::SceneMainGame() : BaseScene(SceneGame::MainGame)
 	{
-		registerGameObject<SceneMainGame>(__FUNCTION__);
+		GORegister(SceneMainGame);
 	}
 
 	void SceneMainGame::onInitialAttach()

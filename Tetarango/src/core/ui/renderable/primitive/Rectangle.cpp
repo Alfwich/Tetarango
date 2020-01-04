@@ -4,6 +4,6 @@ namespace AW
 {
 	Rectangle::Rectangle()
 	{
-		registerGameObject<Rectangle>(__FUNCTION__);
+		GORegister(Rectangle);
 	}
 }

@@ -27,7 +27,7 @@ namespace AWGame
 	CheckBoxBasic::CheckBoxBasic(GuiButton configuration) : BaseGui(configuration)
 	{
 		renderTextureMode = AW::RenderTextureMode::BilinearNoWrap;
-		registerGameObject<CheckBoxBasic>(__FUNCTION__);
+		GORegister(CheckBoxBasic);
 	}
 
 	CheckBoxBasic::CheckBoxBasic() : CheckBoxBasic(GuiButton::CheckBoxBasic) {}

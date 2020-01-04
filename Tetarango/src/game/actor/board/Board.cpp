@@ -41,7 +41,7 @@ namespace AWGame
 
 	Board::Board()
 	{
-		registerGameObject<Board>(__FUNCTION__);
+		GORegister(Board);
 	}
 
 	Board::Board(unsigned int boardWidth, unsigned int boardHeight) : Board()

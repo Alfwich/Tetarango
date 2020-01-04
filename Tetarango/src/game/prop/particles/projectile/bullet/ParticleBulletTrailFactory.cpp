@@ -4,7 +4,7 @@ namespace AWGame
 {
 	ParticleBulletTrailParticleFactory::ParticleBulletTrailParticleFactory()
 	{
-		registerGameObject<ParticleBulletTrailParticleFactory>(__FUNCTION__);
+		GORegister(ParticleBulletTrailParticleFactory);
 	}
 
 	std::shared_ptr<AW::Particle> ParticleBulletTrailParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)

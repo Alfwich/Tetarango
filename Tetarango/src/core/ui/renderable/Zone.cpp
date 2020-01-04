@@ -10,7 +10,7 @@ namespace AW
 		zIndex = 20;
 		setRequestReconciliation(true);
 		markIsZone();
-		registerGameObject<Zone>(__FUNCTION__);
+		GORegister(Zone);
 	}
 
 	void Zone::visualize()

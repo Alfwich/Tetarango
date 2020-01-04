@@ -6,7 +6,7 @@ namespace AW
 	{
 		renderMode = RenderMode::CachedElement;
 		renderUpdateMode = RenderUpdateMode::WhenDirty;
-		registerGameObject<DisplayBuffer>(__FUNCTION__);
+		GORegister(DisplayBuffer);
 	}
 
 	void DisplayBuffer::onLoadResources()

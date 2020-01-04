@@ -10,7 +10,7 @@ namespace AW
 	{
 		this->sceneName = sceneName;
 		activate();
-		registerGameObject<Scene>(__FUNCTION__);
+		GORegister(Scene);
 	}
 
 	std::shared_ptr<SceneContainer> Scene::getSceneContainer()

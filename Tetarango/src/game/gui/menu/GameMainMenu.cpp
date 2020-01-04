@@ -16,7 +16,7 @@ namespace AWGame
 	GameMainMenu::GameMainMenu() : BaseGui(GuiMenu::MenuGame)
 	{
 		setShouldRebuildOnLoad();
-		registerGameObject<GameMainMenu>(__FUNCTION__);
+		GORegister(GameMainMenu);
 	}
 
 	void GameMainMenu::onInitialAttach()

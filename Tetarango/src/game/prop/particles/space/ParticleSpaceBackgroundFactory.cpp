@@ -6,7 +6,7 @@ namespace AWGame
 {
 	ParticleSpaceBackgroundParticleFactory::ParticleSpaceBackgroundParticleFactory()
 	{
-		registerGameObject<ParticleSpaceBackgroundParticleFactory>(__FUNCTION__);
+		GORegister(ParticleSpaceBackgroundParticleFactory);
 	}
 
 	std::shared_ptr<AW::Particle> ParticleSpaceBackgroundParticleFactory::makeParticle(AW::ParticleCreationBundle& bundle)

@@ -8,7 +8,7 @@ namespace AWGame
 {
 	ParticleFiringFactory::ParticleFiringFactory()
 	{
-		registerGameObject<ParticleFiringFactory>(__FUNCTION__);
+		GORegister(ParticleFiringFactory);
 	}
 
 	std::shared_ptr<AW::Particle> ParticleFiringFactory::makeParticle(AW::ParticleCreationBundle& bundle)

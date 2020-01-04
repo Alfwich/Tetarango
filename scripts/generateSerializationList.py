@@ -65,10 +65,10 @@ def main():
                 if hasInserted:
                     objectsToAdd[-1][2] = True
                 hasResources = True
-            if "registerGameObject<" in line:
+            if "GORegister(" in line:
                 hasInserted = True
                 pathInfo = rf.split("src/game") if "src/game" in rf else rf.split("src/core")
-                objectsToAdd.append([pathInfo[1][1:].replace(".cpp", ".h"), line.split("<")[1].split(">")[0], hasResources])
+                objectsToAdd.append([pathInfo[1][1:].replace(".cpp", ".h"), line.split("(")[1].split(")")[0], hasResources])
 
     namespaces = []
     for namespace in namespaces_to_use:

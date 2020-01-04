@@ -11,7 +11,7 @@ namespace AW
 {
 	BodySensor::BodySensor()
 	{
-		registerGameObject<BodySensor>(__FUNCTION__);
+		GORegister(BodySensor);
 	}
 
 	void BodySensor::onAttach()

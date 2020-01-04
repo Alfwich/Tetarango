@@ -11,7 +11,7 @@ namespace AWGame
 {
 	GameCamera::GameCamera() : BaseGui(GuiCamera::CameraBasic)
 	{
-		registerGameObject<GameCamera>(__FUNCTION__);
+		GORegister(GameCamera);
 	}
 
 	void GameCamera::onInitialAttach()

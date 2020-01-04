@@ -8,7 +8,7 @@ namespace AWGame
 {
 	ParticleHitFleshFactory::ParticleHitFleshFactory()
 	{
-		registerGameObject<ParticleHitFleshFactory>(__FUNCTION__);
+		GORegister(ParticleHitFleshFactory);
 	}
 
 	std::shared_ptr<AW::Particle> ParticleHitFleshFactory::makeParticle(AW::ParticleCreationBundle& bundle)

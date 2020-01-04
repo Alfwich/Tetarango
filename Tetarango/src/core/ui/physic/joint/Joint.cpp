@@ -4,7 +4,7 @@ namespace AW
 {
 	Joint::Joint()
 	{
-		registerGameObject<Joint>(__FUNCTION__);
+		GORegister(Joint);
 	}
 
 	void Joint::setJointType(JointType type)

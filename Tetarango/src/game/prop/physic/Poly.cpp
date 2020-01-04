@@ -9,7 +9,7 @@ namespace AWGame
 {
 	Poly::Poly()
 	{
-		registerGameObject<Poly>(__FUNCTION__);
+		GORegister(Poly);
 	}
 
 	void Poly::onCreateChildren()

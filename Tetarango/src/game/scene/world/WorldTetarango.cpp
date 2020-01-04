@@ -9,7 +9,7 @@ namespace AWGame
 {
 	SceneWorldTetarango::SceneWorldTetarango() : BaseScene(SceneGame::WorldTetarango)
 	{
-		registerGameObject<SceneWorldTetarango>(__FUNCTION__);
+		GORegister(SceneWorldTetarango);
 	}
 
 	void SceneWorldTetarango::onAttach()
