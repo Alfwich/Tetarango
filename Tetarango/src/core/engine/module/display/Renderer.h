@@ -16,6 +16,18 @@
 #include "util/Rect.h"
 #include "util/Vec.h"
 
+namespace
+{
+	static void GLClearError() { while (glGetError() != GL_NO_ERROR); }
+	static void GLBreakError() { while (auto error = glGetError()) { __debugbreak(); } }
+}
+
+#ifdef _DEBUG
+#define GLDbgCall(x) GLClearError(); x; GLBreakError();
+#else
+#define GLDbgCall(x) x;
+#endif // _DEBUG
+
 namespace AW
 {
 	class Renderer

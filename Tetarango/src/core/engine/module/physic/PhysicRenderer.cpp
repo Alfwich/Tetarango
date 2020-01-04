@@ -12,7 +12,7 @@ namespace AW
 	AWVec2<float> PhysicRenderer::translateB2Point(const b2Vec2 & vert)
 	{
 		const auto aspect = (float)(render.h / render.w);
-		const auto offsetScale = render.w * 0.003125;
+		const auto offsetScale = ((render.w / RigidBody::scalingFactor) / 2.0) + 1.0;
 		const auto offsetX = (float)(render.x / render.w) * -offsetScale;
 		const auto offsetY = (float)(render.y / render.h) * offsetScale;
 		const auto z = (float)zoom;

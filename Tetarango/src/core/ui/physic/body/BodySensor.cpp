@@ -84,6 +84,11 @@ namespace AW
 
 	void BodySensor::onDetach()
 	{
+		if (hasSensor())
+		{
+			modules->physic->unregisterRigidBodySensorForWorld(getWorldId(), std::dynamic_pointer_cast<RigidBodySensor>(shared_from_this()));
+		}
+
 		RigidBodySensor::onDetach();
 	}
 
@@ -92,7 +97,10 @@ namespace AW
 		const auto parentBodyPtr = std::dynamic_pointer_cast<Body>(parent.lock());
 		if (parentBodyPtr != nullptr)
 		{
-			const auto bodyPtr = parentBodyPtr->getBody();
+			auto bodyPtr = parentBodyPtr->getBody();
+			if (bodyPtr == nullptr) parentBodyPtr->onAttach();
+
+			bodyPtr = parentBodyPtr->getBody();
 			if (bodyPtr != nullptr)
 			{
 				b2FixtureDef fixtureDef;

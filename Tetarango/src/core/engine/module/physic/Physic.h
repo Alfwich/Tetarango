@@ -96,6 +96,7 @@ namespace AW
 		void registerRigidBodyJointForWorld(unsigned int worldId, const std::shared_ptr<RigidBodyJoint>& joint);
 
 		void registerRigidBodySensorForWorld(unsigned int worldId, const std::shared_ptr<RigidBodySensor>& sensor);
+		void unregisterRigidBodySensorForWorld(unsigned int worldId, const std::shared_ptr<RigidBodySensor>& sensor);
 
 		void onInit();
 		void onEnterFrame(const double& deltaTime);
