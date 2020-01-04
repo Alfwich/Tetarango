@@ -23,6 +23,9 @@ namespace AW
 		double startFrameTime = 0.0, targetFrameTime = 0.0, frameTime = 0.0;
 		bool running = false;
 
+		void waitForPhysicFrameToFinishIfNeeded();
+		void markPhysicFrameUpdateToStart();
+
 		void updateFrameTime();
 		void processEnterFrames();
 		void processApplicationEvents();

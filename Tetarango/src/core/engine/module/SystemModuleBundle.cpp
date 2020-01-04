@@ -27,6 +27,7 @@ namespace AW
 		serialization->bindThread(thread);
 		filesystem->bindThread(thread);
 		storage->bindThread(thread);
+		physic->bindThread(thread);
 		asset->bindFilesystem(filesystem);
 		asset->bindStorage(storage);
 		font->bindAsset(asset);
@@ -55,9 +56,10 @@ namespace AW
 		logger = createModule<Logger>();
 		asset = createModule<Asset>();
 		shader = createModule<ShaderContainer>();
+
 		physic = createModule<Physic>();
 
-		// Process Event module last
+		// Process Event module init last and cleanup first
 		event = createModule<Event>();
 
 		bindModules();
@@ -126,6 +128,7 @@ namespace AW
 	{
 		if (cleanup) return;
 
+		std::reverse(modules.begin(), modules.end());
 		for (const auto module : modules)
 		{
 			module->onCleanup();

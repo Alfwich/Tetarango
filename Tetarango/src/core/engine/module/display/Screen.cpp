@@ -358,6 +358,5 @@ namespace AW
 
 	void Screen::onCleanup()
 	{
-		renderer->reportOpenGLErrors();
 	}
 }

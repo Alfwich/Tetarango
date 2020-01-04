@@ -4,10 +4,24 @@
 
 namespace AW
 {
+	Physic::Physic()
+	{
+		physicStepLock = SDL_CreateSemaphore(1);
+	}
+
+	Physic::~Physic()
+	{
+		SDL_DestroySemaphore(physicStepLock);
+	}
 
 	void Physic::bindTime(std::shared_ptr<Time> time)
 	{
 		this->time = time;
+	}
+
+	void Physic::bindThread(std::shared_ptr<Thread> thread)
+	{
+		this->thread = thread;
 	}
 
 	void Physic::registerWorld(unsigned int worldId, double gravityX, double gravityY)
@@ -260,9 +274,47 @@ namespace AW
 	void Physic::onInit()
 	{
 		registerWorld(0);
+
+		shouldStepOnBackgroundThread = thread->hasWorkerThreads();
+		if (shouldStepOnBackgroundThread)
+		{
+			Logger::instance()->log("Physic::Running physic on background thread");
+			thread->doWork(this,
+				[](void* data) {
+				const auto physic = (Physic*)data;
+
+				while (physic->isRunning())
+				{
+					if (physic->getShouldStep())
+					{
+						physic->lockSimulations();
+						physic->stepPhysicWorlds();
+						physic->markSteppedUnsafe();
+						physic->unlockSimulations();
+					}
+				}
+
+				return (void*)1;
+			},
+				weak_from_this());
+		}
+		else
+		{
+			Logger::instance()->log("Physic::Running physic on UI thread");
+		}
+	}
+
+	void Physic::onCleanup()
+	{
+		running = false;
 	}
 
 	void Physic::onEnterFrame(const double& deltaTime)
+	{
+		if (!shouldStepOnBackgroundThread) stepPhysicWorlds();
+	}
+
+	void Physic::stepPhysicWorlds()
 	{
 		for (const auto& worldIdToWorldBundle : worlds)
 		{
@@ -294,5 +346,49 @@ namespace AW
 				}
 			}
 		}
+	}
+
+	bool Physic::isRunning()
+	{
+		return shouldStepOnBackgroundThread && running;
+	}
+
+	void Physic::lockSimulations()
+	{
+		if (!shouldStepOnBackgroundThread) return;
+		SDL_SemWait(physicStepLock);
+	}
+
+	void Physic::unlockSimulations()
+	{
+		if (!shouldStepOnBackgroundThread) return;
+		SDL_SemPost(physicStepLock);
+	}
+
+	void Physic::waitIfNeeded()
+	{
+		lockSimulations();
+		unlockSimulations();
+	}
+
+	void Physic::markShouldStep()
+	{
+		lockSimulations();
+		shouldStep = true;
+		unlockSimulations();
+	}
+
+	void Physic::markSteppedUnsafe()
+	{
+		shouldStep = false;
+	}
+
+	bool Physic::getShouldStep()
+	{
+		lockSimulations();
+		const auto result = shouldStep;
+		unlockSimulations();
+
+		return shouldStepOnBackgroundThread && result;
 	}
 }

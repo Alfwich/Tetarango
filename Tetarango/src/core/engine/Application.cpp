@@ -122,7 +122,9 @@ namespace AW
 			updateFrameTime();
 			processEnterFrames();
 			processApplicationEvents();
+			markPhysicFrameUpdateToStart();
 			render();
+			waitForPhysicFrameToFinishIfNeeded();
 			doFrameLimitIfNeeded();
 		}
 		cleanup();
@@ -142,6 +144,16 @@ namespace AW
 		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();
+	}
+
+	void Application::waitForPhysicFrameToFinishIfNeeded()
+	{
+		while (modules->physic->getShouldStep() != false) {};
+	}
+
+	void Application::markPhysicFrameUpdateToStart()
+	{
+		modules->physic->markShouldStep();
 	}
 
 	void Application::updateFrameTime()

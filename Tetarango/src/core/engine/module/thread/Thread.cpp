@@ -120,6 +120,11 @@ namespace AW
 		return workQueue.empty();
 	}
 
+	bool Thread::hasWorkerThreads()
+	{
+		return !threads.empty();
+	}
+
 	void Thread::onInit()
 	{
 		if (!isMainThread())

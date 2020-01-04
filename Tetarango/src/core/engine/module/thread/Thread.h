@@ -45,6 +45,7 @@ namespace AW
 		bool isMainThread();
 		bool applicationIsRunning();
 		bool workQueueIsEmpty();
+		bool hasWorkerThreads();
 
 		std::shared_ptr<Worker> getWorkerFromWorkQueue();
 		void putWorkerIntoResultQueue(std::shared_ptr<Worker> resultBundle);

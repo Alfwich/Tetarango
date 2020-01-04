@@ -21,8 +21,8 @@ namespace AW
 	{
 		if (data != nullptr)
 		{
-			status = WorkerStatus::ERROR;
 			result = toDo(data);
+			status = WorkerStatus::DONE;
 			data = nullptr;
 		}
 		else

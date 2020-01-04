@@ -143,7 +143,7 @@ namespace AWGame
 		camera->target = player;
 
 		const auto dim = 100.0;
-		for (auto i = 0; i < 50; ++i)
+		for (auto i = 0; i < 5000; ++i)
 		{
 			const auto poly = std::make_shared<Poly>();
 			poly->setColor(AW::Color::random());
@@ -158,7 +158,7 @@ namespace AWGame
 			}
 			poly->setRotation(AW::NumberHelper::random(360));
 
-			poly->setPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-3000.0, 3000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0));
+			poly->setPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
 			contentContainer->add(poly);
 		}
 	}
@@ -258,7 +258,7 @@ namespace AWGame
 			modules->physic->setWorldGravity(0, 0.0, 0.0);
 		}
 
-		if (key == AWKey::FIVE)
+		if (key == AWKey::SIX)
 		{
 			modules->physic->setWorldGravity(0);
 		}

@@ -5,6 +5,7 @@
 #include "box2d/b2_body.h"
 #include "engine/module/IBaseModule.h"
 #include "engine/module/time/Time.h"
+#include "engine/module/thread/Thread.h"
 
 #include "RigidBody.h"
 #include "RigidBodySensor.h"
@@ -14,6 +15,9 @@ namespace AW
 {
 	class Physic : public IBaseModule
 	{
+		SDL_sem* physicStepLock;
+		bool running = true, shouldStep = false, shouldStepOnBackgroundThread = false;
+
 		PhysicRenderer physicRenderer;
 		class RigidBodyBundle
 		{
@@ -70,12 +74,16 @@ namespace AW
 		};
 
 		std::shared_ptr<Time> time;
+		std::shared_ptr<Thread> thread;
 
 		std::unordered_map<unsigned int, std::shared_ptr<WorldBundle>> worlds;
 
 	public:
+		Physic();
+		~Physic();
 
 		void bindTime(std::shared_ptr<Time> time);
+		void bindThread(std::shared_ptr<Thread> thread);
 
 		void registerWorld(unsigned int worldId, double gravityX = 0.0, double gravityY = -9.807);
 
@@ -99,7 +107,18 @@ namespace AW
 		void unregisterRigidBodySensorForWorld(unsigned int worldId, const std::shared_ptr<RigidBodySensor>& sensor);
 
 		void onInit();
+		void onCleanup();
 		void onEnterFrame(const double& deltaTime);
+		void stepPhysicWorlds();
+
+		bool isRunning();
+		void lockSimulations();
+		void unlockSimulations();
+		void waitIfNeeded();
+
+		void markShouldStep();
+		void markSteppedUnsafe();
+		bool getShouldStep();
 
 	};
 }
