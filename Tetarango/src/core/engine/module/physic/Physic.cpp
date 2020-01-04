@@ -23,7 +23,7 @@ namespace AW
 		worldTimer->start();
 
 		worlds[worldId] = std::make_shared<WorldBundle>(world, worldTimer);
-		worlds.at(worldId)->world->SetContactListener(this);
+		worlds.at(worldId)->world->SetContactListener(worlds.at(worldId).get());
 		worlds.at(worldId)->world->SetDebugDraw(&physicRenderer);
 		Logger::instance()->log("Physic::Created world worldId=" + std::to_string(worldId));
 	}
@@ -254,50 +254,6 @@ namespace AW
 						world->DestroyBody(body);
 						rigidBodyBundle = worldBundle->bodies.erase(rigidBodyBundle);
 					}
-				}
-			}
-		}
-	}
-
-	void Physic::BeginContact(b2Contact* contact)
-	{
-		for (const auto& worldIdToWorldBundle : worlds)
-		{
-			const auto& worldBundle = worldIdToWorldBundle.second;
-
-			for (auto it = worldBundle->sensors.begin(); it != worldBundle->sensors.end();)
-			{
-				const auto sensorPtr = (*it).lock();
-				if (sensorPtr != nullptr)
-				{
-					sensorPtr->BeginContact(contact);
-					++it;
-				}
-				else
-				{
-					it = worldBundle->sensors.erase(it);
-				}
-			}
-		}
-	}
-
-	void Physic::EndContact(b2Contact* contact)
-	{
-		for (const auto& worldIdToWorldBundle : worlds)
-		{
-			const auto& worldBundle = worldIdToWorldBundle.second;
-
-			for (auto it = worldBundle->sensors.begin(); it != worldBundle->sensors.end();)
-			{
-				const auto sensorPtr = (*it).lock();
-				if (sensorPtr != nullptr)
-				{
-					sensorPtr->EndContact(contact);
-					++it;
-				}
-				else
-				{
-					it = worldBundle->sensors.erase(it);
 				}
 			}
 		}

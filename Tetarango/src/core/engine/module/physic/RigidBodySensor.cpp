@@ -41,7 +41,7 @@ namespace AW
 		const auto fixB = contact->GetFixtureB();
 		const auto bodyB = fixB->GetBody();
 
-		if (bodyA == bodyReference || bodyB == bodyReference)
+		if ((bodyA == bodyReference || bodyB == bodyReference) && (fixA->IsSensor() || fixB->IsSensor()))
 		{
 			onBeginContact(bodyA->GetUserData(), bodyB->GetUserData(), contact);
 		}
@@ -54,7 +54,7 @@ namespace AW
 		const auto fixB = contact->GetFixtureB();
 		const auto bodyB = fixB->GetBody();
 
-		if (bodyA == bodyReference || bodyB == bodyReference)
+		if ((bodyA == bodyReference || bodyB == bodyReference) && (fixA->IsSensor() || fixB->IsSensor()))
 		{
 			onEndContact(bodyA->GetUserData(), bodyB->GetUserData(), contact);
 		}

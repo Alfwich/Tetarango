@@ -12,7 +12,7 @@
 
 namespace AW
 {
-	class Physic : public IBaseModule, public b2ContactListener
+	class Physic : public IBaseModule
 	{
 		PhysicRenderer physicRenderer;
 		class RigidBodyBundle
@@ -23,7 +23,7 @@ namespace AW
 			b2Body *body;
 		};
 
-		class WorldBundle
+		class WorldBundle : public b2ContactListener
 		{
 		public:
 			WorldBundle(std::shared_ptr<b2World> world, std::shared_ptr<Timer> timer) : world(world), worldTimer(timer) {};
@@ -35,6 +35,38 @@ namespace AW
 
 			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
 			std::list<std::weak_ptr<RigidBodySensor>> sensors;
+
+			void BeginContact(b2Contact* contact)
+			{
+				for (auto it = sensors.begin(); it != sensors.end();)
+				{
+					if (auto ptr = (*it).lock())
+					{
+						ptr->BeginContact(contact);
+						++it;
+					}
+					else
+					{
+						it = sensors.erase(it);
+					}
+				}
+			}
+
+			void EndContact(b2Contact* contact)
+			{
+				for (auto it = sensors.begin(); it != sensors.end();)
+				{
+					if (auto ptr = (*it).lock())
+					{
+						ptr->EndContact(contact);
+						++it;
+					}
+					else
+					{
+						it = sensors.erase(it);
+					}
+				}
+			}
 		};
 
 		std::shared_ptr<Time> time;
@@ -68,7 +100,5 @@ namespace AW
 		void onInit();
 		void onEnterFrame(const double& deltaTime);
 
-		void BeginContact(b2Contact* contact);
-		void EndContact(b2Contact* contact);
 	};
 }
