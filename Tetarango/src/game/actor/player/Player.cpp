@@ -1,5 +1,7 @@
 #include "Player.h"
 
+#include "ui/physic/body/BodySensor.h"
+
 namespace
 {
 	const auto impulse = 10000;
@@ -39,7 +41,13 @@ namespace AWGame
 		body->setDensity(5.0);
 		body->setBodyType(AW::BodyType::Circle);
 		body->setDynamicBody();
+		body->setDensity(5.0);
 		add(body);
+
+		const auto bodySensor = std::make_shared<AW::BodySensor>();
+		bodySensor->width = getWidth();
+		bodySensor->height = getHeight();
+		body->add(bodySensor);
 
 		const auto oDot = std::make_shared<AW::Rectangle>();
 		oDot->setColor(AW::Color::random());
@@ -78,5 +86,15 @@ namespace AWGame
 	std::shared_ptr<AW::Body> Player::getBodyObject()
 	{
 		return body;
+	}
+
+	void Player::BeginContact(b2Contact * contact)
+	{
+		std::cout << "Player Contacted With Something" << std::endl;
+	}
+
+	void Player::EndContact(b2Contact * contact)
+	{
+		std::cout << "Player Ended Contacted With Something" << std::endl;
 	}
 }

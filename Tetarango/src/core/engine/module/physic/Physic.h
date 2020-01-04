@@ -5,12 +5,13 @@
 #include "box2d/b2_body.h"
 #include "engine/module/IBaseModule.h"
 #include "engine/module/time/Time.h"
+
 #include "RigidBody.h"
-#include "RigidBodyJoint.h"
+#include "RigidBodySensor.h"
 
 namespace AW
 {
-	class Physic : public IBaseModule
+	class Physic : public IBaseModule, public b2ContactListener
 	{
 		class RigidBodyBundle
 		{
@@ -19,15 +20,6 @@ namespace AW
 			std::weak_ptr<RigidBody> object;
 			b2Body *body;
 		};
-
-		class RigidBodyJointBundle
-		{
-		public:
-			RigidBodyJointBundle(std::weak_ptr<RigidBodyJoint> object, b2Joint *joint) : object(object), joint(joint) {}
-			std::weak_ptr<RigidBodyJoint> object;
-			b2Joint *joint;
-		};
-
 
 		class WorldBundle
 		{
@@ -40,6 +32,7 @@ namespace AW
 			int velocityIterations = 6, positionIterations = 2;
 
 			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
+			std::list<std::weak_ptr<RigidBodySensor>> sensors;
 		};
 
 		std::shared_ptr<Time> time;
@@ -65,7 +58,15 @@ namespace AW
 
 		void registerRigidBodyJointForWorld(unsigned int worldId, const std::shared_ptr<RigidBodyJoint>& joint);
 
+		void registerRigidBodySensorForWorld(unsigned int worldId, const std::shared_ptr<RigidBodySensor>& sensor);
+
 		void onInit();
 		void onEnterFrame(const double& deltaTime);
+
+		/// Called when two fixtures begin to touch.
+		void BeginContact(b2Contact* contact);
+
+		/// Called when two fixtures cease to touch.
+		void EndContact(b2Contact* contact);
 	};
 }

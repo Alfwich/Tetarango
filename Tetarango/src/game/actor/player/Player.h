@@ -29,5 +29,8 @@ namespace AWGame
 
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
+
+		virtual void BeginContact(b2Contact* contact);
+		virtual void EndContact(b2Contact* contact);
 	};
 }

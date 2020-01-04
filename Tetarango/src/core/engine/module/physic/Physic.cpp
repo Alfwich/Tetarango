@@ -21,6 +21,7 @@ namespace AW
 		worldTimer->start();
 
 		worlds[worldId] = std::make_shared<WorldBundle>(world, worldTimer);
+		worlds.at(worldId)->world->SetContactListener(this);
 		Logger::instance()->log("Physic::Created world worldId=" + std::to_string(worldId));
 	}
 
@@ -174,6 +175,32 @@ namespace AW
 		obj->createJoint(worldBundle->world);
 	}
 
+	void Physic::registerRigidBodySensorForWorld(unsigned int worldId, const std::shared_ptr<RigidBodySensor>& obj)
+	{
+		if (worlds.count(worldId) == 0)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to register sensor for worldId=" + std::to_string(worldId) + ", that does not exist");
+			return;
+		}
+
+		if (obj == nullptr)
+		{
+			Logger::instance()->logCritical("Physic::Attempted to register null sensor for worldId=" + std::to_string(worldId));
+			return;
+		}
+
+		if (obj->hasSensor())
+		{
+			Logger::instance()->logCritical("Physic::Attempted to register sensor for worldId=" + std::to_string(worldId) + ", that already has a sensor");
+			return;
+		}
+
+		auto worldBundle = worlds.at(worldId);
+		worldBundle->sensors.push_back(obj);
+
+		obj->createSensor();
+	}
+
 	void Physic::onInit()
 	{
 		registerWorld(0);
@@ -185,7 +212,7 @@ namespace AW
 		{
 			const auto& worldBundle = worldIdToWorldBundle.second;
 
-			const auto timefactor = time->getComputedTimeFactor(worldBundle->timescope);
+			const auto timefactor = (float)time->getComputedTimeFactor(worldBundle->timescope);
 			if (timefactor <= 0.0) continue;
 
 			const auto threshold = (unsigned int)(worldBundle->timestep * 1000.0);
@@ -208,6 +235,50 @@ namespace AW
 						world->DestroyBody(body);
 						rigidBodyBundle = worldBundle->bodies.erase(rigidBodyBundle);
 					}
+				}
+			}
+		}
+	}
+
+	void Physic::BeginContact(b2Contact* contact)
+	{
+		for (const auto& worldIdToWorldBundle : worlds)
+		{
+			const auto& worldBundle = worldIdToWorldBundle.second;
+
+			for (auto it = worldBundle->sensors.begin(); it != worldBundle->sensors.end();)
+			{
+				const auto sensorPtr = (*it).lock();
+				if (sensorPtr != nullptr)
+				{
+					sensorPtr->BeginContact(contact);
+					++it;
+				}
+				else
+				{
+					it = worldBundle->sensors.erase(it);
+				}
+			}
+		}
+	}
+
+	void Physic::EndContact(b2Contact* contact)
+	{
+		for (const auto& worldIdToWorldBundle : worlds)
+		{
+			const auto& worldBundle = worldIdToWorldBundle.second;
+
+			for (auto it = worldBundle->sensors.begin(); it != worldBundle->sensors.end();)
+			{
+				const auto sensorPtr = (*it).lock();
+				if (sensorPtr != nullptr)
+				{
+					sensorPtr->EndContact(contact);
+					++it;
+				}
+				else
+				{
+					it = worldBundle->sensors.erase(it);
 				}
 			}
 		}

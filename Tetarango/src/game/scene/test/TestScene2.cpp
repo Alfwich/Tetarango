@@ -20,7 +20,7 @@ namespace AWGame
 	TestScene2::TestScene2() : AW::Scene("test_scene_2")
 	{
 		setTimeScope(AW::TimeScope::Game);
-		setShouldRebuildOnLoad();
+		//setShouldRebuildOnLoad();
 		registerGameObject<TestScene2>(__FUNCTION__);
 	}
 
@@ -223,6 +223,10 @@ namespace AWGame
 		if (key == AWKey::ESCAPE)
 		{
 			destroyChildren();
+			camera = nullptr;
+			player = nullptr;
+			contentContainer = nullptr;
+			obj1 = obj2 = nullptr;
 			const auto applicationSceneContainer = findFirstInParentChain<AW::SceneContainer>();
 			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::SavedGamesMenu));
 		}
