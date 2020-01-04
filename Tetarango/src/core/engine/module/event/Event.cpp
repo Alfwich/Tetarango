@@ -68,10 +68,12 @@ namespace AW
 
 		thread->processWorkers();
 
+#if _DEBUG
 		if (gameConfig->getConfigBool(Config::Param::immediateDebugOutput))
 		{
 			reportSdlErrors();
 		}
+#endif // _DEBUG
 	}
 
 	void Event::reportSdlErrors()
@@ -266,4 +268,4 @@ namespace AW
 		processEvents();
 		processEnterFrames(frameTime);
 	}
-}
+	}

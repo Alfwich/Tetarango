@@ -180,6 +180,7 @@ bash ./make.sh</Command>
   <ItemGroup>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
     <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
+    <ClCompile Include="src\core\engine\module\physic\PhysicRenderer.cpp" />
     <ClCompile Include="src\core\engine\module\physic\RigidBody.cpp" />
     <ClCompile Include="src\core\engine\module\physic\RigidBodyJoint.cpp" />
     <ClCompile Include="src\core\engine\module\physic\RigidBodySensor.cpp" />
@@ -302,6 +303,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
     <ClInclude Include="src\core\engine\module\display\VertexBufferProxy.h" />
+    <ClInclude Include="src\core\engine\module\physic\PhysicRenderer.h" />
     <ClInclude Include="src\core\engine\module\physic\RigidBody.h" />
     <ClInclude Include="src\core\engine\module\physic\Physic.h" />
     <ClInclude Include="src\core\engine\module\physic\RigidBodyJoint.h" />

@@ -34,6 +34,7 @@ namespace AW
 		shader->bindAsset(asset);
 		screen->bindShader(shader);
 		screen->bindTexture(texture);
+		screen->bindPhysic(physic);
 	}
 
 	SystemModuleBundle::SystemModuleBundle()

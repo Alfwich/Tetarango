@@ -1,5 +1,7 @@
 #include "Physic.h"
 
+#include "box2d/b2_draw.h"
+
 namespace AW
 {
 
@@ -22,6 +24,7 @@ namespace AW
 
 		worlds[worldId] = std::make_shared<WorldBundle>(world, worldTimer);
 		worlds.at(worldId)->world->SetContactListener(this);
+		worlds.at(worldId)->world->SetDebugDraw(&physicRenderer);
 		Logger::instance()->log("Physic::Created world worldId=" + std::to_string(worldId));
 	}
 
@@ -84,6 +87,22 @@ namespace AW
 	double Physic::getPhysicFrameDeltaTime()
 	{
 		return time->getDeltaTime();
+	}
+
+	void Physic::performDebugDraw(double screenWidth, double screenHeight)
+	{
+		physicRenderer.prepare(screenWidth, screenHeight);
+
+		for (const auto& worldIdToWorldBundle : worlds)
+		{
+			const auto& worldBundle = worldIdToWorldBundle.second;
+			worldBundle->world->DrawDebugData();
+		}
+	}
+
+	PhysicRenderer & Physic::getDebugRenderer()
+	{
+		return physicRenderer;
 	}
 
 	void Physic::registerRigidBodyForWorld(unsigned int worldId, const std::shared_ptr<RigidBody>& obj)

@@ -83,6 +83,11 @@ namespace AWGame
 				setScreenAnchorPoint(getScreenAnchorX() + xDelta, getScreenAnchorY() + yDelta);
 			}
 		}
+
+		if (modules->screen->getCurrentScreenConfig().visualizePhysic)
+		{
+			modules->physic->getDebugRenderer().matchWithCamera(shared_from_this());
+		}
 	}
 
 	void GameCamera::onKey(AWKey code, bool pressed)

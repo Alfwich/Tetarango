@@ -18,6 +18,7 @@ namespace AW
 	class ShaderContainer;
 	class TextureContainer;
 	class Time;
+	class Physic;
 
 	class DisplayModeInfo
 	{
@@ -53,6 +54,7 @@ namespace AW
 		std::shared_ptr<TextureContainer> texture;
 		std::shared_ptr<ShaderContainer> shader;
 		std::shared_ptr<Time> time;
+		std::shared_ptr<Physic> physic;
 
 		std::shared_ptr<Renderer> renderer;
 
@@ -62,6 +64,7 @@ namespace AW
 		void bindTexture(std::shared_ptr<TextureContainer> texture);
 		void bindShader(std::shared_ptr<ShaderContainer> shader);
 		void bindTime(std::shared_ptr<Time> time);
+		void bindPhysic(std::shared_ptr<Physic> physic);
 
 		bool init(const ScreenConfig& config, std::string name = "Window");
 		void bindDefaultShaders();
@@ -99,3 +102,4 @@ namespace AW
 #include "engine/module/shader/ShaderContainer.h"
 #include "engine/module/display/TextureContainer.h"
 #include "engine/module/time/Time.h"
+#include "engine/module/physic/Physic.h"

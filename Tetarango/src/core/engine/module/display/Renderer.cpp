@@ -198,8 +198,6 @@ namespace AW
 		preRender(screen, frameTimestamp);
 		renderOpenGL(root);
 		postRender();
-
-		SDL_GL_SwapWindow(screen->getWindow());
 	}
 
 	void Renderer::renderOpenGL(std::shared_ptr<Renderable> root)

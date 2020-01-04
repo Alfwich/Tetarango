@@ -12,9 +12,11 @@ namespace
 	const auto displayWireframeModeParamKey = "display-wireframe-mode";
 	const auto displayDoubleBufferParamKey = "display-double-buffer";
 	const auto displayFrameLimiterParamKey = "display-frame-limiter";
+
 	const auto displayDebugClipRectsParamKey = "display-debug-clip-rects-buffer";
 	const auto displayDebugContainersParamKey = "display-debug-containers-limiter";
 	const auto displayDebugOverlayParamKey = "display-debug-overlay-enabled";
+	const auto displayDebugPhysicParamKey = "display-debug-physic-enabled";
 
 	const auto masterVolParamKey = "vol-master";
 	const auto generalVolParamKey = "vol-general";
@@ -43,9 +45,11 @@ namespace AWGame
 			screenConfig.useDoubleBuffer = storageClient->readBool(displayDoubleBufferParamKey);
 			screenConfig.openGlWireframeMode = storageClient->readBool(displayWireframeModeParamKey);
 			screenConfig.frameLimiter = storageClient->readInt(displayFrameLimiterParamKey);
+
 			screenConfig.visualizeClipRects = storageClient->readBool(displayDebugClipRectsParamKey);
 			screenConfig.visualizeContainers = storageClient->readBool(displayDebugContainersParamKey);
 			screenConfig.debugOverlayEnabled = storageClient->readBool(displayDebugOverlayParamKey);
+			screenConfig.visualizePhysic = storageClient->readBool(displayDebugPhysicParamKey);
 		}
 
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
@@ -189,12 +193,15 @@ namespace AWGame
 		storageClient->writeInt(displayVsyncModeParamKey, (int)screenConfig.vMode);
 		storageClient->writeInt(displayMSAAParamKey, screenConfig.msaaSamples);
 		storageClient->writeInt(displayFrameLimiterParamKey, screenConfig.frameLimiter);
+
+		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
+		storageClient->writeBool(displayDoubleBufferParamKey, screenConfig.useDoubleBuffer);
+
 		storageClient->writeBool(displayWireframeModeParamKey, screenConfig.openGlWireframeMode);
 		storageClient->writeBool(displayDebugClipRectsParamKey, screenConfig.visualizeClipRects);
 		storageClient->writeBool(displayDebugContainersParamKey, screenConfig.visualizeContainers);
 		storageClient->writeBool(displayDebugOverlayParamKey, screenConfig.debugOverlayEnabled);
-		storageClient->writeBool(displayOpenGLCompatibilityParamKey, screenConfig.openGLCompatibilityMode);
-		storageClient->writeBool(displayDoubleBufferParamKey, screenConfig.useDoubleBuffer);
+		storageClient->writeBool(displayDebugPhysicParamKey, screenConfig.visualizePhysic);
 
 		if (screenBuffer != nullptr)
 		{

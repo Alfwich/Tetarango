@@ -198,6 +198,8 @@ namespace AWGame
 
 	void TestScene2::onEnterFrame(const double& deltaTime)
 	{
+		if (contentContainer == nullptr) rebuild();
+
 		for (const auto c : contentContainer->getChildrenOfType<Box>())
 		{
 			if (c->getY() > 4000)

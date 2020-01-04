@@ -8,11 +8,13 @@
 
 #include "RigidBody.h"
 #include "RigidBodySensor.h"
+#include "PhysicRenderer.h"
 
 namespace AW
 {
 	class Physic : public IBaseModule, public b2ContactListener
 	{
+		PhysicRenderer physicRenderer;
 		class RigidBodyBundle
 		{
 		public:
@@ -53,6 +55,9 @@ namespace AW
 
 		double getPhysicFrameDeltaTime();
 
+		void performDebugDraw(double screenWidth, double screenHeight);
+		PhysicRenderer& getDebugRenderer();
+
 		void registerRigidBodyForWorld(unsigned int worldId, const std::shared_ptr<RigidBody>& body);
 		void unregisterRigidBodyForWorld(unsigned int worldId, b2Body* body);
 
@@ -63,10 +68,7 @@ namespace AW
 		void onInit();
 		void onEnterFrame(const double& deltaTime);
 
-		/// Called when two fixtures begin to touch.
 		void BeginContact(b2Contact* contact);
-
-		/// Called when two fixtures cease to touch.
 		void EndContact(b2Contact* contact);
 	};
 }

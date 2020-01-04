@@ -30,6 +30,11 @@ namespace AW
 		this->time = time;
 	}
 
+	void Screen::bindPhysic(std::shared_ptr<Physic> physic)
+	{
+		this->physic = physic;
+	}
+
 	bool Screen::init(const ScreenConfig& config, std::string name)
 	{
 		currentConfig = config;
@@ -330,10 +335,19 @@ namespace AW
 		{
 			renderer->render(root, this, time->getHighResolutionTicks() / 1000.0);
 
+#if _DEBUG
 			if (gameConfig->getConfigBool(Config::Param::immediateDebugOutput))
 			{
 				renderer->reportOpenGLErrors();
 			}
+#endif // _DEBUG
+
+			if (currentConfig.visualizePhysic)
+			{
+				physic->performDebugDraw(currentConfig.width, currentConfig.height);
+			}
+
+			SDL_GL_SwapWindow(window);
 		}
 	}
 

@@ -182,7 +182,7 @@ namespace AWGame
 
 		debugRenderingCheckbox = std::make_shared<CheckBoxBasic>();
 		debugRenderingCheckbox->setText("Debug Rendering");
-		debugRenderingCheckbox->setChecked(config.visualizeContainers || config.visualizeClipRects);
+		debugRenderingCheckbox->setChecked(config.visualizeContainers || config.visualizeClipRects || config.visualizePhysic);
 		debugRenderingCheckbox->clickListener = weak_from_this();
 		centeringContainer->add(debugRenderingCheckbox);
 
@@ -421,8 +421,9 @@ namespace AWGame
 
 		if (id == debugRenderingCheckbox->getId())
 		{
-			config.visualizeClipRects = !(config.visualizeClipRects || config.visualizeContainers);
+			config.visualizeClipRects = !(config.visualizeClipRects || config.visualizeContainers || config.visualizePhysic);
 			config.visualizeContainers = config.visualizeClipRects;
+			config.visualizePhysic = config.visualizeClipRects;
 			debugRenderingCheckbox->setChecked(config.visualizeClipRects);
 			shouldEnableApply = true;
 		}
