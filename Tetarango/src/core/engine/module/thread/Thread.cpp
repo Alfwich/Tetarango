@@ -1,5 +1,10 @@
 #include "Thread.h"
 
+namespace
+{
+	const auto workerThreadName = "AW_Worker_";
+}
+
 namespace AW
 {
 	Thread::Thread()
@@ -120,6 +125,11 @@ namespace AW
 		return workQueue.empty();
 	}
 
+	bool Thread::hasExtraWorkerThreads()
+	{
+		return threads.size() > 1;
+	}
+
 	bool Thread::hasWorkerThreads()
 	{
 		return !threads.empty();
@@ -129,7 +139,7 @@ namespace AW
 	{
 		if (!isMainThread())
 		{
-			Logger::instance()->log("Thread::Failed to onInit , the calling thread is not the main thread");
+			Logger::instance()->log("Thread::Failed to onInit, the calling thread is not the main thread");
 			return;
 		}
 
@@ -137,7 +147,6 @@ namespace AW
 		const auto numWorkerThreads = SDL_GetCPUCount() - 1;
 		for (int i = 0; i < numWorkerThreads; ++i)
 		{
-			auto threadName = "MT_Worker";
 			const auto thread = SDL_CreateThread([](void* data) -> int {
 				const auto thread = (Thread*)data;
 				while (thread->applicationIsRunning())
@@ -156,7 +165,7 @@ namespace AW
 				}
 
 				return 0;
-			}, threadName, this);
+			}, std::string(workerThreadName + std::to_string(i)).c_str(), this);
 
 			threads.push_back(thread);
 		}

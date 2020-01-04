@@ -16,7 +16,8 @@ namespace AW
 	class Physic : public IBaseModule
 	{
 		SDL_sem* physicStepLock;
-		bool running = true, shouldStep = false, shouldStepOnBackgroundThread = false;
+
+		bool  shouldStepOnBackgroundThread = false, doStep = false;
 
 		PhysicRenderer physicRenderer;
 		class RigidBodyBundle
@@ -40,13 +41,16 @@ namespace AW
 			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
 			std::list<std::weak_ptr<RigidBodySensor>> sensors;
 
+			std::vector<std::pair<b2Contact*, std::weak_ptr<RigidBodySensor>>> sensorsToNotifyBeginContact;
+			std::vector<std::pair<b2Contact*, std::weak_ptr<RigidBodySensor>>> sensorsToNotifyEndContact;
+
 			void BeginContact(b2Contact* contact)
 			{
 				for (auto it = sensors.begin(); it != sensors.end();)
 				{
 					if (auto ptr = (*it).lock())
 					{
-						ptr->BeginContact(contact);
+						sensorsToNotifyBeginContact.push_back(std::make_pair(contact, (*it)));
 						++it;
 					}
 					else
@@ -62,7 +66,7 @@ namespace AW
 				{
 					if (auto ptr = (*it).lock())
 					{
-						ptr->EndContact(contact);
+						sensorsToNotifyEndContact.push_back(std::make_pair(contact, (*it)));
 						++it;
 					}
 					else
@@ -77,6 +81,8 @@ namespace AW
 		std::shared_ptr<Thread> thread;
 
 		std::unordered_map<unsigned int, std::shared_ptr<WorldBundle>> worlds;
+
+		void startBackgroundThreadStepping();
 
 	public:
 		Physic();
@@ -111,14 +117,13 @@ namespace AW
 		void onEnterFrame(const double& deltaTime);
 		void stepPhysicWorlds();
 
-		bool isRunning();
+		bool backgroundThreadSteppingEnabled();
 		void lockSimulations();
 		void unlockSimulations();
-		void waitIfNeeded();
 
 		void markShouldStep();
 		void markSteppedUnsafe();
-		bool getShouldStep();
+		bool shouldStep();
 
 	};
 }

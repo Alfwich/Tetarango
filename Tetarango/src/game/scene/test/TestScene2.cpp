@@ -20,7 +20,7 @@ namespace AWGame
 	TestScene2::TestScene2() : AW::Scene("test_scene_2")
 	{
 		setTimeScope(AW::TimeScope::Game);
-		//setShouldRebuildOnLoad();
+		setShouldRebuildOnLoad();
 		GORegister(TestScene2);
 	}
 
@@ -143,7 +143,7 @@ namespace AWGame
 		camera->target = player;
 
 		const auto dim = 100.0;
-		for (auto i = 0; i < 5000; ++i)
+		for (auto i = 0; i < 2000; ++i)
 		{
 			const auto poly = std::make_shared<Poly>();
 			poly->setColor(AW::Color::random());

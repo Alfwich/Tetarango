@@ -124,8 +124,8 @@ namespace AW
 			processApplicationEvents();
 			markPhysicFrameUpdateToStart();
 			render();
-			waitForPhysicFrameToFinishIfNeeded();
 			doFrameLimitIfNeeded();
+			waitForPhysicFrameToFinishIfNeeded();
 		}
 		cleanup();
 
@@ -148,7 +148,7 @@ namespace AW
 
 	void Application::waitForPhysicFrameToFinishIfNeeded()
 	{
-		while (modules->physic->getShouldStep() != false) {};
+		while (modules->physic->shouldStep() != false) {};
 	}
 
 	void Application::markPhysicFrameUpdateToStart()

@@ -4,6 +4,8 @@
 
 namespace AW
 {
+
+
 	Physic::Physic()
 	{
 		physicStepLock = SDL_CreateSemaphore(1);
@@ -271,49 +273,6 @@ namespace AW
 		}
 	}
 
-	void Physic::onInit()
-	{
-		registerWorld(0);
-
-		shouldStepOnBackgroundThread = thread->hasWorkerThreads();
-		if (shouldStepOnBackgroundThread)
-		{
-			Logger::instance()->log("Physic::Running physic on background thread");
-			thread->doWork(this,
-				[](void* data) {
-				const auto physic = (Physic*)data;
-
-				while (physic->isRunning())
-				{
-					if (physic->getShouldStep())
-					{
-						physic->lockSimulations();
-						physic->stepPhysicWorlds();
-						physic->markSteppedUnsafe();
-						physic->unlockSimulations();
-					}
-				}
-
-				return (void*)1;
-			},
-				weak_from_this());
-		}
-		else
-		{
-			Logger::instance()->log("Physic::Running physic on UI thread");
-		}
-	}
-
-	void Physic::onCleanup()
-	{
-		running = false;
-	}
-
-	void Physic::onEnterFrame(const double& deltaTime)
-	{
-		if (!shouldStepOnBackgroundThread) stepPhysicWorlds();
-	}
-
 	void Physic::stepPhysicWorlds()
 	{
 		for (const auto& worldIdToWorldBundle : worlds)
@@ -328,29 +287,28 @@ namespace AW
 			{
 				const auto& world = worldBundle->world;
 				world->Step(worldBundle->timestep * timefactor, worldBundle->velocityIterations, worldBundle->positionIterations);
-
-				for (auto rigidBodyBundle = worldBundle->bodies.begin(); rigidBodyBundle != worldBundle->bodies.end();)
-				{
-					const auto rigidBodyPtr = (*rigidBodyBundle)->object.lock();
-					if (rigidBodyPtr != nullptr)
-					{
-						rigidBodyPtr->physicUpdate();
-						++rigidBodyBundle;
-					}
-					else
-					{
-						auto body = (*rigidBodyBundle)->body;
-						world->DestroyBody(body);
-						rigidBodyBundle = worldBundle->bodies.erase(rigidBodyBundle);
-					}
-				}
 			}
 		}
 	}
 
-	bool Physic::isRunning()
+	void Physic::startBackgroundThreadStepping()
 	{
-		return shouldStepOnBackgroundThread && running;
+		thread->doWork(this, [](void* mod) {
+			const auto physic = (Physic*)mod;
+
+			while (physic->backgroundThreadSteppingEnabled())
+			{
+				if (physic->shouldStep())
+				{
+					physic->lockSimulations();
+					physic->stepPhysicWorlds();
+					physic->markSteppedUnsafe();
+					physic->unlockSimulations();
+				}
+			}
+
+			return (void*)1;
+		}, weak_from_this());
 	}
 
 	void Physic::lockSimulations()
@@ -365,30 +323,101 @@ namespace AW
 		SDL_SemPost(physicStepLock);
 	}
 
-	void Physic::waitIfNeeded()
+	bool Physic::backgroundThreadSteppingEnabled()
 	{
-		lockSimulations();
-		unlockSimulations();
+		return shouldStepOnBackgroundThread;
 	}
 
 	void Physic::markShouldStep()
 	{
 		lockSimulations();
-		shouldStep = true;
+		doStep = true;
 		unlockSimulations();
 	}
 
 	void Physic::markSteppedUnsafe()
 	{
-		shouldStep = false;
+		doStep = false;
 	}
 
-	bool Physic::getShouldStep()
+	bool Physic::shouldStep()
 	{
 		lockSimulations();
-		const auto result = shouldStep;
+		const auto result = doStep;
 		unlockSimulations();
 
 		return shouldStepOnBackgroundThread && result;
 	}
+
+	void Physic::onInit()
+	{
+		registerWorld(0);
+
+		// Only step on BG thread if we have extra threads for other operations
+		shouldStepOnBackgroundThread = thread->hasExtraWorkerThreads();
+		if (shouldStepOnBackgroundThread)
+		{
+			Logger::instance()->log("Physic::Running physic on background thread");
+			startBackgroundThreadStepping();
+		}
+		else
+		{
+			Logger::instance()->log("Physic::Running physic on UI thread");
+		}
+	}
+
+	void Physic::onCleanup()
+	{
+		shouldStepOnBackgroundThread = false;
+	}
+
+	void Physic::onEnterFrame(const double& deltaTime)
+	{
+		if (!shouldStepOnBackgroundThread) stepPhysicWorlds();
+
+		for (const auto& worldIdToWorldBundle : worlds)
+		{
+			const auto& worldBundle = worldIdToWorldBundle.second;
+			const auto& world = worldBundle->world;
+
+			for (auto rigidBodyBundle = worldBundle->bodies.begin(); rigidBodyBundle != worldBundle->bodies.end();)
+			{
+				const auto rigidBodyPtr = (*rigidBodyBundle)->object.lock();
+				if (rigidBodyPtr != nullptr)
+				{
+					rigidBodyPtr->physicUpdate();
+					++rigidBodyBundle;
+				}
+				else
+				{
+					auto body = (*rigidBodyBundle)->body;
+					world->DestroyBody(body);
+					rigidBodyBundle = worldBundle->bodies.erase(rigidBodyBundle);
+				}
+			}
+
+			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyBeginContact)
+			{
+				const auto sensorPtr = contactToSensorPair.second.lock();
+				if (sensorPtr != nullptr)
+				{
+					sensorPtr->BeginContact(contactToSensorPair.first);
+				}
+			}
+			worldBundle->sensorsToNotifyBeginContact.clear();
+
+			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyEndContact)
+			{
+				const auto sensorPtr = contactToSensorPair.second.lock();
+				if (sensorPtr != nullptr)
+				{
+					sensorPtr->EndContact(contactToSensorPair.first);
+				}
+			}
+			worldBundle->sensorsToNotifyEndContact.clear();
+		}
+
+	}
+
+
 }

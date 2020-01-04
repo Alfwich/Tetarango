@@ -9,7 +9,12 @@ namespace
 	const auto itemFontSize = 24;
 	const std::vector<int> frameLimits = {
 		0,
+#if _DEBUG
+		5,
+		10,
+		20,
 		30,
+#endif // _DEBUG
 		60,
 		90,
 		120,
