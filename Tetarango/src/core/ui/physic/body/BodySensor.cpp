@@ -14,6 +14,46 @@ namespace AW
 		GORegister(BodySensor);
 	}
 
+	void BodySensor::setX(double x)
+	{
+		rect.x = x;
+	}
+
+	double BodySensor::getX()
+	{
+		return rect.x;
+	}
+
+	void BodySensor::setY(double y)
+	{
+		rect.y = y;
+	}
+
+	double BodySensor::getY()
+	{
+		return rect.y;
+	}
+
+	void BodySensor::setWidth(double w)
+	{
+		rect.w = w;
+	}
+
+	double BodySensor::getWidth()
+	{
+		return rect.w;
+	}
+
+	void BodySensor::setHeight(double h)
+	{
+		rect.h = h;
+	}
+
+	double BodySensor::getHeight()
+	{
+		return rect.h;
+	}
+
 	void BodySensor::onAttach()
 	{
 		if (!hasSensor())
@@ -58,11 +98,11 @@ namespace AW
 				b2FixtureDef fixtureDef;
 
 				b2PolygonShape collider;
-				collider.SetAsBox(RigidBody::screenToWorldPosition(width) / 2.f, RigidBody::screenToWorldPosition(height) / 2.f);
+				collider.SetAsBox(RigidBody::screenToWorldPosition(rect.w) / 2.f, RigidBody::screenToWorldPosition(rect.h) / 2.f);
 				for (auto v : collider.m_vertices)
 				{
-					v.x += RigidBody::screenToWorldPosition(x);
-					v.y -= RigidBody::screenToWorldPosition(y);
+					v.x += RigidBody::screenToWorldPosition(rect.x);
+					v.y -= RigidBody::screenToWorldPosition(rect.y);
 				}
 
 				fixtureDef.shape = &collider;
@@ -90,21 +130,33 @@ namespace AW
 		return nullptr;
 	}
 
-	void BodySensor::onBeginContact(b2Contact * contact)
+	void BodySensor::onBeginContact(void* bodyA, void* bodyB, b2Contact * contact)
 	{
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)
 		{
-			listenerPtr->BeginContact(contact);
+			listenerPtr->onBeginContact(static_cast<Body*>(bodyA), static_cast<Body*>(bodyB), contact);
 		}
 	}
 
-	void BodySensor::onEndContact(b2Contact * contact)
+	void BodySensor::onEndContact(void* bodyA, void* bodyB, b2Contact * contact)
 	{
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)
 		{
-			listenerPtr->EndContact(contact);
+			listenerPtr->onEndContact(static_cast<Body*>(bodyA), static_cast<Body*>(bodyB), contact);
 		}
+	}
+
+	std::shared_ptr<SerializationClient> BodySensor::doSerialize(SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__sensor__", hint);
+
+		rect.x = client->serializeDouble("r.x", rect.x);
+		rect.y = client->serializeDouble("r.y", rect.y);
+		rect.w = client->serializeDouble("r.w", rect.w);
+		rect.h = client->serializeDouble("r.h", rect.h);
+
+		return GameObject::doSerialize(hint);
 	}
 }

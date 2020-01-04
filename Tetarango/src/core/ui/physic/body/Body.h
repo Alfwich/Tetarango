@@ -38,7 +38,8 @@ namespace AW
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 
-		virtual void applyForce(double vX, double vY, double amount) override;
+		virtual void applyForce(float vX, float vY, float amount) override;
+		virtual void applyForce(float vX, float vY, float cX, float cY, float amount) override;
 
 		virtual b2Body* onCreateBody(const std::shared_ptr<b2World>& world);
 		virtual void onPhysicUpdate();

@@ -96,9 +96,14 @@ namespace AW
 		return GameObject::doSerialize(hint);
 	}
 
-	void Body::applyForce(double vX, double vY, double amount)
+	void Body::applyForce(float vX, float vY, float amount)
 	{
 		RigidBody::applyForce(vX, vY, amount * (modules->physic->getPhysicFrameDeltaTime() / 1000.0));
+	}
+
+	void Body::applyForce(float vX, float vY, float cX, float cY, float amount)
+	{
+		RigidBody::applyForce(vX, vY, cX, cY, amount * (modules->physic->getPhysicFrameDeltaTime() / 1000.0));
 	}
 
 	b2Body* Body::onCreateBody(const std::shared_ptr<b2World>& world)
@@ -148,6 +153,8 @@ namespace AW
 		}
 		break;
 		}
+
+		bodyReference->SetUserData(this);
 
 		return bodyReference;
 	}

@@ -14,10 +14,10 @@ namespace AW
 	public:
 
 		void BeginContact(b2Contact* contact);
-		virtual void onBeginContact(b2Contact* contact) { /* NO-OP*/ };
+		virtual void onBeginContact(void* bodyA, void* bodyB, b2Contact* contact) { /* NO-OP*/ };
 
 		void EndContact(b2Contact* contact);
-		virtual void onEndContact(b2Contact* contact) { /* NO-OP*/ };
+		virtual void onEndContact(void* bodyA, void* bodyB, b2Contact* contact) { /* NO-OP*/ };
 
 		void createSensor();
 		bool hasSensor();

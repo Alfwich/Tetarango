@@ -34,25 +34,29 @@ namespace AW
 		return worldId;
 	}
 
-	void RigidBodySensor::BeginContact(b2Contact * contact)
+	void RigidBodySensor::BeginContact(b2Contact *contact)
 	{
 		const auto fixA = contact->GetFixtureA();
 		const auto bodyA = fixA->GetBody();
-		if (bodyA == bodyReference) return onBeginContact(contact);
-
-		const auto fixB = contact->GetFixtureA();
+		const auto fixB = contact->GetFixtureB();
 		const auto bodyB = fixB->GetBody();
-		if (bodyB == bodyReference) return onBeginContact(contact);
+
+		if (bodyA == bodyReference || bodyB == bodyReference)
+		{
+			onBeginContact(bodyA->GetUserData(), bodyB->GetUserData(), contact);
+		}
 	}
 
-	void RigidBodySensor::EndContact(b2Contact * contact)
+	void RigidBodySensor::EndContact(b2Contact *contact)
 	{
 		const auto fixA = contact->GetFixtureA();
 		const auto bodyA = fixA->GetBody();
-		if (bodyA == bodyReference) return onEndContact(contact);
-
-		const auto fixB = contact->GetFixtureA();
+		const auto fixB = contact->GetFixtureB();
 		const auto bodyB = fixB->GetBody();
-		if (bodyB == bodyReference) return onEndContact(contact);
+
+		if (bodyA == bodyReference || bodyB == bodyReference)
+		{
+			onEndContact(bodyA->GetUserData(), bodyB->GetUserData(), contact);
+		}
 	}
 }

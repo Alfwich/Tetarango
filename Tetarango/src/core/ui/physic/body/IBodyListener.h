@@ -20,11 +20,8 @@ namespace AW
 
 		virtual const std::vector<AWVec2<double>>& getBodyScreenPoints() { return noop; };
 
-		/// Called when two fixtures begin to touch.
-		virtual void BeginContact(b2Contact* contact) { /* NO-OP */ };
-
-		/// Called when two fixtures cease to touch.
-		virtual void EndContact(b2Contact* contact) { /* NO-OP */ };
+		virtual void onBeginContact(const Body* bodyA, const Body* bodyB, b2Contact* contact) { /* NO-OP */ };
+		virtual void onEndContact(const Body* bodyA, const Body* bodyB, b2Contact* contact) { /* NO-OP */ };
 
 	};
 }

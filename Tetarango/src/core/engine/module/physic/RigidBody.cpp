@@ -126,11 +126,37 @@ namespace AW
 		bodyDef.type = b2_staticBody;
 	}
 
-	void RigidBody::applyForce(double vX, double vY, double amount)
+	void RigidBody::applyForce(float vX, float vY, float amount)
 	{
 		if (hasBody())
 		{
-			bodyReference->ApplyForceToCenter(b2Vec2((float)(vX * amount), (float)(vY * amount)), true);
+			bodyReference->ApplyForceToCenter(b2Vec2(vX * amount, vY * amount), true);
+		}
+	}
+
+	void RigidBody::applyForce(AWVec2<float> v, float amount)
+	{
+		applyForce(v.x, v.y, amount);
+	}
+
+	void RigidBody::applyForce(float vX, float vY, float cX, float cY, float amount)
+	{
+		if (hasBody())
+		{
+			bodyReference->ApplyForce(b2Vec2(vX * amount, vY * amount), b2Vec2(cX, cY), true);
+		}
+	}
+
+	void RigidBody::applyForce(AWVec2<float> v, AWVec2<float> c, float amount)
+	{
+		applyForce(v.x, v.y, c.x, c.y, amount);
+	}
+
+	void RigidBody::applyTorque(float t)
+	{
+		if (hasBody())
+		{
+			bodyReference->ApplyTorque(t, true);
 		}
 	}
 
@@ -141,6 +167,7 @@ namespace AW
 		bodyDef.type = (b2BodyType)client->serializeInt("body_type", (int)bodyDef.type);
 		massFactor = (float)client->serializeDouble("massFactor", massFactor);
 		fixtureDef.density = (float)client->serializeDouble("density", fixtureDef.density);
+		bodyDef.fixedRotation = client->serializeBool("fixed-rot", bodyDef.fixedRotation);
 
 		if (hint == SerializationHint::SERIALIZE && hasBody())
 		{
@@ -219,6 +246,7 @@ namespace AW
 
 	void RigidBody::setFixedRotation(bool flag)
 	{
+		bodyDef.fixedRotation = flag;
 		if (hasBody())
 		{
 			bodyReference->SetFixedRotation(flag);

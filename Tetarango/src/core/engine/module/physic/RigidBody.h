@@ -71,7 +71,13 @@ namespace AW
 		void setDynamicBody();
 		void setStaticBody();
 
-		virtual void applyForce(double vX, double vY, double amount);
+		virtual void applyForce(float vX, float vY, float amount);
+		virtual void applyForce(AWVec2<float> v, float amount);
+
+		virtual void applyForce(float vX, float vY, float cX, float cY, float amount);
+		virtual void applyForce(AWVec2<float> v, AWVec2<float> c, float amount);
+
+		virtual void applyTorque(float t);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint) { return nullptr; };
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);

@@ -40,13 +40,14 @@ namespace AWGame
 		body->name = "body";
 		body->setDensity(5.0);
 		body->setBodyType(AW::BodyType::Circle);
+		body->setFixedRotation(true);
 		body->setDynamicBody();
 		body->setDensity(5.0);
 		add(body);
 
 		const auto bodySensor = std::make_shared<AW::BodySensor>();
-		bodySensor->width = getWidth();
-		bodySensor->height = getHeight();
+		bodySensor->setWidth(getWidth());
+		bodySensor->setHeight(getHeight());
 		body->add(bodySensor);
 
 		const auto oDot = std::make_shared<AW::Rectangle>();
@@ -88,12 +89,12 @@ namespace AWGame
 		return body;
 	}
 
-	void Player::BeginContact(b2Contact * contact)
+	void Player::onBeginContact(const AW::Body * bodyA, const AW::Body * bodyB, b2Contact * contact)
 	{
 		std::cout << "Player Contacted With Something" << std::endl;
 	}
 
-	void Player::EndContact(b2Contact * contact)
+	void Player::onEndContact(const AW::Body * bodyA, const AW::Body * bodyB, b2Contact * contact)
 	{
 		std::cout << "Player Ended Contacted With Something" << std::endl;
 	}
