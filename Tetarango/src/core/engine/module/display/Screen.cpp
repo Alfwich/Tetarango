@@ -355,8 +355,4 @@ namespace AW
 	{
 		bindDefaultShaders();
 	}
-
-	void Screen::onCleanup()
-	{
-	}
 }

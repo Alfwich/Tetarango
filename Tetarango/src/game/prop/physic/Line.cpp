@@ -5,6 +5,7 @@
 namespace
 {
 	const auto bodyId = "line-body";
+	const auto dynamicPropName = "line-dynamic";
 }
 
 namespace AWGame
@@ -19,7 +20,14 @@ namespace AWGame
 	{
 		const auto body = std::make_shared<AW::Body>();
 		body->name = bodyId;
-		body->setStaticBody();
+		if (getDynamic())
+		{
+			body->setDynamicBody();
+		}
+		else
+		{
+			body->setStaticBody();
+		}
 		body->setBodyType(AW::BodyType::Line);
 		add(body);
 	}
@@ -38,4 +46,26 @@ namespace AWGame
 	{
 		return body;
 	}
+
+	void Line::setDynamic(bool flag)
+	{
+		serializationClient->setBool(dynamicPropName, flag);
+		if (body != nullptr)
+		{
+			if (flag)
+			{
+				body->setDynamicBody();
+			}
+			else
+			{
+				body->setStaticBody();
+			}
+		}
+	}
+
+	bool Line::getDynamic()
+	{
+		return serializationClient->getBool(dynamicPropName, true);
+	}
+
 }

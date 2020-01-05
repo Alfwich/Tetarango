@@ -103,8 +103,8 @@ namespace AW
 		void renderPolygonOpenGL(RenderPackage* renderPackage);
 		void renderParticleSystemOpenGL(RenderPackage* renderPackage);
 
-		void openGLDrawArrays(RenderPackage* renderPackage);
-		void openGLDrawPoints(RenderPackage* renderPackage, unsigned int vertexArray, unsigned int numPoints);
+		void openGLDrawTriangles(RenderPackage* renderPackage);
+		void openGLDrawPoints(RenderPackage* renderPackage, unsigned int vBuffer, unsigned int numPoints, bool isFilled = true);
 		void openGLDrawArraysStencil(RenderPackage* renderPackage);
 
 		void changeProgram(unsigned int programId);

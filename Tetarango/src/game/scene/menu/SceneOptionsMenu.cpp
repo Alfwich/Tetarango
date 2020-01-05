@@ -10,7 +10,6 @@ namespace
 	const std::vector<int> frameLimits = {
 		0,
 #if _DEBUG
-		5,
 		10,
 		20,
 		30,
@@ -691,7 +690,7 @@ namespace AWGame
 		masterVolLabel->setText("Master Volume " + volumeToString(modules->sound->getMasterVolume()));
 		generalVolLabel->setText("Effect Volume " + volumeToString(modules->sound->getEffectVolume()));
 		musicVolLabel->setText("Music Volume " + volumeToString(modules->sound->getMusicVolume()));
-		if (config.frameLimiter < 30)
+		if (config.frameLimiter < frameLimits[1])
 		{
 			frameLimiterLabelValue->setText("Off");
 		}

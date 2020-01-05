@@ -52,14 +52,51 @@ namespace AW
 		updateSize();
 	}
 
+	void Polygon::centerBalancePoints()
+	{
+		double minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
+		for (const auto& p : screenPoints)
+		{
+			if (p.x > minX) minX = p.x;
+			if (p.x < maxX) maxX = p.x;
+			if (p.y > minY) minY = p.y;
+			if (p.y < maxY) maxY = p.y;
+		}
+
+		const auto xOffset = std::abs(maxX / 2.0) - std::abs(minX / 2.0);
+		const auto yOffset = std::abs(maxY / 2.0) - std::abs(minY / 2.0);
+
+		if (std::abs(xOffset) > 1.0 || std::abs(yOffset) > 1.0)
+		{
+			for (auto& p : screenPoints)
+			{
+				p.x += xOffset;
+				p.y += yOffset;
+			}
+			updateSize();
+		}
+	}
+
 	const std::vector<AWVec2<double>>& Polygon::getScreenPoints()
 	{
 		return screenPoints;
 	}
 
+	void Polygon::setFilled(bool flag)
+	{
+		filled = flag;
+	}
+
+	bool Polygon::getFilled()
+	{
+		return filled;
+	}
+
 	std::shared_ptr<SerializationClient> Polygon::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__polygon__", hint);
+
+		filled = client->serializeBool("poly-filled", filled);
 
 		switch (hint)
 		{
@@ -100,7 +137,7 @@ namespace AW
 		auto w = getWidth(), h = getHeight();
 		for (const auto p : screenPoints)
 		{
-			result.push_back(AWVec2<double>(((p.x / w) * 2.0) - 1.0, ((p.y / h) * 2.0) - 1.0));
+			result.push_back(AWVec2<double>(((p.x / w) * 2.0), ((p.y / h) * 2.0)));
 		}
 
 		return result;

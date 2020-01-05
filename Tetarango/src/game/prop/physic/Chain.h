@@ -1,16 +1,17 @@
 #pragma once
 
-#include "ui/renderable/primitive/Primitive.h"
+#include "ui/renderable/primitive/Polygon.h"
 #include "ui/physic/body/Body.h"
+#include "ui/physic/body/IBodyListener.h"
 
 namespace AWGame
 {
-	class Line : public AW::Primitive, public AW::IBodyListener
+	class Chain: public AW::Polygon, public AW::IBodyListener
 	{
 		std::shared_ptr<AW::Body> body;
 
 	public:
-		Line();
+		Chain();
 
 		void onCreateChildren();
 		void onChildrenHydrated();
@@ -20,6 +21,10 @@ namespace AWGame
 
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Renderable> getRenderableBody() override;
+		const std::vector<AWVec2<double>>& getBodyScreenPoints();
+
+		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
 	};
 }
+

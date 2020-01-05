@@ -36,6 +36,8 @@ namespace AW
 
 	void RigidBodySensor::BeginContact(b2Contact *contact)
 	{
+		if (!hasSensor() || bodyReference == nullptr) return;
+
 		const auto fixA = contact->GetFixtureA();
 		const auto bodyA = fixA->GetBody();
 		const auto fixB = contact->GetFixtureB();
@@ -49,6 +51,8 @@ namespace AW
 
 	void RigidBodySensor::EndContact(b2Contact *contact)
 	{
+		if (!hasSensor() || bodyReference == nullptr) return;
+
 		const auto fixA = contact->GetFixtureA();
 		const auto bodyA = fixA->GetBody();
 		const auto fixB = contact->GetFixtureB();

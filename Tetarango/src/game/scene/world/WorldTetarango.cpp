@@ -5,6 +5,7 @@
 #include "actor/player/Player.h"
 #include "gui/camera/GameCamera.h"
 #include "prop/physic/Line.h"
+#include "prop/physic/Chain.h"
 
 namespace AWGame
 {
@@ -26,12 +27,18 @@ namespace AWGame
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
 
-		const auto ground = std::make_shared<Line>();
-		ground->setSize(2000.0, 10.0);
+		const auto ground = std::make_shared<Chain>();
+		ground->setDynamic(false);
+		for (auto i = -30; i < 30; ++i)
+		{
+			ground->setPoint(200 * i, AW::NumberHelper::random(-10, 10));
+		}
+		ground->centerBalancePoints();
+		ground->centerAlignWithin(contentContainer);
 		contentContainer->add(ground);
 
 		const auto player = std::make_shared<Player>();
-		player->setPosition(0.0, -200);
+		player->centerAlignWithin(contentContainer, 0.0, -100.0);
 		contentContainer->add(player);
 
 		const auto gameCamera = std::make_shared<GameCamera>();

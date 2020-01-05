@@ -234,7 +234,7 @@ namespace AW
 		currentProgramId = 0;
 	}
 
-	void Renderer::openGLDrawArrays(RenderPackage* renderPackage)
+	void Renderer::openGLDrawTriangles(RenderPackage* renderPackage)
 	{
 		if (renderPackage->stencilDepth > 0)
 		{
@@ -329,7 +329,7 @@ namespace AW
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
-	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, unsigned int vBuffer, unsigned int numPoints)
+	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, unsigned int vBuffer, unsigned int numPoints, bool isFilled)
 	{
 		if (renderPackage->stencilDepth > 0)
 		{
@@ -360,7 +360,7 @@ namespace AW
 
 		GLDbgCall(setVertexAttributePointer(vBuffer, commonVertexStride, commonOffset));
 
-		GLDbgCall(glDrawArrays(GL_TRIANGLE_FAN, 0, numPoints));
+		GLDbgCall(glDrawArrays(isFilled ? GL_TRIANGLE_FAN : GL_LINE_STRIP, 0, numPoints));
 
 		if (currentScreenConfig.openGlWireframeMode)
 		{
@@ -1086,7 +1086,7 @@ namespace AW
 		const auto texture = ele->getTexture();
 		bindGLTexture(texture == nullptr ? 0 : texture->openGlTextureId());
 
-		openGLDrawArrays(renderPackage);
+		openGLDrawTriangles(renderPackage);
 
 		ele->markClean();
 	}
@@ -1232,7 +1232,7 @@ namespace AW
 
 		setColorModParam(renderPackage);
 
-		openGLDrawArrays(renderPackage);
+		openGLDrawTriangles(renderPackage);
 
 		prim->markClean();
 	}
@@ -1288,7 +1288,8 @@ namespace AW
 
 		const auto vertexBufferId = poly->vertexBuffer->id;
 		const auto vertexBufferSize = poly->vertexBuffer->size;
-		openGLDrawPoints(renderPackage, vertexBufferId, vertexBufferSize);
+
+		openGLDrawPoints(renderPackage, vertexBufferId, vertexBufferSize, poly->getFilled());
 
 		poly->markClean();
 	}
@@ -1371,7 +1372,7 @@ namespace AW
 
 			bindGLTexture(glTextureId);
 
-			openGLDrawArrays(renderPackage);
+			openGLDrawTriangles(renderPackage);
 		}
 	}
 }

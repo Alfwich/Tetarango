@@ -10,6 +10,8 @@ namespace AW
 	{
 		std::vector<AWVec2<double>> screenPoints;
 
+		bool filled = true;
+
 		void updateSize();
 
 	public:
@@ -21,7 +23,12 @@ namespace AW
 		void setPoint(double x, double y);
 		void setPoints(const std::vector<AWVec2<double>>& points);
 
+		void centerBalancePoints();
+
 		const std::vector<AWVec2<double>>& getScreenPoints();
+
+		void setFilled(bool flag);
+		bool getFilled();
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 

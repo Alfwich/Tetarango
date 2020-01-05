@@ -40,7 +40,7 @@ namespace AWGame
 		body->name = "body";
 		body->setDensity(5.0);
 		body->setBodyType(AW::BodyType::Circle);
-		body->setFixedRotation(true);
+		//body->setFixedRotation(true);
 		body->setDynamicBody();
 		body->setDensity(5.0);
 		add(body);
@@ -91,11 +91,11 @@ namespace AWGame
 
 	void Player::onBeginContact(const AW::Body * bodyA, const AW::Body * bodyB, b2Contact * contact)
 	{
-		std::cout << "Player Contacted With Something" << std::endl;
+		// TODO: Something with this
 	}
 
 	void Player::onEndContact(const AW::Body * bodyA, const AW::Body * bodyB, b2Contact * contact)
 	{
-		std::cout << "Player Ended Contacted With Something" << std::endl;
+		// TODO: Something with this
 	}
 }

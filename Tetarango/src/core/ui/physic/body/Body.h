@@ -12,7 +12,8 @@ namespace AW
 		Box,
 		Circle,
 		Polygon,
-		Line
+		Line,
+		Chain
 	};
 
 	class Body : public GameObject, public RigidBody

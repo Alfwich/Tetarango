@@ -35,13 +35,12 @@ namespace AW
 	{
 		const auto widthFactor = screenToWorldPosition(rend->getWidth());
 		const auto heightFactor = screenToWorldPosition(rend->getHeight());
-		const auto translate = AWVec2<float>(-widthFactor / 2.0, heightFactor / 2.0);
 		const auto scaleFactor = AWVec2<double>(1.0 / widthFactor, 1.0 / heightFactor);
 		auto b2Pts = std::vector<b2Vec2>();
 
 		for (const auto pt : screenPoints)
 		{
-			auto world = screenToWorld(pt).add(translate);
+			auto world = screenToWorld(pt);
 			b2Pts.push_back(world.asB2());
 		}
 
@@ -176,6 +175,23 @@ namespace AW
 			}
 		}
 		break;
+
+		case BodyType::Chain:
+		{
+			const auto listenerPtr = listener.lock();
+			if (listenerPtr != nullptr)
+			{
+				b2ChainShape shape;
+
+				const auto screenPoints = translateScreenPointsToWorldPoints(rend, listenerPtr->getBodyScreenPoints());
+				shape.CreateChain(&screenPoints[0], (unsigned int)screenPoints.size());
+				fixtureDef.shape = &shape;
+
+				bodyReference->CreateFixture(&fixtureDef);
+			}
+		}
+		break;
+
 		}
 
 		bodyReference->SetUserData(this);
