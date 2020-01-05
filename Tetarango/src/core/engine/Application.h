@@ -57,11 +57,14 @@ namespace AW
 		virtual void onCleanup() { /* NO-OP */ };
 
 		void run(int argc, char* args[]);
+
 		bool isRunning();
 		bool hasInit();
 
 		std::shared_ptr<SystemModuleBundle> modules;
-		virtual void render();
+		void preRender();
+		void render();
+		void postRender();
 
 		virtual bool onFailedToProvisionScreen() { return false; };
 		virtual void onProvisionedScreen() { /* NO-OP */ };

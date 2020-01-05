@@ -122,10 +122,9 @@ namespace AW
 			updateFrameTime();
 			processEnterFrames();
 			processApplicationEvents();
-			markPhysicFrameUpdateToStart();
+			preRender();
 			render();
-			doFrameLimitIfNeeded();
-			waitForPhysicFrameToFinishIfNeeded();
+			postRender();
 		}
 		cleanup();
 
@@ -209,9 +208,20 @@ namespace AW
 		running = false;
 	}
 
+	void Application::preRender()
+	{
+		markPhysicFrameUpdateToStart();
+	}
+
 	void Application::render()
 	{
 		modules->screen->render(root);
+	}
+
+	void Application::postRender()
+	{
+		doFrameLimitIfNeeded();
+		waitForPhysicFrameToFinishIfNeeded();
 	}
 
 	void Application::provisionScreen()

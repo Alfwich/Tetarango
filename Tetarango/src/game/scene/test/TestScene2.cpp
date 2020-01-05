@@ -143,7 +143,7 @@ namespace AWGame
 		camera->target = player;
 
 		const auto dim = 100.0;
-		for (auto i = 0; i < 2000; ++i)
+		for (auto i = 0; i < 10; ++i)
 		{
 			const auto poly = std::make_shared<Poly>();
 			poly->setColor(AW::Color::random());
