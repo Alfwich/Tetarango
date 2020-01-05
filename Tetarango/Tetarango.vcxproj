@@ -430,7 +430,6 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\engine\module\display\Screen.h" />
     <ClInclude Include="src\core\ui\renderable\element\Element.h" />
     <ClInclude Include="src\core\engine\Application.h" />
-    <ClInclude Include="src\game\GameImports.h" />
     <ClInclude Include="src\game\GameApplication.h" />
     <ClInclude Include="src\core\engine\module\time\Timer.h" />
     <ClInclude Include="src\core\engine\module\display\TextureContainer.h" />

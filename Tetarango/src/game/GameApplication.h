@@ -3,10 +3,11 @@
 #include <random>
 #include <sstream>
 #include <algorithm>
-#include "GameImports.h"
+
 #include "GameConfig.h"
 #include "engine/module/display/DisplayRoot.h"
 #include "engine/Application.h"
+#include "ui/scene/SceneContainer.h"
 #include "ui/renderable/element/DisplayBuffer.h"
 #include "debug/monitor/DebugMonitor.h"
 

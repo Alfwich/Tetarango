@@ -1,11 +1,13 @@
 #include "TestScene2.h"
 
 #include <random>
-#include "GameImports.h"
+
+#include "scene/BaseScene.h"
 #include "ui/renderable/element/DisplayBuffer.h"
 #include "generator/block/GeneratorBlock.h"
 #include "prop/physic/Poly.h"
 #include "prop/physic/Chain.h"
+#include "scene/BaseScene.h"
 
 namespace
 {

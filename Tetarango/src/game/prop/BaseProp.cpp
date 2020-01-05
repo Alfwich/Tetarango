@@ -1,7 +1,7 @@
 #include "BaseProp.h"
 
 #include "Props.h"
-#include "GameImports.h"
+
 
 namespace
 {

@@ -20,7 +20,6 @@ namespace AWGame
 	{
 		setShouldRebuildOnLoad();
 		setTimeScope(AW::TimeScope::Game);
-		//GORegister(SceneTetris);
 		GORegister(SceneTetris);
 	}
 

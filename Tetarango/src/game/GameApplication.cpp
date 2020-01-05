@@ -1,5 +1,20 @@
 #include "GameApplication.h"
-#include "GameImports.h"
+
+#include <memory>
+
+#include "scene/Scenes.h"
+#include "scene/BaseScene.h"
+#include "ui/scene/Scene.h"
+#include "ui/scene/SceneContainer.h"
+
+#include "scene/test/TestScene.h"
+#include "scene/test/TestScene2.h"
+#include "scene/test/tetris/SceneTetris.h"
+
+#include "scene/menu/SceneSplash.h"
+#include "scene/menu/SceneMainMenu.h"
+#include "scene/menu/SceneOptionsMenu.h"
+#include "scene/menu/SceneSavedGamesMenu.h"
 
 namespace
 {
