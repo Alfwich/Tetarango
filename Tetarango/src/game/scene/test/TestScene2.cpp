@@ -274,6 +274,30 @@ namespace AWGame
 		{
 			modules->physic->setWorldGravity(0);
 		}
+
+		if (key == AWKey::SEVEN)
+		{
+			const auto dim = 100.0;
+			for (auto i = 0; i < 100; ++i)
+			{
+				const auto poly = std::make_shared<Poly>();
+				poly->setColor(AW::Color::random());
+
+				const auto pts = AW::NumberHelper::randomInt(3, 8);
+				const auto d = (AW::NumberHelper::PI * 2.0) / pts;
+				for (auto i = 0; i < pts; ++i)
+				{
+					const auto x = std::cos(i * d) * dim;
+					const auto y = std::sin(i * d) * dim;
+					poly->setPoint(x, y);
+				}
+				poly->setRotation(AW::NumberHelper::random(360));
+
+				poly->setPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
+				contentContainer->add(poly);
+			}
+
+		}
 	}
 
 	void TestScene2::onKey(AWKey key, bool isPressed)
