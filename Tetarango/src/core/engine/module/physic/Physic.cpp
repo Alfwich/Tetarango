@@ -399,7 +399,7 @@ namespace AW
 			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyBeginContact)
 			{
 				const auto sensorPtr = contactToSensorPair.second.lock();
-				if (sensorPtr != nullptr)
+				if (sensorPtr != nullptr && sensorPtr->hasSensor())
 				{
 					sensorPtr->BeginContact(contactToSensorPair.first);
 				}
@@ -409,7 +409,7 @@ namespace AW
 			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyEndContact)
 			{
 				const auto sensorPtr = contactToSensorPair.second.lock();
-				if (sensorPtr != nullptr)
+				if (sensorPtr != nullptr && sensorPtr->hasSensor())
 				{
 					sensorPtr->EndContact(contactToSensorPair.first);
 				}
