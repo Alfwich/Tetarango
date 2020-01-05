@@ -98,7 +98,7 @@ namespace AW
 
 	void PhysicRenderer::DrawSegment(const b2Vec2 & p1, const b2Vec2 & p2, const b2Color & color)
 	{
-		glBegin(GL_LINE);
+		glBegin(GL_LINES);
 		glColor4f(color.r, color.g, color.b, color.a);
 		const auto p1V = translateB2Point(p1), p2V = translateB2Point(p2);
 		glVertex2f(p1V.x, p1V.y);

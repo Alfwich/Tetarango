@@ -225,6 +225,7 @@ bash ./make.sh</Command>
     <ClCompile Include="src\game\gui\BaseGui.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\Backdrop.cpp" />
     <ClCompile Include="src\game\prop\physic\Box.cpp" />
+    <ClCompile Include="src\game\prop\physic\Line.cpp" />
     <ClCompile Include="src\game\prop\physic\Poly.cpp" />
     <ClCompile Include="src\game\prop\title\TitleGame.cpp" />
     <ClCompile Include="src\game\scene\BaseScene.cpp" />
@@ -358,6 +359,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\game\gui\BaseGui.h" />
     <ClInclude Include="src\game\gui\Guis.h" />
     <ClInclude Include="src\game\prop\physic\Box.h" />
+    <ClInclude Include="src\game\prop\physic\Line.h" />
     <ClInclude Include="src\game\prop\physic\Poly.h" />
     <ClInclude Include="src\game\prop\Props.h" />
     <ClInclude Include="src\core\ui\scene\SceneTransitionBundle.h" />

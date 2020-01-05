@@ -122,18 +122,22 @@ namespace AW
 		{
 		case BodyType::Box:
 		{
-			auto shape = b2PolygonShape();
+			b2PolygonShape shape;
+
 			shape.SetAsBox(screenToWorldPosition(rend->getWidth()) / 2.f, screenToWorldPosition(rend->getHeight()) / 2.f);
 			fixtureDef.shape = &shape;
+
 			bodyReference->CreateFixture(&fixtureDef);
 		}
 		break;
 
 		case BodyType::Circle:
 		{
-			auto shape = b2CircleShape();
+			b2CircleShape shape;
+
 			shape.m_radius = screenToWorldPosition((float)std::max(rend->getWidth(), rend->getHeight()) / 2.f);
 			fixtureDef.shape = &shape;
+
 			bodyReference->CreateFixture(&fixtureDef);
 		}
 		break;
@@ -143,11 +147,31 @@ namespace AW
 			const auto listenerPtr = listener.lock();
 			if (listenerPtr != nullptr)
 			{
-				auto shape = b2PolygonShape();
-				const auto screenPoints = translateScreenPointsToWorldPoints(rend, listenerPtr->getBodyScreenPoints());
+				b2PolygonShape shape;
 
+				const auto screenPoints = translateScreenPointsToWorldPoints(rend, listenerPtr->getBodyScreenPoints());
 				shape.Set(&screenPoints[0], (unsigned int)screenPoints.size());
 				fixtureDef.shape = &shape;
+
+				bodyReference->CreateFixture(&fixtureDef);
+			}
+		}
+		break;
+
+		case BodyType::Line:
+		{
+			const auto listenerPtr = listener.lock();
+			if (listenerPtr != nullptr)
+			{
+				b2EdgeShape shape;
+
+				const auto xOffset = screenToWorldPosition(rend->getWidth()) / 2.f;
+				const auto yOffset = screenToWorldPosition(rend->getHeight()) / 2.f;
+
+				b2Vec2 p1{ -xOffset, -yOffset }, p2{ xOffset, -yOffset };
+				shape.Set(p1, p2);
+				fixtureDef.shape = &shape;
+
 				bodyReference->CreateFixture(&fixtureDef);
 			}
 		}

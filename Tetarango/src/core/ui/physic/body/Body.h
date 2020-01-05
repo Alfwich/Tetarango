@@ -11,7 +11,8 @@ namespace AW
 	{
 		Box,
 		Circle,
-		Polygon
+		Polygon,
+		Line
 	};
 
 	class Body : public GameObject, public RigidBody

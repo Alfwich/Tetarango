@@ -4,6 +4,7 @@
 #include "prop/physic/Box.h"
 #include "actor/player/Player.h"
 #include "gui/camera/GameCamera.h"
+#include "prop/physic/Line.h"
 
 namespace AWGame
 {
@@ -25,10 +26,8 @@ namespace AWGame
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
 
-		const auto ground = std::make_shared<Box>();
-		ground->setDynamic(false);
-		ground->setSize(2000.0, 100.0);
-		ground->setColor(150, 75, 0);
+		const auto ground = std::make_shared<Line>();
+		ground->setSize(2000.0, 10.0);
 		contentContainer->add(ground);
 
 		const auto player = std::make_shared<Player>();
