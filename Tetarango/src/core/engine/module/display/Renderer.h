@@ -54,11 +54,11 @@ namespace AW
 		std::stack<std::tuple<double, double, unsigned int, unsigned int>> frameBufferStack;
 		std::stack<Color> colorStack;
 		std::stack<RenderPositionMode> renderPositionModeStack;
-		std::stack<RenderPositionProcessing> renderProcessingStack;
+		std::stack<RenderPositionProcessingMode> renderProcessingStack;
 		std::stack<RenderTextureMode> textureModeStack;
-		std::stack<RenderDepthTest> renderDepthStack;
+		std::stack<RenderDepthTestMode> renderDepthStack;
 		std::stack<RenderMultiSampleMode> renderMultiSampleModeStack;
-		std::stack<RenderTarget> renderTargetStack;
+		std::stack<RenderTargetMode> renderTargetStack;
 		std::stack<RenderColorMode> renderColorMode;
 
 		unsigned int screenWidth = 0, screenHeight = 0;

@@ -1,6 +1,7 @@
 #include "Renderable.h"
 
 #include "util/NumberHelper.h"
+#include "engine/module/physic/RigidBody.h"
 
 namespace AW
 {
@@ -81,9 +82,12 @@ namespace AW
 		return rect;
 	}
 
-	void Renderable::setWorldRect(Rect* r)
+	void Renderable::setWorldRectFromScreenRect(Rect* r)
 	{
-		worldRect = r;
+		worldRect.x = (double)RigidBody::screenToWorldPosition((float)r->x);
+		worldRect.y = (double)RigidBody::screenToWorldPosition((float)r->y);
+		worldRect.w = (double)RigidBody::screenToWorldPosition((float)r->w);
+		worldRect.h = (double)RigidBody::screenToWorldPosition((float)r->h);
 	}
 
 	void Renderable::setScreenRect(Rect* r)
@@ -134,7 +138,7 @@ namespace AW
 
 	void Renderable::setX(double newX)
 	{
-		rect.x = newX;
+		rect.x = unitConversionMode == UnitConversionMode::Pixel ? newX : RigidBody::worldToScreenPosition((float)newX);
 	}
 
 	double Renderable::getY()
@@ -144,7 +148,7 @@ namespace AW
 
 	void Renderable::setY(double newY)
 	{
-		rect.y = newY;
+		rect.y = unitConversionMode == UnitConversionMode::Pixel ? newY : RigidBody::worldToScreenPosition((float)newY);
 	}
 
 	double Renderable::getWidth()
@@ -154,7 +158,7 @@ namespace AW
 
 	void Renderable::setWidth(double newWidth)
 	{
-		rect.w = newWidth;
+		rect.w = unitConversionMode == UnitConversionMode::Pixel ? newWidth : RigidBody::worldToScreenPosition((float)newWidth);
 	}
 
 	double Renderable::getHeight()
@@ -164,7 +168,7 @@ namespace AW
 
 	void Renderable::setHeight(double newHeight)
 	{
-		rect.h = newHeight;
+		rect.h = unitConversionMode == UnitConversionMode::Pixel ? newHeight : RigidBody::worldToScreenPosition((float)newHeight);
 	}
 
 	void Renderable::setRotation(double newRotation)
@@ -742,13 +746,15 @@ namespace AW
 		visible = client->serializeBool("visible", visible);
 		renderMode = (RenderMode)client->serializeInt("r-mode", (int)renderMode);
 		renderPositionMode = (RenderPositionMode)client->serializeInt("r-p-m", (int)renderPositionMode);
-		renderPositionProcessing = (RenderPositionProcessing)client->serializeInt("r-p-p-m", (int)renderPositionProcessing);
+		renderPositionProcessing = (RenderPositionProcessingMode)client->serializeInt("r-p-p-m", (int)renderPositionProcessing);
 		renderTextureMode = (RenderTextureMode)client->serializeInt("r-t-m", (int)renderTextureMode);
-		renderDepthTest = (RenderDepthTest)client->serializeInt("r-d-t-e", (int)renderDepthTest);
+		renderDepthTest = (RenderDepthTestMode)client->serializeInt("r-d-t-e", (int)renderDepthTest);
 		renderMultiSampleMode = (RenderMultiSampleMode)client->serializeInt("r-m-s-m", (int)renderMultiSampleMode);
 		renderUpdateMode = (RenderUpdateMode)client->serializeInt("r-u-m", (int)renderUpdateMode);
-		renderTarget = (RenderTarget)client->serializeInt("r-target", (int)renderTarget);
+		renderTarget = (RenderTargetMode)client->serializeInt("r-target", (int)renderTarget);
 		renderColorMode = (RenderColorMode)client->serializeInt("r-color-m", (int)renderColorMode);
+
+		unitConversionMode = (UnitConversionMode)client->serializeInt("r-uc-m", (int)unitConversionMode);
 
 		clipRect.x = client->serializeDouble("cr-x", clipRect.x);
 		clipRect.y = client->serializeDouble("cr-y", clipRect.y);

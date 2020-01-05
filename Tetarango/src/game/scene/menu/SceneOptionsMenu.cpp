@@ -59,7 +59,7 @@ namespace AWGame
 		config = modules->screen->getCurrentScreenConfig();
 
 		rootContainer = std::make_shared<AW::Container>();
-		rootContainer->renderPositionProcessing = AW::RenderPositionProcessing::Floor;
+		rootContainer->renderPositionProcessing = AW::RenderPositionProcessingMode::Floor;
 		rootContainer->setSizeToScreenSize();
 		rootContainer->topLeftAlignSelf();
 		add(rootContainer);

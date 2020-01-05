@@ -41,11 +41,11 @@ namespace AW
 	Renderer::Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer)
 	{
 		renderPositionModeStack.push(RenderPositionMode::Positioned);
-		renderProcessingStack.push(RenderPositionProcessing::None);
+		renderProcessingStack.push(RenderPositionProcessingMode::None);
 		textureModeStack.push(RenderTextureMode::LinearNoWrap);
-		renderDepthStack.push(RenderDepthTest::Disabled);
+		renderDepthStack.push(RenderDepthTestMode::Disabled);
 		renderMultiSampleModeStack.push(RenderMultiSampleMode::Disabled);
-		renderTargetStack.push(RenderTarget::Screen);
+		renderTargetStack.push(RenderTargetMode::Screen);
 		renderColorMode.push(RenderColorMode::Multiplicative);
 
 		for (auto i = 0; i < bufferExpandFactor; ++i)
@@ -241,7 +241,7 @@ namespace AW
 			glStencilFunc(GL_EQUAL, 1, 0xFF);
 		}
 
-		if (!depthEnabled && renderDepthStack.top() == RenderDepthTest::Enabled)
+		if (!depthEnabled && renderDepthStack.top() == RenderDepthTestMode::Enabled)
 		{
 			glEnable(GL_DEPTH_TEST);
 			depthEnabled = true;
@@ -336,7 +336,7 @@ namespace AW
 			glStencilFunc(GL_EQUAL, 1, 0xFF);
 		}
 
-		if (!depthEnabled && renderDepthStack.top() == RenderDepthTest::Enabled)
+		if (!depthEnabled && renderDepthStack.top() == RenderDepthTestMode::Enabled)
 		{
 			glEnable(GL_DEPTH_TEST);
 			depthEnabled = true;
@@ -678,7 +678,7 @@ namespace AW
 			renderPositionModeStack.push(rend->renderPositionMode);
 		}
 
-		if (rend->renderPositionProcessing != RenderPositionProcessing::None)
+		if (rend->renderPositionProcessing != RenderPositionProcessingMode::None)
 		{
 			renderProcessingStack.push(rend->renderPositionProcessing);
 		}
@@ -688,7 +688,7 @@ namespace AW
 			textureModeStack.push(rend->renderTextureMode);
 		}
 
-		if (rend->renderDepthTest != RenderDepthTest::Unspecified)
+		if (rend->renderDepthTest != RenderDepthTestMode::Unspecified)
 		{
 			renderDepthStack.push(rend->renderDepthTest);
 		}
@@ -725,7 +725,7 @@ namespace AW
 			renderMultiSampleModeStack.pop();
 		}
 
-		if (rend->renderDepthTest != RenderDepthTest::Unspecified)
+		if (rend->renderDepthTest != RenderDepthTestMode::Unspecified)
 		{
 			renderDepthStack.pop();
 		}
@@ -735,7 +735,7 @@ namespace AW
 			textureModeStack.pop();
 		}
 
-		if (rend->renderPositionProcessing != RenderPositionProcessing::None)
+		if (rend->renderPositionProcessing != RenderPositionProcessingMode::None)
 		{
 			renderProcessingStack.pop();
 		}
@@ -787,7 +787,7 @@ namespace AW
 		auto rectMiddleX = (rect.x - (rend->getWidth() / 2.0) * scale) + renderPackage->xOffset;
 		auto rectMiddleY = (rect.y - (rend->getHeight() / 2.0) * scale) + renderPackage->yOffset;
 
-		if (renderProcessingStack.top() == RenderPositionProcessing::Floor)
+		if (renderProcessingStack.top() == RenderPositionProcessingMode::Floor)
 		{
 			rectMiddleX = std::floor(rectMiddleX);
 			rectMiddleY = std::floor(rectMiddleY);
@@ -828,7 +828,7 @@ namespace AW
 		renderPackage->world.w = rend->getWidth();
 		renderPackage->world.h = rend->getHeight();
 
-		rend->setWorldRect(&renderPackage->world);
+		rend->setWorldRectFromScreenRect(&renderPackage->world);
 		rend->setScreenRect(&renderPackage->computed);
 	}
 
@@ -1009,7 +1009,7 @@ namespace AW
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
-		renderTargetStack.push(RenderTarget::Background);
+		renderTargetStack.push(RenderTargetMode::Background);
 
 		auto childRenderPackage = getNextRenderPackageForObj(renderPackage->obj);
 
@@ -1068,7 +1068,7 @@ namespace AW
 		{
 			LM::mat4x4_dup(tP, pAbs);
 		}
-		else if (renderTargetStack.top() == RenderTarget::Background)
+		else if (renderTargetStack.top() == RenderTargetMode::Background)
 		{
 			LM::mat4x4_dup(tP, pBackground);
 		}
@@ -1117,7 +1117,7 @@ namespace AW
 		{
 			LM::mat4x4_dup(tP, pAbs);
 		}
-		else if (renderTargetStack.top() == RenderTarget::Background)
+		else if (renderTargetStack.top() == RenderTargetMode::Background)
 		{
 			LM::mat4x4_dup(tP, pBackground);
 		}
@@ -1217,7 +1217,7 @@ namespace AW
 		{
 			LM::mat4x4_dup(tP, pAbs);
 		}
-		else if (renderTargetStack.top() == RenderTarget::Background)
+		else if (renderTargetStack.top() == RenderTargetMode::Background)
 		{
 			LM::mat4x4_dup(tP, pBackground);
 		}
@@ -1265,7 +1265,7 @@ namespace AW
 		{
 			LM::mat4x4_dup(tP, pAbs);
 		}
-		else if (renderTargetStack.top() == RenderTarget::Background)
+		else if (renderTargetStack.top() == RenderTargetMode::Background)
 		{
 			LM::mat4x4_dup(tP, pBackground);
 		}
@@ -1304,7 +1304,7 @@ namespace AW
 		{
 			LM::mat4x4_dup(tP, pAbs);
 		}
-		else if (renderTargetStack.top() == RenderTarget::Background)
+		else if (renderTargetStack.top() == RenderTargetMode::Background)
 		{
 			LM::mat4x4_dup(tP, pBackground);
 		}

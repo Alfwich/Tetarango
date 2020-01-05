@@ -22,7 +22,7 @@ namespace AW
 		Polygon
 	};
 
-	enum class RenderPositionProcessing
+	enum class RenderPositionProcessingMode
 	{
 		None,
 		Floor
@@ -44,7 +44,7 @@ namespace AW
 		AbsoluteSelfOnly
 	};
 
-	enum class RenderDepthTest
+	enum class RenderDepthTestMode
 	{
 		Unspecified,
 		Enabled,
@@ -64,7 +64,7 @@ namespace AW
 		WhenDirty
 	};
 
-	enum class RenderTarget
+	enum class RenderTargetMode
 	{
 		Screen,
 		Background
@@ -74,6 +74,12 @@ namespace AW
 	{
 		Multiplicative,
 		Absolute
+	};
+
+	enum class UnitConversionMode
+	{
+		Pixel,
+		Meter
 	};
 
 	class Renderable : public ISerializableDataSubscriber
@@ -91,13 +97,15 @@ namespace AW
 		unsigned int cachedProgramId = 0, cachedClipRectProgram = 0;
 		RenderMode renderMode = RenderMode::ChildrenOnly;
 		RenderPositionMode renderPositionMode = RenderPositionMode::Unspecified;
-		RenderDepthTest renderDepthTest = RenderDepthTest::Unspecified;
+		RenderDepthTestMode renderDepthTest = RenderDepthTestMode::Unspecified;
 		RenderMultiSampleMode renderMultiSampleMode = RenderMultiSampleMode::Unspecified;
-		RenderPositionProcessing renderPositionProcessing = RenderPositionProcessing::None;
+		RenderPositionProcessingMode renderPositionProcessing = RenderPositionProcessingMode::None;
 		RenderTextureMode renderTextureMode = RenderTextureMode::LinearNoWrap;
 		RenderUpdateMode renderUpdateMode = RenderUpdateMode::EveryFrame;
-		RenderTarget renderTarget = RenderTarget::Screen;
+		RenderTargetMode renderTarget = RenderTargetMode::Screen;
 		RenderColorMode renderColorMode = RenderColorMode::Multiplicative;
+
+		UnitConversionMode unitConversionMode = UnitConversionMode::Pixel;
 
 		const std::shared_ptr<ShaderReference>& getVertexShader();
 		const std::shared_ptr<ShaderReference>& getFragmentShader();
@@ -119,7 +127,7 @@ namespace AW
 
 		virtual Rect getRect();
 
-		virtual void setWorldRect(Rect* r);
+		virtual void setWorldRectFromScreenRect(Rect* r);
 		virtual void setScreenRect(Rect* r);
 		virtual const Rect* getWorldRect();
 		virtual const Rect* getScreenRect();
