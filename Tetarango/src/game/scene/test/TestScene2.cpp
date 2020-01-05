@@ -196,6 +196,7 @@ namespace AWGame
 
 				contentContainer->add(b);
 
+				/*
 				const auto c = std::make_shared<Chain>();
 				c->setDynamic(true);
 				c->setScreenPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
@@ -206,6 +207,7 @@ namespace AWGame
 				}
 
 				contentContainer->add(c);
+				*/
 			}
 
 			modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);

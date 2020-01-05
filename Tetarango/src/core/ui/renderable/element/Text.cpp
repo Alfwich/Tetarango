@@ -172,8 +172,8 @@ namespace AW
 		if (getHasClipRect())
 		{
 			auto clipRect = Rect(*getClipRect());
-			clipRect.x += (textPositioningElement->getScreenWidth() - getScreenWidth()) / 2.0 + getHalfWidth();
-			clipRect.y += (textPositioningElement->getScreenHeight() - getScreenHeight()) / 2.0 + getHalfHeight();
+			clipRect.x += (textPositioningElement->getScreenWidth() - getScreenWidth()) / 2.0 + getScreenHalfWidth();
+			clipRect.y += (textPositioningElement->getScreenHeight() - getScreenHeight()) / 2.0 + getScreenHalfHeight();
 			textPositioningElement->setClipRect(clipRect);
 		}
 
@@ -196,7 +196,7 @@ namespace AW
 
 	void Text::onLayoutChildren()
 	{
-		textPositioningElement->setScreenPosition(getHalfWidth(), getHalfHeight());
+		textPositioningElement->setScreenPosition(getScreenHalfWidth(), getScreenHalfHeight());
 	}
 
 	void Text::setVertexShader(std::shared_ptr<ShaderReference> shader)

@@ -322,39 +322,39 @@ namespace AW
 		rotateScreen(RigidBody::worldToScreenRotation(radians));
 	}
 
-	double Renderable::getLeft()
+	double Renderable::getScreenLeft()
 	{
-		return getScreenX() - getHalfWidth();
+		return getScreenX() - getScreenHalfWidth();
 	}
 
-	double Renderable::getRight()
+	double Renderable::getScreenRight()
 	{
-		return getScreenX() + getHalfWidth();
+		return getScreenX() + getScreenHalfWidth();
 	}
 
-	double Renderable::getTop()
+	double Renderable::getScreenTop()
 	{
-		return getScreenY() - getHalfHeight();
+		return getScreenY() - getScreenHalfHeight();
 	}
 
-	double Renderable::getBottom()
+	double Renderable::getScreenBottom()
 	{
-		return getScreenY() + getHalfHeight();
+		return getScreenY() + getScreenHalfHeight();
 	}
 
-	double Renderable::getHalfWidth()
+	double Renderable::getScreenHalfWidth()
 	{
 		return getScreenWidth() / 2.0;
 	}
 
-	double Renderable::getHalfHeight()
+	double Renderable::getScreenHalfHeight()
 	{
 		return getScreenHeight() / 2.0;
 	}
 
 	void Renderable::topLeftAlignSelf(double xOffset, double yOffset)
 	{
-		RendManagedLayoutOp(setScreenPosition(this->getHalfWidth() + xOffset, this->getHalfHeight() + yOffset));
+		RendManagedLayoutOp(setScreenPosition(this->getScreenHalfWidth() + xOffset, this->getScreenHalfHeight() + yOffset));
 	}
 
 	void Renderable::centerWithin(Renderable* other, double xOffset, double yOffset)
@@ -369,7 +369,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getHalfWidth() + xOffset, other->getHalfHeight() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset));
 		}
 	}
 
@@ -385,7 +385,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getLeft() - getHalfWidth() - xOffset, other->getScreenY() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset));
 		}
 	}
 
@@ -393,7 +393,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getLeft() - getHalfWidth() - xOffset, other->getTop() + getHalfHeight() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset));
 		}
 	}
 
@@ -401,7 +401,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getLeft() - getHalfWidth() - xOffset, other->getBottom() - getHalfHeight() - yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset));
 		}
 	}
 
@@ -409,7 +409,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getRight() + getHalfWidth() + xOffset, other->getScreenY() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset));
 		}
 	}
 
@@ -417,7 +417,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getRight() + getHalfWidth() + xOffset, other->getTop() + getHalfHeight() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset));
 		}
 	}
 
@@ -425,7 +425,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getRight() + getHalfWidth() + xOffset, other->getBottom() - getHalfHeight() - yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset));
 		}
 	}
 
@@ -433,7 +433,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getScreenX() + xOffset, other->getTop() - getHalfHeight() - yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset));
 		}
 	}
 
@@ -441,7 +441,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getLeft() + getHalfWidth() + xOffset, other->getTop() - getHalfHeight() - yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset));
 		}
 	}
 
@@ -449,7 +449,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getRight() - getHalfWidth() - xOffset, other->getTop() - getHalfHeight() - yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset));
 		}
 	}
 
@@ -457,7 +457,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getScreenX() + xOffset, other->getBottom() + getHalfHeight() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset));
 		}
 	}
 
@@ -465,7 +465,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getRight() - getHalfWidth() - xOffset, other->getBottom() + getHalfHeight() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset));
 		}
 	}
 
@@ -473,7 +473,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenPosition(other->getLeft() + getHalfWidth() + xOffset, other->getBottom() + getHalfHeight() + yOffset));
+			RendManagedLayoutOp(setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset));
 		}
 	}
 
@@ -489,7 +489,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			RendManagedLayoutOp(setScreenSizeAndPosition(other->getHalfWidth() + xOffset, other->getHalfHeight() + yOffset, other->getScreenWidth() + wOffset * 2.0, other->getScreenHeight() + hOffset * 2.0));
+			RendManagedLayoutOp(setScreenSizeAndPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset, other->getScreenWidth() + wOffset * 2.0, other->getScreenHeight() + hOffset * 2.0));
 		}
 	}
 
@@ -650,7 +650,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getLeft() + getHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
 		}
 	}
 
@@ -667,7 +667,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getLeft() + getHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
 		}
 	}
 
@@ -684,7 +684,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getRight() - getHalfWidth() - xOffset, other->getScreenY() + yOffset);
+			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
 		}
 	}
 
@@ -701,7 +701,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getTop() + getHalfHeight() + yOffset);
+			setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 		}
 	}
 
@@ -718,7 +718,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getBottom() - getHalfHeight() - yOffset);
+			setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 		}
 	}
 
@@ -735,7 +735,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getLeft() + getHalfWidth() + xOffset, other->getTop() + getHalfHeight() + yOffset);
+			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 		}
 	}
 
@@ -752,7 +752,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getRight() - getHalfWidth() - xOffset, other->getTop() + getHalfHeight() + yOffset);
+			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 		}
 	}
 
@@ -769,7 +769,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getLeft() + getHalfWidth() + xOffset, other->getBottom() - getHalfHeight() - yOffset);
+			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 		}
 	}
 
@@ -786,7 +786,7 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getRight() - getHalfWidth() - xOffset, other->getBottom() - getHalfHeight() - yOffset);
+			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 		}
 	}
 

@@ -87,13 +87,13 @@ namespace AWGame
 		auto targetRect = scroller->getRect();
 		if (getHorizontal())
 		{
-			targetRect.y = getHalfHeight();
-			targetRect.x = getScrollPosition() * (getScreenWidth() - scroller->getScreenWidth()) + scroller->getHalfWidth();
+			targetRect.y = getScreenHalfHeight();
+			targetRect.x = getScrollPosition() * (getScreenWidth() - scroller->getScreenWidth()) + scroller->getScreenHalfWidth();
 		}
 		else
 		{
-			targetRect.x = getHalfWidth();
-			targetRect.y = getScrollPosition() * (getScreenHeight() - scroller->getScreenHeight()) + scroller->getHalfHeight();
+			targetRect.x = getScreenHalfWidth();
+			targetRect.y = getScrollPosition() * (getScreenHeight() - scroller->getScreenHeight()) + scroller->getScreenHalfHeight();
 		}
 		scrollerTransition->startTransition(scroller, instant ? 0.0 : 50.0, targetRect);
 	}
@@ -253,11 +253,11 @@ namespace AWGame
 			{
 				if (getHorizontal())
 				{
-					startMousePositionOnClick = modules->input->mouse->X() - (modules->input->mouse->X() - scroller->getScreenRect()->x) + scroller->getHalfWidth();
+					startMousePositionOnClick = modules->input->mouse->X() - (modules->input->mouse->X() - scroller->getScreenRect()->x) + scroller->getScreenHalfWidth();
 				}
 				else
 				{
-					startMousePositionOnClick = modules->input->mouse->Y() - (modules->input->mouse->Y() - scroller->getScreenRect()->y) + scroller->getHalfHeight();
+					startMousePositionOnClick = modules->input->mouse->Y() - (modules->input->mouse->Y() - scroller->getScreenRect()->y) + scroller->getScreenHalfHeight();
 				}
 				startMousePositionScrollPosition = getScrollPosition();
 			}

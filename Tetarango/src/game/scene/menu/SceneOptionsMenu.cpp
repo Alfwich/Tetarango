@@ -283,7 +283,7 @@ namespace AWGame
 		const auto checkboxYOffset = 8.0;
 		const auto checkboxYGroupOffset = 32.0;
 		const auto numResolutionButtonsToShow = 7.0;
-		const auto horScreenPadding = fullscreenDesktopCheckbox->getHalfWidth() + 50.0;
+		const auto horScreenPadding = fullscreenDesktopCheckbox->getScreenHalfWidth() + 50.0;
 
 		resolutionsLabel->setScreenPosition(0.0, 0.0);
 		if (!resolutionButtons.empty())
@@ -291,7 +291,7 @@ namespace AWGame
 			const auto exampleButton = resolutionButtons.front();
 			const auto availableVerticalScreen = applyButton->getScreenY() - optionsMenuTitle->getScreenY();
 			resolutionScrollArea->visible = true;
-			resolutionScrollArea->setScrollAmount(exampleButton->getHalfHeight());
+			resolutionScrollArea->setScrollAmount(exampleButton->getScreenHalfHeight());
 			resolutionScrollArea->setScreenSize(exampleButton->getScreenWidth(), (exampleButton->getScreenHeight() + generalElementOffset) * numResolutionButtonsToShow);
 			resolutionScrollArea->setScrollerHeight(resolutionScrollArea->getScreenHeight());
 

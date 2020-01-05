@@ -76,6 +76,12 @@ namespace AW
 		Absolute
 	};
 
+	enum class LayoutUnit
+	{
+		Pixel,
+		Meter
+	};
+
 	class Renderable : public ISerializableDataSubscriber
 	{
 		double rot = 0.0, alpha = 1.0, scale = 1.0;
@@ -98,6 +104,8 @@ namespace AW
 		RenderUpdateMode renderUpdateMode = RenderUpdateMode::EveryFrame;
 		RenderTargetMode renderTarget = RenderTargetMode::Screen;
 		RenderColorMode renderColorMode = RenderColorMode::Multiplicative;
+
+		LayoutUnit layoutUnit = LayoutUnit::Pixel;
 
 		const std::shared_ptr<ShaderReference>& getVertexShader();
 		const std::shared_ptr<ShaderReference>& getFragmentShader();
@@ -178,12 +186,12 @@ namespace AW
 		void setWorldSize(float width, float height);
 		void rotateWorld(float radians);
 
-		double getLeft();
-		double getRight();
-		double getTop();
-		double getBottom();
-		double getHalfWidth();
-		double getHalfHeight();
+		double getScreenLeft();
+		double getScreenRight();
+		double getScreenTop();
+		double getScreenBottom();
+		double getScreenHalfWidth();
+		double getScreenHalfHeight();
 
 		void topLeftAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
 

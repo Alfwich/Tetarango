@@ -161,7 +161,7 @@ namespace AWGame
 		}
 		else if (state == 4)
 		{
-			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getHalfHeight());
+			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getScreenHalfHeight());
 			splashText->setAlpha(scaledMainPositionIn);
 
 			splashImage->toTopOf(splashText);
@@ -172,7 +172,7 @@ namespace AWGame
 		else if (state == 5)
 		{
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
-			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getHalfHeight());
+			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getScreenHalfHeight());
 
 			splashImage->toTopOf(splashText);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);

@@ -27,13 +27,13 @@ namespace AWGame
 		savedGamesMenuTitle = std::make_shared<AW::Text>();
 		savedGamesMenuTitle->setFont("medium", 28);
 		savedGamesMenuTitle->setText("Saved Games");
-		savedGamesMenuTitle->toTopOf(rootContainer, 0, -savedGamesMenuTitle->getHalfHeight() - modules->screen->getHeight() * 0.25);
+		savedGamesMenuTitle->toTopOf(rootContainer, 0, -savedGamesMenuTitle->getScreenHalfHeight() - modules->screen->getHeight() * 0.25);
 		rootContainer->add(savedGamesMenuTitle);
 
 		const auto client = modules->storage->getClient();
 		const auto buttonOffset = modules->screen->getHeight() * buttonVerticalPaddingFactor;
 		const auto centerContainer = std::make_shared<AW::Container>();
-		centerContainer->centerAlignWithin(rootContainer, 0, savedGamesMenuTitle->getBottom() / 2.0);
+		centerContainer->centerAlignWithin(rootContainer, 0, savedGamesMenuTitle->getScreenBottom() / 2.0);
 		rootContainer->add(centerContainer);
 
 		saveSlot1 = std::make_shared<ButtonBasic>();

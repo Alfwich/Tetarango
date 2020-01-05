@@ -79,7 +79,7 @@ namespace AWGame
 			}
 			else
 			{
-				title->setScreenPosition(primaryTitle->getScreenX() + primaryTitle->getHalfWidth() - title->getHalfWidth(), primaryTitle->getScreenY());
+				title->setScreenPosition(primaryTitle->getScreenX() + primaryTitle->getScreenHalfWidth() - title->getScreenHalfWidth(), primaryTitle->getScreenY());
 			}
 
 			lastTitle = title;

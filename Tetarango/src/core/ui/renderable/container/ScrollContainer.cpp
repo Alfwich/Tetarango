@@ -47,11 +47,11 @@ namespace AW
 	void ScrollContainer::onLayoutChildren()
 	{
 		scrollContainer->resizeSelfToChildrenAndCenterChildren();
-		scrollContainer->setScreenX(scrollContainer->getHalfWidth());
+		scrollContainer->setScreenX(scrollContainer->getScreenHalfWidth());
 		const auto scrollAmount = getScrollPosition();
 		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 50);
-		Rect target = scrollContainer->getRect() + Rect(0, scrollContainer->getHalfHeight(), 0, 0);
-		target.y = -scrollContainer->getScreenHeight() * scrollAmount + scrollContainer->getHalfHeight();
+		Rect target = scrollContainer->getRect() + Rect(0, scrollContainer->getScreenHalfHeight(), 0, 0);
+		target.y = -scrollContainer->getScreenHeight() * scrollAmount + scrollContainer->getScreenHalfHeight();
 		scrollTransition->startTransition(scrollContainer, doNextLayoutInstantly ? 0.0 : scrollSpeedMs, target);
 		doNextLayoutInstantly = false;
 	}
