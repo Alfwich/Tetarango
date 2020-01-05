@@ -20,7 +20,7 @@ namespace AWGame
 	void SceneSavedGamesMenu::onCreateChildren()
 	{
 		const auto rootContainer = std::make_shared<AW::Container>();
-		rootContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		rootContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		rootContainer->topLeftAlignSelf();
 		add(rootContainer);
 
@@ -56,7 +56,7 @@ namespace AWGame
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
-				cachedImage->setSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
+				cachedImage->setScreenSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
 				cachedImage->toRightOf(saveSlot1, 10.0, 0.0);
 				centerContainer->add(cachedImage);
 			}
@@ -82,7 +82,7 @@ namespace AWGame
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
-				cachedImage->setSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
+				cachedImage->setScreenSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
 				cachedImage->toRightOf(saveSlot2, 10.0, 0.0);
 				centerContainer->add(cachedImage);
 			}
@@ -108,7 +108,7 @@ namespace AWGame
 			if (cachedImage != nullptr)
 			{
 				cachedImage->setShouldScaleToImageSize(false);
-				cachedImage->setSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
+				cachedImage->setScreenSize(cachedImage->cachedImageWidth() * 0.2, cachedImage->cachedImageHeight() * 0.2);
 				cachedImage->toRightOf(saveSlot3, 10.0, 0.0);
 				centerContainer->add(cachedImage);
 			}

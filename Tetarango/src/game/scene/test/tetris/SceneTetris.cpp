@@ -75,19 +75,19 @@ namespace AWGame
 	void SceneTetris::onCreateChildren()
 	{
 		const auto cached = std::make_shared<AW::Container>();
-		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		cached->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		cached->topLeftAlignSelf();
 		add(cached);
 
 		const auto testBlock = std::make_shared<Block>();
 		board = std::make_shared<Board>(10, 24);
-		board->setCellSize(testBlock->getWidth(), testBlock->getHeight());
+		board->setCellSize(testBlock->getScreenWidth(), testBlock->getScreenHeight());
 		board->centerAlignWithin(cached);
 		board->name = "board";
 		cached->add(board);
 
 		previewBoard = std::make_shared<Board>(5, 5);
-		previewBoard->setCellSize(testBlock->getWidth(), testBlock->getHeight());
+		previewBoard->setCellSize(testBlock->getScreenWidth(), testBlock->getScreenHeight());
 		previewBoard->name = "preview-board";
 		previewBoard->disableBoardFalling();
 		previewBoard->addTetromino(blockColorGenerator.getTetromino());
@@ -112,7 +112,7 @@ namespace AWGame
 		particleSystem = std::make_shared<AW::ParticleSystem>();
 		particleSystem->zIndex = -5;
 		particleSystem->name = "p-system";
-		particleSystem->setSize(modules->screen->getWidth() * 2.0, modules->screen->getHeight() * 2.0);
+		particleSystem->setScreenSize(modules->screen->getWidth() * 2.0, modules->screen->getHeight() * 2.0);
 		particleSystem->setParticleFactory(std::make_shared<ParticleSpaceBackgroundParticleFactory>());
 		particleSystem->setParticlesPerSecond(2);
 		particleSystem->emitImmediately(40);

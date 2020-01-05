@@ -129,7 +129,7 @@ namespace AW
 					getRect(),
 					systemVelocityX,
 					systemVelocityY,
-					getRotation(),
+					getScreenRotation(),
 					getAlpha()
 				};
 
@@ -278,7 +278,7 @@ namespace AW
 			getRect(),
 			systemVelocityX,
 			systemVelocityY,
-			getRotation(),
+			getScreenRotation(),
 			getAlpha()
 		};
 
@@ -302,7 +302,7 @@ namespace AW
 			getRect(),
 			systemVelocityX,
 			systemVelocityY,
-			getRotation(),
+			getScreenRotation(),
 			getAlpha()
 		};
 

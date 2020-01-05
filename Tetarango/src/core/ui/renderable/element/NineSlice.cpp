@@ -26,8 +26,8 @@ namespace AW
 		if (fragmentShader != nullptr)
 		{
 			fragmentShader->setFloatIUParam("cornerSize", getCornerSize());
-			fragmentShader->setFloatIUParam("targetWidth", getWidth());
-			fragmentShader->setFloatIUParam("targetHeight", getHeight());
+			fragmentShader->setFloatIUParam("targetWidth", getScreenWidth());
+			fragmentShader->setFloatIUParam("targetHeight", getScreenHeight());
 
 			const auto cR = getTextureClipRect();
 			if (cR != nullptr)
@@ -49,20 +49,20 @@ namespace AW
 	{
 		if (fragmentShader != nullptr)
 		{
-			fragmentShader->setFloatIUParam("targetWidth", getWidth());
-			fragmentShader->setFloatIUParam("targetHeight", getHeight());
+			fragmentShader->setFloatIUParam("targetWidth", getScreenWidth());
+			fragmentShader->setFloatIUParam("targetHeight", getScreenHeight());
 		}
 	}
 
-	void NineSlice::setWidth(double width)
+	void NineSlice::setScreenWidth(double width)
 	{
-		Animated::setWidth(width);
+		Animated::setScreenWidth(width);
 		layout();
 	}
 
-	void NineSlice::setHeight(double height)
+	void NineSlice::setScreenHeight(double height)
 	{
-		Animated::setHeight(height);
+		Animated::setScreenHeight(height);
 		layout();
 	}
 
@@ -73,8 +73,8 @@ namespace AW
 		const auto clipRect = getTextureClipRect();
 		if (fragmentShader != nullptr && clipRect != nullptr)
 		{
-			fragmentShader->setFloatIUParam("targetWidth", getWidth());
-			fragmentShader->setFloatIUParam("targetHeight", getHeight());
+			fragmentShader->setFloatIUParam("targetWidth", getScreenWidth());
+			fragmentShader->setFloatIUParam("targetHeight", getScreenHeight());
 		}
 	}
 

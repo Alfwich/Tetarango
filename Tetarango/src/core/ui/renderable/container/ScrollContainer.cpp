@@ -47,11 +47,11 @@ namespace AW
 	void ScrollContainer::onLayoutChildren()
 	{
 		scrollContainer->resizeSelfToChildrenAndCenterChildren();
-		scrollContainer->setX(scrollContainer->getHalfWidth());
+		scrollContainer->setScreenX(scrollContainer->getHalfWidth());
 		const auto scrollAmount = getScrollPosition();
 		const auto scrollSpeedMs = serializationClient->getInt(scrollSpeedInMsParamName, 50);
 		Rect target = scrollContainer->getRect() + Rect(0, scrollContainer->getHalfHeight(), 0, 0);
-		target.y = -scrollContainer->getHeight() * scrollAmount + scrollContainer->getHalfHeight();
+		target.y = -scrollContainer->getScreenHeight() * scrollAmount + scrollContainer->getHalfHeight();
 		scrollTransition->startTransition(scrollContainer, doNextLayoutInstantly ? 0.0 : scrollSpeedMs, target);
 		doNextLayoutInstantly = false;
 	}
@@ -89,14 +89,14 @@ namespace AW
 		return scrollContainer->getScreenRect();
 	}
 
-	double ScrollContainer::getWidth()
+	double ScrollContainer::getScreenWidth()
 	{
-		return scrollContainer->getWidth();
+		return scrollContainer->getScreenWidth();
 	}
 
-	double ScrollContainer::getHeight()
+	double ScrollContainer::getScreenHeight()
 	{
-		return scrollContainer->getHeight();
+		return scrollContainer->getScreenHeight();
 	}
 
 	void ScrollContainer::scroll(double amount)
@@ -108,7 +108,7 @@ namespace AW
 	double ScrollContainer::scrollPixels(int amount)
 	{
 		const auto currentScrollPosition = getScrollPosition();
-		const auto resultingPosition = currentScrollPosition + amount / getHeight();
+		const auto resultingPosition = currentScrollPosition + amount / getScreenHeight();
 		setScrollPosition(resultingPosition);
 
 		return resultingPosition;

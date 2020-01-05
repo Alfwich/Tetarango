@@ -1,10 +1,5 @@
 #pragma once
 
-namespace
-{
-	const auto noop = std::vector<AWVec2<double>>();
-}
-
 namespace AW
 {
 	class Body;
@@ -28,7 +23,7 @@ namespace AW
 		virtual void onBodyUpdated() { /* NO-OP*/ };
 		virtual void onBodyUpdated(int id) { onBodyUpdated(); };
 
-		virtual const std::vector<AWVec2<double>>& getBodyScreenPoints() { return noop; };
+		virtual const std::vector<AWVec2<float>> getBodyWorldPoints() { return std::vector<AWVec2<float>>(); };
 
 		virtual void onBeginContact(std::unique_ptr<ContactBundle> bundle) { /* NO-OP */ };
 		virtual void onEndContact(std::unique_ptr<ContactBundle> bundle) { /* NO-OP */ };

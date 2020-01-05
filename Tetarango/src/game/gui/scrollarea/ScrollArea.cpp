@@ -30,8 +30,8 @@ namespace AWGame
 
 	double ScrollArea::getScrollMaxLimit()
 	{
-		const auto containerHeight = container->getHeight();
-		const auto myHeight = getHeight();
+		const auto containerHeight = container->getScreenHeight();
+		const auto myHeight = getScreenHeight();
 
 		return (containerHeight - myHeight) / containerHeight;
 	}
@@ -50,7 +50,7 @@ namespace AWGame
 		scroller = std::make_shared<ScrollBarBasic>();
 		scroller->name = scrollerId;
 		scroller->scrollListener = weak_from_this();
-		scroller->setSize(getScollerWidth(), getScrollerHeight());
+		scroller->setScreenSize(getScollerWidth(), getScrollerHeight());
 		scroller->zIndex = 1;
 		scroller->visible = getScrollerVisible();
 		scroller->setInputEnabled(getScrollerEnabled());
@@ -74,8 +74,8 @@ namespace AWGame
 	{
 		container->topLeftAlignSelf();
 
-		const auto containerHeight = container->getHeight();
-		const auto myHeight = getHeight();
+		const auto containerHeight = container->getScreenHeight();
+		const auto myHeight = getScreenHeight();
 		const auto shouldAllowScroll = containerHeight > myHeight;
 		if (shouldAllowScroll)
 		{
@@ -224,14 +224,14 @@ namespace AWGame
 
 		if (scroller != nullptr)
 		{
-			scroller->setSize(getScollerWidth(), getScrollerHeight());
+			scroller->setScreenSize(getScollerWidth(), getScrollerHeight());
 			layout();
 		}
 	}
 
 	double ScrollArea::getScrollerHeight()
 	{
-		return std::min(getHeight(), serializationClient->getDouble(scrollerHeightParam, 400.0));
+		return std::min(getScreenHeight(), serializationClient->getDouble(scrollerHeightParam, 400.0));
 	}
 
 	void ScrollArea::setScrollerWidth(double width)
@@ -239,7 +239,7 @@ namespace AWGame
 		serializationClient->setDouble(scrollerWidthParam, width);
 		if (scroller != nullptr)
 		{
-			scroller->setSize(getScollerWidth(), getScrollerHeight());
+			scroller->setScreenSize(getScollerWidth(), getScrollerHeight());
 			layout();
 		}
 	}

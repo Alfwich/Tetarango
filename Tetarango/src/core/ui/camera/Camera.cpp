@@ -19,7 +19,7 @@ namespace AW
 			const auto yZoomOffset = (anchorY - containerHeignt / 2.0) * zoom - (anchorY - containerHeignt / 2.0);
 
 			cameraParent->setScale(zoom);
-			cameraParent->setPosition(xOffset - xZoomOffset, yOffset - yZoomOffset);
+			cameraParent->setScreenPosition(xOffset - xZoomOffset, yOffset - yZoomOffset);
 		}
 
 		const auto listenerPtr = std::dynamic_pointer_cast<ICameraListener>(listener.lock());

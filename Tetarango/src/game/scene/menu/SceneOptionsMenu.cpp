@@ -101,7 +101,7 @@ namespace AWGame
 		{
 			auto resolutionButton = std::make_shared<ButtonBasic>();
 			resolutionButton->setText(resolution);
-			resolutionButton->setSize(180.0, 60.0);
+			resolutionButton->setScreenSize(180.0, 60.0);
 			resolutionButton->setFontSize(24.0);
 			const auto resWidth = AW::StringHelper::getDisplayComponentForDisplayString(resolution, 0);
 			const auto resHeight = AW::StringHelper::getDisplayComponentForDisplayString(resolution, 1);
@@ -111,13 +111,13 @@ namespace AWGame
 			}
 
 			if (config.mode == AW::ScreenModes::FullscreenDesktop
-				|| resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+				|| resolution == (std::to_string(getDisplayScreenWidth()) + "x" + std::to_string(getDisplayScreenHeight())))
 			{
 				resolutionButton->setEnabled(false);
 				resolutionButton->setColor(resolutionButtonDisabledColor);
 			}
 
-			if (resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight())))
+			if (resolution == (std::to_string(getDisplayScreenWidth()) + "x" + std::to_string(getDisplayScreenHeight())))
 			{
 				resolutionButton->setColor(resolutionButtonSelectedColor);
 			}
@@ -197,25 +197,25 @@ namespace AWGame
 		centeringContainer->add(debugOverlayCheckbox);
 
 		masterVolScrollBar = std::make_shared<ScrollBarBasic>();
-		masterVolScrollBar->setSize(200.0, 30.0);
+		masterVolScrollBar->setScreenSize(200.0, 30.0);
 		masterVolScrollBar->setHorizontal(true);
 		masterVolScrollBar->scrollListener = weak_from_this();
 		centeringContainer->add(masterVolScrollBar);
 
 		generalVolScrollBar = std::make_shared<ScrollBarBasic>();
-		generalVolScrollBar->setSize(200.0, 30.0);
+		generalVolScrollBar->setScreenSize(200.0, 30.0);
 		generalVolScrollBar->setHorizontal(true);
 		generalVolScrollBar->scrollListener = weak_from_this();
 		centeringContainer->add(generalVolScrollBar);
 
 		musicVolScrollBar = std::make_shared<ScrollBarBasic>();
-		musicVolScrollBar->setSize(200.0, 30.0);
+		musicVolScrollBar->setScreenSize(200.0, 30.0);
 		musicVolScrollBar->setHorizontal(true);
 		musicVolScrollBar->scrollListener = weak_from_this();
 		centeringContainer->add(musicVolScrollBar);
 
 		frameLimiterScrollBar = std::make_shared<ScrollBarBasic>();
-		frameLimiterScrollBar->setSize(200.0, 30.0);
+		frameLimiterScrollBar->setScreenSize(200.0, 30.0);
 		frameLimiterScrollBar->setHorizontal(true);
 		frameLimiterScrollBar->clickListener = weak_from_this();
 		frameLimiterScrollBar->scrollListener = weak_from_this();
@@ -285,15 +285,15 @@ namespace AWGame
 		const auto numResolutionButtonsToShow = 7.0;
 		const auto horScreenPadding = fullscreenDesktopCheckbox->getHalfWidth() + 50.0;
 
-		resolutionsLabel->setPosition(0.0, 0.0);
+		resolutionsLabel->setScreenPosition(0.0, 0.0);
 		if (!resolutionButtons.empty())
 		{
 			const auto exampleButton = resolutionButtons.front();
-			const auto availableVerticalScreen = applyButton->getY() - optionsMenuTitle->getY();
+			const auto availableVerticalScreen = applyButton->getScreenY() - optionsMenuTitle->getScreenY();
 			resolutionScrollArea->visible = true;
 			resolutionScrollArea->setScrollAmount(exampleButton->getHalfHeight());
-			resolutionScrollArea->setSize(exampleButton->getWidth(), (exampleButton->getHeight() + generalElementOffset) * numResolutionButtonsToShow);
-			resolutionScrollArea->setScrollerHeight(resolutionScrollArea->getHeight());
+			resolutionScrollArea->setScreenSize(exampleButton->getScreenWidth(), (exampleButton->getScreenHeight() + generalElementOffset) * numResolutionButtonsToShow);
+			resolutionScrollArea->setScrollerHeight(resolutionScrollArea->getScreenHeight());
 
 			resolutionScrollArea->toBottomOf(resolutionsLabel, 0.0, generalElementOffset);
 			{
@@ -306,7 +306,7 @@ namespace AWGame
 			resolutionScrollArea->visible = false;
 		}
 
-		displayModeLabel->toRightOf(resolutionsLabel, std::floor(optionsXOffset + resolutionScrollArea->getWidth() - resolutionsLabel->getWidth()));
+		displayModeLabel->toRightOf(resolutionsLabel, std::floor(optionsXOffset + resolutionScrollArea->getScreenWidth() - resolutionsLabel->getScreenWidth()));
 		fullscreenCheckbox->toBottomLeftOf(displayModeLabel, 0.0, checkboxYOffset);
 		fullscreenDesktopCheckbox->toBottomLeftOf(fullscreenCheckbox, 0.0, checkboxYOffset);
 		windowedCheckbox->toBottomLeftOf(fullscreenDesktopCheckbox, 0.0, checkboxYOffset);
@@ -320,7 +320,7 @@ namespace AWGame
 		frameLimiterLabelValue->toRightOf(frameLimiterLabelPrefix);
 		frameLimiterScrollBar->toBottomLeftOf(frameLimiterLabelPrefix, 0.0, checkboxYOffset);
 
-		miscLabel->toRightOf(displayModeLabel, fullscreenDesktopCheckbox->getWidth() - displayModeLabel->getWidth() + optionsXOffset + 40);
+		miscLabel->toRightOf(displayModeLabel, fullscreenDesktopCheckbox->getScreenWidth() - displayModeLabel->getScreenWidth() + optionsXOffset + 40);
 		wireframeModeCheckbox->toBottomLeftOf(miscLabel, 0.0, checkboxYOffset);
 		debugRenderingCheckbox->toBottomLeftOf(wireframeModeCheckbox, 0.0, checkboxYOffset);
 		debugOverlayCheckbox->toBottomLeftOf(debugRenderingCheckbox, 0.0, checkboxYOffset);
@@ -462,7 +462,7 @@ namespace AWGame
 			const auto maxWindowedWidth = modules->screen->getMaxWindowedWidth();
 			const auto maxWindowedHeight = modules->screen->getMaxWindowedHeight();
 			const auto disabled = config.mode == AW::ScreenModes::FullscreenDesktop
-				|| resolution == (std::to_string(getScreenWidth()) + "x" + std::to_string(getScreenHeight()))
+				|| resolution == (std::to_string(getDisplayScreenWidth()) + "x" + std::to_string(getDisplayScreenHeight()))
 				|| resWidth > maxWindowedWidth
 				|| resHeight > maxWindowedHeight;
 
@@ -626,8 +626,8 @@ namespace AWGame
 			return false;
 		}
 
-		config.width = getScreenWidth();
-		config.height = getScreenHeight();
+		config.width = getDisplayScreenWidth();
+		config.height = getDisplayScreenHeight();
 
 		fullscreenCheckbox->setChecked(false);
 		windowedCheckbox->setChecked(false);

@@ -2,7 +2,7 @@
 
 namespace
 {
-	const auto sizeLimit = DBL_MAX;
+	const auto sizeLimit = FLT_MAX;
 }
 
 namespace AW
@@ -18,7 +18,7 @@ namespace AW
 	{
 		if (screenPoints.size() < 2) return;
 
-		double minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
+		float minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
 		for (const auto& p : screenPoints)
 		{
 			if (p.x > minX) minX = p.x;
@@ -27,34 +27,67 @@ namespace AW
 			if (p.y < maxY) maxY = p.y;
 		}
 
-		setSize(std::abs(maxX - minX), std::abs(maxY - minY));
+		setScreenSize(std::abs(maxX - minX), std::abs(maxY - minY));
 		vertexBuffer = nullptr;
 	}
 
-	void Polygon::setPoint(AWVec2<double> p)
+	void Polygon::insertScreenPoint(float x, float y)
 	{
-		screenPoints.push_back(p);
+		screenPoints.push_back(AWVec2<float>(x, y));
+	}
+
+	void Polygon::insertWorldPoint(float x, float y)
+	{
+		screenPoints.push_back(AWVec2<float>(AW::RigidBody::worldToScreenPosition(x), AW::RigidBody::worldToScreenPosition(y)));
+	}
+
+	void Polygon::addWorldPoint(AWVec2<float> p)
+	{
+		insertWorldPoint(p.x, p.y);
 		updateSize();
 	}
 
-	void Polygon::setPoint(double x, double y)
+	void Polygon::addWorldPoint(float x, float y)
 	{
-		screenPoints.push_back(AWVec2<double>(x, y));
+		insertWorldPoint(x, y);
 		updateSize();
 	}
 
-	void Polygon::setPoints(const std::vector<AWVec2<double>>& points)
+	void Polygon::addWorldPoints(const std::vector<AWVec2<float>>& points)
 	{
 		for (const auto& p : points)
 		{
-			this->screenPoints.push_back(p);
+			insertWorldPoint(p.x, p.y);
 		}
+
+		updateSize();
+	}
+
+	void Polygon::addScreenPoint(AWVec2<float> p)
+	{
+		insertScreenPoint(p.x, p.y);
+		updateSize();
+	}
+
+	void Polygon::addScreenPoint(float x, float y)
+	{
+		insertScreenPoint(x, y);
+		updateSize();
+	}
+
+	void Polygon::addScreenPoints(const std::vector<AWVec2<float>>& points)
+	{
+		for (const auto& p : points)
+		{
+			insertScreenPoint(p.x, p.y);
+		}
+
 		updateSize();
 	}
 
 	void Polygon::centerBalancePoints()
 	{
-		double minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
+		float minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
 		for (const auto& p : screenPoints)
 		{
 			if (p.x > minX) minX = p.x;
@@ -77,9 +110,25 @@ namespace AW
 		}
 	}
 
-	const std::vector<AWVec2<double>>& Polygon::getScreenPoints()
+	const std::vector<AWVec2<float>>& Polygon::getScreenPoints()
 	{
 		return screenPoints;
+	}
+
+	std::vector<AWVec2<float>> Polygon::getWorldPoints()
+	{
+		const auto widthFactor = getWorldWidth();
+		const auto heightFactor = getWorldHeight();
+		const auto scaleFactor = AWVec2<float>(1.f / widthFactor, 1.f / heightFactor);
+		auto result = std::vector<AWVec2<float>>();
+
+		for (const auto pt : screenPoints)
+		{
+			result.push_back(RigidBody::screenToWorld(pt));
+		}
+
+		return result;
+
 	}
 
 	void Polygon::setFilled(bool flag)
@@ -116,7 +165,7 @@ namespace AW
 			for (unsigned int i = 0, limit = client->getInt("numPts", 0); i < limit; ++i)
 			{
 				const auto iStr = std::to_string(i);
-				const auto pt = AWVec2<double>(client->getDouble("pt_x_" + iStr), client->getDouble("pt_y_" + iStr));
+				const auto pt = AWVec2<float>((float)client->getDouble("pt_x_" + iStr), (float)client->getDouble("pt_y_" + iStr));
 				screenPoints.push_back(pt);
 			}
 			updateSize();
@@ -130,14 +179,14 @@ namespace AW
 		return Primitive::doSerialize(hint);
 	}
 
-	std::vector<AWVec2<double>> Polygon::getRenderPoints()
+	std::vector<AWVec2<float>> Polygon::getRenderPoints()
 	{
-		auto result = std::vector<AWVec2<double>>();
+		auto result = std::vector<AWVec2<float>>();
 
-		auto w = getWidth(), h = getHeight();
+		auto w = getScreenWidth(), h = getScreenHeight();
 		for (const auto p : screenPoints)
 		{
-			result.push_back(AWVec2<double>(((p.x / w) * 2.0), ((p.y / h) * 2.0)));
+			result.push_back(AWVec2<float>(((p.x / w) * 2.0), ((p.y / h) * 2.0)));
 		}
 
 		return result;

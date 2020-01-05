@@ -20,7 +20,7 @@ namespace AW
 
 		if (serializationClient->getBool(shouldScaleToImageParamName, true))
 		{
-			setSize(bundle->width, bundle->height);
+			setScreenSize(bundle->width, bundle->height);
 		}
 	}
 

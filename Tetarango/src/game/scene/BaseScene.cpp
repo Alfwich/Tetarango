@@ -49,12 +49,12 @@ namespace AWGame
 
 	BaseScene::BaseScene(SceneGame name) : AW::Scene(config.game.at(name)) {}
 
-	int BaseScene::getScreenWidth()
+	int BaseScene::getDisplayScreenWidth()
 	{
 		return modules->screen->getWidth();
 	}
 
-	int BaseScene::getScreenHeight()
+	int BaseScene::getDisplayScreenHeight()
 	{
 		return modules->screen->getHeight();
 	}

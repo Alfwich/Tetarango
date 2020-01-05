@@ -18,6 +18,6 @@ namespace AW
 
 	void Backdrop::setSizeToEffectiveInfinity()
 	{
-		this->setSize(effectiveInfinity, effectiveInfinity);
+		this->setScreenSize(effectiveInfinity, effectiveInfinity);
 	}
 }

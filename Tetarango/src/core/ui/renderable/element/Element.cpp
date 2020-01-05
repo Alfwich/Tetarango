@@ -38,7 +38,7 @@ namespace AW
 
 		if (getMatchSizeToTexture())
 		{
-			setSize(texture->getWidth(), texture->getHeight());
+			setScreenSize(texture->getWidth(), texture->getHeight());
 		}
 	}
 
@@ -77,7 +77,7 @@ namespace AW
 
 		if (flag && texture != nullptr)
 		{
-			setSize(texture->getWidth(), texture->getHeight());
+			setScreenSize(texture->getWidth(), texture->getHeight());
 		}
 	}
 

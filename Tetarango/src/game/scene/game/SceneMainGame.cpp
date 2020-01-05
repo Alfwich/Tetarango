@@ -96,7 +96,7 @@ namespace AWGame
 		gameMainMenu = std::make_shared<GameMainMenu>();
 		gameMainMenu->name = mainMenuId;
 		gameMainMenu->zIndex = 18;
-		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		gameMainMenu->setScreenPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		gameMainMenu->renderPositionMode = AW::RenderPositionMode::Absolute;
 		gameMainMenu->visible = false;
 		add(gameMainMenu);
@@ -106,7 +106,7 @@ namespace AWGame
 		globalTransition->setDuration(450.0);
 		globalTransition->zIndex = 20;
 		globalTransition->listener = std::dynamic_pointer_cast<INotifyOnFade>(shared_from_this());
-		globalTransition->setSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
+		globalTransition->setScreenSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
 		globalTransition->renderPositionMode = AW::RenderPositionMode::Absolute;
 		add(globalTransition);
 
@@ -135,8 +135,8 @@ namespace AWGame
 			currentScene->rebuild();
 		}
 
-		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		globalTransition->setSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
+		gameMainMenu->setScreenPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		globalTransition->setScreenSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
 	void SceneMainGame::onChildrenHydrated()
@@ -144,7 +144,7 @@ namespace AWGame
 		masterSceneContainer = findChildWithName<AW::SceneContainer>(masterSceneContainerId);
 		globalParticleSystem = findChildWithName<AW::ParticleSystem>(starSystemId);
 		gameMainMenu = findChildWithName<GameMainMenu>(mainMenuId);
-		gameMainMenu->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
+		gameMainMenu->setScreenPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
 		gameMainMenu->hide();
 
 		globalTransition = findChildWithName<TransitionFade>(globalTransitionId);

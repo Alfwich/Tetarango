@@ -15,8 +15,8 @@ namespace AW
 		void onInitialAttach();
 		void onLayoutChildren();
 
-		void setWidth(double width);
-		void setHeight(double height);
+		void setScreenWidth(double width);
+		void setScreenHeight(double height);
 
 		void setCurrentAnimation(std::string animationName);
 

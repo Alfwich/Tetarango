@@ -87,7 +87,7 @@ namespace AWGame
 		screenBuffer->renderUpdateMode = AW::RenderUpdateMode::EveryFrame;
 		screenBuffer->renderPositionMode = AW::RenderPositionMode::AbsoluteSelfOnly;
 		screenBuffer->setClearColor(0, 0, 0);
-		screenBuffer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		screenBuffer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		screenBuffer->topLeftAlignSelf();
 		root->add(screenBuffer);
 
@@ -130,7 +130,7 @@ namespace AWGame
 
 		debugMonitor = std::make_shared<AW::DebugMonitor>();
 		debugMonitor->zIndex = 1;
-		debugMonitor->setPosition(5.0, 5.0);
+		debugMonitor->setScreenPosition(5.0, 5.0);
 		if (!screenConfig.debugOverlayEnabled)
 		{
 			debugMonitor->visible = false;
@@ -206,7 +206,7 @@ namespace AWGame
 		if (screenBuffer != nullptr)
 		{
 			screenBuffer->rebuildInternalTexture();
-			screenBuffer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+			screenBuffer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 			screenBuffer->topLeftAlignSelf();
 		}
 

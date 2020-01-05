@@ -31,10 +31,10 @@ namespace AW
 		return nullptr;
 	}
 
-	std::vector<b2Vec2> Body::translateScreenPointsToWorldPoints(const std::shared_ptr<Renderable>& rend, const std::vector<AWVec2<double>>& screenPoints)
+	std::vector<b2Vec2> Body::translateScreenPointsToWorldPoints(const std::shared_ptr<Renderable>& rend, const std::vector<AWVec2<float>>& screenPoints)
 	{
-		const auto widthFactor = screenToWorldPosition(rend->getWidth());
-		const auto heightFactor = screenToWorldPosition(rend->getHeight());
+		const auto widthFactor = screenToWorldPosition(rend->getScreenWidth());
+		const auto heightFactor = screenToWorldPosition(rend->getScreenHeight());
 		const auto scaleFactor = AWVec2<double>(1.0 / widthFactor, 1.0 / heightFactor);
 		auto b2Pts = std::vector<b2Vec2>();
 
@@ -113,8 +113,8 @@ namespace AW
 			return nullptr;
 		}
 
-		bodyDef.position.Set(screenToWorldPosition(rend->getX()), -screenToWorldPosition(rend->getY()));
-		bodyDef.angle = screenToWorldRotation(rend->getRotation());
+		bodyDef.position.Set(rend->getWorldX(), rend->getWorldY());
+		bodyDef.angle = rend->getWorldRotation();
 
 		bodyReference = world->CreateBody(&bodyDef);
 		switch (bodyType)
@@ -123,7 +123,8 @@ namespace AW
 		{
 			b2PolygonShape shape;
 
-			shape.SetAsBox(screenToWorldPosition(rend->getWidth()) / 2.f, screenToWorldPosition(rend->getHeight()) / 2.f);
+			shape.SetAsBox(screenToWorldPosition(rend->getScreenWidth()) / 2.f, screenToWorldPosition(rend->getScreenHeight()) / 2.f);
+			shape.SetAsBox(rend->getWorldWidth() / 2.f, rend->getWorldHeight() / 2.f);
 			fixtureDef.shape = &shape;
 
 			bodyReference->CreateFixture(&fixtureDef);
@@ -134,7 +135,7 @@ namespace AW
 		{
 			b2CircleShape shape;
 
-			shape.m_radius = screenToWorldPosition((float)std::max(rend->getWidth(), rend->getHeight()) / 2.f);
+			shape.m_radius = std::max(rend->getWorldWidth(), rend->getWorldHeight()) / 2.f;
 			fixtureDef.shape = &shape;
 
 			bodyReference->CreateFixture(&fixtureDef);
@@ -148,8 +149,11 @@ namespace AW
 			{
 				b2PolygonShape shape;
 
-				const auto screenPoints = translateScreenPointsToWorldPoints(rend, listenerPtr->getBodyScreenPoints());
-				shape.Set(&screenPoints[0], (unsigned int)screenPoints.size());
+				const auto screenPoints = listenerPtr->getBodyWorldPoints();
+				std::vector<b2Vec2> pts;
+				for (const auto& sp : screenPoints) pts.push_back(b2Vec2(sp.x, sp.y));
+
+				shape.Set(&pts[0], (unsigned int)pts.size());
 				fixtureDef.shape = &shape;
 
 				bodyReference->CreateFixture(&fixtureDef);
@@ -164,8 +168,8 @@ namespace AW
 			{
 				b2EdgeShape shape;
 
-				const auto xOffset = screenToWorldPosition(rend->getWidth()) / 2.f;
-				const auto yOffset = screenToWorldPosition(rend->getHeight()) / 2.f;
+				const auto xOffset = rend->getWorldWidth() / 2.f;
+				const auto yOffset = rend->getWorldHeight() / 2.f;
 
 				b2Vec2 p1{ -xOffset, -yOffset }, p2{ xOffset, -yOffset };
 				shape.Set(p1, p2);
@@ -183,8 +187,11 @@ namespace AW
 			{
 				b2ChainShape shape;
 
-				const auto screenPoints = translateScreenPointsToWorldPoints(rend, listenerPtr->getBodyScreenPoints());
-				shape.CreateChain(&screenPoints[0], (unsigned int)screenPoints.size());
+				const auto screenPoints = listenerPtr->getBodyWorldPoints();
+				std::vector<b2Vec2> pts;
+				for (const auto& sp : screenPoints) pts.push_back(b2Vec2(sp.x, sp.y));
+
+				shape.CreateChain(&pts[0], (unsigned int)pts.size());
 				fixtureDef.shape = &shape;
 
 				bodyReference->CreateFixture(&fixtureDef);
@@ -207,8 +214,8 @@ namespace AW
 			if (rend != nullptr)
 			{
 				const auto pos = bodyReference->GetPosition();
-				rend->setPosition(worldToScreenPosition(pos.x), -worldToScreenPosition(pos.y));
-				rend->setRotation(worldToScreenRotation(bodyReference->GetAngle()));
+				rend->setWorldPosition(pos.x, pos.y);
+				rend->setWorldRotation(bodyReference->GetAngle());
 			}
 		}
 		else
@@ -225,8 +232,9 @@ namespace AW
 			return;
 		}
 
-		const auto pos = b2Vec2(screenToWorldPosition(rend->getX()), -screenToWorldPosition(rend->getY()));
-		const auto rotation = screenToWorldRotation(rend->getRotation());
+		const auto pos = b2Vec2(rend->getWorldX(), rend->getWorldY());
+		const auto rotation = rend->getWorldRotation();
+
 		bodyReference->SetTransform(pos, rotation);
 	}
 

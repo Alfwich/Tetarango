@@ -92,7 +92,7 @@ namespace AWGame
 		splashImage->setAlpha(0.0);
 		titleGame->setAlpha(0.0);
 		loadingProgressBar->setColor(150, 150, 150);
-		loadingProgressBar->setHeight(loadingBarHeight);
+		loadingProgressBar->setScreenHeight(loadingBarHeight);
 		splashTransition->startTargetlessTransition(splashTransitionTimeInSeconds * 1000.0);
 		modules->physic->setWorldGravity(0, 0.0, -2.0);
 	}
@@ -103,8 +103,8 @@ namespace AWGame
 		const auto scaledMainPositionIn = AW::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorIn), 0.0, 1.0);
 		const auto scaledMainPositionOut = AW::NumberHelper::clamp(std::pow((position - animationOffset) * splashTransitionTimeInSeconds, animationScalingFactorOut), 0.0, 1.0);
 
-		loadingProgressBar->setWidth(getScreenWidth() * position);
-		loadingProgressBar->topLeftAlignSelf(0.0, getScreenHeight() - loadingProgressBar->getHeight());
+		loadingProgressBar->setScreenWidth(getDisplayScreenWidth() * position);
+		loadingProgressBar->topLeftAlignSelf(0.0, getDisplayScreenHeight() - loadingProgressBar->getScreenHeight());
 
 		if (currentTransitionSeconds >= splashTransitionTimeInSeconds - 1.0)
 		{
@@ -114,7 +114,7 @@ namespace AWGame
 
 		if (state == 0)
 		{
-			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
+			splashImage->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashText->getScreenHeight() + verticalOffset);
 			splashImage->setAlpha(scaledMainPositionIn);
 
 			splashText->toTopOf(splashImage);
@@ -124,7 +124,7 @@ namespace AWGame
 		}
 		else if (state == 1)
 		{
-			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
+			splashImage->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashText->getScreenHeight() + verticalOffset);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
@@ -134,14 +134,14 @@ namespace AWGame
 		}
 		else if (state == 2)
 		{
-			splashImage->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
+			splashImage->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashText->getScreenHeight() + verticalOffset);
 			splashImage->setAlpha(scaledMainPositionIn);
 
 			tryToGotoNextState(position, 2.0);
 		}
 		else if (state == 3)
 		{
-			splashImage->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashText->getHeight() + verticalOffset);
+			splashImage->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashText->getScreenHeight() + verticalOffset);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
 
 			splashText->toTopOf(splashImage);
@@ -153,7 +153,7 @@ namespace AWGame
 				const auto orgName = modules->gameConfig->getConfigString(Config::Param::organizationName);
 				splashText->setText(orgName + " Presents");
 				splashImage->setTexture(awGamesLogoTextureName);
-				if (splashText->getWidth() > getScreenWidth())
+				if (splashText->getScreenWidth() > getDisplayScreenWidth())
 				{
 					splashText->setFontSize(titleFontSizeSmall);
 				}
@@ -161,7 +161,7 @@ namespace AWGame
 		}
 		else if (state == 4)
 		{
-			splashText->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
+			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getHalfHeight());
 			splashText->setAlpha(scaledMainPositionIn);
 
 			splashImage->toTopOf(splashText);
@@ -172,7 +172,7 @@ namespace AWGame
 		else if (state == 5)
 		{
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
-			splashText->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getScreenHeight() / 2.0 + splashImage->getHalfHeight());
+			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getHalfHeight());
 
 			splashImage->toTopOf(splashText);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
@@ -183,14 +183,14 @@ namespace AWGame
 				{
 					const auto box = std::make_shared<Box>();
 					box->setColor(blockColorGenerator.getBlockColor());
-					box->setPosition(AW::NumberHelper::random(-100, modules->screen->getWidth() + 100), AW::NumberHelper::random(-100, -1000));
+					box->setScreenPosition(AW::NumberHelper::random(-100, modules->screen->getWidth() + 100), AW::NumberHelper::random(-100, -1000));
 					add(box);
 				}
 
 				bottomCollider = std::make_shared<Box>();
 				bottomCollider->visible = false;
 				bottomCollider->setDynamic(false);
-				bottomCollider->setSizeAndPosition(0.0, modules->screen->getHeight(), 8000.0, 20.0);
+				bottomCollider->setScreenSizeAndPosition(0.0, modules->screen->getHeight(), 8000.0, 20.0);
 				add(bottomCollider);
 
 				titleGame->visible = true;
@@ -198,11 +198,11 @@ namespace AWGame
 		}
 		else if (state == 6)
 		{
-			titleGame->setPosition(getScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getScreenHeight() / 2.0);
+			titleGame->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0);
 			titleGame->setAlpha(scaledMainPositionIn);
 
 			titleGameCollider->matchPosition(titleGame, 0.0, 50.0);
-			titleGameCollider->setX(getScreenWidth() / 2.0 - ((1.0 - 1.0) * fadeInHorMovement));
+			titleGameCollider->setScreenX(getDisplayScreenWidth() / 2.0 - ((1.0 - 1.0) * fadeInHorMovement));
 
 			titleGameCollider->setSize(titleGame);
 
@@ -215,7 +215,7 @@ namespace AWGame
 		}
 		else if (state == 7)
 		{
-			titleGame->setPosition(getScreenWidth() / 2.0 + (scaledMainPositionOut * 0.0), getScreenHeight() / 2.0);
+			titleGame->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * 0.0), getDisplayScreenHeight() / 2.0);
 
 			setAlpha(1.0 - scaledMainPositionOut);
 

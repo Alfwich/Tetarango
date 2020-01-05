@@ -120,7 +120,7 @@ namespace AW
 
 		void generateBackgroundRenderBuffer();
 
-		unsigned int generateVertexBuffer(const std::vector<AWVec2<double>>& points);
+		unsigned int generateVertexBuffer(const std::vector<AWVec2<float>>& points);
 
 		void setVertexAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset);
 		void setUVAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset);

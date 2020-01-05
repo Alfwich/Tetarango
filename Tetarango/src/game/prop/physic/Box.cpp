@@ -9,7 +9,7 @@ namespace AWGame
 {
 	Box::Box()
 	{
-		setSize(32, 32);
+		setScreenSize(32, 32);
 		GORegister(Box);
 	}
 

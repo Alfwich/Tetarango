@@ -23,7 +23,7 @@ namespace AWGame
 	void SceneWorldTetarango::onCreateChildren()
 	{
 		const auto contentContainer = std::make_shared<AW::Container>();
-		contentContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
 
@@ -31,7 +31,7 @@ namespace AWGame
 		ground->setDynamic(false);
 		for (auto i = -30; i < 30; ++i)
 		{
-			ground->setPoint(200 * i, AW::NumberHelper::random(-10, 10));
+			ground->addWorldPoint(i, AW::NumberHelper::random(-1, 1));
 		}
 		ground->centerBalancePoints();
 		ground->centerAlignWithin(contentContainer);

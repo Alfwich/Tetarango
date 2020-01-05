@@ -112,7 +112,7 @@ namespace AWGame
 		checkbox->name = "checkbox";
 		checkbox->setAnimationSet(checkBoxBasicId);
 		checkbox->setDefaultAnimationName("default");
-		checkbox->setSize(40.0, 40.0);
+		checkbox->setScreenSize(40.0, 40.0);
 		checkbox->topLeftAlignSelf();
 		add(checkbox);
 

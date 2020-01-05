@@ -61,7 +61,7 @@ namespace AWGame
 	{
 		const auto contentContainer = std::make_shared<AW::Rectangle>();
 		contentContainer->renderColorMode = AW::RenderColorMode::Absolute;
-		contentContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
 		this->contentContainer = contentContainer;
@@ -76,7 +76,7 @@ namespace AWGame
 
 		const auto cached = std::make_shared<AW::DisplayBuffer>();
 		cached->setClearColor(128, 128, 128);
-		cached->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		cached->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		cached->centerWithin(contentContainer, 30.0, 30.0);
 		cached->zIndex = -1;
 		contentContainer->add(cached);
@@ -87,7 +87,7 @@ namespace AWGame
 		background->setFragmentShader(modules->shader->getShader({ "f-color", "f-mandelbrot" }));
 		background->getFragmentShader()->setFloatIUParam("iter", currentIters);
 		background->getFragmentShader()->setFloatV3IUParam("fColor", 1.0, 1.0, 1.0);
-		background->setSize(1200, 800);
+		background->setScreenSize(1200, 800);
 		background->centerWithin(cached, 100.0);
 		background->zIndex = -1;
 		cached->add(background);
@@ -95,14 +95,14 @@ namespace AWGame
 
 		const auto testR = std::make_shared<AW::Rectangle>();
 		testR->setColor(AW::Color::red());
-		testR->setSize(25.0, 25.0);
+		testR->setScreenSize(25.0, 25.0);
 		testR->centerAlignWithin(background, -10.0, -10.0);
 		background->add(testR);
 
 		const auto testR2 = std::make_shared<AW::Rectangle>();
 		testR2->renderColorMode = AW::RenderColorMode::Absolute;
 		testR2->setColor(AW::Color::green());
-		testR2->setSize(15.0, 15.0);
+		testR2->setScreenSize(15.0, 15.0);
 		testR2->centerAlignWithin(testR, 20.0, 20.0);
 		testR->add(testR2);
 
@@ -116,7 +116,7 @@ namespace AWGame
 
 		red = std::make_shared<ScrollBarBasic>();
 		red->renderPositionMode = AW::RenderPositionMode::Absolute;
-		red->setSize(30, 500);
+		red->setScreenSize(30, 500);
 		red->scrollListener = shared_from_this();
 		red->setColor(192, 0, 0);
 		red->toInnerLeftIn(contentContainer);
@@ -126,7 +126,7 @@ namespace AWGame
 		{
 			const auto btn = std::make_shared<ButtonBasic>();
 			btn->setText("Hello World!");
-			btn->setPosition(AW::NumberHelper::random(-1000.0, -2000.0), AW::NumberHelper::random(-1000.0, -2000.0));
+			btn->setScreenPosition(AW::NumberHelper::random(-1000.0, -2000.0), AW::NumberHelper::random(-1000.0, -2000.0));
 			btn->setScale(AW::NumberHelper::random(0.5, 2.0));
 			btn->setColor(AW::Color::random());
 			contentContainer->add(btn);
@@ -134,7 +134,7 @@ namespace AWGame
 
 		green = std::make_shared<ScrollBarBasic>();
 		green->renderPositionMode = AW::RenderPositionMode::Absolute;
-		green->setSize(30, 500);
+		green->setScreenSize(30, 500);
 		green->scrollListener = shared_from_this();
 		green->setColor(0, 192, 0);
 		green->toRightOf(red, 2.0);
@@ -142,7 +142,7 @@ namespace AWGame
 
 		blue = std::make_shared<ScrollBarBasic>();
 		blue->renderPositionMode = AW::RenderPositionMode::Absolute;
-		blue->setSize(30, 500);
+		blue->setScreenSize(30, 500);
 		blue->scrollListener = shared_from_this();
 		blue->setColor(0, 0, 192);
 		blue->toRightOf(green, 2.0);
@@ -152,10 +152,10 @@ namespace AWGame
 			const auto poly = std::make_shared<AW::Polygon>();
 
 			poly->setColor(AW::Color::red());
-			poly->setPoint(0.0, 0.0);
-			poly->setPoint(100.0, 0.0);
-			poly->setPoint(100.0, 500.0);
-			poly->setPoint(0.0, 500.0);
+			poly->addScreenPoint(0.0, 0.0);
+			poly->addScreenPoint(100.0, 0.0);
+			poly->addScreenPoint(100.0, 500.0);
+			poly->addScreenPoint(0.0, 500.0);
 
 			contentContainer->add(poly);
 			obj4 = poly;
@@ -168,9 +168,9 @@ namespace AWGame
 			const auto numP = AW::NumberHelper::randomInt(3, 20);
 			for (auto j = 0; j < numP; ++j)
 			{
-				poly->setPoint(AW::NumberHelper::random(-50, 50), AW::NumberHelper::random(-50, 50));
+				poly->addScreenPoint(AW::NumberHelper::random(-50, 50), AW::NumberHelper::random(-50, 50));
 			}
-			poly->setPosition(AW::NumberHelper::random(-1000.0, 1000.0), AW::NumberHelper::random(-1000.0, 1000.0));
+			poly->setScreenPosition(AW::NumberHelper::random(-1000.0, 1000.0), AW::NumberHelper::random(-1000.0, 1000.0));
 			contentContainer->add(poly);
 		}
 	}
@@ -200,7 +200,7 @@ namespace AWGame
 			}
 		}
 
-		obj4->rotate(deltaTime / 1000.0 * 45.0);
+		obj4->rotateScreen(deltaTime / 1000.0 * 45.0);
 	}
 
 	void TestScene::onKeyPressed(AWKey key)

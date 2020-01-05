@@ -76,12 +76,6 @@ namespace AW
 		Absolute
 	};
 
-	enum class UnitConversionMode
-	{
-		Pixel,
-		Meter
-	};
-
 	class Renderable : public ISerializableDataSubscriber
 	{
 		double rot = 0.0, alpha = 1.0, scale = 1.0;
@@ -104,8 +98,6 @@ namespace AW
 		RenderUpdateMode renderUpdateMode = RenderUpdateMode::EveryFrame;
 		RenderTargetMode renderTarget = RenderTargetMode::Screen;
 		RenderColorMode renderColorMode = RenderColorMode::Multiplicative;
-
-		UnitConversionMode unitConversionMode = UnitConversionMode::Pixel;
 
 		const std::shared_ptr<ShaderReference>& getVertexShader();
 		const std::shared_ptr<ShaderReference>& getFragmentShader();
@@ -139,20 +131,31 @@ namespace AW
 		void setClipRect(const Rect* rect);
 		void setClipRect(const Rect& rect);
 
-		virtual double getX();
-		virtual void setX(double newX);
+		virtual float getWorldX();
+		virtual float getWorldY();
+		virtual float getWorldWidth();
+		virtual float getWorldHeight();
 
-		virtual double getY();
-		virtual void setY(double newY);
+		virtual void setWorldX(float newX);
+		virtual void setWorldY(float newY);
+		virtual void setWorldWidth(float newWidth);
+		virtual void setWorldHeight(float newHeight);
 
-		virtual double getWidth();
-		virtual void setWidth(double newWidth);
+		virtual double getScreenX();
+		virtual double getScreenY();
+		virtual double getScreenWidth();
+		virtual double getScreenHeight();
 
-		virtual double getHeight();
-		virtual void setHeight(double newHeight);
+		virtual void setScreenX(double newX);
+		virtual void setScreenY(double newY);
+		virtual void setScreenWidth(double newWidth);
+		virtual void setScreenHeight(double newHeight);
 
-		virtual double getRotation();
-		virtual void setRotation(double newRotation);
+		virtual double getWorldRotation();
+		virtual void setWorldRotation(float radians);
+
+		virtual double getScreenRotation();
+		virtual void setScreenRotation(double degrees);
 
 		virtual double getAlpha();
 		virtual void setAlpha(double newAlpha);
@@ -164,13 +167,16 @@ namespace AW
 		virtual void onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId);
 		virtual void onTransitionEnd() { /* NO-OP */ };
 
-		void setPosition(const std::shared_ptr<Renderable>& other);
-		void setPosition(double x, double y);
-		void movePosition(double xDelta, double yDelta);
-		void setSize(double width, double height);
-		void setSizeAndPosition(double x, double y, double width, double height);
-		void setSizeAndPosition(const Rect& rect);
-		void rotate(double rotDelta);
+		void setScreenPosition(double x, double y);
+		void moveScreenPosition(double x, double y);
+		void setScreenSize(double width, double height);
+		void setScreenSizeAndPosition(double x, double y, double width, double height);
+		void setScreenSizeAndPosition(const Rect& rect);
+		void rotateScreen(double degrees);
+
+		void setWorldPosition(float x, float y);
+		void setWorldSize(float width, float height);
+		void rotateWorld(float radians);
 
 		double getLeft();
 		double getRight();
@@ -180,6 +186,8 @@ namespace AW
 		double getHalfHeight();
 
 		void topLeftAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
+
+		void setPosition(const std::shared_ptr<Renderable>& other);
 
 		void centerWithin(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
 		void centerWithin(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);

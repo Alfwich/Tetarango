@@ -21,8 +21,8 @@ namespace AW
 		void resizeSelfToChildrenAndCenterChildren();
 		void performAutoLayoutIfNeeded();
 
-		void setWidth(double newWidth);
-		void setHeight(double newHeight);
+		void setScreenWidth(double newWidth);
+		void setScreenHeight(double newHeight);
 	};
 
 }

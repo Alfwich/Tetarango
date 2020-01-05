@@ -67,27 +67,27 @@ namespace AWTest
 				{
 					{
 						std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-						to->setPosition(460.0, 140.0);
+						to->setScreenPosition(460.0, 140.0);
 						infScene->add(to);
 					}
 					{
 						std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-						to->setPosition(460.0, 140.0);
+						to->setScreenPosition(460.0, 140.0);
 						infScene->add(to);
 					}
 					{
 						std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-						to->setPosition(460.0, 140.0);
+						to->setScreenPosition(460.0, 140.0);
 						infScene->add(to);
 					}
 					{
 						std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-						to->setPosition(460.0, 140.0);
+						to->setScreenPosition(460.0, 140.0);
 						infScene->add(to);
 					}
 					{
 						std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-						to->setPosition(460.0, 140.0);
+						to->setScreenPosition(460.0, 140.0);
 						infScene->add(to);
 					}
 
@@ -112,80 +112,80 @@ namespace AWTest
 			{
 
 				std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-				to->setPosition(460.0, 140.0);
+				to->setScreenPosition(460.0, 140.0);
 				infScene->add(to);
 				{
 					std::shared_ptr<AW::Rectangle> rect4 = std::make_unique<AW::Rectangle>();
 					rect4->setColor(0xff, 0, 0xff);
-					rect4->setSizeAndPosition(450, 130, 300.0, 300.0);
+					rect4->setScreenSizeAndPosition(450, 130, 300.0, 300.0);
 					infScene->add(rect4);
 
 
 					std::shared_ptr<AW::Rectangle> rect = std::make_unique<AW::Rectangle>();
 					rect->setColor(0xff, 0, 0);
-					rect->setSizeAndPosition(0.0, 0.0, 30.0, 30.0);
+					rect->setScreenSizeAndPosition(0.0, 0.0, 30.0, 30.0);
 					to->add(rect);
 
 					std::shared_ptr<AW::Rectangle> rect2 = std::make_unique<AW::Rectangle>();
 					rect2->setColor(0, 0xff, 0);
-					rect2->setSizeAndPosition(30.0, 0.0, 30.0, 30.0);
+					rect2->setScreenSizeAndPosition(30.0, 0.0, 30.0, 30.0);
 					rect->add(rect2);
 
 					std::shared_ptr<AW::Rectangle> rect3 = std::make_unique<AW::Rectangle>();
 					rect3->setColor(0, 0, 0xff);
-					rect3->setSizeAndPosition(-15, 30.0, 30.0, 30.0);
+					rect3->setScreenSizeAndPosition(-15, 30.0, 30.0, 30.0);
 					rect2->add(rect3);
 				}
 
 				{
 					std::shared_ptr<AW::Rectangle> rect4 = std::make_unique<AW::Rectangle>();
 					rect4->setColor(0xff, 0, 0xff);
-					rect4->setSizeAndPosition(450, 130, 300.0, 300.0);
+					rect4->setScreenSizeAndPosition(450, 130, 300.0, 300.0);
 					infScene->add(rect4);
 
 					std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-					to->setPosition(460.0, 140.0);
+					to->setScreenPosition(460.0, 140.0);
 					infScene->add(to);
 
 					std::shared_ptr<AW::Rectangle> rect = std::make_unique<AW::Rectangle>();
 					rect->setColor(0xff, 0, 0);
-					rect->setSizeAndPosition(0.0, 0.0, 30.0, 30.0);
+					rect->setScreenSizeAndPosition(0.0, 0.0, 30.0, 30.0);
 					to->add(rect);
 
 					std::shared_ptr<AW::Rectangle> rect2 = std::make_unique<AW::Rectangle>();
 					rect2->setColor(0, 0xff, 0);
-					rect2->setSizeAndPosition(30.0, 0.0, 30.0, 30.0);
+					rect2->setScreenSizeAndPosition(30.0, 0.0, 30.0, 30.0);
 					rect->add(rect2);
 
 					std::shared_ptr<AW::Rectangle> rect3 = std::make_unique<AW::Rectangle>();
 					rect3->setColor(0, 0, 0xff);
-					rect3->setSizeAndPosition(-15, 30.0, 30.0, 30.0);
+					rect3->setScreenSizeAndPosition(-15, 30.0, 30.0, 30.0);
 					rect2->add(rect3);
 				}
 
 				{
 					std::shared_ptr<AW::Rectangle> rect4 = std::make_unique<AW::Rectangle>();
 					rect4->setColor(0xff, 0, 0xff);
-					rect4->setSizeAndPosition(450, 130, 300.0, 300.0);
+					rect4->setScreenSizeAndPosition(450, 130, 300.0, 300.0);
 					infScene->add(rect4);
 
 					std::shared_ptr<TestActor> to = std::make_unique<TestActor>();
-					to->setPosition(460.0, 140.0);
+					to->setScreenPosition(460.0, 140.0);
 					infScene->add(to);
 
 					std::shared_ptr<AW::Rectangle> rect = std::make_unique<AW::Rectangle>();
 					rect->setColor(0xff, 0, 0);
-					rect->setSizeAndPosition(0.0, 0.0, 30.0, 30.0);
+					rect->setScreenSizeAndPosition(0.0, 0.0, 30.0, 30.0);
 					to->add(rect);
 
 					std::shared_ptr<AW::Rectangle> rect2 = std::make_unique<AW::Rectangle>();
 					rect2->setColor(0, 0xff, 0);
-					rect2->setSizeAndPosition(30.0, 0.0, 30.0, 30.0);
+					rect2->setScreenSizeAndPosition(30.0, 0.0, 30.0, 30.0);
 					rect->add(rect2);
 
 					std::shared_ptr<AW::Rectangle> rect3 = std::make_unique<AW::Rectangle>();
 					rect3->setColor(0, 0, 0xff);
-					rect3->setSizeAndPosition(-15, 30.0, 30.0, 30.0);
+					rect3->setScreenSizeAndPosition(-15, 30.0, 30.0, 30.0);
 					rect2->add(rect3);
 				}
 			}

@@ -57,11 +57,11 @@ namespace AW
 
 		if (dynamicResizing && cachedTextureText->isLoaded())
 		{
-			setSize(textureText->getOriginalWidth(), textureText->getOriginalHeight());
+			setScreenSize(textureText->getOriginalWidth(), textureText->getOriginalHeight());
 
 			if (textPositioningElement != nullptr)
 			{
-				textPositioningElement->setSize(textureText->getWidth(), textureText->getHeight());
+				textPositioningElement->setScreenSize(textureText->getWidth(), textureText->getHeight());
 				layout();
 			}
 		}
@@ -165,15 +165,15 @@ namespace AW
 			textPositioningElement->setTexture(cachedTextureText);
 			if (dynamicResizing)
 			{
-				textPositioningElement->setSize(cachedTextureText->getWidth(), cachedTextureText->getHeight());
+				textPositioningElement->setScreenSize(cachedTextureText->getWidth(), cachedTextureText->getHeight());
 			}
 		}
 
 		if (getHasClipRect())
 		{
 			auto clipRect = Rect(*getClipRect());
-			clipRect.x += (textPositioningElement->getWidth() - getWidth()) / 2.0 + getHalfWidth();
-			clipRect.y += (textPositioningElement->getHeight() - getHeight()) / 2.0 + getHalfHeight();
+			clipRect.x += (textPositioningElement->getScreenWidth() - getScreenWidth()) / 2.0 + getHalfWidth();
+			clipRect.y += (textPositioningElement->getScreenHeight() - getScreenHeight()) / 2.0 + getHalfHeight();
 			textPositioningElement->setClipRect(clipRect);
 		}
 
@@ -189,14 +189,14 @@ namespace AW
 			textPositioningElement->setTexture(cachedTextureText);
 			if (dynamicResizing)
 			{
-				textPositioningElement->setSize(cachedTextureText->getWidth(), cachedTextureText->getHeight());
+				textPositioningElement->setScreenSize(cachedTextureText->getWidth(), cachedTextureText->getHeight());
 			}
 		}
 	}
 
 	void Text::onLayoutChildren()
 	{
-		textPositioningElement->setPosition(getHalfWidth(), getHalfHeight());
+		textPositioningElement->setScreenPosition(getHalfWidth(), getHalfHeight());
 	}
 
 	void Text::setVertexShader(std::shared_ptr<ShaderReference> shader)

@@ -12,7 +12,7 @@ namespace AWGame
 	Player::Player()
 	{
 		setColor(AW::Color(255, 64, 32));
-		setSize(200.0, 200.0);
+		setScreenSize(200.0, 200.0);
 		GORegister(Player);
 	}
 
@@ -46,13 +46,13 @@ namespace AWGame
 		add(body);
 
 		const auto bodySensor = std::make_shared<AW::BodySensor>();
-		bodySensor->setWidth(getWidth());
-		bodySensor->setHeight(getHeight());
+		bodySensor->setWidth(getScreenWidth());
+		bodySensor->setHeight(getScreenHeight());
 		body->add(bodySensor);
 
 		const auto oDot = std::make_shared<AW::Rectangle>();
 		oDot->setColor(AW::Color::random());
-		oDot->setSize(50, 50);
+		oDot->setScreenSize(50, 50);
 		oDot->setFragmentShader(modules->shader->getShader({ "f-color", "f-circle" }));
 		oDot->centerAlignWithin(this, 0.0, 75.0);
 		add(oDot);

@@ -12,7 +12,7 @@ namespace AWGame
 {
 	Line::Line()
 	{
-		setSize(100, 1);
+		setScreenSize(100, 1);
 		GORegister(Line);
 	}
 

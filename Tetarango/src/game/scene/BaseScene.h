@@ -23,8 +23,8 @@ namespace AWGame
 		BaseScene() {};
 		BaseScene(SceneGame scene);
 
-		int getScreenWidth();
-		int getScreenHeight();
+		int getDisplayScreenWidth();
+		int getDisplayScreenHeight();
 
 		virtual void transitionToScene(SceneGame scene);
 		virtual void transitionToScene(std::string sceneName);

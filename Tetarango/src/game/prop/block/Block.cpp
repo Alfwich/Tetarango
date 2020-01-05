@@ -10,7 +10,7 @@ namespace AWGame
 {
 	Block::Block()
 	{
-		setSize(32, 32);
+		setScreenSize(32, 32);
 		GORegister(Block);
 	}
 

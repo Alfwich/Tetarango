@@ -22,8 +22,8 @@ namespace AW
 		void remove(std::shared_ptr<GameObject> ao);
 
 		const Rect* getScreenRect();
-		double getWidth();
-		double getHeight();
+		double getScreenWidth();
+		double getScreenHeight();
 
 		void scroll(double amount);
 		double scrollPixels(int amount);

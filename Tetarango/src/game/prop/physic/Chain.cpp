@@ -60,9 +60,9 @@ namespace AWGame
 		return std::dynamic_pointer_cast<Renderable>(shared_from_this());
 	}
 
-	const std::vector<AWVec2<double>>& Chain::getBodyScreenPoints()
+	const std::vector<AWVec2<float>> Chain::getBodyWorldPoints()
 	{
-		return getScreenPoints();
+		return getWorldPoints();
 	}
 
 	std::shared_ptr<AW::Body> Chain::getBodyObject()

@@ -372,7 +372,7 @@ namespace AW
 		setUVAttributePointer(defaultTextureUVBuffer, commonUVStride, commonOffset);
 	}
 
-	unsigned int Renderer::generateVertexBuffer(const std::vector<AWVec2<double>>& points)
+	unsigned int Renderer::generateVertexBuffer(const std::vector<AWVec2<float>>& points)
 	{
 		std::vector<float> pts;
 		for (const auto p : points)
@@ -784,8 +784,8 @@ namespace AW
 		const auto rect = rend->getRect() * Rect(renderPackage->zoom, renderPackage->zoom, scale, scale);
 		const auto rotation = renderPackage->rotation;
 
-		auto rectMiddleX = (rect.x - (rend->getWidth() / 2.0) * scale) + renderPackage->xOffset;
-		auto rectMiddleY = (rect.y - (rend->getHeight() / 2.0) * scale) + renderPackage->yOffset;
+		auto rectMiddleX = (rect.x - (rend->getScreenWidth() / 2.0) * scale) + renderPackage->xOffset;
+		auto rectMiddleY = (rect.y - (rend->getScreenHeight() / 2.0) * scale) + renderPackage->yOffset;
 
 		if (renderProcessingStack.top() == RenderPositionProcessingMode::Floor)
 		{
@@ -820,13 +820,13 @@ namespace AW
 		}
 
 		renderPackage->zoom *= rend->getScale();
-		renderPackage->rotation += rend->getRotation();
+		renderPackage->rotation += rend->getScreenRotation();
 		renderPackage->alpha *= rend->getAlpha();
 
-		renderPackage->world.x = renderPackage->world.x - (originW / 2.0) + rend->getX();
-		renderPackage->world.y = renderPackage->world.y - (originH / 2.0) + rend->getY();
-		renderPackage->world.w = rend->getWidth();
-		renderPackage->world.h = rend->getHeight();
+		renderPackage->world.x = renderPackage->world.x - (originW / 2.0) + rend->getScreenX();
+		renderPackage->world.y = renderPackage->world.y - (originH / 2.0) + rend->getScreenY();
+		renderPackage->world.w = rend->getScreenWidth();
+		renderPackage->world.h = rend->getScreenHeight();
 
 		rend->setWorldRectFromScreenRect(&renderPackage->world);
 		rend->setScreenRect(&renderPackage->computed);
@@ -968,21 +968,21 @@ namespace AW
 		glBindRenderbuffer(GL_RENDERBUFFER, backgroundRenderBuffer);
 		GLDbgCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, backgroundRenderBuffer));
 
-		frameBufferStack.push(std::make_tuple(cached->getWidth(), cached->getHeight(), backRenderBuffer, backgroundRenderBuffer));
+		frameBufferStack.push(std::make_tuple(cached->getScreenWidth(), cached->getScreenHeight(), backRenderBuffer, backgroundRenderBuffer));
 
 		unsigned int texColorBuffer;
 		if (!cached->hasTexture())
 		{
 			glGenTextures(1, &texColorBuffer);
 			glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, cached->getWidth(), cached->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, cached->getScreenWidth(), cached->getScreenHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 			// TODO: If MSAA is needed
 			// glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, currentScreenConfig.msaaSamples, GL_RGB, cached->getHeight(), cached->getWidth(), false);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
-			const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, cached->getWidth(), cached->getHeight());
+			const auto cachedTexture = std::make_shared<Texture>(texColorBuffer, cached->getScreenWidth(), cached->getScreenHeight());
 			cached->setTexture(cachedTexture);
 		}
 		else
@@ -999,8 +999,8 @@ namespace AW
 			return;
 		}
 
-		LM::mat4x4_ortho(pBackground, 0, cached->getWidth(), cached->getHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
-		setViewport(cached->getWidth(), cached->getHeight());
+		LM::mat4x4_ortho(pBackground, 0, cached->getScreenWidth(), cached->getScreenHeight(), 0, -(maxLayers / 2) * layerFactor, (maxLayers / 2) * layerFactor);
+		setViewport(cached->getScreenWidth(), cached->getScreenHeight());
 
 		const auto cColor = cached->getClearColor();
 		if (cColor != nullptr && cColor->a > 0)

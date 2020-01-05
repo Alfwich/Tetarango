@@ -66,7 +66,7 @@ namespace AWGame
 
 	void GameMainMenu::onLayoutChildren()
 	{
-		setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 
 		const auto backgroundFade = findChildWithName<AW::Rectangle>("background");
 		backgroundFade->setSizeAndCenter(this);

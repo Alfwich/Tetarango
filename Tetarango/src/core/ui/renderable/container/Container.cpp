@@ -19,7 +19,7 @@ namespace AW
 
 	void Container::setSizeToScreenSize()
 	{
-		setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
 	std::shared_ptr<SerializationClient> Container::doSerialize(SerializationHint hint)
@@ -66,25 +66,25 @@ namespace AW
 		childrenBounds.w = std::floor(childrenBounds.w);
 		childrenBounds.h = std::floor(childrenBounds.h);
 
-		setSize(childrenBounds.w - childrenBounds.x, childrenBounds.h - childrenBounds.y);
+		setScreenSize(childrenBounds.w - childrenBounds.x, childrenBounds.h - childrenBounds.y);
 
 		for (const auto renderable : getChildrenOfType<Renderable>())
 		{
-			renderable->movePosition(-childrenBounds.x, -childrenBounds.y);
+			renderable->moveScreenPosition(-childrenBounds.x, -childrenBounds.y);
 		}
 
 		isAutoLayingOut = false;
 	}
 
-	void Container::setWidth(double newWidth)
+	void Container::setScreenWidth(double newWidth)
 	{
-		Renderable::setWidth(newWidth);
+		Renderable::setScreenWidth(newWidth);
 		shouldAutoLayout = true;
 	}
 
-	void Container::setHeight(double newHeight)
+	void Container::setScreenHeight(double newHeight)
 	{
-		Renderable::setHeight(newHeight);
+		Renderable::setScreenHeight(newHeight);
 		shouldAutoLayout = true;
 	}
 

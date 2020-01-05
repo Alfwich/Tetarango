@@ -104,7 +104,7 @@ namespace AW
 
 		if (sizeToAnimation && currentAnimation != nullptr)
 		{
-			setSize(clipRect->w, clipRect->h);
+			setScreenSize(clipRect->w, clipRect->h);
 		}
 	}
 

@@ -68,7 +68,7 @@ namespace AWGame
 	{
 		contentContainer = std::make_shared<AW::Container>();
 		contentContainer->name = "cc";
-		contentContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
 
@@ -80,12 +80,14 @@ namespace AWGame
 		camera->listener = shared_from_this();
 		contentContainer->add(camera);
 
+		const auto screenWidthInMeters = AW::RigidBody::screenToWorldPosition(modules->screen->getWidth());
+		const auto screenHeightInMeters = AW::RigidBody::screenToWorldPosition(modules->screen->getHeight());
 		{
 			const auto platform = std::make_shared<Box>();
 			platform->setDynamic(false);
 			platform->setColor(64, 64, 64);
-			platform->setSize(80000.0, 100.0);
-			platform->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() - 150);
+			platform->setWorldSize(400.0, 0.5);
+			platform->setWorldPosition(screenWidthInMeters / 2.0, -(screenHeightInMeters / 2.0) - 5.0);
 			contentContainer->add(platform);
 		}
 
@@ -95,23 +97,23 @@ namespace AWGame
 		const auto platformA = std::make_shared<Box>();
 		platformA->setDynamic(false);
 		platformA->setColor(64, 64, 64);
-		platformA->setSize(500.0, 100.0);
-		platformA->setRotation(45.0);
-		platformA->setPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 + yOff);
+		platformA->setScreenSize(500.0, 100.0);
+		platformA->setScreenRotation(45.0);
+		platformA->setScreenPosition(modules->screen->getWidth() / 2.0 - xOff, modules->screen->getHeight() / 2.0 + yOff);
 		contentContainer->add(platformA);
 
 
 		const auto platformB = std::make_shared<Box>();
 		platformB->setDynamic(false);
 		platformB->setColor(64, 64, 64);
-		platformB->setSize(500.0, 100.0);
-		platformB->setRotation(-45.0);
-		platformB->setPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
+		platformB->setScreenSize(500.0, 100.0);
+		platformB->setScreenRotation(-45.0);
+		platformB->setScreenPosition(modules->screen->getWidth() / 2.0 + xOff, modules->screen->getHeight() / 2.0 + yOff);
 		contentContainer->add(platformB);
 
 		player = std::make_shared<Player>();
 		player->name = "player";
-		player->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
+		player->setScreenPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
 		contentContainer->add(player);
 
 		{
@@ -120,8 +122,8 @@ namespace AWGame
 				const auto binder = std::make_shared<Box>();
 				binder->setDynamic(true);
 				binder->setColor(128, 128, 128);
-				binder->setSize(50.0, 50.0);
-				binder->setPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
+				binder->setScreenSize(50.0, 50.0);
+				binder->setScreenPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0 - 250.0);
 				contentContainer->add(binder);
 
 				const auto joint = std::make_shared<AW::Joint>();
@@ -155,11 +157,11 @@ namespace AWGame
 			{
 				const auto x = std::cos(i * d) * dim;
 				const auto y = std::sin(i * d) * dim;
-				poly->setPoint(x, y);
+				poly->addScreenPoint(x, y);
 			}
-			poly->setRotation(AW::NumberHelper::random(360));
+			poly->setScreenRotation(AW::NumberHelper::random(360));
 
-			poly->setPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
+			poly->setScreenPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
 			contentContainer->add(poly);
 		}
 	}
@@ -186,19 +188,19 @@ namespace AWGame
 				b->setAlpha(0.0);
 
 				b->setDynamic(true);
-				b->setSize(50, 50);
-				b->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
+				b->setScreenSize(50, 50);
+				b->setScreenPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
 				b->setColor(blockColorGenerator.getBlockColor());
 
 				contentContainer->add(b);
 
 				const auto c = std::make_shared<Chain>();
 				c->setDynamic(true);
-				c->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
+				c->setScreenPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
 				c->setColor(blockColorGenerator.getBlockColor());
 				for (int i = 0, numPoints = AW::NumberHelper::randomInt(2, 4); i < numPoints; ++i)
 				{
-					c->setPoint(AW::NumberHelper::random(0, 300.0), AW::NumberHelper::random(0, 300.0));
+					c->addScreenPoint(AW::NumberHelper::random(0, 300.0), AW::NumberHelper::random(0, 300.0));
 				}
 
 				contentContainer->add(c);
@@ -214,7 +216,7 @@ namespace AWGame
 
 		for (const auto c : contentContainer->getChildrenOfType<Box>())
 		{
-			if (c->getY() > 4000)
+			if (c->getWorldY() < -20.0)
 			{
 				if (c->getAlpha() <= 0.0)
 				{
@@ -289,11 +291,11 @@ namespace AWGame
 				{
 					const auto x = std::cos(i * d) * dim;
 					const auto y = std::sin(i * d) * dim;
-					poly->setPoint(x, y);
+					poly->addScreenPoint(x, y);
 				}
-				poly->setRotation(AW::NumberHelper::random(360));
+				poly->setScreenRotation(AW::NumberHelper::random(360));
 
-				poly->setPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
+				poly->setScreenPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
 				contentContainer->add(poly);
 			}
 

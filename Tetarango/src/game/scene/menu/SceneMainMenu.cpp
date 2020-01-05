@@ -26,7 +26,7 @@ namespace AWGame
 	{
 		rootContainer = std::make_shared<AW::Container>();
 		rootContainer->setAlpha(0.0);
-		rootContainer->setSize(modules->screen->getWidth(), modules->screen->getHeight());
+		rootContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		rootContainer->topLeftAlignSelf();
 		add(rootContainer);
 

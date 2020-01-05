@@ -17,8 +17,8 @@ namespace AW
 	{
 		serializationClient->setBool("visualize", true);
 		const auto rec = std::make_shared<Rectangle>();
-		rec->setSize(getWidth(), getHeight());
-		rec->setPosition(getWidth() / 2.0, getHeight() / 2.0);
+		rec->setScreenSize(getScreenWidth(), getScreenHeight());
+		rec->setScreenPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
 		rec->setColor(0xff, 0, 0, 128);
 		add(rec);
 	}

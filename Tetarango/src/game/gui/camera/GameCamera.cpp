@@ -46,7 +46,7 @@ namespace AWGame
 		const auto targetPtr = target.lock();
 		if (targetPtr != nullptr)
 		{
-			setScreenAnchorPoint(targetPtr->getX(), targetPtr->getY());
+			setScreenAnchorPoint(targetPtr->getScreenX(), targetPtr->getScreenY());
 		}
 		else
 		{

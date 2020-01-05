@@ -79,7 +79,7 @@ namespace AWGame
 			}
 			else
 			{
-				title->setPosition(primaryTitle->getX() + primaryTitle->getHalfWidth() - title->getHalfWidth(), primaryTitle->getY());
+				title->setScreenPosition(primaryTitle->getScreenX() + primaryTitle->getHalfWidth() - title->getHalfWidth(), primaryTitle->getScreenY());
 			}
 
 			lastTitle = title;
@@ -104,8 +104,8 @@ namespace AWGame
 			{
 				const auto p = AW::NumberHelper::clamp(std::pow(position, 1.0 / 5.0), 0.0, 1.0);
 				title->setAlpha(p);
-				const auto offset = std::sin((title->getX() / (getWidth() / 2.0)) + p * AW::NumberHelper::PI * 2.0) * 200.0;
-				title->setY(primaryTitle->getY() + offset * (1.0 - p));
+				const auto offset = std::sin((title->getScreenX() / (getScreenWidth() / 2.0)) + p * AW::NumberHelper::PI * 2.0) * 200.0;
+				title->setScreenY(primaryTitle->getScreenY() + offset * (1.0 - p));
 			}
 			else if (id == continuousTransition->getId())
 			{
@@ -120,18 +120,18 @@ namespace AWGame
 				{
 					title->setColor(colors[0]);
 				}
-				const auto period = title->getX() / (getWidth() / 16.0);
+				const auto period = title->getScreenX() / (getScreenWidth() / 16.0);
 				if (position < 0.5)
 				{
 					const auto p = position * 2.0;
 					const auto offset = std::sin(period + p * AW::NumberHelper::PI * 2.0) * 10.0;
-					title->setY(primaryTitle->getY() - std::abs(offset * p));
+					title->setScreenY(primaryTitle->getScreenY() - std::abs(offset * p));
 				}
 				else
 				{
 					const auto p = (position - 0.5) * 2.0;
 					const auto offset = std::sin(period + p * AW::NumberHelper::PI * 2.0) * 10.0;
-					title->setY(primaryTitle->getY() - std::abs(offset * (1.0 - p)));
+					title->setScreenY(primaryTitle->getScreenY() - std::abs(offset * (1.0 - p)));
 				}
 			}
 		}

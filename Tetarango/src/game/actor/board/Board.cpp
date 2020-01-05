@@ -16,7 +16,7 @@ namespace AWGame
 	{
 		if (background != nullptr)
 		{
-			setSize(boardWidth * cellWidth + cellWidth, boardHeight * cellHeight + cellHeight);
+			setScreenSize(boardWidth * cellWidth + cellWidth, boardHeight * cellHeight + cellHeight);
 			background->setSizeAndCenter(this, -(cellWidth / 2.0), -(cellHeight / 2.0));
 		}
 	}
@@ -35,7 +35,7 @@ namespace AWGame
 	{
 		if (blockPtr != nullptr)
 		{
-			blockPtr->setPosition(blockPtr->blockX * cellWidth, blockPtr->blockY * cellHeight);
+			blockPtr->setScreenPosition(blockPtr->blockX * cellWidth, blockPtr->blockY * cellHeight);
 		}
 	}
 
@@ -123,7 +123,7 @@ namespace AWGame
 			}
 
 			const auto t = modules->animation->createTransition();
-			t->startTransition(child, 200.0, AW::Rect(child->getX() + (cellWidth * boardWidth) * AW::NumberHelper::random(-1, 1), child->getY() + (cellHeight * boardHeight) * AW::NumberHelper::random(-1, 1), 0, 0), 0.0);
+			t->startTransition(child, 200.0, AW::Rect(child->getScreenX() + (cellWidth * boardWidth) * AW::NumberHelper::random(-1, 1), child->getScreenY() + (cellHeight * boardHeight) * AW::NumberHelper::random(-1, 1), 0, 0), 0.0);
 			transitions.push_back(t);
 
 			child->blockX = -1;
@@ -466,7 +466,7 @@ namespace AWGame
 				blockMap.erase(calcMapOffset(outgoingBlock->blockX, outgoingBlock->blockY));
 
 				const auto t = modules->animation->createTransition();
-				t->startTransition(outgoingBlock, 200.0, AW::Rect(outgoingBlock->getX() + (cellWidth * boardWidth) * AW::NumberHelper::random(-1, 1), outgoingBlock->getY(), cellWidth, 0), 0.0);
+				t->startTransition(outgoingBlock, 200.0, AW::Rect(outgoingBlock->getScreenX() + (cellWidth * boardWidth) * AW::NumberHelper::random(-1, 1), outgoingBlock->getScreenY(), cellWidth, 0), 0.0);
 				transitions.push_back(t);
 
 				outgoingBlock->blockX = -1;
@@ -512,7 +512,7 @@ namespace AWGame
 			{
 				if (child->blockX == -1 || child->blockY == -1)
 				{
-					if (child->getWidth() == 0 || child->getHeight() == 0)
+					if (child->getScreenWidth() == 0 || child->getScreenHeight() == 0)
 					{
 						child->removeFromParent();
 					}

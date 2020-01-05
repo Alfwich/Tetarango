@@ -15,7 +15,7 @@ namespace AWGame
 {
 	ButtonBasic::ButtonBasic() : BaseGui(GuiButton::ButtonBasic)
 	{
-		setSize(180, 80);
+		setScreenSize(180, 80);
 		GORegister(ButtonBasic);
 	}
 
@@ -114,7 +114,7 @@ namespace AWGame
 	void ButtonBasic::onLayoutChildren()
 	{
 		background->setSizeAndCenter(this);
-		label->setPosition(getWidth() / 2.0, getHeight() / 2.0);
+		label->setScreenPosition(getScreenWidth() / 2.0, getScreenHeight() / 2.0);
 	}
 
 	void ButtonBasic::onChildrenHydrated()

@@ -83,17 +83,17 @@ namespace AWGame
 
 	void ScrollBarBasic::updateScrollerPosition(bool instant)
 	{
-		const auto scrollerSize = getScrollerHeight() * getHeight();
+		const auto scrollerSize = getScrollerHeight() * getScreenHeight();
 		auto targetRect = scroller->getRect();
 		if (getHorizontal())
 		{
 			targetRect.y = getHalfHeight();
-			targetRect.x = getScrollPosition() * (getWidth() - scroller->getWidth()) + scroller->getHalfWidth();
+			targetRect.x = getScrollPosition() * (getScreenWidth() - scroller->getScreenWidth()) + scroller->getHalfWidth();
 		}
 		else
 		{
 			targetRect.x = getHalfWidth();
-			targetRect.y = getScrollPosition() * (getHeight() - scroller->getHeight()) + scroller->getHalfHeight();
+			targetRect.y = getScrollPosition() * (getScreenHeight() - scroller->getScreenHeight()) + scroller->getHalfHeight();
 		}
 		scrollerTransition->startTransition(scroller, instant ? 0.0 : 50.0, targetRect);
 	}
@@ -202,15 +202,15 @@ namespace AWGame
 		background->topLeftAlignSelf();
 		if (getHorizontal())
 		{
-			const auto scrollerHeight = getScrollerHeight() * getWidth();
-			scroller->setHeight(getHeight());
-			scroller->setWidth(scrollerHeight);
+			const auto scrollerHeight = getScrollerHeight() * getScreenWidth();
+			scroller->setScreenHeight(getScreenHeight());
+			scroller->setScreenWidth(scrollerHeight);
 		}
 		else
 		{
-			const auto scrollerHeight = getScrollerHeight() * getHeight();
-			scroller->setHeight(scrollerHeight);
-			scroller->setWidth(getWidth());
+			const auto scrollerHeight = getScrollerHeight() * getScreenHeight();
+			scroller->setScreenHeight(scrollerHeight);
+			scroller->setScreenWidth(getScreenWidth());
 		}
 
 		updateScrollerPosition(true);
@@ -277,11 +277,11 @@ namespace AWGame
 				wasPressed = true;
 				if (getHorizontal())
 				{
-					setScrollPosition(startMousePositionScrollPosition + ((mouseX - startMousePositionOnClick) / (getWidth() - scroller->getWidth())));
+					setScrollPosition(startMousePositionScrollPosition + ((mouseX - startMousePositionOnClick) / (getScreenWidth() - scroller->getScreenWidth())));
 				}
 				else
 				{
-					setScrollPosition(startMousePositionScrollPosition + ((mouseY - startMousePositionOnClick) / (getHeight() - scroller->getHeight())));
+					setScrollPosition(startMousePositionScrollPosition + ((mouseY - startMousePositionOnClick) / (getScreenHeight() - scroller->getScreenHeight())));
 				}
 			}
 		}

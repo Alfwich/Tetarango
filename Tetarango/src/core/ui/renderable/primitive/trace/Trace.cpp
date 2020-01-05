@@ -52,21 +52,21 @@ namespace AW
 		auto wr = Rect(getWorldRect());
 		auto tD = first.distance(&wr);
 		const auto d = length / numSegments;
-		const auto yOffset = getHeight() / 2.0;
-		const auto h = getHeight();
+		const auto yOffset = getScreenHeight() / 2.0;
+		const auto h = getScreenHeight();
 		auto lastRect = Rect();
 
 		for (const auto rect : getChildrenOfType<AW::Rectangle>())
 		{
 			if (tD > d)
 			{
-				rect->setSizeAndPosition(lastRect.x - d, yOffset, d, h);
+				rect->setScreenSizeAndPosition(lastRect.x - d, yOffset, d, h);
 				tD -= d;
 				lastRect = rect->getRect();
 			}
 			else if (tD > 0)
 			{
-				rect->setSizeAndPosition(lastRect.x - tD, yOffset, tD, h);
+				rect->setScreenSizeAndPosition(lastRect.x - tD, yOffset, tD, h);
 				break;
 			}
 		}
