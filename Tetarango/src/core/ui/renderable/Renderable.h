@@ -129,8 +129,8 @@ namespace AW
 
 		virtual void setWorldRectFromScreenRect(Rect* r);
 		virtual void setScreenRect(Rect* r);
-		virtual const Rect* getWorldRect();
-		virtual const Rect* getScreenRect();
+		virtual const Rect* getWorldRect() const;
+		virtual const Rect* getScreenRect() const;
 
 		virtual Rect* getCollisionRect();
 
@@ -139,20 +139,20 @@ namespace AW
 		void setClipRect(const Rect* rect);
 		void setClipRect(const Rect& rect);
 
-		virtual float getWorldX();
-		virtual float getWorldY();
-		virtual float getWorldWidth();
-		virtual float getWorldHeight();
+		virtual float getWorldX() const;
+		virtual float getWorldY() const;
+		virtual float getWorldWidth() const;
+		virtual float getWorldHeight() const;
 
 		virtual void setWorldX(float newX);
 		virtual void setWorldY(float newY);
 		virtual void setWorldWidth(float newWidth);
 		virtual void setWorldHeight(float newHeight);
 
-		virtual double getScreenX();
-		virtual double getScreenY();
-		virtual double getScreenWidth();
-		virtual double getScreenHeight();
+		virtual double getScreenX() const;
+		virtual double getScreenY() const;
+		virtual double getScreenWidth() const;
+		virtual double getScreenHeight() const;
 
 		virtual void setScreenX(double newX);
 		virtual void setScreenY(double newY);
@@ -186,94 +186,77 @@ namespace AW
 		void setWorldSize(float width, float height);
 		void rotateWorld(float radians);
 
-		double getScreenLeft();
-		double getScreenRight();
-		double getScreenTop();
-		double getScreenBottom();
-		double getScreenHalfWidth();
-		double getScreenHalfHeight();
+		double getScreenLeft() const;
+		double getScreenRight() const;
+		double getScreenTop() const;
+		double getScreenBottom() const;
+		double getScreenHalfWidth() const;
+		double getScreenHalfHeight() const;
+
+		float getWorldLeft() const;
+		float getWorldRight() const;
+		float getWorldTop() const;
+		float getWorldBottom() const;
+		float getWorldHalfWidth() const;
+		float getWorldHalfHeight() const;
 
 		void topLeftAlignSelf(double xOffset = 0.0, double yOffset = 0.0);
 
 		void setPosition(const std::shared_ptr<Renderable>& other);
 
-		void centerWithin(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void centerWithin(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerWithin(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerAlignWithin(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void matchPosition(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toLeftOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftTopOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftBottomOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightTopOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightBottomOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopLeftOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopRightOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomLeftOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomRightOf(const Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
+		void setSize(const Renderable* other, double wOffset = 0.0, double hOffset = 0.0);
+		void setSizeAndCenter(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
+		void leftAlign(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerLeftIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerRightIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopLeftIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopRightIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomLeftIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomRightIn(const Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
 
-		void centerAlignWithin(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void centerAlignWithin(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void matchPosition(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void matchPosition(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toLeftTopOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftTopOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toLeftBottomOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toLeftBottomOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toRightOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toRightTopOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightTopOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toRightBottomOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toRightBottomOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toTopOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toTopLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toTopRightOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toTopRightOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toBottomOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toBottomLeftOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomLeftOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void toBottomRightOf(Renderable* other, double xPadding = 0.0, double yPadding = 0.0);
-		void toBottomRightOf(std::shared_ptr<Renderable> other, double xPadding = 0.0, double yPadding = 0.0);
-
-		void setSize(Renderable* other, double wOffset = 0.0, double hOffset = 0.0);
-		void setSize(std::shared_ptr<Renderable> other, double wOffset = 0.0, double hOffset = 0.0);
-
-		void setSizeAndCenter(Renderable* other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
-		void setSizeAndCenter(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
-
-		void leftAlign(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void leftAlign(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerLeftIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerLeftIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerRightIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerRightIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerTopIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerBottomIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerTopLeftIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopLeftIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerTopRightIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerTopRightIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerBottomLeftIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomLeftIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
-
-		void toInnerBottomRightIn(Renderable* other, double xOffset = 0.0, double yOffset = 0.0);
-		void toInnerBottomRightIn(std::shared_ptr<Renderable> other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerAlignWithin(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void centerWithin(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void matchPosition(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toLeftOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftTopOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toLeftBottomOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightTopOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toRightBottomOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopLeftOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toTopRightOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomLeftOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void toBottomRightOf(const std::shared_ptr<Renderable>& other, double xPadding = 0.0, double yPadding = 0.0);
+		void setSize(const std::shared_ptr<Renderable>& other, double wOffset = 0.0, double hOffset = 0.0);
+		void setSizeAndCenter(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0, double wOffset = 0.0, double hOffset = 0.0);
+		void leftAlign(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerLeftIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerRightIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopLeftIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerTopRightIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomLeftIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
+		void toInnerBottomRightIn(const std::shared_ptr<Renderable>& other, double xOffset = 0.0, double yOffset = 0.0);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);

@@ -84,17 +84,17 @@ namespace AW
 		}
 	}
 
-	const Rect* ScrollContainer::getScreenRect()
+	const Rect* ScrollContainer::getScreenRect() const
 	{
 		return scrollContainer->getScreenRect();
 	}
 
-	double ScrollContainer::getScreenWidth()
+	double ScrollContainer::getScreenWidth() const
 	{
 		return scrollContainer->getScreenWidth();
 	}
 
-	double ScrollContainer::getScreenHeight()
+	double ScrollContainer::getScreenHeight() const
 	{
 		return scrollContainer->getScreenHeight();
 	}
