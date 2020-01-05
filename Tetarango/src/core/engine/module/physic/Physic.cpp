@@ -398,21 +398,22 @@ namespace AW
 
 			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyBeginContact)
 			{
-				const auto sensorPtr = contactToSensorPair.second.lock();
-				if (sensorPtr != nullptr && sensorPtr->hasSensor())
+				const auto sensorPtr = contactToSensorPair->sensor.lock();
+				if (sensorPtr != nullptr)
 				{
-					sensorPtr->BeginContact(contactToSensorPair.first);
+					sensorPtr->beginContact(contactToSensorPair->a, contactToSensorPair->b);
 				}
 			}
 			worldBundle->sensorsToNotifyBeginContact.clear();
 
 			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyEndContact)
 			{
-				const auto sensorPtr = contactToSensorPair.second.lock();
-				if (sensorPtr != nullptr && sensorPtr->hasSensor())
+				const auto sensorPtr = contactToSensorPair->sensor.lock();
+				if (sensorPtr != nullptr)
 				{
-					sensorPtr->EndContact(contactToSensorPair.first);
+					sensorPtr->endContact(contactToSensorPair->a, contactToSensorPair->b);
 				}
+
 			}
 			worldBundle->sensorsToNotifyEndContact.clear();
 		}

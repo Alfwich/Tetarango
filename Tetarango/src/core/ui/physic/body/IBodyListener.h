@@ -9,6 +9,16 @@ namespace AW
 {
 	class Body;
 
+	class ContactBundle
+	{
+	public:
+		ContactBundle(void *bodyA, void *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB) 
+			: bodyA(static_cast<Body*>(bodyA)), bodyB(static_cast<Body*>(bodyB)), fixtureA(fixtureA), fixtureB(fixtureB) {};
+
+		Body *bodyA, *bodyB;
+		b2Fixture *fixtureA, *fixtureB;
+	};
+
 	class IBodyListener
 	{
 	public:
@@ -20,8 +30,8 @@ namespace AW
 
 		virtual const std::vector<AWVec2<double>>& getBodyScreenPoints() { return noop; };
 
-		virtual void onBeginContact(const Body* bodyA, const Body* bodyB, b2Contact* contact) { /* NO-OP */ };
-		virtual void onEndContact(const Body* bodyA, const Body* bodyB, b2Contact* contact) { /* NO-OP */ };
+		virtual void onBeginContact(std::unique_ptr<ContactBundle> bundle) { /* NO-OP */ };
+		virtual void onEndContact(std::unique_ptr<ContactBundle> bundle) { /* NO-OP */ };
 
 	};
 }

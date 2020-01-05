@@ -30,7 +30,7 @@ namespace AWGame
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
 
-		virtual void onBeginContact(const AW::Body* bodyA, const AW::Body* bodyB, b2Contact* contact);
-		virtual void onEndContact(const AW::Body* bodyA, const AW::Body* bodyB, b2Contact* contact);
+		virtual void onBeginContact(std::unique_ptr<AW::ContactBundle> bundle);
+		virtual void onEndContact(std::unique_ptr<AW::ContactBundle> bundle);
 	};
 }

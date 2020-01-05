@@ -28,6 +28,15 @@ namespace AW
 			b2Body *body;
 		};
 
+		class RigidBodyContactBundle
+		{
+		public:
+			RigidBodyContactBundle(b2Fixture* a, b2Fixture* b, const std::shared_ptr<RigidBodySensor>& sensor) :a(a), b(b), sensor(sensor) {};
+			b2Fixture *a;
+			b2Fixture *b;
+			const std::weak_ptr<RigidBodySensor> sensor;
+		};
+
 		class WorldBundle : public b2ContactListener
 		{
 		public:
@@ -41,8 +50,8 @@ namespace AW
 			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
 			std::list<std::weak_ptr<RigidBodySensor>> sensors;
 
-			std::vector<std::pair<b2Contact*, std::weak_ptr<RigidBodySensor>>> sensorsToNotifyBeginContact;
-			std::vector<std::pair<b2Contact*, std::weak_ptr<RigidBodySensor>>> sensorsToNotifyEndContact;
+			std::vector<std::shared_ptr<RigidBodyContactBundle>> sensorsToNotifyBeginContact;
+			std::vector<std::shared_ptr<RigidBodyContactBundle>> sensorsToNotifyEndContact;
 
 			void BeginContact(b2Contact* contact)
 			{
@@ -50,7 +59,7 @@ namespace AW
 				{
 					if (auto ptr = (*it).lock())
 					{
-						sensorsToNotifyBeginContact.push_back(std::make_pair(contact, (*it)));
+						sensorsToNotifyBeginContact.push_back(std::make_shared<RigidBodyContactBundle>(contact->GetFixtureA(), contact->GetFixtureB(), ptr));
 						++it;
 					}
 					else
@@ -66,7 +75,7 @@ namespace AW
 				{
 					if (auto ptr = (*it).lock())
 					{
-						sensorsToNotifyEndContact.push_back(std::make_pair(contact, (*it)));
+						sensorsToNotifyEndContact.push_back(std::make_shared<RigidBodyContactBundle>(contact->GetFixtureA(), contact->GetFixtureB(), ptr));
 						++it;
 					}
 					else

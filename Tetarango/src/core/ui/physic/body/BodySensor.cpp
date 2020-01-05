@@ -138,21 +138,21 @@ namespace AW
 		return nullptr;
 	}
 
-	void BodySensor::onBeginContact(void* bodyA, void* bodyB, b2Contact * contact)
+	void BodySensor::onBeginContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB)
 	{
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)
 		{
-			listenerPtr->onBeginContact(static_cast<Body*>(bodyA), static_cast<Body*>(bodyB), contact);
+			listenerPtr->onBeginContact(std::make_unique<ContactBundle>(bodyA->GetUserData(), bodyB->GetUserData(), fixtureA, fixtureB));
 		}
 	}
 
-	void BodySensor::onEndContact(void* bodyA, void* bodyB, b2Contact * contact)
+	void BodySensor::onEndContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB)
 	{
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)
 		{
-			listenerPtr->onEndContact(static_cast<Body*>(bodyA), static_cast<Body*>(bodyB), contact);
+			listenerPtr->onEndContact(std::make_unique<ContactBundle>(bodyA->GetUserData(), bodyB->GetUserData(), fixtureA, fixtureB));
 		}
 	}
 

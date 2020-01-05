@@ -89,13 +89,15 @@ namespace AWGame
 		return body;
 	}
 
-	void Player::onBeginContact(const AW::Body * bodyA, const AW::Body * bodyB, b2Contact * contact)
+	void Player::onBeginContact(std::unique_ptr<AW::ContactBundle> bundle)
 	{
 		// TODO: Something with this
+		std::cout << "onBeginContact" << std::endl;
 	}
 
-	void Player::onEndContact(const AW::Body * bodyA, const AW::Body * bodyB, b2Contact * contact)
+	void Player::onEndContact(std::unique_ptr<AW::ContactBundle> bundle)
 	{
 		// TODO: Something with this
+		std::cout << "onEndContact" << std::endl;
 	}
 }

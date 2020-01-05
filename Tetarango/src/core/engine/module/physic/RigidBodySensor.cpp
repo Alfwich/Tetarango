@@ -34,33 +34,29 @@ namespace AW
 		return worldId;
 	}
 
-	void RigidBodySensor::BeginContact(b2Contact *contact)
+	void RigidBodySensor::beginContact(b2Fixture* fixtureA, b2Fixture* fixtureB)
 	{
 		if (!hasSensor() || bodyReference == nullptr) return;
 
-		const auto fixA = contact->GetFixtureA();
-		const auto bodyA = fixA->GetBody();
-		const auto fixB = contact->GetFixtureB();
-		const auto bodyB = fixB->GetBody();
+		const auto bodyA = fixtureA->GetBody();
+		const auto bodyB = fixtureB->GetBody();
 
-		if ((bodyA == bodyReference || bodyB == bodyReference) && (fixA->IsSensor() || fixB->IsSensor()))
+		if ((bodyA == bodyReference || bodyB == bodyReference) && (fixtureA->IsSensor() || fixtureB->IsSensor()))
 		{
-			onBeginContact(bodyA->GetUserData(), bodyB->GetUserData(), contact);
+			onBeginContact(bodyA, bodyB, fixtureA, fixtureB);
 		}
 	}
 
-	void RigidBodySensor::EndContact(b2Contact *contact)
+	void RigidBodySensor::endContact(b2Fixture * fixtureA, b2Fixture * fixtureB)
 	{
 		if (!hasSensor() || bodyReference == nullptr) return;
 
-		const auto fixA = contact->GetFixtureA();
-		const auto bodyA = fixA->GetBody();
-		const auto fixB = contact->GetFixtureB();
-		const auto bodyB = fixB->GetBody();
+		const auto bodyA = fixtureA->GetBody();
+		const auto bodyB = fixtureB->GetBody();
 
-		if ((bodyA == bodyReference || bodyB == bodyReference) && (fixA->IsSensor() || fixB->IsSensor()))
+		if ((bodyA == bodyReference || bodyB == bodyReference) && (fixtureA->IsSensor() || fixtureB->IsSensor()))
 		{
-			onEndContact(bodyA->GetUserData(), bodyB->GetUserData(), contact);
+			onEndContact(bodyA, bodyB, fixtureA, fixtureB);
 		}
 	}
 }

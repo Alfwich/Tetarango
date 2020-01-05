@@ -5,6 +5,7 @@
 #include "ui/renderable/element/DisplayBuffer.h"
 #include "generator/block/GeneratorBlock.h"
 #include "prop/physic/Poly.h"
+#include "prop/physic/Chain.h"
 
 namespace
 {
@@ -190,6 +191,17 @@ namespace AWGame
 				b->setColor(blockColorGenerator.getBlockColor());
 
 				contentContainer->add(b);
+
+				const auto c = std::make_shared<Chain>();
+				c->setDynamic(true);
+				c->setPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
+				c->setColor(blockColorGenerator.getBlockColor());
+				for (int i = 0, numPoints = AW::NumberHelper::randomInt(2, 4); i < numPoints; ++i)
+				{
+					c->setPoint(AW::NumberHelper::random(0, 300.0), AW::NumberHelper::random(0, 300.0));
+				}
+
+				contentContainer->add(c);
 			}
 
 			modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
