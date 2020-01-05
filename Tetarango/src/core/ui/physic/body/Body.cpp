@@ -31,22 +31,6 @@ namespace AW
 		return nullptr;
 	}
 
-	std::vector<b2Vec2> Body::translateScreenPointsToWorldPoints(const std::shared_ptr<Renderable>& rend, const std::vector<AWVec2<float>>& screenPoints)
-	{
-		const auto widthFactor = screenToWorldPosition(rend->getScreenWidth());
-		const auto heightFactor = screenToWorldPosition(rend->getScreenHeight());
-		const auto scaleFactor = AWVec2<double>(1.0 / widthFactor, 1.0 / heightFactor);
-		auto b2Pts = std::vector<b2Vec2>();
-
-		for (const auto pt : screenPoints)
-		{
-			auto world = screenToWorld(pt);
-			b2Pts.push_back(world.asB2());
-		}
-
-		return b2Pts;
-	}
-
 	void Body::setAutoUpdate(bool flag)
 	{
 		autoUpdate = flag;

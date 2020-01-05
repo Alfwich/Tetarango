@@ -128,7 +128,6 @@ namespace AW
 		}
 
 		return result;
-
 	}
 
 	void Polygon::setFilled(bool flag)

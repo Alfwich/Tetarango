@@ -24,8 +24,6 @@ namespace AW
 		void notifyListenerOnPhysicUpdate();
 		std::shared_ptr<Renderable> getRenderableFromListener();
 
-		std::vector<b2Vec2> translateScreenPointsToWorldPoints(const std::shared_ptr<Renderable>& rend, const std::vector<AWVec2<float>>& screenPoints);
-
 	public:
 		Body();
 
