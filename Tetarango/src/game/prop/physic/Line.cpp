@@ -12,6 +12,7 @@ namespace AWGame
 {
 	Line::Line()
 	{
+		layoutSpace = AW::LayoutSpace::World;
 		setScreenSize(100, 1);
 		GORegister(Line);
 	}

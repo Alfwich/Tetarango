@@ -9,13 +9,17 @@ namespace AWGame
 {
 	Box::Box()
 	{
+		layoutSpace = AW::LayoutSpace::World;
 		setScreenSize(32, 32);
 		GORegister(Box);
 	}
 
 	void Box::onBindShaders()
 	{
-		fragmentShader = modules->shader->getShader({ "f-color" });
+		if (fragmentShader == nullptr)
+		{
+			fragmentShader = modules->shader->getShader({ "f-color" });
+		}
 	}
 
 	void Box::onCreateChildren()

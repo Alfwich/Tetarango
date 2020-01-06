@@ -9,6 +9,7 @@ namespace AWGame
 {
 	Chain::Chain()
 	{
+		layoutSpace = AW::LayoutSpace::World;
 		setFilled(false);
 		GORegister(Chain);
 	}

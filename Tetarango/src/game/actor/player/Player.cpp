@@ -11,6 +11,7 @@ namespace AWGame
 {
 	Player::Player()
 	{
+		layoutSpace = AW::LayoutSpace::World;
 		setColor(AW::Color(255, 64, 32));
 		setScreenSize(200.0, 200.0);
 		GORegister(Player);

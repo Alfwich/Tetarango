@@ -9,6 +9,7 @@ namespace AWGame
 {
 	Poly::Poly()
 	{
+		layoutSpace = AW::LayoutSpace::World;
 		GORegister(Poly);
 	}
 

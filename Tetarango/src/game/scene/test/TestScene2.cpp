@@ -88,7 +88,7 @@ namespace AWGame
 			const auto platform = std::make_shared<Box>();
 			platform->setDynamic(false);
 			platform->setColor(64, 64, 64);
-			platform->setWorldSize(400.0, 0.5);
+			platform->setWorldSize(100.0, 0.5);
 			platform->setWorldPosition(screenWidthInMeters / 2.0, -(screenHeightInMeters / 2.0) - 5.0);
 			contentContainer->add(platform);
 		}
@@ -166,6 +166,20 @@ namespace AWGame
 			poly->setScreenPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
 			contentContainer->add(poly);
 		}
+
+		for (int i = 0; i < 5; ++i)
+		{
+			const auto c = std::make_shared<Chain>();
+			c->setDynamic(true);
+			c->setScreenPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
+			c->setColor(blockColorGenerator.getBlockColor());
+			for (int i = 0, numPoints = AW::NumberHelper::randomInt(4, 8); i < numPoints; ++i)
+			{
+				c->addScreenPoint(AW::NumberHelper::random(0, 300.0), AW::NumberHelper::random(0, 300.0));
+			}
+
+			contentContainer->add(c);
+		}
 	}
 
 	void TestScene2::onLayoutChildren()
@@ -184,7 +198,7 @@ namespace AWGame
 	{
 		if (isAttached())
 		{
-			if (contentContainer->getChildren().size() < 400)
+			if (contentContainer->getChildren().size() < 800)
 			{
 				const auto b = std::make_shared<Box>();
 				b->setAlpha(0.0);
@@ -193,21 +207,23 @@ namespace AWGame
 				b->setScreenSize(50, 50);
 				b->setScreenPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
 				b->setColor(blockColorGenerator.getBlockColor());
+				b->setTexture("prop-blocks");
+
+				const auto fragmentShader = modules->shader->getShader({ "block" }, true);
+
+				b->setFragmentShader(fragmentShader);
+				b->getFragmentShader()->setFloatIUParam("clipX", 32.0);
+				b->getFragmentShader()->setFloatIUParam("clipY", 0.0);
+				b->getFragmentShader()->setFloatIUParam("clipWidth", 64.0);
+				b->getFragmentShader()->setFloatIUParam("clipHeight", 64.0);
+				b->getFragmentShader()->setFloatIUParam("blockBorderSize", 2.0);
+				b->getFragmentShader()->setFloatIUParam("blockEffect", 0.5);
+				b->getFragmentShader()->setFloatIUParam("blockEffectP", 0.25);
+				b->getFragmentShader()->setFloatIUParam("blockEffectG", 0.4);
+				b->getFragmentShader()->setFloatIUParam("blockCenterFill", AW::NumberHelper::random(0.5, 1.0));
+				b->getFragmentShader()->setFloatIUParam("fScanlineRetroAmount", 0.25);
 
 				contentContainer->add(b);
-
-				/*
-				const auto c = std::make_shared<Chain>();
-				c->setDynamic(true);
-				c->setScreenPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
-				c->setColor(blockColorGenerator.getBlockColor());
-				for (int i = 0, numPoints = AW::NumberHelper::randomInt(2, 4); i < numPoints; ++i)
-				{
-					c->addScreenPoint(AW::NumberHelper::random(0, 300.0), AW::NumberHelper::random(0, 300.0));
-				}
-
-				contentContainer->add(c);
-				*/
 			}
 
 			modules->event->registerTimeoutCallback(shared_from_this(), spawnMs);
@@ -283,8 +299,8 @@ namespace AWGame
 
 		if (key == AWKey::SEVEN)
 		{
-			const auto dim = 100.0;
-			for (auto i = 0; i < 100; ++i)
+			const auto dim = 50.0;
+			for (auto i = 0; i < 30; ++i)
 			{
 				const auto poly = std::make_shared<Poly>();
 				poly->setColor(AW::Color::random());
@@ -297,9 +313,10 @@ namespace AWGame
 					const auto y = std::sin(i * d) * dim;
 					poly->addScreenPoint(x, y);
 				}
+				poly->centerBalancePoints();
 				poly->setScreenRotation(AW::NumberHelper::random(360));
 
-				poly->setScreenPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-20000.0, 20000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
+				poly->setScreenPosition((modules->screen->getWidth() / 2.0) + AW::NumberHelper::random(-2000.0, 2000.0), AW::NumberHelper::random(modules->screen->getHeight() / 2.0 - 10000.0));
 				contentContainer->add(poly);
 			}
 
