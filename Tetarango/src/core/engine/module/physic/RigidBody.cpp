@@ -4,48 +4,6 @@
 
 namespace AW
 {
-	const float RigidBody::scalingFactor = 200.f;
-
-	float RigidBody::screenToWorldPosition(float screen)
-	{
-		return screen / scalingFactor;
-	}
-
-	float RigidBody::worldToScreenPosition(float world)
-	{
-		return world * scalingFactor;
-	}
-
-	float RigidBody::screenToWorldRotation(float degrees)
-	{
-		return degrees * -(float)(AW::NumberHelper::PI / 180.0);
-	}
-
-	float RigidBody::worldToScreenRotation(float radians)
-	{
-		return radians * -(float)(180.0 / AW::NumberHelper::PI);
-	}
-
-	AWVec2<float> RigidBody::worldToScreen(const AWVec2<float>& world)
-	{
-		return AWVec2<float>(worldToScreenPosition(world.x), -worldToScreenPosition(world.y));
-	}
-
-	AWVec2<float> RigidBody::screenToWorld(const AWVec2<float>& screen)
-	{
-		return AWVec2<float>(screenToWorldPosition(screen.x), -screenToWorldPosition(screen.y));
-	}
-
-	AWVec2<float> RigidBody::worldToScreen(const AWVec2<double>& world)
-	{
-		return AWVec2<float>(worldToScreenPosition((float)world.x), -worldToScreenPosition((float)world.y));
-	}
-
-	AWVec2<float> RigidBody::screenToWorld(const AWVec2<double>& screen)
-	{
-		return AWVec2<float>(screenToWorldPosition((float)screen.x), -screenToWorldPosition((float)screen.y));
-	}
-
 	RigidBody::RigidBody()
 	{
 		cachedLV.SetZero();

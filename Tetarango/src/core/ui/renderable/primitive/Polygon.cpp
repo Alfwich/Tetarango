@@ -38,7 +38,7 @@ namespace AW
 
 	void Polygon::insertWorldPoint(float x, float y)
 	{
-		screenPoints.push_back(AWVec2<float>(AW::RigidBody::worldToScreenPosition(x), AW::RigidBody::worldToScreenPosition(y)));
+		screenPoints.push_back(AWVec2<float>(Renderable::worldToScreenPosition(x), Renderable::worldToScreenPosition(y)));
 	}
 
 	void Polygon::addWorldPoint(AWVec2<float> p)
@@ -124,7 +124,7 @@ namespace AW
 
 		for (const auto pt : screenPoints)
 		{
-			result.push_back(RigidBody::screenToWorld(pt));
+			result.push_back(Renderable::screenToWorld(pt));
 		}
 
 		return result;

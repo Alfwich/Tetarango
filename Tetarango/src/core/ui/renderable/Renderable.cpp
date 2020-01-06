@@ -1,10 +1,51 @@
 #include "Renderable.h"
 
 #include "util/NumberHelper.h"
-#include "engine/module/physic/RigidBody.h"
 
 namespace AW
 {
+	const float Renderable::scalingFactor = 200.f;
+
+	float Renderable::screenToWorldPosition(float screen)
+	{
+		return screen / scalingFactor;
+	}
+
+	float Renderable::worldToScreenPosition(float world)
+	{
+		return world * scalingFactor;
+	}
+
+	float Renderable::screenToWorldRotation(float degrees)
+	{
+		return degrees * -(float)(AW::NumberHelper::PI / 180.0);
+	}
+
+	float Renderable::worldToScreenRotation(float radians)
+	{
+		return radians * -(float)(180.0 / AW::NumberHelper::PI);
+	}
+
+	AWVec2<float> Renderable::worldToScreen(const AWVec2<float>& world)
+	{
+		return AWVec2<float>(worldToScreenPosition(world.x), -worldToScreenPosition(world.y));
+	}
+
+	AWVec2<float> Renderable::screenToWorld(const AWVec2<float>& screen)
+	{
+		return AWVec2<float>(screenToWorldPosition(screen.x), -screenToWorldPosition(screen.y));
+	}
+
+	AWVec2<float> Renderable::worldToScreen(const AWVec2<double>& world)
+	{
+		return AWVec2<float>(worldToScreenPosition((float)world.x), -worldToScreenPosition((float)world.y));
+	}
+
+	AWVec2<float> Renderable::screenToWorld(const AWVec2<double>& screen)
+	{
+		return AWVec2<float>(screenToWorldPosition((float)screen.x), -screenToWorldPosition((float)screen.y));
+	}
+
 	const std::shared_ptr<ShaderReference>& Renderable::getVertexShader()
 	{
 		return vertexShader;
@@ -84,10 +125,10 @@ namespace AW
 
 	void Renderable::setWorldRectFromScreenRect(Rect* r)
 	{
-		worldRect.x = (double)RigidBody::screenToWorldPosition((float)r->x);
-		worldRect.y = (double)RigidBody::screenToWorldPosition((float)r->y);
-		worldRect.w = (double)RigidBody::screenToWorldPosition((float)r->w);
-		worldRect.h = (double)RigidBody::screenToWorldPosition((float)r->h);
+		worldRect.x = (double)Renderable::screenToWorldPosition((float)r->x);
+		worldRect.y = (double)Renderable::screenToWorldPosition((float)r->y);
+		worldRect.w = (double)Renderable::screenToWorldPosition((float)r->w);
+		worldRect.h = (double)Renderable::screenToWorldPosition((float)r->h);
 	}
 
 	void Renderable::setScreenRect(Rect* r)
@@ -133,12 +174,12 @@ namespace AW
 
 	float Renderable::getWorldX() const
 	{
-		return RigidBody::screenToWorldPosition((float)rect.x);
+		return Renderable::screenToWorldPosition((float)rect.x);
 	}
 
 	void Renderable::setWorldX(float newX)
 	{
-		rect.x = RigidBody::worldToScreenPosition(newX);
+		rect.x = Renderable::worldToScreenPosition(newX);
 	}
 
 	double Renderable::getScreenX() const
@@ -153,12 +194,12 @@ namespace AW
 
 	float Renderable::getWorldY() const
 	{
-		return -RigidBody::screenToWorldPosition((float)rect.y);
+		return -Renderable::screenToWorldPosition((float)rect.y);
 	}
 
 	void Renderable::setWorldY(float newY)
 	{
-		rect.y = RigidBody::worldToScreenPosition(newY);
+		rect.y = Renderable::worldToScreenPosition(newY);
 	}
 
 	double Renderable::getScreenY() const
@@ -173,12 +214,12 @@ namespace AW
 
 	float Renderable::getWorldWidth() const
 	{
-		return RigidBody::screenToWorldPosition((float)rect.w);
+		return Renderable::screenToWorldPosition((float)rect.w);
 	}
 
 	void Renderable::setWorldWidth(float newWidth)
 	{
-		rect.w = RigidBody::worldToScreenPosition(newWidth);
+		rect.w = Renderable::worldToScreenPosition(newWidth);
 	}
 
 	double Renderable::getScreenWidth() const
@@ -193,12 +234,12 @@ namespace AW
 
 	float Renderable::getWorldHeight() const
 	{
-		return RigidBody::screenToWorldPosition((float)rect.h);
+		return Renderable::screenToWorldPosition((float)rect.h);
 	}
 
 	void Renderable::setWorldHeight(float newHeight)
 	{
-		rect.h = RigidBody::worldToScreenPosition(newHeight);
+		rect.h = Renderable::worldToScreenPosition(newHeight);
 	}
 
 	double Renderable::getScreenHeight() const
@@ -279,12 +320,12 @@ namespace AW
 
 	double Renderable::getWorldRotation()
 	{
-		return -RigidBody::screenToWorldRotation((float)rot);
+		return -Renderable::screenToWorldRotation((float)rot);
 	}
 
 	void Renderable::setWorldRotation(float newRotation)
 	{
-		rot = RigidBody::worldToScreenRotation(newRotation);
+		rot = Renderable::worldToScreenRotation(newRotation);
 	}
 
 	double Renderable::getScreenRotation()
@@ -300,22 +341,28 @@ namespace AW
 	void Renderable::setWorldPosition(float x, float y)
 	{
 		setScreenPosition(
-			RigidBody::worldToScreenPosition(x),
-			-RigidBody::worldToScreenPosition(y)
+			Renderable::worldToScreenPosition(x),
+			-Renderable::worldToScreenPosition(y)
 		);
 	}
 
 	void Renderable::setWorldSize(float width, float height)
 	{
 		setScreenSize(
-			RigidBody::worldToScreenPosition(width),
-			RigidBody::worldToScreenPosition(height)
+			Renderable::worldToScreenPosition(width),
+			Renderable::worldToScreenPosition(height)
 		);
+	}
+
+	void Renderable::setWorldSizeAndPosition(float x, float y, float width, float height)
+	{
+		setWorldPosition(x, y);
+		setWorldSize(width, height);
 	}
 
 	void Renderable::rotateWorld(float radians)
 	{
-		rotateScreen(RigidBody::worldToScreenRotation(radians));
+		rotateScreen(Renderable::worldToScreenRotation(radians));
 	}
 
 	double Renderable::getScreenLeft() const
@@ -378,221 +425,366 @@ namespace AW
 		return getWorldHeight() / 2.f;
 	}
 
-	void Renderable::topLeftAlignSelf(double xOffset, double yOffset)
+	void Renderable::mutateOffsetsIfNeeded(float &x, float &y)
 	{
-		setScreenPosition(this->getScreenHalfWidth() + xOffset, this->getScreenHalfHeight() + yOffset);
-	}
-
-	void Renderable::centerWithin(const Renderable* other, double xOffset, double yOffset)
-	{
-		if (other != nullptr)
+		if (layoutSpace == LayoutSpace::World)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
+			x = worldToScreenPosition((float)x);
+			y = worldToScreenPosition((float)y);
 		}
 	}
 
-	void Renderable::centerAlignWithin(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::topLeftAlignSelf(float xOffset, float yOffset)
+	{
+		mutateOffsetsIfNeeded(xOffset, yOffset);
+
+		if (layoutSpace == LayoutSpace::Screen)
+			setScreenPosition(this->getScreenHalfWidth() + xOffset, this->getScreenHalfHeight() + yOffset);
+		else
+			setWorldPosition(this->getWorldHalfWidth() + xOffset, this->getWorldHalfHeight() + yOffset);
+	}
+
+	void Renderable::centerWithin(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
+			else
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldY() + yOffset);
 		}
 	}
 
-	void Renderable::matchPosition(const Renderable * other, double xOffset, double yOffset)
+	void Renderable::centerAlignWithin(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldHalfWidth() + xOffset, other->getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::toLeftOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::matchPosition(const Renderable * other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
+			else
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldY() + yOffset);
 		}
 	}
 
-	void Renderable::toLeftTopOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toLeftOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldY() + yOffset);
 		}
 	}
 
-	void Renderable::toLeftBottomOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toLeftTopOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::toRightOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toLeftBottomOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
-	void Renderable::toRightTopOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toRightOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			else
+				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldY() + yOffset);
 		}
 	}
 
-	void Renderable::toRightBottomOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toRightTopOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::toTopOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toRightBottomOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
-	void Renderable::toTopLeftOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toTopOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
-	void Renderable::toTopRightOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toTopLeftOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
-	void Renderable::toBottomOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toTopRightOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
-	void Renderable::toBottomRightOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toBottomOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::toBottomLeftOf(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toBottomRightOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::setSize(const Renderable* other, double wOffset, double hOffset)
+	void Renderable::toBottomLeftOf(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenSize(other->getScreenWidth() - wOffset, other->getScreenHeight() + hOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::setSizeAndCenter(const Renderable* other, double xOffset, double yOffset, double wOffset, double hOffset)
+	void Renderable::setSize(const Renderable* other, float wOffset, float hOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenSizeAndPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset, other->getScreenWidth() + wOffset * 2.0, other->getScreenHeight() + hOffset * 2.0);
+			mutateOffsetsIfNeeded(wOffset, hOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenSize(other->getScreenWidth() - wOffset, other->getScreenHeight() + hOffset);
+			else
+				setWorldSize(other->getWorldWidth() - wOffset, other->getWorldHeight() + hOffset);
 		}
 	}
 
-	void Renderable::leftAlign(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::setSizeAndCenter(const Renderable* other, float xOffset, float yOffset, float wOffset, float hOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+			mutateOffsetsIfNeeded(wOffset, hOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenSizeAndPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset, other->getScreenWidth() + wOffset * 2.f, other->getScreenHeight() + hOffset * 2.f);
+			else
+				setWorldSizeAndPosition(other->getWorldHalfWidth() + xOffset, other->getWorldHalfHeight() + yOffset, other->getWorldWidth() + wOffset * 2.f, other->getWorldHeight() + hOffset * 2.f);
 		}
 	}
 
-	void Renderable::toInnerLeftIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::leftAlign(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldY() + yOffset);
 		}
 	}
 
-	void Renderable::toInnerRightIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toInnerLeftIn(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldY() + yOffset);
 		}
 	}
 
-	void Renderable::toInnerTopIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toInnerRightIn(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
+			else
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldY() + yOffset);
 		}
 	}
 
-	void Renderable::toInnerBottomIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toInnerTopIn(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::toInnerTopLeftIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomIn(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
-	void Renderable::toInnerTopRightIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toInnerTopLeftIn(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+			
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::toInnerBottomLeftIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toInnerTopRightIn(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
+			else
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
-	void Renderable::toInnerBottomRightIn(const Renderable* other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomLeftIn(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
+		}
+	}
+
+	void Renderable::toInnerBottomRightIn(const Renderable* other, float xOffset, float yOffset)
+	{
+		if (other != nullptr)
+		{
+			mutateOffsetsIfNeeded(xOffset, yOffset);
+
+			if (layoutSpace == LayoutSpace::Screen)
+				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
+			else
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
 
-	void Renderable::centerWithin(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::centerWithin(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -601,7 +793,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::centerAlignWithin(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::centerAlignWithin(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -610,7 +802,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toLeftOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -619,7 +811,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchPosition(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::matchPosition(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -628,7 +820,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftTopOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toLeftTopOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -637,7 +829,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toLeftBottomOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toLeftBottomOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -646,7 +838,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toRightOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -655,7 +847,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightTopOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toRightTopOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -664,7 +856,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toRightBottomOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toRightBottomOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -673,7 +865,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toTopOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -682,7 +874,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopLeftOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toTopLeftOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -691,7 +883,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toTopRightOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toTopRightOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -700,7 +892,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toBottomOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -709,7 +901,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomLeftOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toBottomLeftOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -718,7 +910,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toBottomRightOf(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toBottomRightOf(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -727,7 +919,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::setSize(const std::shared_ptr<Renderable>& other, double wOffset, double hOffset)
+	void Renderable::setSize(const std::shared_ptr<Renderable>& other, float wOffset, float hOffset)
 	{
 		if (other != nullptr)
 		{
@@ -736,7 +928,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::setSizeAndCenter(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset, double wOffset, double hOffset)
+	void Renderable::setSizeAndCenter(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset, float wOffset, float hOffset)
 	{
 		if (other != nullptr)
 		{
@@ -745,7 +937,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::leftAlign(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::leftAlign(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -754,7 +946,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerLeftIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerLeftIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -763,7 +955,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerRightIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerRightIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -772,7 +964,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerTopIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -781,7 +973,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -790,7 +982,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopLeftIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerTopLeftIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -799,7 +991,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerTopRightIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerTopRightIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -808,7 +1000,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomLeftIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomLeftIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -817,7 +1009,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::toInnerBottomRightIn(const std::shared_ptr<Renderable>& other, double xOffset, double yOffset)
+	void Renderable::toInnerBottomRightIn(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
@@ -825,9 +1017,6 @@ namespace AW
 			toInnerBottomRightIn(otherPtr, xOffset, yOffset);
 		}
 	}
-
-
-
 
 	std::shared_ptr<SerializationClient> Renderable::doSerialize(SerializationHint hint)
 	{
@@ -856,6 +1045,7 @@ namespace AW
 		renderUpdateMode = (RenderUpdateMode)client->serializeInt("r-u-m", (int)renderUpdateMode);
 		renderTarget = (RenderTargetMode)client->serializeInt("r-target", (int)renderTarget);
 		renderColorMode = (RenderColorMode)client->serializeInt("r-color-m", (int)renderColorMode);
+		layoutSpace = (LayoutSpace)client->serializeInt("r-layout-s", (int)layoutSpace);
 
 		clipRect.x = client->serializeDouble("cr-x", clipRect.x);
 		clipRect.y = client->serializeDouble("cr-y", clipRect.y);

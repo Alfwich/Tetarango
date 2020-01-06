@@ -27,20 +27,6 @@ namespace AW
 		b2Body* bodyReference = nullptr;
 
 	public:
-		static const float scalingFactor;
-
-		static float screenToWorldPosition(float screen);
-		static float worldToScreenPosition(float world);
-
-		static float screenToWorldRotation(float degrees);
-		static float worldToScreenRotation(float radians);
-
-		static AWVec2<float> worldToScreen(const AWVec2<float>& world);
-		static AWVec2<float> screenToWorld(const AWVec2<float>& screen);
-
-		static AWVec2<float> worldToScreen(const AWVec2<double>& world);
-		static AWVec2<float> screenToWorld(const AWVec2<double>& screen);
-
 		RigidBody();
 
 		b2Body* createBody(const std::shared_ptr<b2World>& world);

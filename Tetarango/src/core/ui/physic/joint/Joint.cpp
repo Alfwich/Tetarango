@@ -143,12 +143,12 @@ namespace AW
 
 	void Joint::setJointDistance(float distance)
 	{
-		jointDistance = RigidBody::screenToWorldPosition(distance);
+		jointDistance = Renderable::screenToWorldPosition(distance);
 	}
 
 	double Joint::getJointDistance()
 	{
-		return RigidBody::worldToScreenPosition(jointDistance);
+		return Renderable::worldToScreenPosition(jointDistance);
 	}
 
 	std::shared_ptr<SerializationClient> Joint::doSerialize(SerializationHint hint)

@@ -106,11 +106,11 @@ namespace AW
 				b2FixtureDef fixtureDef;
 
 				b2PolygonShape collider;
-				collider.SetAsBox(RigidBody::screenToWorldPosition(rect.w) / 2.f, RigidBody::screenToWorldPosition(rect.h) / 2.f);
+				collider.SetAsBox(Renderable::screenToWorldPosition(rect.w) / 2.f, Renderable::screenToWorldPosition(rect.h) / 2.f);
 				for (auto v : collider.m_vertices)
 				{
-					v.x += RigidBody::screenToWorldPosition(rect.x);
-					v.y -= RigidBody::screenToWorldPosition(rect.y);
+					v.x += Renderable::screenToWorldPosition(rect.x);
+					v.y -= Renderable::screenToWorldPosition(rect.y);
 				}
 
 				fixtureDef.shape = &collider;

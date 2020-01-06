@@ -1,6 +1,7 @@
 #include "Body.h"
 
 #include "ui/renderable/primitive/Polygon.h"
+#include "ui/renderable/Renderable.h"
 
 namespace AW
 {
@@ -107,7 +108,7 @@ namespace AW
 		{
 			b2PolygonShape shape;
 
-			shape.SetAsBox(screenToWorldPosition(rend->getScreenWidth()) / 2.f, screenToWorldPosition(rend->getScreenHeight()) / 2.f);
+			shape.SetAsBox(Renderable::screenToWorldPosition(rend->getScreenWidth()) / 2.f, Renderable::screenToWorldPosition(rend->getScreenHeight()) / 2.f);
 			shape.SetAsBox(rend->getWorldWidth() / 2.f, rend->getWorldHeight() / 2.f);
 			fixtureDef.shape = &shape;
 

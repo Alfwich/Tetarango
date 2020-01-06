@@ -82,8 +82,8 @@ namespace AWGame
 		camera->listener = shared_from_this();
 		contentContainer->add(camera);
 
-		const auto screenWidthInMeters = AW::RigidBody::screenToWorldPosition(modules->screen->getWidth());
-		const auto screenHeightInMeters = AW::RigidBody::screenToWorldPosition(modules->screen->getHeight());
+		const auto screenWidthInMeters = AW::Renderable::screenToWorldPosition(modules->screen->getWidth());
+		const auto screenHeightInMeters = AW::Renderable::screenToWorldPosition(modules->screen->getHeight());
 		{
 			const auto platform = std::make_shared<Box>();
 			platform->setDynamic(false);
