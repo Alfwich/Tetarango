@@ -108,7 +108,7 @@ namespace AWGame
 		globalTransition->setDuration(450.0);
 		globalTransition->zIndex = 20;
 		globalTransition->listener = std::dynamic_pointer_cast<INotifyOnFade>(shared_from_this());
-		globalTransition->setScreenSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
+		globalTransition->setScreenPositionSize(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
 		globalTransition->renderPositionMode = AW::RenderPositionMode::Absolute;
 		add(globalTransition);
 
@@ -138,7 +138,7 @@ namespace AWGame
 		}
 
 		gameMainMenu->setScreenPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0);
-		globalTransition->setScreenSizeAndPosition(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
+		globalTransition->setScreenPositionSize(modules->screen->getWidth() / 2.0, modules->screen->getHeight() / 2.0, modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
 	void SceneMainGame::onChildrenHydrated()

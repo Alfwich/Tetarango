@@ -60,13 +60,13 @@ namespace AW
 		{
 			if (tD > d)
 			{
-				rect->setScreenSizeAndPosition(lastRect.x - d, yOffset, d, h);
+				rect->setScreenPositionSize(lastRect.x - d, yOffset, d, h);
 				tD -= d;
 				lastRect = rect->getRect();
 			}
 			else if (tD > 0)
 			{
-				rect->setScreenSizeAndPosition(lastRect.x - tD, yOffset, tD, h);
+				rect->setScreenPositionSize(lastRect.x - tD, yOffset, tD, h);
 				break;
 			}
 		}

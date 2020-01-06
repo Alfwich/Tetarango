@@ -11,6 +11,7 @@ namespace AWGame
 {
 	SceneWorldTetarango::SceneWorldTetarango() : BaseScene(SceneGame::WorldTetarango)
 	{
+		setShouldRebuildOnLoad();
 		GORegister(SceneWorldTetarango);
 	}
 
@@ -24,9 +25,10 @@ namespace AWGame
 	{
 		const auto contentContainer = std::make_shared<AW::Container>();
 		contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
-		contentContainer->topLeftAlignSelf();
 		add(contentContainer);
 
+
+		/*
 		const auto ground = std::make_shared<Chain>();
 		ground->setDynamic(false);
 		for (auto i = -30; i < 30; ++i)
@@ -34,11 +36,17 @@ namespace AWGame
 			ground->addWorldPoint(i, AW::NumberHelper::random(-1, 1));
 		}
 		ground->centerBalancePoints();
-		ground->centerAlignWithin(contentContainer);
+		contentContainer->add(ground);
+		*/
+
+		const auto ground = std::make_shared<Box>();
+		ground->setWorldSize(5, 5);
+		ground->topLeftAlignSelf();
 		contentContainer->add(ground);
 
 		const auto player = std::make_shared<Player>();
-		player->centerAlignWithin(contentContainer, 0.0, -100.0);
+		player->layoutSpace = AW::LayoutSpace::World;
+		player->toBottomRightOf(ground, 0, 1);
 		contentContainer->add(player);
 
 		const auto gameCamera = std::make_shared<GameCamera>();

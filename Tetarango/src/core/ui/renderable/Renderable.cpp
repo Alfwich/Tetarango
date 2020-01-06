@@ -264,11 +264,11 @@ namespace AW
 
 	void Renderable::onTransitionFrame(double p, const Rect& targetRect, double targetAlpha, int transitionId)
 	{
-		setScreenSizeAndPosition(targetRect);
+		setScreenPositionSize(targetRect);
 		setAlpha(targetAlpha);
 	}
 
-	void Renderable::setPosition(const std::shared_ptr<Renderable>& other)
+	void Renderable::setScreenPosition(const std::shared_ptr<Renderable>& other)
 	{
 		setScreenX(other->getScreenX());
 		setScreenY(other->getScreenY());
@@ -292,15 +292,15 @@ namespace AW
 		setScreenHeight(height);
 	}
 
-	void Renderable::setScreenSizeAndPosition(double x, double y, double width, double height)
+	void Renderable::setScreenPositionSize(double x, double y, double width, double height)
 	{
 		setScreenPosition(x, y);
 		setScreenSize(width, height);
 	}
 
-	void Renderable::setScreenSizeAndPosition(const Rect& rect)
+	void Renderable::setScreenPositionSize(const Rect& rect)
 	{
-		setScreenSizeAndPosition(rect.x, rect.y, rect.w, rect.h);
+		setScreenPositionSize(rect.x, rect.y, rect.w, rect.h);
 	}
 
 	void Renderable::setScale(double scale)
@@ -354,7 +354,7 @@ namespace AW
 		);
 	}
 
-	void Renderable::setWorldSizeAndPosition(float x, float y, float width, float height)
+	void Renderable::setWorldPositionAndSize(float x, float y, float width, float height)
 	{
 		setWorldPosition(x, y);
 		setWorldSize(width, height);
@@ -407,12 +407,12 @@ namespace AW
 
 	float Renderable::getWorldTop() const
 	{
-		return getWorldY() - getWorldHalfHeight();
+		return getWorldY() + getWorldHalfHeight();
 	}
 
 	float Renderable::getWorldBottom() const
 	{
-		return getWorldY() + getWorldHalfHeight();
+		return getWorldY() - getWorldHalfHeight();
 	}
 
 	float Renderable::getWorldHalfWidth() const
@@ -425,31 +425,18 @@ namespace AW
 		return getWorldHeight() / 2.f;
 	}
 
-	void Renderable::mutateOffsetsIfNeeded(float &x, float &y)
-	{
-		if (layoutSpace == LayoutSpace::World)
-		{
-			x = worldToScreenPosition((float)x);
-			y = worldToScreenPosition((float)y);
-		}
-	}
-
 	void Renderable::topLeftAlignSelf(float xOffset, float yOffset)
 	{
-		mutateOffsetsIfNeeded(xOffset, yOffset);
-
 		if (layoutSpace == LayoutSpace::Screen)
-			setScreenPosition(this->getScreenHalfWidth() + xOffset, this->getScreenHalfHeight() + yOffset);
+			setScreenPosition(getScreenHalfWidth() + xOffset, getScreenHalfHeight() + yOffset);
 		else
-			setWorldPosition(this->getWorldHalfWidth() + xOffset, this->getWorldHalfHeight() + yOffset);
+			setWorldPosition(getWorldHalfWidth() + xOffset, getWorldHalfHeight() - yOffset);
 	}
 
 	void Renderable::centerWithin(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
 			else
@@ -461,8 +448,6 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset);
 			else
@@ -474,8 +459,6 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
 			else
@@ -487,8 +470,6 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
 			else
@@ -500,12 +481,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -513,12 +492,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
@@ -526,8 +503,6 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
 			else
@@ -539,12 +514,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -552,12 +525,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
@@ -565,12 +536,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldX() + xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
@@ -578,12 +547,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
@@ -591,12 +558,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
@@ -604,12 +569,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldX() + xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -617,12 +580,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -630,12 +591,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -643,12 +602,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(wOffset, hOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
-				setScreenSize(other->getScreenWidth() - wOffset, other->getScreenHeight() + hOffset);
+				setScreenSize(other->getScreenWidth() + wOffset, other->getScreenHeight() + hOffset);
 			else
-				setWorldSize(other->getWorldWidth() - wOffset, other->getWorldHeight() + hOffset);
+				setWorldSize(other->getWorldWidth() + wOffset, other->getWorldHeight() + hOffset);
 		}
 	}
 
@@ -656,13 +613,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-			mutateOffsetsIfNeeded(wOffset, hOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
-				setScreenSizeAndPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset, other->getScreenWidth() + wOffset * 2.f, other->getScreenHeight() + hOffset * 2.f);
+				setScreenPositionSize(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset, other->getScreenWidth() + wOffset * 2.f, other->getScreenHeight() + hOffset * 2.f);
 			else
-				setWorldSizeAndPosition(other->getWorldHalfWidth() + xOffset, other->getWorldHalfHeight() + yOffset, other->getWorldWidth() + wOffset * 2.f, other->getWorldHeight() + hOffset * 2.f);
+				setWorldPositionAndSize(other->getWorldHalfWidth() + xOffset, other->getWorldHalfHeight() + yOffset, other->getWorldWidth() + wOffset * 2.f, other->getWorldHeight() + hOffset * 2.f);
 		}
 	}
 
@@ -670,8 +624,6 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
 			else
@@ -683,8 +635,6 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
 			else
@@ -696,8 +646,6 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
 			else
@@ -709,12 +657,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldX() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -722,12 +668,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldX() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
@@ -735,12 +679,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-			
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -748,12 +690,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenTop() + getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldTop() + getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldTop() - getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -761,12 +701,10 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
 
@@ -774,15 +712,12 @@ namespace AW
 	{
 		if (other != nullptr)
 		{
-			mutateOffsetsIfNeeded(xOffset, yOffset);
-
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenBottom() - getScreenHalfHeight() - yOffset);
 			else
-				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldBottom() - getWorldHalfHeight() - yOffset);
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldBottom() + getWorldHalfHeight() + yOffset);
 		}
 	}
-
 
 	void Renderable::centerWithin(const std::shared_ptr<Renderable>& other, float xOffset, float yOffset)
 	{
@@ -951,7 +886,7 @@ namespace AW
 		if (other != nullptr)
 		{
 			const auto otherPtr = other.get();
-			toInnerLeftIn(otherPtr, xOffset);
+			toInnerLeftIn(otherPtr, xOffset, yOffset);
 		}
 	}
 
@@ -960,7 +895,7 @@ namespace AW
 		if (other != nullptr)
 		{
 			const auto otherPtr = other.get();
-			toInnerRightIn(otherPtr, xOffset);
+			toInnerRightIn(otherPtr, xOffset, yOffset);
 		}
 	}
 
@@ -969,7 +904,7 @@ namespace AW
 		if (other != nullptr)
 		{
 			const auto otherPtr = other.get();
-			toInnerTopIn(otherPtr, yOffset);
+			toInnerTopIn(otherPtr, xOffset, yOffset);
 		}
 	}
 
@@ -978,7 +913,7 @@ namespace AW
 		if (other != nullptr)
 		{
 			const auto otherPtr = other.get();
-			toInnerBottomIn(otherPtr, yOffset);
+			toInnerBottomIn(otherPtr, xOffset, yOffset);
 		}
 	}
 

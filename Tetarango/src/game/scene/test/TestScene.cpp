@@ -149,6 +149,20 @@ namespace AWGame
 		blue->toRightOf(green, 2.0);
 		add(blue);
 
+		xF = std::make_shared<ScrollBarBasic>();
+		xF->renderPositionMode = AW::RenderPositionMode::Absolute;
+		xF->setScreenSize(30, 500);
+		xF->toRightOf(blue, 4.0);
+		add(xF);
+		xF->setScrollPosition(1.0);
+
+		yF = std::make_shared<ScrollBarBasic>();
+		yF->renderPositionMode = AW::RenderPositionMode::Absolute;
+		yF->setScreenSize(30, 500);
+		yF->toRightOf(xF, 2.0);
+		add(yF);
+		yF->setScrollPosition(1.0);
+
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
 
@@ -173,6 +187,15 @@ namespace AWGame
 			}
 			poly->setScreenPosition(AW::NumberHelper::random(-1000.0, 1000.0), AW::NumberHelper::random(-1000.0, 1000.0));
 			contentContainer->add(poly);
+		}
+
+		layoutExampleRects.clear();
+		for (int i = 0; i < 80; ++i)
+		{
+			const auto exR = std::make_shared<AW::Rectangle>();
+			exR->setAlpha(0.5);
+			layoutExampleRects.push_back(exR);
+			contentContainer->add(exR);
 		}
 	}
 
@@ -202,6 +225,171 @@ namespace AWGame
 		}
 
 		obj4->rotateScreen(deltaTime / 1000.0 * 45.0);
+
+		for (const auto layoutR : layoutExampleRects)
+		{
+			layoutR->setScreenPosition(10000, 10000);
+			layoutR->setScreenSize(200, 200);
+		}
+
+		int i = 0;
+		auto example1 = layoutExampleRects[i++];
+		example1->layoutSpace = AW::LayoutSpace::Screen;
+		example1->setWorldPositionAndSize(15, 5, 5, 5);
+		example1->setColor(255, 0, 0);
+
+		auto example2 = layoutExampleRects[i++];
+		example2->layoutSpace = AW::LayoutSpace::Screen;
+		example2->setWorldSize(5, 5);
+		example2->setColor(255, 128, 0);
+		example2->toLeftOf(example1, 600);
+
+		auto target = example1;
+		auto space = AW::LayoutSpace::Screen;
+		layoutMotionTime += deltaTime / 1000.0;
+		auto exC = AW::Color(0, 128, 128);
+		auto offsetX = std::cosf(layoutMotionTime * AW::NumberHelper::PI * 2.0) * 100.0 * xF->getScrollPosition(), offsetY = std::sinf(layoutMotionTime * AW::NumberHelper::PI * 2.0) * 100.0 * yF->getScrollPosition();
+
+		for (int j = 0; j < 2; ++j)
+		{
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toTopOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toTopLeftOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toTopRightOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toRightOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toRightTopOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toRightBottomOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toLeftOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toLeftTopOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toLeftBottomOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toBottomOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toBottomLeftOf(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toBottomRightOf(target, offsetX, offsetY);
+			}
+			
+
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerTopIn(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerTopLeftIn(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerTopRightIn(target, offsetX, offsetY);
+			}
+
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerLeftIn(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->matchPosition(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerRightIn(target, offsetX, offsetY);
+			}
+
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerBottomIn(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerBottomRightIn(target, offsetX, offsetY);
+			}
+			{
+				const auto rect = layoutExampleRects[i++];
+				rect->setColor(exC);
+				rect->layoutSpace = space;
+				rect->toInnerBottomLeftIn(target, offsetX, offsetY);
+			}
+
+			offsetX /= 200.0;
+			offsetY /= 200.0;
+			space = AW::LayoutSpace::World;
+			target = example2;
+			exC.r = 64;
+			exC.b = 255;
+		}
 	}
 
 	void TestScene::onKeyPressed(AWKey key)
@@ -209,6 +397,7 @@ namespace AWGame
 		if (key == AWKey::ESCAPE)
 		{
 			destroyChildren();
+			layoutExampleRects.clear();
 			const auto applicationSceneContainer = findFirstInParentChain<AW::SceneContainer>();
 			applicationSceneContainer->transitionToScene(BaseScene::sceneToStr(SceneGame::SavedGamesMenu));
 		}

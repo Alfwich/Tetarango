@@ -198,13 +198,13 @@ namespace AW
 		void setScreenPosition(double x, double y);
 		void moveScreenPosition(double x, double y);
 		void setScreenSize(double width, double height);
-		void setScreenSizeAndPosition(double x, double y, double width, double height);
-		void setScreenSizeAndPosition(const Rect& rect);
+		void setScreenPositionSize(double x, double y, double width, double height);
+		void setScreenPositionSize(const Rect& rect);
 		void rotateScreen(double degrees);
 
 		void setWorldPosition(float x, float y);
 		void setWorldSize(float width, float height);
-		void setWorldSizeAndPosition(float x, float y, float width, float height);
+		void setWorldPositionAndSize(float x, float y, float width, float height);
 		void rotateWorld(float radians);
 
 		double getScreenLeft() const;
@@ -221,7 +221,6 @@ namespace AW
 		float getWorldHalfWidth() const;
 		float getWorldHalfHeight() const;
 
-		void mutateOffsetsIfNeeded(float& x, float& y);
 		void topLeftAlignSelf(float xOffset = 0.0, float yOffset = 0.0);
 		void centerWithin(const Renderable* other, float xOffset = 0.0, float yOffset = 0.0);
 		void centerAlignWithin(const Renderable* other, float xOffset = 0.0, float yOffset = 0.0);
@@ -250,7 +249,7 @@ namespace AW
 		void toInnerBottomLeftIn(const Renderable* other, float xOffset = 0.0, float yOffset = 0.0);
 		void toInnerBottomRightIn(const Renderable* other, float xOffset = 0.0, float yOffset = 0.0);
 
-		void setPosition(const std::shared_ptr<Renderable>& other);
+		void setScreenPosition(const std::shared_ptr<Renderable>& other);
 		void centerAlignWithin(const std::shared_ptr<Renderable>& other, float xOffset = 0.0, float yOffset = 0.0);
 		void centerWithin(const std::shared_ptr<Renderable>& other, float xOffset = 0.0, float yOffset = 0.0);
 		void matchPosition(const std::shared_ptr<Renderable>& other, float xOffset = 0.0, float yOffset = 0.0);

@@ -16,13 +16,15 @@ namespace AWGame
 
 	class TestScene : public AW::Scene, public AW::ICameraListener, public IGuiListener
 	{
-		double currentIters = 15;
+		double currentIters = 15, layoutMotionTime = 0.0;
 		bool itersIncPressed = false, itersDecPressed = false;
 		std::shared_ptr<GameCamera> camera;
 
-		std::shared_ptr<ScrollBarBasic> red, green, blue;
+		std::shared_ptr<ScrollBarBasic> red, green, blue, xF, yF;
 		std::shared_ptr<AW::Text> infoLabel;
 		std::shared_ptr<Renderable> obj1, obj2, obj3, obj4, contentContainer;
+
+		std::vector<std::shared_ptr<Renderable>> layoutExampleRects;
 
 		std::shared_ptr<AW::Timer> iterTimer, updateTimer;
 

@@ -190,7 +190,7 @@ namespace AWGame
 				bottomCollider = std::make_shared<Box>();
 				bottomCollider->visible = false;
 				bottomCollider->setDynamic(false);
-				bottomCollider->setScreenSizeAndPosition(0.0, modules->screen->getHeight(), 8000.0, 20.0);
+				bottomCollider->setScreenPositionSize(0.0, modules->screen->getHeight(), 8000.0, 20.0);
 				add(bottomCollider);
 
 				titleGame->visible = true;
