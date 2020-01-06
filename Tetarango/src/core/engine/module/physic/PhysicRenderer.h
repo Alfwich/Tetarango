@@ -1,9 +1,6 @@
 #pragma once
 
 #include "box2d/b2_draw.h"
-#include "util/Rect.h"
-#include "util/Vec.h"
-
 
 namespace AW
 {

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include "ui/scene/Scene.h"
 #include "gui/camera/GameCamera.h"
 #include "gui/IGuiListener.h"

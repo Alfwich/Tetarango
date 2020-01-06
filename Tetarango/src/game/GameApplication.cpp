@@ -1,7 +1,5 @@
 #include "GameApplication.h"
 
-#include <memory>
-
 #include "scene/Scenes.h"
 #include "scene/BaseScene.h"
 #include "ui/scene/Scene.h"

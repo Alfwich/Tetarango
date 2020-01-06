@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
-#include <SDL.h>
+
+
 #include "util/Rect.h"
 #include "engine/module/display/Texture.h"
 #include "engine/module/shader/ShaderReference.h"

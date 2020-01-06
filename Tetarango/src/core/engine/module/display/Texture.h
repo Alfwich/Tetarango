@@ -1,8 +1,7 @@
 #pragma once
 
-#include <SDL.h>
 #include "GL/glew.h"
-#include <string>
+
 #include "engine/module/asset/ImageBundle.h"
 
 namespace AW

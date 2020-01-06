@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "ui/renderable/element/Animated.h"
 #include "ui/renderable/element/Text.h"
 #include "gui/IGuiListener.h"

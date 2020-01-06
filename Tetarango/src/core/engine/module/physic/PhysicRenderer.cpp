@@ -1,7 +1,5 @@
 #include "PhysicRenderer.h"
 
-#include <iostream>
-
 #include "GL/glew.h"
 
 #include "ui/renderable/Renderable.h"

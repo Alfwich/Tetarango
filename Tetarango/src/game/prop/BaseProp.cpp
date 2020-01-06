@@ -2,7 +2,6 @@
 
 #include "Props.h"
 
-
 namespace
 {
 	const AWGame::Props config;

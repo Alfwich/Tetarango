@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "ui/renderable/element/NineSlice.h"
 #include "ui/renderable/element/Element.h"
 #include "engine/module/SystemModuleBundle.h"

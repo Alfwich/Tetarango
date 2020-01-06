@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <SDL.h>
-
 namespace AW
 {
 	// In-App understood mapping

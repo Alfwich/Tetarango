@@ -6,7 +6,7 @@ resource_folders = ["Tetarango/src"]
 resource_include_files = [".cpp"]
 namespaces_to_use = ["AWGame"]
 
-output_file = "Tetarango/src/core/serialization-list.generated.h"
+output_file = "Tetarango/serialization-list.generated.h"
 output_file_template = """#pragma once
 
 // GENERATED FILE - CHANGES WILL BE LOST

@@ -1,6 +1,5 @@
 #include "AnimationSet.h"
 
-
 namespace AW
 {
 

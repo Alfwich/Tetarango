@@ -1,7 +1,5 @@
 #include "BaseGui.h"
 
-#include <string>
-
 #include "Guis.h"
 
 namespace

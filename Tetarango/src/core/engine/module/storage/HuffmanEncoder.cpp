@@ -1,12 +1,5 @@
 ﻿#include "HuffmanEncoder.h"
 
-#include <unordered_map>
-#include <queue>
-#include <iostream>
-#include <bitset>
-#include <sstream>
-#include "util/StringHelper.h"
-
 namespace AW
 {
 

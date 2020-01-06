@@ -1,10 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <climits>
-#include <SDL.h>
-#include "util/Rect.h"
 #include "engine/module/time/Time.h"
 
 namespace AW

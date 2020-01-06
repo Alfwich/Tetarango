@@ -1,10 +1,7 @@
 #pragma once
 
-#include <unordered_map>
-#include <string>
 #include "AnimationSet.h"
 #include "Transition.h"
-#include "engine/module/logger/Logger.h"
 #include "engine/module/event/Event.h"
 #include "engine/module/IBaseModule.h"
 

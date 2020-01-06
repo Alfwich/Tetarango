@@ -1,12 +1,5 @@
 #pragma once
 
-#include <map>
-#include <memory>
-#include <vector>
-#include <limits>
-
-#include "NumberHelper.h"
-
 namespace AW
 {
 

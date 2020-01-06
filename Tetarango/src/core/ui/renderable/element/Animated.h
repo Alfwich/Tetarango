@@ -1,11 +1,9 @@
 #pragma once
 
-#include <SDL.h>
 #include "Element.h"
 #include "engine/module/animation/Animation.h"
 #include "engine/module/animation/AnimationSet.h"
 #include "engine/module/time/Timer.h"
-#include "util/Rect.h"
 
 namespace AW
 {

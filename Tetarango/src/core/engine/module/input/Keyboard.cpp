@@ -1,10 +1,7 @@
 #include "Keyboard.h"
 
-#include "SDL_keycode.h"
-
 namespace AW
 {
-
 	void Keyboard::registerKey(AWKey code, std::weak_ptr<IInputListener> listener)
 	{
 		onKeyListeners[code].push_back(listener);

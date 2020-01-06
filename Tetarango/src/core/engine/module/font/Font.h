@@ -1,10 +1,5 @@
 #pragma once
 
-#include <string>
-#include <map>
-#include <SDL.h>
-#include <SDL_ttf.h>
-
 #include "engine/module/display/Screen.h"
 
 namespace AW

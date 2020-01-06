@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "IBaseModule.h"
 #include "filesystem/Filesystem.h"
 #include "font/FontContainer.h"
@@ -8,7 +7,6 @@
 #include "serialization/Serialization.h"
 #include "animation/AnimationContainer.h"
 #include "storage/Storage.h"
-#include "logger/Logger.h"
 #include "event/Event.h"
 #include "sound/Sound.h"
 #include "thread/Thread.h"

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <random>
-#include <math.h>
-#include <algorithm>
-
 namespace AW
 {
 	class NumberHelper

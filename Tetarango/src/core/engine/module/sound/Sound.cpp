@@ -1,8 +1,5 @@
 #include "Sound.h"
 
-#include "SDL_mixer.h"
-#include "util/NumberHelper.h"
-
 namespace AW
 {
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "ui/renderable/container/Container.h"
 #include "ui/renderable/element/NineSlice.h"
 #include "ui/renderable/element/Text.h"

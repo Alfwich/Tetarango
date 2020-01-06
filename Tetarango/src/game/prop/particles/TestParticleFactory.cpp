@@ -1,7 +1,5 @@
 #include "TestParticleFactory.h"
 
-#include <random>
-
 namespace AWGame
 {
 	TestParticleFactory::TestParticleFactory() : TestParticleFactory(0xff, 0xff, 0xff)

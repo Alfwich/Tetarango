@@ -3,7 +3,6 @@
 namespace AW
 {
 
-
 	void Animation::addAnimationFrame(int x, int y, int width, int height)
 	{
 		std::shared_ptr<Rect> r = std::make_shared<Rect>();

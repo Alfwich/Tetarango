@@ -1,7 +1,5 @@
 #include "Serializer.h"
 
-#include "util/StringHelper.h"
-
 namespace AW
 {
 	void Serializer::addChildData(std::string childData)

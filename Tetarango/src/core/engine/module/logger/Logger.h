@@ -1,12 +1,5 @@
 #pragma once
-#pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS, TODO: Get rid of this
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <ctime>
-#include "SDL.h"
 #include "engine/module/IBaseModule.h"
 
 namespace AW

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "engine/module/SystemModuleBundle.h"
 #include "Props.h"
 

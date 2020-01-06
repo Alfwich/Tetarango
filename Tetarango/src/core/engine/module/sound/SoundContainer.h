@@ -1,15 +1,8 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include <memory>
-#include "SDL.h"
-#include "SDL_mixer.h"
 #include "SoundClip.h"
 #include "Music.h"
-#include "engine/module/logger/Logger.h"
 #include "engine/module/asset/Asset.h"
-
 
 namespace AW
 {

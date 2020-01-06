@@ -1,6 +1,5 @@
 #include "Trace.h"
 
-#include "util/NumberHelper.h"
 #include "ui/renderable/primitive/Rectangle.h"
 
 namespace AW

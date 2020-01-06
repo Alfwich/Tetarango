@@ -1,7 +1,5 @@
 #include "BlockParticleFactory.h"
 
-#include "util/NumberHelper.h"
-
 namespace AWGame
 {
 	void BlockParticle::onEnterFrame(const double& deltaTime)

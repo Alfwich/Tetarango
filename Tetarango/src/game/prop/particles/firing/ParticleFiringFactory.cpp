@@ -1,7 +1,5 @@
 #include "ParticleFiringFactory.h"
 
-#include "util/NumberHelper.h"
-#include <random>
 #include "ParticleFiring.h"
 
 namespace AWGame

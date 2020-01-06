@@ -1,11 +1,6 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include <list>
-#include <memory>
 #include "Shader.h"
-#include "engine/module/logger/Logger.h"
 #include "engine/module/asset/Asset.h"
 #include "engine/module/IBaseModule.h"
 #include "ShaderReference.h"

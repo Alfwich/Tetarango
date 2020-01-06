@@ -1,6 +1,5 @@
 #include "ParticleSpaceBackground.h"
 
-
 namespace AWGame
 {
 	void ParticleSpaceBackground::onEnterFrame(const double& deltaTime)

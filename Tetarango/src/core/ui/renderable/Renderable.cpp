@@ -1,7 +1,5 @@
 #include "Renderable.h"
 
-#include "util/NumberHelper.h"
-
 namespace AW
 {
 	const float Renderable::scalingFactor = 200.f;

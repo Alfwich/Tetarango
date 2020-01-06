@@ -1,7 +1,5 @@
 #include "TestScene.h"
 
-#include <random>
-
 #include "scene/BaseScene.h"
 #include "ui/renderable/element/DisplayBuffer.h"
 #include "ui/renderable/primitive/Polygon.h"

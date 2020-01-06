@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-#include "engine/module/logger/Logger.h"
 #include "engine/module/IBaseModule.h"
 #include "engine/module/thread/Thread.h"
 

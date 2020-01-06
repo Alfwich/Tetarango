@@ -1,7 +1,5 @@
 #include "ParticleSpaceBackgroundFactory.h"
 
-#include "util/NumberHelper.h"
-
 namespace AWGame
 {
 	ParticleSpaceBackgroundParticleFactory::ParticleSpaceBackgroundParticleFactory()

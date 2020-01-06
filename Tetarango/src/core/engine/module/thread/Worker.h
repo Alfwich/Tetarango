@@ -1,9 +1,5 @@
 #pragma once
 
-#include <memory>
-#include "SDL.h"
-#include "SDL_thread.h"
-#include "engine/module/logger/Logger.h"
 #include "INotifyOnCompletion.h"
 #include "WorkerStatus.h"
 #include "AsyncBundles.h"

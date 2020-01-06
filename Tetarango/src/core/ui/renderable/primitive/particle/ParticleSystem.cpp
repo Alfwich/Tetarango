@@ -1,6 +1,5 @@
 #include "ParticleSystem.h"
 
-
 namespace AW
 {
 	ParticleSystem::ParticleSystem()

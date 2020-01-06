@@ -1,10 +1,5 @@
 #include "Shader.h"
 
-#include <vector>
-#include "util/StringHelper.h"
-#include "util/NumberHelper.h"
-#include "engine/module/logger/Logger.h"
-
 namespace
 {
 	const auto loaderReplaceToken = "mainN()";

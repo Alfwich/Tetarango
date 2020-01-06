@@ -1,7 +1,5 @@
 #include "ParticleHitHardFactory.h"
 
-#include "util/NumberHelper.h"
-#include <random>
 #include "ParticleHitHard.h"
 
 namespace AWGame

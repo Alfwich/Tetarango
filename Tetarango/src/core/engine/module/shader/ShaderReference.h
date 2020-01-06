@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include <vector>
 #include "GL/glew.h"
 #include "engine/module/asset/ResourceBundle.h"
 #include "Shader.h"

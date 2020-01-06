@@ -4,7 +4,6 @@
 #include "engine/GameObject.h"
 #include "ui/renderable/Renderable.h"
 #include "engine/module/display/RenderPackage.h"
-#include "util/Color.h"
 
 namespace AW
 {

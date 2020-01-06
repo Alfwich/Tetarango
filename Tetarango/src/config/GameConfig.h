@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-#include <map>
 #include "BaseConfig.h"
 
 namespace Config

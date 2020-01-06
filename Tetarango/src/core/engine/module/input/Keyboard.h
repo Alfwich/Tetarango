@@ -1,15 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <list>
-#include <unordered_map>
-#include <SDL.h>
 #include "engine/module/input/IInputListener.h"
-#include "util/Key.h"
 
 namespace AW
 {
-
 	class Keyboard
 	{
 		std::unordered_map<AWKey, std::list<std::weak_ptr<IInputListener>>> onKeyListeners;

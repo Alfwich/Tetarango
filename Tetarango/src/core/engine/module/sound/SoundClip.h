@@ -1,8 +1,5 @@
 #pragma once
-#include "SDL.h"
-#include "SDL_mixer.h"
-#include "engine/module/logger/Logger.h"
-#include "util/StringHelper.h"
+
 #include "engine/module/asset/Asset.h"
 
 namespace AW

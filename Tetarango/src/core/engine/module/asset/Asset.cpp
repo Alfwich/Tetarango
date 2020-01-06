@@ -1,10 +1,6 @@
 #include "Asset.h"
 
 #include <png.h>
-#include <vector>
-#include <iostream>
-#include <stdlib.h>
-#include "SDL.h"
 
 namespace AW
 {

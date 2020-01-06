@@ -1,12 +1,9 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <map>
+
 #include "ISerializable.h"
 #include "Hydrater.h"
 #include "SerializationTags.h"
 #include "engine/module/IBaseModule.h"
-#include "engine/module/logger/Logger.h"
 #include "engine/module/thread/Thread.h"
 
 namespace AW

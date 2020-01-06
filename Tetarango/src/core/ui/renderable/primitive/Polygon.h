@@ -2,7 +2,6 @@
 
 #include "ui/renderable/primitive/Primitive.h"
 #include "engine/module/display/VertexBufferProxy.h"
-#include "util/Vec.h"
 
 namespace AW
 {

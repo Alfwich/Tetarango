@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "ui/renderable/element/Element.h"
 
 namespace AW

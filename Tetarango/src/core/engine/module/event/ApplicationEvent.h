@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "engine/module/display/ScreenConfig.h"
 
 namespace AW

@@ -1,8 +1,6 @@
 #pragma once
 
-#include <SDL.h>
 #include "gamepad/GamepadMappings.h"
-#include "util/Key.h"
 
 namespace AW
 {

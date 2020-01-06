@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <Sdl.h>
-
 namespace AW
 {
 	class Rect

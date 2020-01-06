@@ -1,10 +1,6 @@
 #pragma once
 
-#include <unordered_map>
-#include <string>
-#include <SDL.h>
 #include "Animation.h"
-#include "engine/module/logger/Logger.h"
 
 namespace AW
 {

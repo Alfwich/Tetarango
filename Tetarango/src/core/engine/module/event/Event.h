@@ -1,13 +1,5 @@
 #pragma once
 
-#include <list>
-#include <set>
-#include <map>
-#include <memory>
-#include "SDL.h"
-#include "SDL_mixer.h"
-#include "SDL_image.h"
-#include <SDL_ttf.h>
 #include "engine/module/IBaseModule.h"
 #include "engine/module/input/Input.h"
 #include "engine/module/thread/Thread.h"

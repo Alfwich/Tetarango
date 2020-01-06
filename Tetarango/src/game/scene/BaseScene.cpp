@@ -1,7 +1,5 @@
 #include "BaseScene.h"
 
-
-
 namespace
 {
 	const AWGame::Scenes config;

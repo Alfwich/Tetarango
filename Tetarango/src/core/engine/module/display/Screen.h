@@ -1,12 +1,7 @@
 #pragma once
 
-#include <SDL.h>
-#include <string>
-#include <vector>
-#include <algorithm>
 #include "ScreenConfig.h"
 #include "engine/module/IBaseModule.h"
-#include "util/StringHelper.h"
 
 namespace AW
 {

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "box2d/box2d.h"
-#include "util/NumberHelper.h"
-#include "util/Vec.h"
 #include "engine/module/serialization/ISerializable.h"
 #include "RigidBodyJoint.h"
 

@@ -1,4 +1,5 @@
 #include "Texture.h"
+
 namespace AW
 {
 	Texture::Texture()

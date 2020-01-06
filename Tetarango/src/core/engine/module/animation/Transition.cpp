@@ -1,6 +1,5 @@
 #include "Transition.h"
 
-
 namespace AW
 {
 	Transition::Transition(std::shared_ptr<Time> time, TimeScope scopeName)

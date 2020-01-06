@@ -1,7 +1,5 @@
 #include "Music.h"
 
-#include "SDL_mixer.h"
-
 namespace AW
 {
 	Music::Music(std::string path, std::shared_ptr<Asset> asset)

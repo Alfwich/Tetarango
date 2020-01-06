@@ -1,7 +1,5 @@
 #include "RigidBody.h"
 
-#include <iostream>
-
 namespace AW
 {
 	RigidBody::RigidBody()

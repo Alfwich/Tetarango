@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "ui/scene/Scene.h"
 #include "ui/renderable/element/Text.h"
 #include "scene/BaseScene.h"

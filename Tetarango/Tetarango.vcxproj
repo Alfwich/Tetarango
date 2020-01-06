@@ -67,18 +67,21 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DEV|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Async</ExceptionHandling>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ShowIncludes>false</ShowIncludes>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -93,20 +96,22 @@ python scripts/generateSerializationList.py .</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='PROD_DEBUG|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Async</ExceptionHandling>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>None</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,14 +126,14 @@ python scripts/generateSerializationList.py .</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='PROD|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -136,6 +141,8 @@ python scripts/generateSerializationList.py .</Command>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -178,6 +185,11 @@ bash ./make.sh</Command>
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DEV|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='PROD_DEBUG|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='PROD|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
     <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
     <ClCompile Include="src\core\engine\module\physic\PhysicRenderer.cpp" />
@@ -300,6 +312,7 @@ bash ./make.sh</Command>
     <ClCompile Include="src\game\scene\world\WorldTetarango.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\core\debug\monitor\DebugMonitor.h" />
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
@@ -314,7 +327,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\engine\module\shader\ShaderContainer.h" />
     <ClInclude Include="src\core\engine\module\shader\ShaderReference.h" />
     <ClInclude Include="src\core\engine\module\sound\Music.h" />
-    <ClInclude Include="src\core\serialization-list.generated.h" />
+    <ClInclude Include="serialization-list.generated.h" />
     <ClInclude Include="src\core\ui\camera\ICameraListener.h" />
     <ClInclude Include="src\core\ui\physic\body\BodySensor.h" />
     <ClInclude Include="src\core\ui\physic\body\IBodyListener.h" />

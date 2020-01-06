@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 namespace AWGame
 {
 	class IGuiListener

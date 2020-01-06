@@ -1,12 +1,7 @@
 #pragma once
 
-#include <unordered_map>
-#include <vector>
-#include <string>
-#include <SDL.h>
-#include "Timer.h"
 #include "engine/module/IBaseModule.h"
-#include "engine/module/logger/Logger.h"
+#include "Timer.h"
 #include "TimeScope.h"
 
 namespace AW

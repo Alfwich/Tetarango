@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "gui/scrollbar/ScrollBarBasic.h"
 #include "ui/renderable/container/ScrollContainer.h"
 #include "ui/renderable/element/NineSlice.h"

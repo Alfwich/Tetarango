@@ -1,7 +1,5 @@
 #pragma once
 
-#include <algorithm>
-#include <SDL.h>
 #include "engine/GameObject.h"
 #include "ICameraListener.h"
 

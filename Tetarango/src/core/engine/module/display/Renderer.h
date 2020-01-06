@@ -1,10 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-#include <algorithm>
-#include <stack>
-#include <list>
-#include <SDL.h>
 #include "GL/glew.h"
 #include "engine/GameObject.h"
 #include "ui/camera/Camera.h"
@@ -12,9 +7,6 @@
 #include "ui/renderable/primitive/Primitive.h"
 #include "RenderPackage.h"
 #include "util/linmath.h"
-#include "util/Color.h"
-#include "util/Rect.h"
-#include "util/Vec.h"
 
 namespace
 {

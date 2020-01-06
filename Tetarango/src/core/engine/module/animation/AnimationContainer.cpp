@@ -1,6 +1,5 @@
 #include "AnimationContainer.h"
 
-
 namespace AW
 {
 	void AnimationContainer::bindTime(std::shared_ptr<Time> time)

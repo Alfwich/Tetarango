@@ -1,9 +1,6 @@
 #include "ShaderContainer.h"
 
 #include "GL/glew.h"
-#include <map>
-
-#include "util/NumberHelper.h"
 
 namespace
 {

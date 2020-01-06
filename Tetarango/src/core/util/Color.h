@@ -1,7 +1,6 @@
 #pragma once
 
 #include "NumberHelper.h"
-#include "SDL.h"
 
 namespace AW
 {

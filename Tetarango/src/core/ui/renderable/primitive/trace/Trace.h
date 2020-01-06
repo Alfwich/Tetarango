@@ -1,9 +1,7 @@
 #pragma once
 
-#include <list>
 #include "ui/renderable/primitive/Primitive.h"
 #include "engine/module/time/timer.h"
-#include "util/Rect.h"
 
 namespace AW
 {

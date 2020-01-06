@@ -1,12 +1,5 @@
 #pragma once
 
-#include <stdio.h>
-#include <string>
-#include <vector>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
 #include "GameConfig.h"
 #include "engine/module/time/Timer.h"
 #include "engine/module/SystemModuleBundle.h"

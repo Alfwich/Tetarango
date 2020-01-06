@@ -2,7 +2,6 @@
 
 #include "Texture.h"
 #include "engine/module/font/Font.h"
-#include "util/Color.h"
 
 namespace AW
 {

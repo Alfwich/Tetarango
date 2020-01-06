@@ -1,11 +1,5 @@
 #include "GameObject.h"
 
-#include <chrono>
-#include <ctime>
-
-#include "util/VectorHelper.h"
-
-
 namespace
 {
 	int nextGameObjectId = 100;

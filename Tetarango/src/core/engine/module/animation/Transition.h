@@ -1,10 +1,7 @@
 #pragma once
 
-#include <string>
-#include <memory>
 #include "engine/module/time/Time.h"
 #include "engine/module/event/EnterFrameListener.h"
-#include "util/Rect.h"
 #include "INotifyOnTransition.h"
 
 namespace AW

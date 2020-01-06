@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "engine/GameObject.h"
 #include "engine/module/thread/INotifyOnCompletion.h"
 

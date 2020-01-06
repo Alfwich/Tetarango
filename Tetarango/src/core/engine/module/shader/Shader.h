@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-#include <map>
 #include "GL/glew.h"
 #include "engine/module/asset/ResourceBundle.h"
 

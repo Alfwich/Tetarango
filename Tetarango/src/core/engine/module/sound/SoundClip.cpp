@@ -1,7 +1,5 @@
 #include "SoundClip.h"
 
-#include "SDL_mixer.h"
-
 namespace AW
 {
 	SoundClip::SoundClip(std::string path, std::shared_ptr<Asset> asset)

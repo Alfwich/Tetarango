@@ -1,11 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-#include <list>
-#include <string>
-#include <algorithm>
-#include "SDL.h"
-#include "engine/module/logger/Logger.h"
 #include "GamepadMappings.h"
 #include "engine/module/input/IInputListener.h"
 

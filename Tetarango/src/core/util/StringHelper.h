@@ -1,10 +1,5 @@
 #pragma once
 
-#include <stdio.h>
-#include <string>
-#include <vector>
-#include <ctype.h>
-
 namespace AW
 {
 

@@ -4,7 +4,6 @@
 #include "engine/module/physic/RigidBodySensor.h"
 #include "ui/physic/body/IBodyListener.h"
 #include "box2d/b2_contact.h"
-#include "util/Rect.h"
 
 namespace AW
 {

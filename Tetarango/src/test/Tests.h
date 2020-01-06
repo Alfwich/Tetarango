@@ -3,9 +3,8 @@
 
 #include "GameConfig.h"
 #include "engine/module/SystemModuleBundle.h"
-#include "TestActor.h"
-#include "util/StringHelper.h"
 #include "util/RandomGenerator.h"
+#include "TestActor.h"
 
 namespace AWTest
 {

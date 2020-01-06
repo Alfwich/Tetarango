@@ -2,7 +2,6 @@
 
 namespace AW
 {
-
 	void Mouse::handleMouseMove(int x, int y)
 	{
 		if (x != this->x || y != this->y)

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include "ui/renderable/element/Text.h"
 #include "ui/renderable/container/Container.h"
 #include "engine/module/animation/Transition.h"

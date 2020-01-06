@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "gui/BaseGui.h"
 #include "ui/renderable/container/Container.h"
 #include "ui/renderable/element/Element.h"

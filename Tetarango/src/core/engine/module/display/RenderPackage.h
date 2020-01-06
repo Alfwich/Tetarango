@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include "util/Rect.h"
-
 namespace AW
 {
 	class Renderable;

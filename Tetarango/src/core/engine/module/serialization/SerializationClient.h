@@ -1,12 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <map>
-#include <unordered_map>
-#include <memory>
-#include "util/Rect.h"
-
 namespace AW
 {
 	enum class SerializationHint

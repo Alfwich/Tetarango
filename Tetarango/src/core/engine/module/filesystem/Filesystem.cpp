@@ -1,7 +1,5 @@
 #include "Filesystem.h"
 
-#include <SDL.h>
-
 namespace AW
 {
 	void Filesystem::bindThread(std::shared_ptr<Thread> thread)

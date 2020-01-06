@@ -1,13 +1,8 @@
 #pragma once
 
-#include <memory>
-#include <SDL.h>
 #include "engine/module/serialization/ISerializable.h"
-#include "util/Rect.h"
-#include "util/Color.h"
 #include "engine/module/shader/ShaderReference.h"
 #include "engine/module/display/RenderPackage.h"
-#include "util/Vec.h"
 
 namespace AW
 {
