@@ -7,7 +7,7 @@ namespace AW
 	class ContactBundle
 	{
 	public:
-		ContactBundle(void *bodyA, void *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB) 
+		ContactBundle(void *bodyA, void *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB)
 			: bodyA(static_cast<Body*>(bodyA)), bodyB(static_cast<Body*>(bodyB)), fixtureA(fixtureA), fixtureB(fixtureB) {};
 
 		Body *bodyA, *bodyB;
@@ -17,6 +17,7 @@ namespace AW
 	class IBodyListener
 	{
 	public:
+		virtual std::shared_ptr<Renderable> getShape() { return getRenderableBody(); };
 		virtual std::shared_ptr<Renderable> getRenderableBody() = 0;
 		virtual std::shared_ptr<Body> getBodyObject() = 0;
 

@@ -145,6 +145,8 @@ namespace AW
 
 	void Animated::onAttach()
 	{
+		assert(frameTimer != nullptr); // Animated::onInitialAttach() was not called
+
 		frameTimer->setTimeScope(getTimeScope());
 
 		if (!currentAnimationName.empty())

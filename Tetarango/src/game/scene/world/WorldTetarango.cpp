@@ -28,9 +28,9 @@ namespace AWGame
 
 		const auto ground = std::make_shared<Chain>();
 		ground->setDynamic(false);
-		for (auto i = -30; i < 30; ++i)
+		for (auto i = -60; i < 60; ++i)
 		{
-			ground->addWorldPoint(i, AW::NumberHelper::random(-1, 1));
+			ground->addWorldPoint(i * 0.5, AW::NumberHelper::random(-0.25, 0.25));
 		}
 		ground->centerBalancePoints();
 		contentContainer->add(ground);

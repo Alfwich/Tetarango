@@ -8,8 +8,6 @@
 
 namespace AWTest
 {
-
-
 	class Tests
 	{
 	public:

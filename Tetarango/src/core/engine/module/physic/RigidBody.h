@@ -63,6 +63,8 @@ namespace AW
 
 		virtual void applyTorque(float t);
 
+		virtual AWVec2<float> getVelocity();
+
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint) { return nullptr; };
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
 	};

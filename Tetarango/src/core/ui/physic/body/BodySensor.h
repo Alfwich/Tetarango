@@ -13,17 +13,19 @@ namespace AW
 	public:
 		BodySensor();
 
-		void setX(double x);
-		double getX();
+		void setWorldX(float x);
+		float getWorldX();
 
-		void setY(double y);
-		double getY();
+		void setWorldY(float y);
+		float getWorldY();
 
-		void setWidth(double w);
-		double getWidth();
+		void setWorldWidth(float w);
+		void setWorldHeight(float h);
+		void setScreenWidth(float w);
+		void setScreenHeight(float h);
 
-		void setHeight(double h);
-		double getHeight();
+		float getWorldWidth() const;
+		float getWorldHeight() const;
 
 		void onAttach();
 		void onDetach();

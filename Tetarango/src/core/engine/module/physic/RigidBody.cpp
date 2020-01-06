@@ -116,6 +116,20 @@ namespace AW
 		}
 	}
 
+	AWVec2<float> RigidBody::getVelocity()
+	{
+		auto result = AWVec2<float>();
+
+		if (hasBody())
+		{
+			const auto v = bodyReference->GetLinearVelocity();
+			result.x = v.x;
+			result.y = v.y;
+		}
+
+		return result;
+	}
+
 	void RigidBody::doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient)
 	{
 		auto client = injectedClient->getClient("__rigid_body__", hint);

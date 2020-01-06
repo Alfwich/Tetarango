@@ -21,13 +21,18 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<Renderable> Body::getRenderableFromListener()
+	std::shared_ptr<Renderable> Body::getShapeFromListener()
 	{
-		const auto listenerPtr = listener.lock();
-		if (listenerPtr != nullptr)
-		{
-			return listenerPtr->getRenderableBody();
-		}
+		const auto lPtr = std::dynamic_pointer_cast<IBodyListener>(listener.lock());
+		if (lPtr != nullptr) return lPtr->getShape();
+
+		return nullptr;
+	}
+
+	std::shared_ptr<Renderable> Body::getRenderTargetFromListener()
+	{
+		const auto lPtr = std::dynamic_pointer_cast<IBodyListener>(listener.lock());
+		if (lPtr != nullptr) return lPtr->getRenderableBody();
 
 		return nullptr;
 	}
@@ -69,15 +74,34 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<SerializationClient> Body::doSerialize(SerializationHint hint)
+	void Body::setWorldWidth(float width)
 	{
-		const auto client = serializationClient->getClient("__body__", hint);
+		size.x = width;
+	}
 
-		bodyType = (BodyType)client->serializeInt("body-type", (int)bodyType);
+	void Body::setWorldHeight(float height)
+	{
+		size.y = height;
+	}
 
-		RigidBody::doManualSerialize(hint, client);
+	void Body::setScreenWidth(float width)
+	{
+		size.x = Renderable::screenToWorldPosition(width);
+	}
 
-		return GameObject::doSerialize(hint);
+	void Body::setScreenHeight(float height)
+	{
+		size.y = Renderable::screenToWorldPosition(height);
+	}
+
+	float Body::getWorldWidth()
+	{
+		return 0.0f;
+	}
+
+	float Body::getWorldHeight()
+	{
+		return 0.0f;
 	}
 
 	void Body::applyForce(float vX, float vY, float amount)
@@ -90,12 +114,30 @@ namespace AW
 		RigidBody::applyForce(vX, vY, cX, cY, amount * (modules->physic->getPhysicFrameDeltaTime() / 1000.0));
 	}
 
+	void Body::applyImpulse(float vX, float vY, float amount)
+	{
+		RigidBody::applyForce(vX, vY, amount);
+	}
+
+	void Body::applyImpulse(float vX, float vY, float cX, float cY, float amount)
+	{
+		RigidBody::applyForce(vX, vY, cX, cY, amount);
+	}
+
 	b2Body* Body::onCreateBody(const std::shared_ptr<b2World>& world)
 	{
-		const auto rend = getRenderableFromListener();
+		const auto rend = getShapeFromListener();
 		if (rend == nullptr)
 		{
 			return nullptr;
+		}
+
+		if (size.x == 0 && size.y == 0)
+		{
+			size.x = rend->getWorldWidth();
+			size.y = rend->getWorldHeight();
+
+			assert(size.x > 0 || size.y > 0); // No size information was available - this is needed to create a fixture
 		}
 
 		bodyDef.position.Set(rend->getWorldX(), rend->getWorldY());
@@ -108,8 +150,7 @@ namespace AW
 		{
 			b2PolygonShape shape;
 
-			shape.SetAsBox(Renderable::screenToWorldPosition(rend->getScreenWidth()) / 2.f, Renderable::screenToWorldPosition(rend->getScreenHeight()) / 2.f);
-			shape.SetAsBox(rend->getWorldWidth() / 2.f, rend->getWorldHeight() / 2.f);
+			shape.SetAsBox(size.x / 2.f, size.y / 2.f);
 			fixtureDef.shape = &shape;
 
 			bodyReference->CreateFixture(&fixtureDef);
@@ -120,7 +161,7 @@ namespace AW
 		{
 			b2CircleShape shape;
 
-			shape.m_radius = std::max(rend->getWorldWidth(), rend->getWorldHeight()) / 2.f;
+			shape.m_radius = std::max(size.x, size.y) / 2.f;
 			fixtureDef.shape = &shape;
 
 			bodyReference->CreateFixture(&fixtureDef);
@@ -129,14 +170,14 @@ namespace AW
 
 		case BodyType::Polygon:
 		{
-			const auto listenerPtr = listener.lock();
-			if (listenerPtr != nullptr)
+			const auto polygonPtr = std::dynamic_pointer_cast<AW::Polygon>(rend);
+			if (polygonPtr != nullptr)
 			{
 				b2PolygonShape shape;
 
-				const auto screenPoints = listenerPtr->getBodyWorldPoints();
+				const auto worldPoints = polygonPtr->getWorldPoints();
 				std::vector<b2Vec2> pts;
-				for (const auto& sp : screenPoints) pts.push_back(b2Vec2(sp.x, sp.y));
+				for (const auto& sp : worldPoints) pts.push_back(b2Vec2(sp.x, sp.y));
 
 				shape.Set(&pts[0], (unsigned int)pts.size());
 				fixtureDef.shape = &shape;
@@ -148,33 +189,29 @@ namespace AW
 
 		case BodyType::Line:
 		{
-			const auto listenerPtr = listener.lock();
-			if (listenerPtr != nullptr)
-			{
-				b2EdgeShape shape;
+			b2EdgeShape shape;
 
-				const auto xOffset = rend->getWorldWidth() / 2.f;
-				const auto yOffset = rend->getWorldHeight() / 2.f;
+			const auto xOffset = size.x / 2.f;
+			const auto yOffset = size.y / 2.f;
 
-				b2Vec2 p1{ -xOffset, -yOffset }, p2{ xOffset, -yOffset };
-				shape.Set(p1, p2);
-				fixtureDef.shape = &shape;
+			b2Vec2 p1{ -xOffset, -yOffset }, p2{ xOffset, -yOffset };
+			shape.Set(p1, p2);
+			fixtureDef.shape = &shape;
 
-				bodyReference->CreateFixture(&fixtureDef);
-			}
+			bodyReference->CreateFixture(&fixtureDef);
 		}
 		break;
 
 		case BodyType::Chain:
 		{
-			const auto listenerPtr = listener.lock();
-			if (listenerPtr != nullptr)
+			const auto chainPtr = std::dynamic_pointer_cast<AW::Polygon>(rend);
+			if (chainPtr!= nullptr)
 			{
 				b2ChainShape shape;
 
-				const auto screenPoints = listenerPtr->getBodyWorldPoints();
+				const auto worldPoints = chainPtr->getWorldPoints();
 				std::vector<b2Vec2> pts;
-				for (const auto& sp : screenPoints) pts.push_back(b2Vec2(sp.x, sp.y));
+				for (const auto& sp : worldPoints) pts.push_back(b2Vec2(sp.x, sp.y));
 
 				shape.CreateChain(&pts[0], (unsigned int)pts.size());
 				fixtureDef.shape = &shape;
@@ -195,7 +232,7 @@ namespace AW
 	{
 		if (autoUpdate)
 		{
-			const auto rend = getRenderableFromListener();
+			const auto rend = getRenderTargetFromListener();
 			if (rend != nullptr)
 			{
 				const auto pos = bodyReference->GetPosition();
@@ -211,7 +248,7 @@ namespace AW
 
 	void Body::updateBodyForRenderable()
 	{
-		const auto rend = getRenderableFromListener();
+		const auto rend = getRenderTargetFromListener();
 		if (rend == nullptr)
 		{
 			return;
@@ -223,4 +260,16 @@ namespace AW
 		bodyReference->SetTransform(pos, rotation);
 	}
 
+	std::shared_ptr<SerializationClient> Body::doSerialize(SerializationHint hint)
+	{
+		const auto client = serializationClient->getClient("__body__", hint);
+
+		bodyType = (BodyType)client->serializeInt("body-type", (int)bodyType);
+		size.x = (float)client->serializeDouble("width", size.x);
+		size.y = (float)client->serializeDouble("height", size.y);
+
+		RigidBody::doManualSerialize(hint, client);
+
+		return GameObject::doSerialize(hint);
+	}
 }

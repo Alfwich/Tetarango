@@ -6,6 +6,7 @@ template <typename T>
 class AWVec2
 {
 public:
+	AWVec2() { x = T(); y = T(); }
 	AWVec2(T v) { x = v; y = v; }
 	AWVec2(T x, T y) { this->x = x; this->y = y; }
 

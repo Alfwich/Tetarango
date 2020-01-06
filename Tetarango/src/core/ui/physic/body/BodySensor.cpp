@@ -14,44 +14,54 @@ namespace AW
 		GORegister(BodySensor);
 	}
 
-	void BodySensor::setX(double x)
+	void BodySensor::setWorldX(float x)
 	{
 		rect.x = x;
 	}
 
-	double BodySensor::getX()
+	float BodySensor::getWorldX()
 	{
-		return rect.x;
+		return (float)rect.x;
 	}
 
-	void BodySensor::setY(double y)
+	void BodySensor::setWorldY(float y)
 	{
 		rect.y = y;
 	}
 
-	double BodySensor::getY()
+	float BodySensor::getWorldY()
 	{
-		return rect.y;
+		return (float)rect.y;
 	}
 
-	void BodySensor::setWidth(double w)
+	void BodySensor::setWorldWidth(float w)
 	{
 		rect.w = w;
 	}
 
-	double BodySensor::getWidth()
+	float BodySensor::getWorldWidth() const
 	{
-		return rect.w;
+		return (float)rect.w;
 	}
 
-	void BodySensor::setHeight(double h)
+	void BodySensor::setWorldHeight(float h)
 	{
 		rect.h = h;
 	}
 
-	double BodySensor::getHeight()
+	void BodySensor::setScreenWidth(float w)
 	{
-		return rect.h;
+		rect.w = Renderable::screenToWorldPosition(w);
+	}
+
+	void BodySensor::setScreenHeight(float h)
+	{
+		rect.h = Renderable::screenToWorldPosition(h);
+	}
+
+	float BodySensor::getWorldHeight() const
+	{
+		return (float)rect.h;
 	}
 
 	void BodySensor::onAttach()
@@ -106,11 +116,11 @@ namespace AW
 				b2FixtureDef fixtureDef;
 
 				b2PolygonShape collider;
-				collider.SetAsBox(Renderable::screenToWorldPosition(rect.w) / 2.f, Renderable::screenToWorldPosition(rect.h) / 2.f);
+				collider.SetAsBox((float)rect.w / 2.f, (float)rect.h / 2.f);
 				for (auto v : collider.m_vertices)
 				{
-					v.x += Renderable::screenToWorldPosition(rect.x);
-					v.y -= Renderable::screenToWorldPosition(rect.y);
+					v.x += (float)rect.x;
+					v.y -= (float)rect.y;
 				}
 
 				fixtureDef.shape = &collider;

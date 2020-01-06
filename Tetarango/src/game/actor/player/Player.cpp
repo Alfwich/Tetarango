@@ -1,10 +1,15 @@
 #include "Player.h"
 
 #include "ui/physic/body/BodySensor.h"
+#include "ui/renderable/primitive/Polygon.h"
 
 namespace
 {
-	const auto impulse = 10000;
+	const auto jumpImpulse = 5.0;
+	const auto moveForce = 30.0;
+	const auto maxLeftRightVelocity = 1.0;
+	const auto playerStartTextureName = "player-start";
+	const auto playerAnimationSetName = "player-animations";
 }
 
 namespace AWGame
@@ -12,19 +17,55 @@ namespace AWGame
 	Player::Player()
 	{
 		layoutSpace = AW::LayoutSpace::World;
-		setColor(AW::Color(255, 64, 32));
-		setScreenSize(200.0, 200.0);
+		setScreenSize(128, 128);
 		GORegister(Player);
 	}
 
-	void Player::onBindShaders()
+	void Player::onLoadResources()
 	{
-		fragmentShader = modules->shader->getShader({ "f-color", "f-circle" });
-		fragmentShader->setFloatIUParam("fCircleEdge", 0.1);
+		GOLoadTexture("actor/player/player-start.png", playerStartTextureName);
+
+		auto animationSet = std::make_shared<AW::AnimationSet>();
+		{
+			auto row = 0;
+			auto col = 0;
+
+			AW::RectI frameSize = {
+				0,
+				0,
+				128,
+				128
+			};
+
+			{
+				auto anim = animationSet->startNewAnimation("default");
+				anim->addGeneralFrames(col * frameSize.w, (row++) * frameSize.h, frameSize.w, frameSize.h, 1);
+			}
+
+			{
+				auto anim = animationSet->startNewAnimation("right");
+				anim->addGeneralFrames(col * frameSize.w, (row++) * frameSize.h, frameSize.w, frameSize.h, 1);
+			}
+
+			{
+				auto anim = animationSet->startNewAnimation("left");
+				anim->addGeneralFrames(col * frameSize.w, (row++) * frameSize.h, frameSize.w, frameSize.h, 1);
+			}
+
+			{
+				auto anim = animationSet->startNewAnimation("duck");
+				anim->addGeneralFrames(col * frameSize.w, (row++) * frameSize.h, frameSize.w, frameSize.h, 1);
+			}
+		}
+
+		modules->animation->addAnimationSet(animationSet, playerAnimationSetName);
+
 	}
 
 	void Player::onInitialAttach()
 	{
+		AW::Animated::onInitialAttach();
+
 		modules->input->keyboard->registerKeys({
 			AWKey::UP,
 			AWKey::DOWN,
@@ -32,31 +73,28 @@ namespace AWGame
 			AWKey::RIGHT
 			}, weak_from_this());
 
+		setTexture(playerStartTextureName);
+		setAnimationSet(playerAnimationSetName);
+		setDefaultAnimationName("default");
 		enableEnterFrame();
 	}
 
 	void Player::onCreateChildren()
 	{
+
+
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
-		body->setDensity(5.0);
-		body->setBodyType(AW::BodyType::Circle);
-		//body->setFixedRotation(true);
+		body->setBodyType(AW::BodyType::Polygon);
+		body->setFixedRotation(true);
 		body->setDynamicBody();
-		body->setDensity(5.0);
+		body->setFriction(0.2);
 		add(body);
 
 		const auto bodySensor = std::make_shared<AW::BodySensor>();
-		bodySensor->setWidth(getScreenWidth());
-		bodySensor->setHeight(getScreenHeight());
+		bodySensor->setScreenWidth(44);
+		bodySensor->setScreenHeight(48);
 		body->add(bodySensor);
-
-		const auto oDot = std::make_shared<AW::Rectangle>();
-		oDot->setColor(AW::Color::random());
-		oDot->setScreenSize(50, 50);
-		oDot->setFragmentShader(modules->shader->getShader({ "f-color", "f-circle" }));
-		oDot->centerAlignWithin(this, 0.0, 75.0);
-		add(oDot);
 	}
 
 	void Player::onChildrenHydrated()
@@ -66,10 +104,20 @@ namespace AWGame
 
 	void Player::onEnterFrame(const double& deltaTime)
 	{
-		if (up) body->applyForce(0.0, 1.0, impulse);
-		if (down) body->applyForce(0.0, -1.0, impulse);
-		if (left) body->applyForce(-1.0, 0.0, impulse);
-		if (right) body->applyForce(1.0, 0.0, impulse);
+		if (up && (contacts > 0 || airJumpsAllowed > 0))
+		{
+			body->applyImpulse(0.0, 1.0, jumpImpulse);
+			--airJumpsAllowed;
+			up = false;
+		}
+		if (left && body->getVelocity().x > -maxLeftRightVelocity) body->applyForce(-1.0, 0.0, contacts > 0 ? moveForce : moveForce / 10);
+		if (right && body->getVelocity().x < maxLeftRightVelocity) body->applyForce(1.0, 0.0, contacts > 0 ? moveForce : moveForce / 10);
+		if (down) body->applyForce(0.0, -1.0, moveForce);
+
+		if (up) play("default");
+		else if (left) play("left");
+		else if (right) play("right");
+		else if (down) play("duck");
 	}
 
 	void Player::onKey(AWKey key, bool isPressed)
@@ -90,15 +138,29 @@ namespace AWGame
 		return body;
 	}
 
+	std::shared_ptr<AW::Renderable> Player::getShape()
+	{
+		const auto bodyCollider = std::make_shared<AW::Polygon>();
+		const auto offset = (AW::NumberHelper::PI * 2.0) / 16.0;
+		const auto step = (AW::NumberHelper::PI * 2.0) / 8.0;
+		for (auto i = 0; i < 8; ++i)
+		{
+			bodyCollider->addScreenPoint(std::cosf(offset + i * step) * 22.0, std::sinf(offset + i * step) * 24.0);
+		}
+		bodyCollider->centerBalancePoints();
+		bodyCollider->matchPosition(this);
+
+		return bodyCollider;
+	}
+
 	void Player::onBeginContact(std::unique_ptr<AW::ContactBundle> bundle)
 	{
-		// TODO: Something with this
-		std::cout << "onBeginContact" << std::endl;
+		contacts++;
+		airJumpsAllowed = 2;
 	}
 
 	void Player::onEndContact(std::unique_ptr<AW::ContactBundle> bundle)
 	{
-		// TODO: Something with this
-		std::cout << "onEndContact" << std::endl;
+		contacts--;
 	}
 }
