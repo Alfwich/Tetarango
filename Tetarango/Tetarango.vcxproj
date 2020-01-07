@@ -386,6 +386,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\ui\camera\ICameraListener.h" />
     <ClInclude Include="src\core\ui\physic\body\BodySensor.h" />
     <ClInclude Include="src\core\ui\physic\body\IBodyListener.h" />
+    <ClInclude Include="src\core\ui\physic\body\IBodyFixture.h" />
     <ClInclude Include="src\core\ui\physic\joint\Joint.h" />
     <ClInclude Include="src\core\ui\renderable\container\ScrollContainer.h" />
     <ClInclude Include="src\core\ui\renderable\element\DisplayBuffer.h" />

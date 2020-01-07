@@ -66,9 +66,10 @@ namespace AW
 
 	void BodySensor::onAttach()
 	{
-		if (!hasSensor())
+		if (!hasAttachedSensorCallback)
 		{
 			modules->physic->registerRigidBodySensorForWorld(getWorldId(), std::dynamic_pointer_cast<RigidBodySensor>(shared_from_this()));
+			hasAttachedSensorCallback = true;
 		}
 
 		const auto listenerPtr = listener.lock();
@@ -94,58 +95,11 @@ namespace AW
 
 	void BodySensor::onDetach()
 	{
-		if (hasSensor())
+		if (hasAttachedSensorCallback)
 		{
 			modules->physic->unregisterRigidBodySensorForWorld(getWorldId(), std::dynamic_pointer_cast<RigidBodySensor>(shared_from_this()));
+			hasAttachedSensorCallback = false;
 		}
-
-		RigidBodySensor::onDetach();
-	}
-
-	b2Fixture * BodySensor::onCreateSensor()
-	{
-		const auto parentBodyPtr = std::dynamic_pointer_cast<Body>(parent.lock());
-		if (parentBodyPtr != nullptr)
-		{
-			auto bodyPtr = parentBodyPtr->getBody();
-			if (bodyPtr == nullptr) parentBodyPtr->onAttach();
-
-			bodyPtr = parentBodyPtr->getBody();
-			if (bodyPtr != nullptr)
-			{
-				b2FixtureDef fixtureDef;
-
-				b2PolygonShape collider;
-				collider.SetAsBox((float)rect.w / 2.f, (float)rect.h / 2.f);
-				for (auto v : collider.m_vertices)
-				{
-					v.x += (float)rect.x;
-					v.y -= (float)rect.y;
-				}
-
-				fixtureDef.shape = &collider;
-				fixtureDef.isSensor = true;
-
-				return bodyPtr->CreateFixture(&fixtureDef);
-			}
-		}
-
-		return nullptr;
-	}
-
-	b2Body* BodySensor::onGetBodyReference()
-	{
-		const auto parentBodyPtr = std::dynamic_pointer_cast<Body>(parent.lock());
-		if (parentBodyPtr != nullptr)
-		{
-			const auto bodyPtr = parentBodyPtr->getBody();
-			if (bodyPtr != nullptr)
-			{
-				return bodyPtr;
-			}
-		}
-
-		return nullptr;
 	}
 
 	void BodySensor::onBeginContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB)
@@ -153,7 +107,11 @@ namespace AW
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)
 		{
-			listenerPtr->onBeginContact(std::make_unique<ContactBundle>(bodyA->GetUserData(), bodyB->GetUserData(), fixtureA, fixtureB));
+			const auto bodyRef = listenerPtr->getBodyObject()->getBody();
+			if (bodyA == bodyRef || bodyB == bodyRef)
+			{
+				listenerPtr->onBeginContact(std::make_unique<ContactBundle>(bodyA->GetUserData(), bodyB->GetUserData(), fixtureA, fixtureB));
+			}
 		}
 	}
 
@@ -162,7 +120,11 @@ namespace AW
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)
 		{
-			listenerPtr->onEndContact(std::make_unique<ContactBundle>(bodyA->GetUserData(), bodyB->GetUserData(), fixtureA, fixtureB));
+			const auto bodyRef = listenerPtr->getBodyObject()->getBody();
+			if (bodyA == bodyRef || bodyB == bodyRef)
+			{
+				listenerPtr->onEndContact(std::make_unique<ContactBundle>(bodyA->GetUserData(), bodyB->GetUserData(), fixtureA, fixtureB));
+			}
 		}
 	}
 
@@ -176,5 +138,20 @@ namespace AW
 		rect.h = client->serializeDouble("r.h", rect.h);
 
 		return GameObject::doSerialize(hint);
+	}
+
+	const BodyType BodySensor::getBodyType() const
+	{
+		return BodyType::Box;
+	}
+
+	const AWVec2<float> BodySensor::getBodyWorldSize()
+	{
+		return AWVec2<float>(rect.w, rect.h);
+	}
+
+	const bool BodySensor::isSensor() const
+	{
+		return true;
 	}
 }

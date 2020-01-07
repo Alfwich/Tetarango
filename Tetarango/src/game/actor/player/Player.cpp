@@ -1,12 +1,14 @@
 #include "Player.h"
 
 #include "ui/physic/body/BodySensor.h"
-#include "ui/renderable/primitive/Polygon.h"
+
+#include "prop/physic/Box.h"
+#include "prop/physic/Poly.h"
 
 namespace
 {
-	const auto jumpImpulse = 5.0;
-	const auto moveForce = 30.0;
+	const auto jumpImpulse = 20.0;
+	const auto moveForce = 120.0;
 	const auto maxLeftRightVelocity = 1.0;
 	const auto playerStartTextureName = "player-start";
 	const auto playerAnimationSetName = "player-animations";
@@ -23,7 +25,7 @@ namespace AWGame
 
 	void Player::onLoadResources()
 	{
-		GOLoadTexture("actor/player/player-start.png", playerStartTextureName);
+		modules->texture->loadTexture("res/image/actor/player/player-start.png", playerStartTextureName);
 
 		auto animationSet = std::make_shared<AW::AnimationSet>();
 		{
@@ -81,15 +83,22 @@ namespace AWGame
 
 	void Player::onCreateChildren()
 	{
-
-
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
-		body->setBodyType(AW::BodyType::Polygon);
 		body->setFixedRotation(true);
 		body->setDynamicBody();
 		body->setFriction(0.2);
 		add(body);
+
+		const auto bodyCollider = std::make_shared<Poly>();
+		const auto offset = (AW::NumberHelper::PI * 2.0) / 16.0;
+		const auto step = (AW::NumberHelper::PI * 2.0) / 8.0;
+		for (auto i = 0; i < 8; ++i)
+		{
+			bodyCollider->addScreenPoint(std::cosf(offset + i * step) * 22.0, std::sinf(offset + i * step) * 24.0);
+		}
+		bodyCollider->centerBalancePoints();
+		body->add(bodyCollider);
 
 		const auto bodySensor = std::make_shared<AW::BodySensor>();
 		bodySensor->setScreenWidth(44);
@@ -136,21 +145,6 @@ namespace AWGame
 	std::shared_ptr<AW::Body> Player::getBodyObject()
 	{
 		return body;
-	}
-
-	std::shared_ptr<AW::Renderable> Player::getShape()
-	{
-		const auto bodyCollider = std::make_shared<AW::Polygon>();
-		const auto offset = (AW::NumberHelper::PI * 2.0) / 16.0;
-		const auto step = (AW::NumberHelper::PI * 2.0) / 8.0;
-		for (auto i = 0; i < 8; ++i)
-		{
-			bodyCollider->addScreenPoint(std::cosf(offset + i * step) * 22.0, std::sinf(offset + i * step) * 24.0);
-		}
-		bodyCollider->centerBalancePoints();
-		bodyCollider->matchPosition(this);
-
-		return bodyCollider;
 	}
 
 	void Player::onBeginContact(std::unique_ptr<AW::ContactBundle> bundle)

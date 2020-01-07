@@ -4,34 +4,26 @@
 #include "engine/GameObject.h"
 #include "engine/module/physic/RigidBody.h"
 #include "IBodyListener.h"
+#include "IBodyFixture.h"
 
 namespace AW
 {
-	enum class BodyType
-	{
-		Box,
-		Circle,
-		Polygon,
-		Line,
-		Chain
-	};
 
 	class Body : public GameObject, public RigidBody
 	{
-		BodyType bodyType = BodyType::Box;
 		bool autoUpdate = true;
-		AWVec2<float> size;
 
 		void notifyListenerOnPhysicUpdate();
 
-		std::shared_ptr<Renderable> getShapeFromListener();
+		std::shared_ptr<IBodyFixture> getBodyFixtureFromListener();
 		std::shared_ptr<Renderable> getRenderTargetFromListener();
+
+		void createFixture(const std::shared_ptr<IBodyFixture>& fixture);
 
 	public:
 		Body();
 
 		void setAutoUpdate(bool flag);
-		void setBodyType(BodyType type);
 
 		std::weak_ptr<IBodyListener> listener;
 
@@ -40,19 +32,14 @@ namespace AW
 		virtual void onAttach();
 		virtual void onDetach();
 
-		virtual void setWorldWidth(float width);
-		virtual void setWorldHeight(float height);
-		virtual void setScreenWidth(float width);
-		virtual void setScreenHeight(float height);
-
-		virtual float getWorldWidth();
-		virtual float getWorldHeight();
-
 		virtual void applyForce(float vX, float vY, float amount) override;
 		virtual void applyForce(float vX, float vY, float cX, float cY, float amount) override;
 
 		void applyImpulse(float vX, float vY, float amount);
 		void applyImpulse(float vX, float vY, float cX, float cY, float amount);
+
+		virtual void add(std::shared_ptr<GameObject> obj) override;
+		virtual void remove(std::shared_ptr<GameObject> obj) override;
 
 		virtual b2Body* onCreateBody(const std::shared_ptr<b2World>& world);
 		virtual void onPhysicUpdate();

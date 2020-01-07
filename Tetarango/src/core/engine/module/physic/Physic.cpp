@@ -224,16 +224,8 @@ namespace AW
 			return;
 		}
 
-		if (obj->hasSensor())
-		{
-			Logger::instance()->logCritical("Physic::Attempted to register sensor for worldId=" + std::to_string(worldId) + ", that already has a sensor");
-			return;
-		}
-
 		auto worldBundle = worlds.at(worldId);
 		worldBundle->sensors.push_back(obj);
-
-		obj->createSensor();
 	}
 
 	void Physic::unregisterRigidBodySensorForWorld(unsigned int worldId, const std::shared_ptr<RigidBodySensor>& obj)
@@ -250,18 +242,12 @@ namespace AW
 			return;
 		}
 
-		if (!obj->hasSensor())
-		{
-			Logger::instance()->logCritical("Physic::Attempted to unregister sensor for worldId=" + std::to_string(worldId) + ", that does not has a sensor");
-			return;
-		}
-
 		const auto& worldBundle = worlds.at(worldId);
 
 		for (auto it = worldBundle->sensors.begin(); it != worldBundle->sensors.end();)
 		{
 			const auto bodySensor = (*it).lock();
-			if (bodySensor->getSensor() == obj->getSensor())
+			if (bodySensor == obj)
 			{
 				it = worldBundle->sensors.erase(it);
 				return;

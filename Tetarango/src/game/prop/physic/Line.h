@@ -2,10 +2,11 @@
 
 #include "ui/renderable/primitive/Primitive.h"
 #include "ui/physic/body/Body.h"
+#include "ui/physic/body/IBodyFixture.h"
 
 namespace AWGame
 {
-	class Line : public AW::Primitive, public AW::IBodyListener
+	class Line : public AW::Primitive, public AW::IBodyListener, public AW::IBodyFixture
 	{
 		std::shared_ptr<AW::Body> body;
 
@@ -21,5 +22,8 @@ namespace AWGame
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Renderable> getRenderableBody() override;
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
+
+		// Inherited via IBodyFixture
+		virtual const AW::BodyType getBodyType() const override;
 	};
 }

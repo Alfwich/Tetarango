@@ -16,9 +16,11 @@ namespace AWGame
 
 	void Chain::onCreateChildren()
 	{
+		// Will be used as a composite body
+		if (std::dynamic_pointer_cast<AW::Body>(parent.lock()) != nullptr) return;
+
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
-		body->setBodyType(AW::BodyType::Chain);
 		if (getDynamic())
 		{
 			body->setDynamicBody();
@@ -69,6 +71,11 @@ namespace AWGame
 	std::shared_ptr<AW::Body> Chain::getBodyObject()
 	{
 		return body;
+	}
+
+	const AW::BodyType Chain::getBodyType() const
+	{
+		return AW::BodyType::Chain;
 	}
 
 }

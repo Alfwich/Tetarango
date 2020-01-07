@@ -33,7 +33,6 @@ namespace AWGame
 		virtual std::shared_ptr<Renderable> getRenderableBody() override;
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
-		virtual std::shared_ptr<Renderable> getShape() override;
 
 		virtual void onBeginContact(std::unique_ptr<AW::ContactBundle> bundle) override;
 		virtual void onEndContact(std::unique_ptr<AW::ContactBundle> bundle) override;

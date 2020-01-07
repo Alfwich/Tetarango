@@ -144,7 +144,7 @@ namespace AW
 		}
 
 		Logger::instance()->log("Thread::Creating worker threads");
-		const auto numWorkerThreads = SDL_GetCPUCount() - 1;
+		const auto numWorkerThreads = NumberHelper::clamp<int>(SDL_GetCPUCount() * 2, 1, 8);
 		for (int i = 0; i < numWorkerThreads; ++i)
 		{
 			const auto thread = SDL_CreateThread([](void* data) -> int {

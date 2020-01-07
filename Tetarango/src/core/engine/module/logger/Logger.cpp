@@ -71,7 +71,6 @@ namespace AW
 	void Logger::logCritical(std::string msg)
 	{
 		log(msg, "!! critical !!");
-		this->purgeToLogFile(true);
 	}
 
 	void Logger::logCritical(char* msg)

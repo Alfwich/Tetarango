@@ -24,8 +24,12 @@ namespace AWGame
 
 	void Box::onCreateChildren()
 	{
+		// Will be used as a composite body
+		if (std::dynamic_pointer_cast<AW::Body>(parent.lock()) != nullptr) return;
+
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
+
 		if (getDynamic())
 		{
 			body->setDynamicBody();
@@ -71,5 +75,15 @@ namespace AWGame
 	std::shared_ptr<AW::Body> Box::getBodyObject()
 	{
 		return body;
+	}
+
+	const AW::BodyType Box::getBodyType() const
+	{
+		return AW::BodyType::Box;
+	}
+
+	const AWVec2<float> Box::getBodyWorldSize()
+	{
+		return AWVec2<float>(getWorldWidth(), getWorldHeight());
 	}
 }

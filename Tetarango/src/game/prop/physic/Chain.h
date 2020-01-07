@@ -3,10 +3,11 @@
 #include "ui/renderable/primitive/Polygon.h"
 #include "ui/physic/body/Body.h"
 #include "ui/physic/body/IBodyListener.h"
+#include "ui/physic/body/IBodyFixture.h"
 
 namespace AWGame
 {
-	class Chain: public AW::Polygon, public AW::IBodyListener
+	class Chain: public AW::Polygon, public AW::IBodyListener, public AW::IBodyFixture
 	{
 		std::shared_ptr<AW::Body> body;
 
@@ -25,6 +26,9 @@ namespace AWGame
 
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
+
+		// Inherited via IBodyFixture
+		virtual const AW::BodyType getBodyType() const override;
 	};
 }
 

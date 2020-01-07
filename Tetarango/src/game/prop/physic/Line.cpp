@@ -19,6 +19,9 @@ namespace AWGame
 
 	void Line::onCreateChildren()
 	{
+		// Will be used as a composite body
+		if (std::dynamic_pointer_cast<AW::Body>(parent.lock()) != nullptr) return;
+
 		const auto body = std::make_shared<AW::Body>();
 		body->name = bodyId;
 		if (getDynamic())
@@ -29,7 +32,6 @@ namespace AWGame
 		{
 			body->setStaticBody();
 		}
-		body->setBodyType(AW::BodyType::Line);
 		add(body);
 	}
 
@@ -46,6 +48,11 @@ namespace AWGame
 	std::shared_ptr<AW::Body> Line::getBodyObject()
 	{
 		return body;
+	}
+
+	const AW::BodyType Line::getBodyType() const
+	{
+		return AW::BodyType::Line;
 	}
 
 	void Line::setDynamic(bool flag)

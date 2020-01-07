@@ -8,7 +8,6 @@
 #include "engine/module/physic/RigidBody.h"
 
 #define GORegister(x) registerGameObject<x>(__FUNCTION__);
-#define GOLoadTexture(x, y) modules->texture->loadTexture(std::string("res/image/") + std::string(x), y);
 
 namespace AW
 {

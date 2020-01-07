@@ -1,7 +1,6 @@
 #pragma once
 
 #if PROFILE == 1
-#define AW_PROFILE_SECTION(label, x) { ProfileTimer timer(label); x; }
 #define AW_PROFILE_METHOD() ProfileTimer __timer__(__FUNCSIG__);
 #else
 #define AW_PROFILE_SECTION(label, x)

@@ -15,9 +15,11 @@ namespace AWGame
 
 	void Poly::onCreateChildren()
 	{
+		// Will be used as a composite body
+		if (std::dynamic_pointer_cast<AW::Body>(parent.lock()) != nullptr) return;
+
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
-		body->setBodyType(AW::BodyType::Polygon);
 		if (getDynamic())
 		{
 			body->setDynamicBody();
@@ -60,14 +62,14 @@ namespace AWGame
 		return std::dynamic_pointer_cast<Renderable>(shared_from_this());
 	}
 
-	const std::vector<AWVec2<float>> Poly::getBodyWorldPoints()
-	{
-		return getWorldPoints();
-	}
-
 	std::shared_ptr<AW::Body> Poly::getBodyObject()
 	{
 		return body;
+	}
+
+	const AW::BodyType Poly::getBodyType() const
+	{
+		return AW::BodyType::Polygon;
 	}
 
 }
