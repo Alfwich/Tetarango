@@ -66,7 +66,7 @@ namespace AWGame
 		titleGame->setFontSize(150);
 		add(titleGame);
 
-		titleGameCollider = std::make_shared<Box>();
+		titleGameCollider = std::make_shared<AW::Box>();
 		titleGameCollider->layoutSpace = AW::LayoutSpace::Screen;
 		titleGameCollider->visible = false;
 		titleGameCollider->setDynamic(false);
@@ -181,14 +181,14 @@ namespace AWGame
 			{
 				for (auto i = 0; i < numBlocksToMake; ++i)
 				{
-					const auto box = std::make_shared<Box>();
+					const auto box = std::make_shared<AW::Box>();
 					box->layoutSpace = AW::LayoutSpace::Screen;
 					box->setColor(blockColorGenerator.getBlockColor());
 					box->setScreenPosition(AW::NumberHelper::random(-100, modules->screen->getWidth() + 100), AW::NumberHelper::random(-100, -1000));
 					add(box);
 				}
 
-				bottomCollider = std::make_shared<Box>();
+				bottomCollider = std::make_shared<AW::Box>();
 				bottomCollider->layoutSpace = AW::LayoutSpace::Screen;
 				bottomCollider->visible = false;
 				bottomCollider->setDynamic(false);

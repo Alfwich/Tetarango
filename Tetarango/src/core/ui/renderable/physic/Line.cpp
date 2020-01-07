@@ -8,7 +8,7 @@ namespace
 	const auto dynamicPropName = "line-dynamic";
 }
 
-namespace AWGame
+namespace AW
 {
 	Line::Line()
 	{

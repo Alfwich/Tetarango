@@ -5,7 +5,7 @@
 #include "engine/module/time/Timer.h"
 #include "scene/BaseScene.h"
 #include "prop/block/Block.h"
-#include "prop/physic/Box.h"
+#include "ui/renderable/physic/Box.h"
 #include "prop/title/TitleGame.h"
 
 namespace AWGame
@@ -21,7 +21,7 @@ namespace AWGame
 		std::shared_ptr<AW::Element> splashImage;
 		std::shared_ptr<TitleGame> titleGame;
 
-		std::shared_ptr<Box> titleGameCollider, bottomCollider;
+		std::shared_ptr<AW::Box> titleGameCollider, bottomCollider;
 
 		std::shared_ptr<AW::Element> loadingProgressBar;
 

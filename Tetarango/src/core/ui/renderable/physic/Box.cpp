@@ -5,7 +5,7 @@ namespace
 	const auto dynamicPropName = "awg-box-d";
 }
 
-namespace AWGame
+namespace AW
 {
 	Box::Box()
 	{

@@ -3,8 +3,8 @@
 #include "scene/BaseScene.h"
 #include "ui/renderable/element/DisplayBuffer.h"
 #include "generator/block/GeneratorBlock.h"
-#include "prop/physic/Poly.h"
-#include "prop/physic/Chain.h"
+#include "ui/renderable/physic/Poly.h"
+#include "ui/renderable/physic/Chain.h"
 #include "scene/BaseScene.h"
 
 namespace
@@ -83,7 +83,7 @@ namespace AWGame
 		const auto screenWidthInMeters = AW::Renderable::screenToWorldPosition(modules->screen->getWidth());
 		const auto screenHeightInMeters = AW::Renderable::screenToWorldPosition(modules->screen->getHeight());
 		{
-			const auto platform = std::make_shared<Box>();
+			const auto platform = std::make_shared<AW::Box>();
 			platform->setDynamic(false);
 			platform->setColor(64, 64, 64);
 			platform->setWorldSize(100.0, 0.5);
@@ -94,7 +94,7 @@ namespace AWGame
 		const auto xOff = 700.0;
 		const auto yOff = -250.0;
 
-		const auto platformA = std::make_shared<Box>();
+		const auto platformA = std::make_shared<AW::Box>();
 		platformA->setDynamic(false);
 		platformA->setColor(64, 64, 64);
 		platformA->setScreenSize(500.0, 100.0);
@@ -103,7 +103,7 @@ namespace AWGame
 		contentContainer->add(platformA);
 
 
-		const auto platformB = std::make_shared<Box>();
+		const auto platformB = std::make_shared<AW::Box>();
 		platformB->setDynamic(false);
 		platformB->setColor(64, 64, 64);
 		platformB->setScreenSize(500.0, 100.0);
@@ -119,7 +119,7 @@ namespace AWGame
 		{
 			for (auto i = 0; i < 10; ++i)
 			{
-				const auto binder = std::make_shared<Box>();
+				const auto binder = std::make_shared<AW::Box>();
 				binder->setDynamic(true);
 				binder->setColor(128, 128, 128);
 				binder->setScreenSize(50.0, 50.0);
@@ -148,7 +148,7 @@ namespace AWGame
 		const auto dim = 100.0;
 		for (auto i = 0; i < 10; ++i)
 		{
-			const auto poly = std::make_shared<Poly>();
+			const auto poly = std::make_shared<AW::Poly>();
 			poly->setColor(AW::Color::random());
 
 			const auto pts = AW::NumberHelper::randomInt(3, 8);
@@ -167,7 +167,7 @@ namespace AWGame
 
 		for (int i = 0; i < 5; ++i)
 		{
-			const auto c = std::make_shared<Chain>();
+			const auto c = std::make_shared<AW::Chain>();
 			c->setDynamic(true);
 			c->setScreenPosition(modules->screen->getWidth() / 2.0 + AW::NumberHelper::random(-400.0, 400.0), modules->screen->getHeight() / 2.0 + AW::NumberHelper::random(-800.0, -1000.0));
 			c->setColor(blockColorGenerator.getBlockColor());
@@ -198,7 +198,7 @@ namespace AWGame
 		{
 			if (contentContainer->getChildren().size() < 800)
 			{
-				const auto b = std::make_shared<Box>();
+				const auto b = std::make_shared<AW::Box>();
 				b->setAlpha(0.0);
 
 				b->setDynamic(true);
@@ -232,7 +232,7 @@ namespace AWGame
 	{
 		if (contentContainer == nullptr) rebuild();
 
-		for (const auto c : contentContainer->getChildrenOfType<Box>())
+		for (const auto c : contentContainer->getChildrenOfType<AW::Box>())
 		{
 			if (c->getWorldY() < -20.0)
 			{
@@ -300,7 +300,7 @@ namespace AWGame
 			const auto dim = 50.0;
 			for (auto i = 0; i < 30; ++i)
 			{
-				const auto poly = std::make_shared<Poly>();
+				const auto poly = std::make_shared<AW::Poly>();
 				poly->setColor(AW::Color::random());
 
 				const auto pts = AW::NumberHelper::randomInt(3, 8);

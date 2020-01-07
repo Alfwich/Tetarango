@@ -5,7 +5,7 @@ namespace
 	const auto dynamicPropName = "poly-d";
 }
 
-namespace AWGame
+namespace AW
 {
 	Poly::Poly()
 	{

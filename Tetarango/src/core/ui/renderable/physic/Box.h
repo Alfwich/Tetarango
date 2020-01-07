@@ -1,17 +1,21 @@
 #pragma once
 
-#include "ui/renderable/primitive/Primitive.h"
 #include "ui/physic/body/Body.h"
+#include "ui/physic/body/IBodyListener.h"
+#include "ui/renderable/element/Element.h"
 #include "ui/physic/body/IBodyFixture.h"
 
-namespace AWGame
+namespace AW
 {
-	class Line : public AW::Primitive, public AW::IBodyListener, public AW::IBodyFixture
+	class Box : public AW::Element, public AW::IBodyListener, public AW::IBodyFixture
 	{
 		std::shared_ptr<AW::Body> body;
+		bool dynamic = false;
 
 	public:
-		Line();
+		Box();
+
+		void onBindShaders();
 
 		void onCreateChildren();
 		void onChildrenHydrated();
@@ -20,10 +24,12 @@ namespace AWGame
 		bool getDynamic();
 
 		// Inherited via IBodyListener
-		virtual std::shared_ptr<AW::Renderable> getRenderableBody() override;
+		virtual std::shared_ptr<Renderable> getRenderableBody() override;
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
 
 		// Inherited via IBodyFixture
 		virtual const AW::BodyType getBodyType() const override;
+
+		virtual const AWVec2<float> getBodyWorldSize() override;
 	};
 }

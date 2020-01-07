@@ -6,7 +6,7 @@
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/container/Container.h"
-#include "prop/physic/Box.h"
+#include "ui/renderable/physic/Box.h"
 #include "actor/player/Player.h"
 #include "ui/physic/joint/Joint.h"
 

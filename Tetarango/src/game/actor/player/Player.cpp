@@ -2,8 +2,8 @@
 
 #include "ui/physic/body/BodySensor.h"
 
-#include "prop/physic/Box.h"
-#include "prop/physic/Poly.h"
+#include "ui/renderable/physic/Box.h"
+#include "ui/renderable/physic/Poly.h"
 
 namespace
 {
@@ -85,12 +85,12 @@ namespace AWGame
 	{
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
-		body->setFixedRotation(true);
+		//body->setFixedRotation(true);
 		body->setDynamicBody();
 		body->setFriction(0.2);
 		add(body);
 
-		const auto bodyCollider = std::make_shared<Poly>();
+		const auto bodyCollider = std::make_shared<AW::Poly>();
 		const auto offset = (AW::NumberHelper::PI * 2.0) / 16.0;
 		const auto step = (AW::NumberHelper::PI * 2.0) / 8.0;
 		for (auto i = 0; i < 8; ++i)

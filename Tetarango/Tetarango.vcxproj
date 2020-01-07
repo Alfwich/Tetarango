@@ -291,10 +291,10 @@ bash ./make.sh</Command>
     <ClCompile Include="src\game\prop\BaseProp.cpp" />
     <ClCompile Include="src\game\gui\BaseGui.cpp" />
     <ClCompile Include="src\core\ui\renderable\element\Backdrop.cpp" />
-    <ClCompile Include="src\game\prop\physic\Box.cpp" />
-    <ClCompile Include="src\game\prop\physic\Chain.cpp" />
-    <ClCompile Include="src\game\prop\physic\Line.cpp" />
-    <ClCompile Include="src\game\prop\physic\Poly.cpp" />
+    <ClCompile Include="src\core\ui\renderable\physic\Box.cpp" />
+    <ClCompile Include="src\core\ui\renderable\physic\Chain.cpp" />
+    <ClCompile Include="src\core\ui\renderable\physic\Line.cpp" />
+    <ClCompile Include="src\core\ui\renderable\physic\Poly.cpp" />
     <ClCompile Include="src\game\prop\title\TitleGame.cpp" />
     <ClCompile Include="src\game\scene\BaseScene.cpp" />
     <ClCompile Include="src\core\engine\module\serialization\SerializationClient.cpp" />
@@ -382,7 +382,6 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\engine\module\shader\ShaderContainer.h" />
     <ClInclude Include="src\core\engine\module\shader\ShaderReference.h" />
     <ClInclude Include="src\core\engine\module\sound\Music.h" />
-    <ClInclude Include="serialization-list.generated.h" />
     <ClInclude Include="src\core\ui\camera\ICameraListener.h" />
     <ClInclude Include="src\core\ui\physic\body\BodySensor.h" />
     <ClInclude Include="src\core\ui\physic\body\IBodyListener.h" />
@@ -429,10 +428,10 @@ bash ./make.sh</Command>
     <ClInclude Include="src\game\prop\BaseProp.h" />
     <ClInclude Include="src\game\gui\BaseGui.h" />
     <ClInclude Include="src\game\gui\Guis.h" />
-    <ClInclude Include="src\game\prop\physic\Box.h" />
-    <ClInclude Include="src\game\prop\physic\Chain.h" />
-    <ClInclude Include="src\game\prop\physic\Line.h" />
-    <ClInclude Include="src\game\prop\physic\Poly.h" />
+    <ClInclude Include="src\core\ui\renderable\physic\Box.h" />
+    <ClInclude Include="src\core\ui\renderable\physic\Chain.h" />
+    <ClInclude Include="src\core\ui\renderable\physic\Line.h" />
+    <ClInclude Include="src\core\ui\renderable\physic\Poly.h" />
     <ClInclude Include="src\game\prop\Props.h" />
     <ClInclude Include="src\core\ui\scene\SceneTransitionBundle.h" />
     <ClInclude Include="src\core\ui\renderable\element\Backdrop.h" />

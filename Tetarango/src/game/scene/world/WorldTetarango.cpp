@@ -1,11 +1,11 @@
 #include "WorldTetarango.h"
 
 #include "scene/game/SceneMainGame.h"
-#include "prop/physic/Box.h"
 #include "actor/player/Player.h"
 #include "gui/camera/GameCamera.h"
-#include "prop/physic/Line.h"
-#include "prop/physic/Chain.h"
+#include "ui/renderable/physic/Box.h"
+#include "ui/renderable/physic/Line.h"
+#include "ui/renderable/physic/Chain.h"
 
 namespace AWGame
 {
@@ -26,7 +26,7 @@ namespace AWGame
 		contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		add(contentContainer);
 
-		const auto ground = std::make_shared<Chain>();
+		const auto ground = std::make_shared<AW::Chain>();
 		ground->setDynamic(false);
 		for (auto i = -60; i < 60; ++i)
 		{

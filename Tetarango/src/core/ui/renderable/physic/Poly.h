@@ -5,14 +5,14 @@
 #include "ui/physic/body/IBodyListener.h"
 #include "ui/physic/body/IBodyFixture.h"
 
-namespace AWGame
+namespace AW
 {
-	class Chain: public AW::Polygon, public AW::IBodyListener, public AW::IBodyFixture
+	class Poly : public AW::Polygon, public AW::IBodyListener, public AW::IBodyFixture
 	{
 		std::shared_ptr<AW::Body> body;
 
 	public:
-		Chain();
+		Poly();
 
 		void onCreateChildren();
 		void onChildrenHydrated();
@@ -22,7 +22,6 @@ namespace AWGame
 
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Renderable> getRenderableBody() override;
-		const std::vector<AWVec2<float>> getBodyWorldPoints();
 
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<AW::Body> getBodyObject() override;
@@ -31,4 +30,3 @@ namespace AWGame
 		virtual const AW::BodyType getBodyType() const override;
 	};
 }
-
