@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/module/ModuleBundleStatus.h"
 #include "ui/renderable/Renderable.h"
 #include "engine/module/display/RenderPackage.h"
 #include "engine/module/input/IInputListener.h"

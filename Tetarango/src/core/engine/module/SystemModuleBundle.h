@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IBaseModule.h"
+#include "ModuleBundleStatus.h"
 #include "filesystem/Filesystem.h"
 #include "font/FontContainer.h"
 #include "input/Input.h"
@@ -21,13 +22,6 @@ namespace AW
 	class Screen;
 	class Time;
 
-	enum class ModuleBundleStatus
-	{
-		UNINITIALIZED,
-		INITIALIZED,
-		READY,
-		CLEANED_UP
-	};
 
 	class SystemModuleBundle : public IBaseModule
 	{

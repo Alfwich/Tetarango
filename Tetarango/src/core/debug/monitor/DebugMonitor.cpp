@@ -14,7 +14,6 @@ namespace AW
 	{
 		setShouldRebuildOnLoad();
 		renderPositionMode = AW::RenderPositionMode::Absolute;
-
 		markIsDebugElement();
 		GORegister(DebugMonitor);
 	}
