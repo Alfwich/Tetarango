@@ -48,3 +48,4 @@
 #include "util/Rect.h"
 
 #include "engine/module/logger/Logger.h"
+#include "util/profile/ProfileTimer.h"

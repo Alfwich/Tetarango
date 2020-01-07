@@ -157,17 +157,20 @@ namespace AW
 
 	void Application::updateFrameTime()
 	{
+		AW_PROFILE_METHOD();
 		frameTime = std::min(100.0, frameTimer->getTicksAndRestart());
 		startFrameTime = modules->time->getHighResolutionTicks();
 	}
 
 	void Application::processEnterFrames()
 	{
+		AW_PROFILE_METHOD();
 		modules->onEnterFrame(frameTime);
 	}
 
 	void Application::processApplicationEvents()
 	{
+		AW_PROFILE_METHOD();
 		for (auto e : modules->event->getEvents())
 		{
 			switch (e->code)
@@ -210,16 +213,19 @@ namespace AW
 
 	void Application::preRender()
 	{
+		AW_PROFILE_METHOD();
 		markPhysicFrameUpdateToStart();
 	}
 
 	void Application::render()
 	{
+		AW_PROFILE_METHOD();
 		modules->screen->render(root);
 	}
 
 	void Application::postRender()
 	{
+		AW_PROFILE_METHOD();
 		doFrameLimitIfNeeded();
 		waitForPhysicFrameToFinishIfNeeded();
 	}

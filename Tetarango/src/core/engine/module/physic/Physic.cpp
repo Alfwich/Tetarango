@@ -275,6 +275,7 @@ namespace AW
 
 	void Physic::stepPhysicWorlds()
 	{
+		AW_PROFILE_METHOD();
 		for (const auto& worldIdToWorldBundle : worlds)
 		{
 			const auto& worldBundle = worldIdToWorldBundle.second;

@@ -3,7 +3,7 @@ import os, sys, datetime, glob, shutil
 from distutils.dir_util import copy_tree
 
 platform_folders = ["x64"]
-package_folders = ["DEV", "PROD_DEBUG", "PROD"]
+package_folders = ["DEV", "PROD_DEBUG", "PROD_PROFILE","PROD"]
 debug_packages = ["DEV", "PROD_DEBUG"]
 resource_folders = ["Tetarango/res"]
 resource_exclude_files = [".xcf"]

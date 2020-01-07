@@ -19,7 +19,6 @@ namespace AW
 	{
 		auto now = std::chrono::system_clock::now();
 		auto time = now.time_since_epoch().count();
-
 		return (int) std::chrono::nanoseconds(time).count();
 	}
 

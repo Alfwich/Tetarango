@@ -9,6 +9,10 @@
       <Configuration>PROD_DEBUG</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="PROD_PROFILE|x64">
+      <Configuration>PROD_PROFILE</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="PROD|x64">
       <Configuration>PROD</Configuration>
       <Platform>x64</Platform>
@@ -41,6 +45,12 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PROD_PROFILE|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -55,6 +65,9 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='PROD|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='PROD_PROFILE|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DEV|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -65,13 +78,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PROD|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PROD_PROFILE|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DEV|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -100,7 +116,7 @@ python scripts/generateSerializationList.py .</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -130,7 +146,7 @@ python scripts/generateSerializationList.py .</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -146,6 +162,44 @@ python scripts/generateSerializationList.py .</Command>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64;$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+    <PreBuildEvent>
+      <Command>cd ..
+python scripts/generateSerializationList.py .</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd ..
+bash ./make.sh</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='PROD_PROFILE|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";PROFILE=1;%(PreprocessorDefinitions);AW_LOGGING_MACROS=1</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <OmitFramePointers>false</OmitFramePointers>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64;$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -189,6 +243,7 @@ bash ./make.sh</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DEV|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='PROD_DEBUG|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='PROD|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='PROD_PROFILE|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
     <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
@@ -339,6 +394,7 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\ui\physic\body\Body.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\Polygon.h" />
     <ClInclude Include="src\core\util\Key.h" />
+    <ClInclude Include="src\core\util\profile\ProfileTimer.h" />
     <ClInclude Include="src\core\util\Vec.h" />
     <ClInclude Include="src\game\actor\board\Board.h" />
     <ClInclude Include="src\game\actor\player\Player.h" />

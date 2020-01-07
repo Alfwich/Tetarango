@@ -12,8 +12,6 @@ namespace Config
 		organizationName,
 		logToConsole,
 		logToFile,
-		throwOnCriticalLog,
-		throwOnFatalLog,
 		runTests,
 		saveOnClose,
 		saveReadableStoreFiles,
@@ -43,8 +41,6 @@ namespace Config
 					{ Param::organizationName, "AW Games" },
 					{ Param::logToConsole, TRUE },
 					{ Param::logToFile, TRUE },
-					{ Param::throwOnCriticalLog, FALSE },
-					{ Param::throwOnFatalLog, TRUE },
 					{ Param::runTests, FALSE },
 					{ Param::saveOnClose, TRUE },
 					{ Param::saveReadableStoreFiles, FALSE },
@@ -76,13 +72,12 @@ namespace Config
 				//base[Param::visualizeContainers] = TRUE;
 				//base[Param::visualizeClipRects] = TRUE;
 			}
-			else if (GAME_ENVIRONMENT == "PROD")
+			else if (GAME_ENVIRONMENT == "PROD" || GAME_ENVIRONMENT == "PROD_PROFILE")
 			{
 				base[Param::enableTestScenes] = TRUE;
 				//base[Param::launchToLastScene] = TRUE;
 				//base[Param::saveWholeSceneOnClose] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
-				//base[ConfigParam::throwOnFatalLog] = TRUE;
 				//base[Param::visualizeZones] = TRUE;
 			}
 			else

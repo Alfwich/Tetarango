@@ -71,12 +71,7 @@ namespace AW
 	void Logger::logCritical(std::string msg)
 	{
 		log(msg, "!! critical !!");
-
-		if (throwOnCritical)
-		{
-			this->purgeToLogFile(true);
-			throw std::exception(msg.c_str());
-		}
+		this->purgeToLogFile(true);
 	}
 
 	void Logger::logCritical(char* msg)
@@ -87,12 +82,11 @@ namespace AW
 	void Logger::logFatal(std::string msg)
 	{
 		log(msg, "!! FATAL !!");
+		this->purgeToLogFile(true);
 
-		if (throwOnFatal)
-		{
-			this->purgeToLogFile(true);
-			throw std::exception(msg.c_str());
-		}
+#ifdef _DEBUG
+		__debugbreak();
+#endif // _DEBUG
 	}
 
 	void Logger::logFatal(char * msg)
@@ -118,8 +112,6 @@ namespace AW
 		purgeCacheTimer = time->createPureTimer();
 		logToConsoleEnabled = gameConfig->getConfigBool(Config::Param::logToConsole);
 		logToFileEnabled = gameConfig->getConfigBool(Config::Param::logToFile);
-		throwOnCritical = gameConfig->getConfigBool(Config::Param::throwOnCriticalLog);
-		throwOnFatal = gameConfig->getConfigBool(Config::Param::throwOnFatalLog);
 	}
 
 	void Logger::onCleanup()
