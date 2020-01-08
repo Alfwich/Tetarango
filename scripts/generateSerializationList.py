@@ -7,7 +7,9 @@ resource_include_files = [".cpp"]
 namespaces_to_use = ["AWGame"]
 
 output_file = "Tetarango/serialization-list.generated.h"
-output_file_template = """#pragma once
+output_file_template = """#pragma warning(push)
+#pragma warning(disable : 4834)
+#pragma once
 
 // GENERATED FILE - CHANGES WILL BE LOST
 
@@ -33,6 +35,7 @@ namespace AW
         }
     };
 }
+#pragma warning(pop)
 """
 include_template = "#include \"{{SOURCE_FILE}}\""
 namespace_template = "using namespace {{NAMESPACE}};"
