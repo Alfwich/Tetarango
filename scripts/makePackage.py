@@ -61,7 +61,7 @@ def main():
                         for file in glob.glob(r'*.pack'):
                             shutil.copy(file, packageRootDir)
 
-                    print("    Packing SDL/GLEW dlls")
+                    print("    Packing dlls")
                     for dll in dll_folders:
                         for file in glob.glob(opDir + dll +  r'/*.dll'):
                             shutil.copy(file, packageRootDir)
