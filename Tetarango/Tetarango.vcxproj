@@ -87,10 +87,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC;SDL_DYNAMIC_API=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Async</ExceptionHandling>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -98,11 +98,12 @@
       <ShowIncludes>false</ShowIncludes>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;$(SolutionDir)Tetarango\lib\libpng\lib\x64\debug;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;$(SolutionDir)Tetarango\lib\libpng\lib\x64\debug;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64\debug;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32sd.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
@@ -116,10 +117,10 @@ python scripts/generateSerializationList.py .</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC;SDL_DYNAMIC_API</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Async</ExceptionHandling>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -132,7 +133,7 @@ python scripts/generateSerializationList.py .</Command>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64\debug;$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64\debug;$(SolutionDir)Tetarango\lib\box2d\lib\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32sd.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
@@ -146,12 +147,12 @@ python scripts/generateSerializationList.py .</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC;SDL_DYNAMIC_API</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <OmitFramePointers>false</OmitFramePointers>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -163,7 +164,7 @@ python scripts/generateSerializationList.py .</Command>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64;$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64;$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32s.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -184,10 +185,10 @@ bash ./make.sh</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";PROFILE=1;%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GAME_ENVIRONMENT="$(ConfigurationName)";PROFILE=1;%(PreprocessorDefinitions);AW_LOGGING_MACROS=1;GLEW_STATIC;SDL_DYNAMIC_API</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tetarango;$(SolutionDir)Tetarango\lib\box2d\include;$(SolutionDir)Tetarango\lib\libpng\include;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\include;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\include;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\include;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\include;$(SolutionDir)Tetarango\lib\glew-2.1.0\include;$(SolutionDir)Tetarango\src\core;$(SolutionDir)Tetarango\src\game;$(SolutionDir)Tetarango\src\config;$(SolutionDir)Tetarango\src\test;$(SolutionDir)Tetarango\lib\cereal-1.3.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -201,7 +202,7 @@ bash ./make.sh</Command>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64;$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.9\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Tetarango\lib\box2d\lib\x64;$(SolutionDir)Tetarango\lib\libpng\lib\x64;$(SolutionDir)Tetarango\lib\SDL2-2.0.10\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_ttf-2.0.15\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_mixer-2.0.4\lib\x64;$(SolutionDir)Tetarango\lib\SDL2_image-2.0.5\lib\x64;$(SolutionDir)Tetarango\lib\glew-2.1.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32s.lib;glu32.lib;libpng16.lib;zlib.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -218,7 +219,6 @@ bash ./make.sh</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="asset.pack" />
-    <None Include="glew32.dll" />
     <None Include="libFLAC-8.dll" />
     <None Include="libfreetype-6.dll" />
     <None Include="libjpeg-9.dll" />
@@ -232,10 +232,6 @@ bash ./make.sh</Command>
     <None Include="libvorbis-0.dll" />
     <None Include="libvorbisfile-3.dll" />
     <None Include="libwebp-7.dll" />
-    <None Include="SDL2.dll" />
-    <None Include="SDL2_image.dll" />
-    <None Include="SDL2_mixer.dll" />
-    <None Include="SDL2_ttf.dll" />
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
