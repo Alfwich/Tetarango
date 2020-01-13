@@ -28,11 +28,11 @@ namespace AW
 	{
 		frameTimes[frameTimeI] = frameTime;
 
-		if (frameTimeI + 1 == frameTimes.size())
+		if (frameTimeI + 1 == (int)frameTimes.size())
 		{
 			hasHydrated = true;
 		}
-		frameTimeI = (frameTimeI + 1) % frameTimes.size();
+		frameTimeI = (frameTimeI + 1) % (int)frameTimes.size();
 
 		if (updateTimer->getTicks() >= updateThreshold)
 		{

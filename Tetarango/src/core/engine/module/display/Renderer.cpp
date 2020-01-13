@@ -208,8 +208,8 @@ namespace AW
 
 		const auto width = screenWidth, height = screenHeight;
 
-		double lowerDepthLayer = -(maxLayers / 2) * layerFactor;
-		double upperDepthLayer = (maxLayers / 2) * layerFactor;
+		double lowerDepthLayer = -(maxLayers / 2) * (double)layerFactor;
+		double upperDepthLayer = (maxLayers / 2) * (double)layerFactor;
 		LM::mat4x4_ortho(p, 0.0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
 		LM::mat4x4_ortho(pAbs, 0, width, height, 0.0, lowerDepthLayer, upperDepthLayer);
 

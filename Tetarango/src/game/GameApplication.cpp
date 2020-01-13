@@ -170,7 +170,7 @@ namespace AWGame
 	bool GameApplication::onFailedToProvisionScreen()
 	{
 		auto currentDisplayMode = modules->screen->getCurrentDisplayMode();
-		int width, height;
+		int width = 0, height = 0;
 
 		for (const auto mode : currentDisplayMode.modes)
 		{

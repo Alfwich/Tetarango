@@ -9,6 +9,7 @@ namespaces_to_use = ["AWGame"]
 output_file = "Tetarango/serialization-list.generated.h"
 output_file_template = """#pragma warning(push)
 #pragma warning(disable : 4834)
+#pragma warning(disable : 26444)
 #pragma once
 
 // GENERATED FILE - CHANGES WILL BE LOST

@@ -13,7 +13,7 @@ namespace AW
 		std::shared_ptr<Storage> storage;
 		std::shared_ptr<Filesystem> filesystem;
 
-		unsigned int cursorPosition;
+		unsigned int cursorPosition = 0;
 
 		const std::string assetPackStart = "##ASSET_PACK_START##";
 		const std::string assetPackEnd = "##ASSET_PACK_END##";

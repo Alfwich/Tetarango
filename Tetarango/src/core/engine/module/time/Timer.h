@@ -8,7 +8,7 @@ namespace AW
 
 	class Timer
 	{
-		bool running, paused, pure, scope, unstoppable;
+		bool running = false, paused = false, pure = false, scope = false, unstoppable = false;
 		unsigned int currentTicks, pausedTicks;
 		TimeScope timeScope;
 		Time* time;
@@ -38,4 +38,5 @@ namespace AW
 	};
 
 }
+
 #include "Time.h"

@@ -2,7 +2,7 @@
 
 namespace AW
 {
-	enum ImageBundleType
+	enum class ImageBundleType
 	{
 		Unspecificed,
 		Png,
@@ -14,8 +14,8 @@ namespace AW
 	{
 	public:
 		std::vector<unsigned char> data;
-		int width;
-		int height;
-		ImageBundleType type;
+		int width = 0;
+		int height = 0;
+		ImageBundleType type = ImageBundleType::Unspecificed;
 	};
 }

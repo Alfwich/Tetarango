@@ -9,7 +9,7 @@ namespace AWGame
 	{
 	public:
 		std::string displayName;
-		double weight;
+		double weight = 0.0;
 	};
 
 	class BaseProp

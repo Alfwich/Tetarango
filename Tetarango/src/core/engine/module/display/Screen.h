@@ -44,7 +44,7 @@ namespace AW
 	{
 		SDL_Window* window;
 		ScreenConfig currentConfig;
-		int windowWidth, windowHeight, maxWindowedWidth, maxWindowedHeight;
+		int windowWidth = 0, windowHeight = 0, maxWindowedWidth = 0, maxWindowedHeight = 0;
 
 		std::shared_ptr<TextureContainer> texture;
 		std::shared_ptr<ShaderContainer> shader;
