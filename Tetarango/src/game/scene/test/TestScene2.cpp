@@ -86,7 +86,7 @@ namespace AWGame
 			const auto platform = std::make_shared<AW::Box>();
 			platform->setDynamic(false);
 			platform->setColor(64, 64, 64);
-			platform->setWorldSize(100.0, 0.5);
+			platform->setWorldSize(20.0, 0.5);
 			platform->setWorldPosition(screenWidthInMeters / 2.0, -(screenHeightInMeters / 2.0) - 5.0);
 			contentContainer->add(platform);
 		}

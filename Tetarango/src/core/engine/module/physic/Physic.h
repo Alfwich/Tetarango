@@ -10,6 +10,8 @@
 #include "RigidBodySensor.h"
 #include "PhysicRenderer.h"
 
+#include "ui/physic/body/Body.h"
+
 namespace AW
 {
 	class Physic : public IBaseModule
@@ -22,21 +24,21 @@ namespace AW
 		class RigidBodyBundle
 		{
 		public:
-			RigidBodyBundle(std::weak_ptr<RigidBody> object, b2Body *body) : object(object), body(body) {}
+			RigidBodyBundle(std::weak_ptr<RigidBody> object, b2Body* body) : object(object), body(body) {}
 			std::weak_ptr<RigidBody> object;
-			b2Body *body;
+			b2Body* body;
 		};
 
 		class RigidBodyContactBundle
 		{
 		public:
-			RigidBodyContactBundle(b2Fixture* a, b2Fixture* b, const std::shared_ptr<RigidBodySensor>& sensor) :a(a), b(b), sensor(sensor) {};
-			b2Fixture *a;
-			b2Fixture *b;
+			RigidBodyContactBundle(b2Fixture* a, b2Fixture* b, const std::shared_ptr<RigidBodySensor>& sensor) :a(a), b(b), bodyA(a->GetBody()), bodyB(b->GetBody()), sensor(sensor) {};
+			b2Fixture* a, * b;
+			b2Body* bodyA, * bodyB;
 			const std::weak_ptr<RigidBodySensor> sensor;
 		};
 
-		class WorldBundle : public b2ContactListener
+		class WorldBundle : public b2ContactListener, public b2DestructionListener
 		{
 		public:
 			WorldBundle(std::shared_ptr<b2World> world, std::shared_ptr<Timer> timer) : world(world), worldTimer(timer) {};
@@ -46,49 +48,26 @@ namespace AW
 			TimeScope timescope = TimeScope::Global;
 			int velocityIterations = 6, positionIterations = 2;
 
-			std::list<std::shared_ptr<RigidBodyBundle>> bodies;
+			std::list<std::unique_ptr<RigidBodyBundle>> bodies;
 			std::list<std::weak_ptr<RigidBodySensor>> sensors;
 
-			std::vector<std::shared_ptr<RigidBodyContactBundle>> sensorsToNotifyBeginContact;
-			std::vector<std::shared_ptr<RigidBodyContactBundle>> sensorsToNotifyEndContact;
+			std::vector<std::unique_ptr<RigidBodyContactBundle>> sensorsToNotifyBeginContact;
+			std::vector<std::unique_ptr<RigidBodyContactBundle>> sensorsToNotifyEndContact;
 
-			void BeginContact(b2Contact* contact)
-			{
-				for (auto it = sensors.begin(); it != sensors.end();)
-				{
-					if (auto ptr = (*it).lock())
-					{
-						sensorsToNotifyBeginContact.push_back(std::make_shared<RigidBodyContactBundle>(contact->GetFixtureA(), contact->GetFixtureB(), ptr));
-						++it;
-					}
-					else
-					{
-						it = sensors.erase(it);
-					}
-				}
-			}
+			std::vector<b2Body*> bodiesToDestroy;
 
-			void EndContact(b2Contact* contact)
-			{
-				for (auto it = sensors.begin(); it != sensors.end();)
-				{
-					if (auto ptr = (*it).lock())
-					{
-						sensorsToNotifyEndContact.push_back(std::make_shared<RigidBodyContactBundle>(contact->GetFixtureA(), contact->GetFixtureB(), ptr));
-						++it;
-					}
-					else
-					{
-						it = sensors.erase(it);
-					}
-				}
-			}
+			virtual void BeginContact(b2Contact* contact) override;
+			virtual void EndContact(b2Contact* contact) override;
+
+			// Inherited via b2DestructionListener
+			virtual void SayGoodbye(b2Joint* joint) override;
+			virtual void SayGoodbye(b2Fixture* fixture) override;
 		};
 
 		std::shared_ptr<Time> time;
 		std::shared_ptr<Thread> thread;
 
-		std::unordered_map<unsigned int, std::shared_ptr<WorldBundle>> worlds;
+		std::unordered_map<unsigned int, std::unique_ptr<WorldBundle>> worlds;
 
 		void startBackgroundThreadStepping();
 

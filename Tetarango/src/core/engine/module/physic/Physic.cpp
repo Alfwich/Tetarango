@@ -38,8 +38,9 @@ namespace AW
 		const auto worldTimer = time->createTimer();
 		worldTimer->start();
 
-		worlds[worldId] = std::make_shared<WorldBundle>(world, worldTimer);
+		worlds[worldId] = std::make_unique<WorldBundle>(world, worldTimer);
 		worlds.at(worldId)->world->SetContactListener(worlds.at(worldId).get());
+		worlds.at(worldId)->world->SetDestructionListener(worlds.at(worldId).get());
 		worlds.at(worldId)->world->SetDebugDraw(&physicRenderer);
 		Logger::instance()->log("Physic::Created world worldId=" + std::to_string(worldId));
 	}
@@ -116,7 +117,7 @@ namespace AW
 		}
 	}
 
-	PhysicRenderer & Physic::getDebugRenderer()
+	PhysicRenderer& Physic::getDebugRenderer()
 	{
 		return physicRenderer;
 	}
@@ -141,12 +142,12 @@ namespace AW
 			return;
 		}
 
-		auto worldBundle = worlds.at(worldId);
+		auto& worldBundle = worlds.at(worldId);
 		const auto body = obj->createBody(worldBundle->world);
-		worldBundle->bodies.push_back(std::make_shared<RigidBodyBundle>(obj, body));
+		worldBundle->bodies.push_back(std::make_unique<RigidBodyBundle>(obj, body));
 	}
 
-	void Physic::unregisterRigidBodyForWorld(unsigned int worldId, b2Body * body)
+	void Physic::unregisterRigidBodyForWorld(unsigned int worldId, b2Body* body)
 	{
 		if (worlds.count(worldId) == 0)
 		{
@@ -174,7 +175,7 @@ namespace AW
 				}
 				else
 				{
-					world->DestroyBody(body);
+					worldBundle->bodiesToDestroy.push_back(body);
 				}
 				worldBundle->bodies.erase(rigidBodyBundle);
 				return;
@@ -206,7 +207,7 @@ namespace AW
 			return;
 		}
 
-		auto worldBundle = worlds.at(worldId);
+		auto& worldBundle = worlds.at(worldId);
 		obj->createJoint(worldBundle->world);
 	}
 
@@ -224,7 +225,7 @@ namespace AW
 			return;
 		}
 
-		auto worldBundle = worlds.at(worldId);
+		auto& worldBundle = worlds.at(worldId);
 		worldBundle->sensors.push_back(obj);
 	}
 
@@ -280,8 +281,8 @@ namespace AW
 
 	void Physic::startBackgroundThreadStepping()
 	{
-		thread->doWork(this, [](void* mod) {
-			const auto physic = (Physic*)mod;
+		thread->doWork(this, [](void* svc) {
+			const auto physic = (Physic*)svc;
 
 			while (physic->backgroundThreadSteppingEnabled())
 			{
@@ -295,7 +296,7 @@ namespace AW
 			}
 
 			return (void*)1;
-		}, weak_from_this());
+			}, weak_from_this());
 	}
 
 	void Physic::lockSimulations()
@@ -378,12 +379,12 @@ namespace AW
 				else
 				{
 					auto body = (*rigidBodyBundle)->body;
-					world->DestroyBody(body);
+					worldBundle->bodiesToDestroy.push_back(body);
 					rigidBodyBundle = worldBundle->bodies.erase(rigidBodyBundle);
 				}
 			}
 
-			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyBeginContact)
+			for (const auto& contactToSensorPair : worldBundle->sensorsToNotifyBeginContact)
 			{
 				const auto sensorPtr = contactToSensorPair->sensor.lock();
 				if (sensorPtr != nullptr)
@@ -393,7 +394,7 @@ namespace AW
 			}
 			worldBundle->sensorsToNotifyBeginContact.clear();
 
-			for (const auto contactToSensorPair : worldBundle->sensorsToNotifyEndContact)
+			for (const auto& contactToSensorPair : worldBundle->sensorsToNotifyEndContact)
 			{
 				const auto sensorPtr = contactToSensorPair->sensor.lock();
 				if (sensorPtr != nullptr)
@@ -403,9 +404,79 @@ namespace AW
 
 			}
 			worldBundle->sensorsToNotifyEndContact.clear();
-		}
 
+			for (const auto& bodyToDestroy : worldBundle->bodiesToDestroy)
+			{
+				world->DestroyBody(bodyToDestroy);
+			}
+			worldBundle->bodiesToDestroy.clear();
+		}
+	}
+
+	void Physic::WorldBundle::BeginContact(b2Contact* contact)
+	{
+		for (auto it = sensors.begin(); it != sensors.end();)
+		{
+			if (auto ptr = (*it).lock())
+			{
+				sensorsToNotifyBeginContact.push_back(std::make_unique<RigidBodyContactBundle>(contact->GetFixtureA(), contact->GetFixtureB(), ptr));
+				++it;
+			}
+			else
+			{
+				it = sensors.erase(it);
+			}
+		}
+	}
+
+	void Physic::WorldBundle::EndContact(b2Contact* contact)
+	{
+		for (auto it = sensors.begin(); it != sensors.end();)
+		{
+			if (auto ptr = (*it).lock())
+			{
+				sensorsToNotifyEndContact.push_back(std::make_unique<RigidBodyContactBundle>(contact->GetFixtureA(), contact->GetFixtureB(), ptr));
+				++it;
+			}
+			else
+			{
+				it = sensors.erase(it);
+			}
+		}
 	}
 
 
+	void Physic::WorldBundle::SayGoodbye(b2Joint* joint)
+	{
+		// TODO: See if needed
+	}
+
+	void Physic::WorldBundle::SayGoodbye(b2Fixture* fixture)
+	{
+		for (auto it = sensorsToNotifyBeginContact.begin(); it != sensorsToNotifyBeginContact.end();)
+		{
+			const auto& ptr = (*it);
+			if (ptr->a == fixture || ptr->b == fixture)
+			{
+				it = sensorsToNotifyBeginContact.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
+		for (auto it = sensorsToNotifyEndContact.begin(); it != sensorsToNotifyEndContact.end();)
+		{
+			const auto& ptr = (*it);
+			if (ptr->a == fixture || ptr->b == fixture)
+			{
+				it = sensorsToNotifyEndContact.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
 }

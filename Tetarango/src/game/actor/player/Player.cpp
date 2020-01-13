@@ -85,7 +85,7 @@ namespace AWGame
 	{
 		body = std::make_shared<AW::Body>();
 		body->name = "body";
-		//body->setFixedRotation(true);
+		body->setFixedRotation(true);
 		body->setDynamicBody();
 		body->setFriction(0.2);
 		add(body);
