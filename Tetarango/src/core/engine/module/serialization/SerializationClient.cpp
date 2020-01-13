@@ -35,12 +35,10 @@ namespace AW
 	}
 
 	SerializationClient::SerializationClient() : SerializationClient("", SerializationHint::UNSPECIFIED)
-	{
-	}
+	{}
 
 	SerializationClient::SerializationClient(std::string scope) : SerializationClient(scope, SerializationHint::UNSPECIFIED)
-	{
-	}
+	{}
 
 	SerializationClient::SerializationClient(std::string scope, SerializationHint hint)
 	{

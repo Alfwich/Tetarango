@@ -40,7 +40,8 @@ namespace AW
 		void exit();
 
 		virtual void onWorkError(WORKER_ID workerId, WorkerTaskCode code) { /* NO-OP */ };
-		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AsyncResultBundle> result) {
+		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode code, std::shared_ptr<AsyncResultBundle> result)
+		{
 			Logger::instance()->logCritical("Application::Worker returned data but onWorkDone was not overridden.");
 		}
 		virtual void onInit() { /* NO-OP */ };

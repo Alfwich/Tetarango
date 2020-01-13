@@ -19,7 +19,7 @@ namespace AW
 
 		int state = 0, zIndex = 0,
 			cModR = 0xff, cModG = 0xff, cModB = 0xff;
-		
+
 		bool shouldDecay = true;
 
 		double ogX = 0.0, ogY = 0.0, ogW = 0.0, ogH = 0.0,

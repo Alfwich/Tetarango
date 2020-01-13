@@ -37,7 +37,7 @@ namespace AW
 		static std::shared_ptr<SystemModuleBundle> getModuleBundle();
 
 		SystemModuleBundle();
-		
+
 		ModuleBundleStatus status = ModuleBundleStatus::UNINITIALIZED;
 
 		std::shared_ptr<Logger> logger;

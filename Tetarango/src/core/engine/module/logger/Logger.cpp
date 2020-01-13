@@ -88,7 +88,7 @@ namespace AW
 #endif // _DEBUG
 	}
 
-	void Logger::logFatal(char * msg)
+	void Logger::logFatal(char* msg)
 	{
 		logFatal(std::string(msg));
 	}

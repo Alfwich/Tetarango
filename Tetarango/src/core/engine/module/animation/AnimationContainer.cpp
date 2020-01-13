@@ -21,7 +21,8 @@ namespace AW
 
 	std::shared_ptr<AnimationSet> AnimationContainer::getAnimationSet(std::string name)
 	{
-		if (animationSets.count(name) == 0) {
+		if (animationSets.count(name) == 0)
+		{
 			Logger::instance()->logCritical("AnimationContainer::Failed to find animation set for key= " + name);
 			return nullptr;
 		}

@@ -42,7 +42,7 @@ namespace AW
 		return bodyReference;
 	}
 
-	b2Body * RigidBody::getBody()
+	b2Body* RigidBody::getBody()
 	{
 		return bodyReference;
 	}

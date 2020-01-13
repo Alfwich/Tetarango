@@ -6,7 +6,7 @@
 namespace AW
 {
 
-	class Trace : public Primitive 
+	class Trace : public Primitive
 	{
 		double numSegments = 5, length = 0.0;
 		bool firstRender = true;

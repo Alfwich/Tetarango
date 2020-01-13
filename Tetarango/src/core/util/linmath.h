@@ -72,9 +72,9 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 
 	static inline void vec3_reflect(vec3 r, vec3 const v, vec3 const n)
 	{
-		float p = 2.f*vec3_mul_inner(v, n);
+		float p = 2.f * vec3_mul_inner(v, n);
 		int i;
-		for (i = 0;i < 3;++i)
+		for (i = 0; i < 3; ++i)
 			r[i] = v[i] - p * n[i];
 	}
 
@@ -88,9 +88,9 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 
 	static inline void vec4_reflect(vec4 r, vec4 v, vec4 n)
 	{
-		float p = 2.f*vec4_mul_inner(v, n);
+		float p = 2.f * vec4_mul_inner(v, n);
 		int i;
-		for (i = 0;i < 4;++i)
+		for (i = 0; i < 4; ++i)
 			r[i] = v[i] - p * n[i];
 	}
 
@@ -152,7 +152,8 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 		vec4_scale(M[0], a[0], x);
 		vec4_scale(M[1], a[1], y);
 		vec4_scale(M[2], a[2], z);
-		for (i = 0; i < 4; ++i) {
+		for (i = 0; i < 4; ++i)
+		{
 			M[3][i] = a[3][i];
 		}
 	}
@@ -160,7 +161,8 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 	{
 		mat4x4 temp;
 		int k, r, c;
-		for (c = 0; c < 4; ++c) for (r = 0; r < 4; ++r) {
+		for (c = 0; c < 4; ++c) for (r = 0; r < 4; ++r)
+		{
 			temp[c][r] = 0.f;
 			for (k = 0; k < 4; ++k)
 				temp[c][r] += a[k][r] * b[c][k];
@@ -170,7 +172,8 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 	static inline void mat4x4_mul_vec4(vec4 r, mat4x4 M, vec4 v)
 	{
 		int i, j;
-		for (j = 0; j < 4; ++j) {
+		for (j = 0; j < 4; ++j)
+		{
 			r[j] = 0.f;
 			for (i = 0; i < 4; ++i)
 				r[j] += M[i][j] * v[i];
@@ -188,7 +191,8 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 		vec4 t = { x, y, z, 0 };
 		vec4 r;
 		int i;
-		for (i = 0; i < 4; ++i) {
+		for (i = 0; i < 4; ++i)
+		{
 			mat4x4_row(r, M, i);
 			M[3][i] += vec4_mul_inner(r, t);
 		}
@@ -205,7 +209,8 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 		float c = cosf(angle);
 		vec3 u = { x, y, z };
 
-		if (vec3_len(u) > 1e-4) {
+		if (vec3_len(u) > 1e-4)
+		{
 			vec3_norm(u, u);
 			mat4x4 T;
 			mat4x4_from_vec3_mul_outer(T, u, u);
@@ -230,7 +235,8 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 			T[3][3] = 1.;
 			mat4x4_mul(R, M, T);
 		}
-		else {
+		else
+		{
 			mat4x4_dup(R, M);
 		}
 	}
@@ -337,10 +343,10 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 
 	static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, float n, float f)
 	{
-		M[0][0] = 2.f*n / (r - l);
+		M[0][0] = 2.f * n / (r - l);
 		M[0][1] = M[0][2] = M[0][3] = 0.f;
 
-		M[1][1] = 2.*n / (t - b);
+		M[1][1] = 2. * n / (t - b);
 		M[1][0] = M[1][2] = M[1][3] = 0.f;
 
 		M[2][0] = (r + l) / (r - l);
@@ -348,7 +354,7 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 		M[2][2] = -(f + n) / (f - n);
 		M[2][3] = -1.f;
 
-		M[3][2] = -2.f*(f*n) / (f - n);
+		M[3][2] = -2.f * (f * n) / (f - n);
 		M[3][0] = M[3][1] = M[3][3] = 0.f;
 	}
 	static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, float n, float f)
@@ -484,7 +490,8 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 			r[i] = -q[i];
 		r[3] = q[3];
 	}
-	static inline void quat_rotate(quat r, float angle, vec3 axis) {
+	static inline void quat_rotate(quat r, float angle, vec3 axis)
+	{
 		vec3 v;
 		vec3_scale(v, axis, sinf(angle / 2));
 		int i;
@@ -525,17 +532,17 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 		float d2 = d * d;
 
 		M[0][0] = a2 + b2 - c2 - d2;
-		M[0][1] = 2.f*(b*c + a * d);
-		M[0][2] = 2.f*(b*d - a * c);
+		M[0][1] = 2.f * (b * c + a * d);
+		M[0][2] = 2.f * (b * d - a * c);
 		M[0][3] = 0.f;
 
-		M[1][0] = 2 * (b*c - a * d);
+		M[1][0] = 2 * (b * c - a * d);
 		M[1][1] = a2 - b2 + c2 - d2;
-		M[1][2] = 2.f*(c*d + a * b);
+		M[1][2] = 2.f * (c * d + a * b);
 		M[1][3] = 0.f;
 
-		M[2][0] = 2.f*(b*d + a * c);
-		M[2][1] = 2.f*(c*d - a * b);
+		M[2][0] = 2.f * (b * d + a * c);
+		M[2][1] = 2.f * (c * d - a * b);
 		M[2][2] = a2 - b2 - c2 + d2;
 		M[2][3] = 0.f;
 
@@ -560,9 +567,10 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 		int i;
 
 		int perm[] = { 0, 1, 2, 0, 1 };
-		int *p = perm;
+		int* p = perm;
 
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 3; i++)
+		{
 			float m = M[i][i];
 			if (m < r)
 				continue;
@@ -572,16 +580,17 @@ static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
 
 		r = sqrtf(1.f + M[p[0]][p[0]] - M[p[1]][p[1]] - M[p[2]][p[2]]);
 
-		if (r < 1e-6) {
+		if (r < 1e-6)
+		{
 			q[0] = 1.f;
 			q[1] = q[2] = q[3] = 0.f;
 			return;
 		}
 
 		q[0] = r / 2.f;
-		q[1] = (M[p[0]][p[1]] - M[p[1]][p[0]]) / (2.f*r);
-		q[2] = (M[p[2]][p[0]] - M[p[0]][p[2]]) / (2.f*r);
-		q[3] = (M[p[2]][p[1]] - M[p[1]][p[2]]) / (2.f*r);
+		q[1] = (M[p[0]][p[1]] - M[p[1]][p[0]]) / (2.f * r);
+		q[2] = (M[p[2]][p[0]] - M[p[0]][p[2]]) / (2.f * r);
+		q[3] = (M[p[2]][p[1]] - M[p[1]][p[2]]) / (2.f * r);
 	}
 
 }

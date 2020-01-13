@@ -3,7 +3,7 @@
 namespace AWGame
 {
 
-	enum class PropParticleFactory 
+	enum class PropParticleFactory
 	{
 		ParticleFactoryTest
 	};

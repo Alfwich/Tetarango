@@ -26,8 +26,7 @@ namespace AWGame
 	}
 
 	void TestScene2::onLoadResources()
-	{
-	}
+	{}
 
 	void TestScene2::onInitialAttach()
 	{
@@ -181,8 +180,7 @@ namespace AWGame
 	}
 
 	void TestScene2::onLayoutChildren()
-	{
-	}
+	{}
 
 	void TestScene2::onChildrenHydrated()
 	{
@@ -322,18 +320,14 @@ namespace AWGame
 	}
 
 	void TestScene2::onKey(AWKey key, bool isPressed)
-	{
-	}
+	{}
 
 	void TestScene2::onMouseButton(AWMouseButton button, bool isPressed)
-	{
-	}
+	{}
 
 	void TestScene2::onScrollBarScroll(int id, double pos)
-	{
-	}
+	{}
 
 	void TestScene2::onCameraUpdate()
-	{
-	}
+	{}
 }

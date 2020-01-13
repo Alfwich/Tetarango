@@ -6,7 +6,7 @@
 
 namespace AW
 {
-	class TimeScopeBundle 
+	class TimeScopeBundle
 	{
 	public:
 		TimeScopeBundle(double timeFactor) { this->timeFactor = timeFactor; };

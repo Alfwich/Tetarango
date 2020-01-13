@@ -72,7 +72,7 @@ namespace AW
 		return false;
 	}
 
-	bool Asset::beginsWith(char * data, unsigned int pos, std::string tag)
+	bool Asset::beginsWith(char* data, unsigned int pos, std::string tag)
 	{
 		const auto tagSize = tag.size();
 
@@ -189,8 +189,9 @@ namespace AW
 	}
 
 	//encode and write PNG to memory (std::vector) with libpng on C++
-	static void PngWriteCallback(png_structp  png_ptr, png_bytep data, png_size_t length) {
-		std::vector<unsigned char> *p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
+	static void PngWriteCallback(png_structp  png_ptr, png_bytep data, png_size_t length)
+	{
+		std::vector<unsigned char>* p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
 		p->insert(p->end(), data, data + length);
 	}
 
@@ -249,7 +250,7 @@ namespace AW
 	//encode and write PNG to memory (std::vector) with libpng on C++
 	static void PngReadCallback(png_structp png_ptr, png_bytep data, png_size_t length)
 	{
-		std::vector<unsigned char> *p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
+		std::vector<unsigned char>* p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
 		if (p == nullptr)
 		{
 			return;
@@ -317,8 +318,9 @@ namespace AW
 		auto inBuff = new char[size];
 		const unsigned int stride = width * bitDepth * channels / 8;
 
-		for (size_t i = 0; i < height; i++) {
-			png_uint_32 q = (png_uint_32)(i)* stride;
+		for (size_t i = 0; i < height; i++)
+		{
+			png_uint_32 q = (png_uint_32)(i)*stride;
 			rowPtrs[i] = (png_bytep)inBuff + q;
 		}
 

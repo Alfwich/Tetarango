@@ -12,7 +12,7 @@ namespace AW
 {
 	class ProfileTimer
 	{
-		const char *label;
+		const char* label;
 		long long start, end;
 		bool started = true;
 
@@ -30,7 +30,7 @@ namespace AW
 
 	public:
 		ProfileTimer() : label(0), start(getCurrentMicroseconds()) {}
-		ProfileTimer(const char *label) : label(label), start(getCurrentMicroseconds()) {}
+		ProfileTimer(const char* label) : label(label), start(getCurrentMicroseconds()) {}
 		~ProfileTimer() { stop(); }
 
 		void stop()

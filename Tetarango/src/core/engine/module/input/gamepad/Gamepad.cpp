@@ -17,7 +17,8 @@ namespace AW
 			{
 				closeGamepad((it++)->first);
 			}
-			else {
+			else
+			{
 				++it;
 			}
 		}
@@ -72,7 +73,7 @@ namespace AW
 					{
 						it = buttonListener.second.erase(it);
 					}
-					else 
+					else
 					{
 						++it;
 					}
@@ -91,7 +92,7 @@ namespace AW
 					{
 						it = axisListener.second.erase(it);
 					}
-					else 
+					else
 					{
 						++it;
 					}
@@ -229,7 +230,8 @@ namespace AW
 
 	bool Gamepad::openGamepad(int index)
 	{
-		if (SDL_NumJoysticks() < 0 || !(SDL_WasInit(SDL_INIT_JOYSTICK) & SDL_INIT_JOYSTICK)) {
+		if (SDL_NumJoysticks() < 0 || !(SDL_WasInit(SDL_INIT_JOYSTICK) & SDL_INIT_JOYSTICK))
+		{
 			Logger::instance()->logCritical("Gamepad::Attempted to open gamepad when SDL_Joystick was not init");
 			return false;
 		}
@@ -275,7 +277,8 @@ namespace AW
 
 	void Gamepad::closeGamepad(int index)
 	{
-		if (deviceIdToGamepadBundle.size() <= 0 || !(SDL_WasInit(SDL_INIT_JOYSTICK) & SDL_INIT_JOYSTICK)) {
+		if (deviceIdToGamepadBundle.size() <= 0 || !(SDL_WasInit(SDL_INIT_JOYSTICK) & SDL_INIT_JOYSTICK))
+		{
 			return;
 		}
 
@@ -316,7 +319,8 @@ namespace AW
 
 	void Gamepad::registerAxis(int gamepadIndex, GamepadAxisMapping axis, std::weak_ptr<IInputListener> listener)
 	{
-		if (axis == GamepadAxisMapping::LEFT) {
+		if (axis == GamepadAxisMapping::LEFT)
+		{
 			registerAxis(gamepadIndex, GamepadAxisMapping::LEFT_X, listener);
 			registerAxis(gamepadIndex, GamepadAxisMapping::LEFT_Y, listener);
 			return;
@@ -338,7 +342,8 @@ namespace AW
 
 	void Gamepad::unregisterAxis(int gamepadIndex, GamepadAxisMapping axis, std::weak_ptr<IInputListener> listener)
 	{
-		if (axis == GamepadAxisMapping::LEFT) {
+		if (axis == GamepadAxisMapping::LEFT)
+		{
 			unregisterAxis(gamepadIndex, GamepadAxisMapping::LEFT_X, listener);
 			unregisterAxis(gamepadIndex, GamepadAxisMapping::LEFT_Y, listener);
 			return;

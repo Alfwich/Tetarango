@@ -32,7 +32,8 @@ namespace Config
 	public:
 
 	protected:
-		const std::map<Param, std::string> getConfig() {
+		const std::map<Param, std::string> getConfig()
+		{
 			std::map<Param, std::string> base
 			{
 					{ Param::version, "v0.16" },

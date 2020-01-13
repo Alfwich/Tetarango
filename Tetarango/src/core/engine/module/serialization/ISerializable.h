@@ -29,7 +29,8 @@ namespace AW
 	class ISerializable : public ISerializableDataSubscriber
 	{
 	public:
-		ISerializable() {
+		ISerializable()
+		{
 			this->serializationClient = std::make_shared<SerializationClient>();
 		};
 		virtual ~ISerializable() = 0 {};

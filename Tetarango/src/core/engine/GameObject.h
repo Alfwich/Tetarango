@@ -15,7 +15,8 @@ namespace AW
 	class SystemModuleBundle;
 	class SceneTransitionBundle;
 
-	enum class GTags {
+	enum class GTags
+	{
 		IsRootElement,
 		IsZone,
 		IsDebugElement,

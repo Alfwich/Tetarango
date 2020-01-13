@@ -14,13 +14,13 @@ namespace AW
 		Worker() {};
 
 		std::weak_ptr<INotifyOnCompletion> callback;
-		void* (*toDo)(void*data);
+		void* (*toDo)(void* data);
 		void* data;
 		void* result;
 		std::shared_ptr<AsyncResultBundle> resultBundle;
 
 	public:
-		Worker(void* data, void* (*toDo)(void*data), std::weak_ptr<INotifyOnCompletion> callback, WORKER_ID workerId);
+		Worker(void* data, void* (*toDo)(void* data), std::weak_ptr<INotifyOnCompletion> callback, WORKER_ID workerId);
 
 		WORKER_ID workerId = 0;
 		WorkerStatus status;

@@ -72,7 +72,7 @@ namespace AWGame
 			{ GuiScrollBar::ScrollBarBasic, "scrollbar-basic" }
 		};
 
-		const std::map<GuiScrollArea, std::string> scrollareas {
+		const std::map<GuiScrollArea, std::string> scrollareas{
 			{ GuiScrollArea::ScrollArea, "scroll-area-basic" }
 		};
 

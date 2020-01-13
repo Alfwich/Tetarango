@@ -104,7 +104,7 @@ namespace AW
 		}
 	}
 
-	b2Joint * Joint::onCreateJoint(const std::shared_ptr<b2World>& world)
+	b2Joint* Joint::onCreateJoint(const std::shared_ptr<b2World>& world)
 	{
 		const auto bodyA = getBodyA(), bodyB = getBodyB();
 		if (bodyA == nullptr || bodyB == nullptr)

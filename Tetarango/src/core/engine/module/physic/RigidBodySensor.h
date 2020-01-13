@@ -12,10 +12,10 @@ namespace AW
 	public:
 
 		void beginContact(b2Fixture* fixtureA, b2Fixture* fixtureB);
-		virtual void onBeginContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB) { /* NO-OP*/ };
+		virtual void onBeginContact(b2Body* bodyA, b2Body* bodyB, b2Fixture* fixtureA, b2Fixture* fixtureB) { /* NO-OP*/ };
 
-		void endContact(b2Fixture *fixtureA, b2Fixture *fixtureB);
-		virtual void onEndContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB) { /* NO-OP*/ };
+		void endContact(b2Fixture* fixtureA, b2Fixture* fixtureB);
+		virtual void onEndContact(b2Body* bodyA, b2Body* bodyB, b2Fixture* fixtureA, b2Fixture* fixtureB) { /* NO-OP*/ };
 
 		void setWorldId(unsigned int worldId);
 		unsigned int getWorldId();

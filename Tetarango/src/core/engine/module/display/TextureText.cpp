@@ -100,7 +100,7 @@ namespace AW
 			{
 				for (int x = 0; x < tempSurface->w; ++x)
 				{
-					Uint8 *target_pixel = (Uint8 *)tempSurface->pixels + y * tempSurface->pitch + x * sizeof *target_pixel;
+					Uint8* target_pixel = (Uint8*)tempSurface->pixels + y * tempSurface->pitch + x * sizeof * target_pixel;
 					auto color = &tempSurface->format->palette->colors[*target_pixel];
 					auto adjustedPtr = ptr + x + (y * tempSurface->w);
 					*adjustedPtr = color->a << 24 | color->r << 16 | color->g << 8 | color->b;

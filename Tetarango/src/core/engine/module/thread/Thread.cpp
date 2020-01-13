@@ -60,7 +60,7 @@ namespace AW
 		SDL_SemPost(resultQueueLock);
 	}
 
-	WORKER_ID Thread::doWork(void* data, void* (*toDo)(void *data), std::weak_ptr<INotifyOnCompletion> callback)
+	WORKER_ID Thread::doWork(void* data, void* (*toDo)(void* data), std::weak_ptr<INotifyOnCompletion> callback)
 	{
 		if (!isMainThread())
 		{
@@ -147,25 +147,26 @@ namespace AW
 		const auto numWorkerThreads = NumberHelper::clamp<int>(SDL_GetCPUCount() * 2, 1, 8);
 		for (int i = 0; i < numWorkerThreads; ++i)
 		{
-			const auto thread = SDL_CreateThread([](void* data) -> int {
-				const auto thread = (Thread*)data;
-				while (thread->applicationIsRunning())
+			const auto thread = SDL_CreateThread([](void* data) -> int
 				{
-					const auto worker = thread->getWorkerFromWorkQueue();
-
-					if (worker != nullptr)
+					const auto thread = (Thread*)data;
+					while (thread->applicationIsRunning())
 					{
-						worker->doWork();
-						thread->putWorkerIntoResultQueue(worker);
-					}
-					else
-					{
-						SDL_Delay(100);
-					}
-				}
+						const auto worker = thread->getWorkerFromWorkQueue();
 
-				return 0;
-			}, std::string(workerThreadName + std::to_string(i)).c_str(), this);
+						if (worker != nullptr)
+						{
+							worker->doWork();
+							thread->putWorkerIntoResultQueue(worker);
+						}
+						else
+						{
+							SDL_Delay(100);
+						}
+					}
+
+					return 0;
+				}, std::string(workerThreadName + std::to_string(i)).c_str(), this);
 
 			threads.push_back(thread);
 		}

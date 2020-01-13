@@ -53,7 +53,8 @@ namespace AW
 	class AsyncOperationBundle
 	{
 	public:
-		AsyncOperationBundle(std::shared_ptr<T> service, std::shared_ptr<S> data) {
+		AsyncOperationBundle(std::shared_ptr<T> service, std::shared_ptr<S> data)
+		{
 			this->service = std::dynamic_pointer_cast<T>(service);
 			this->data = data;
 		};

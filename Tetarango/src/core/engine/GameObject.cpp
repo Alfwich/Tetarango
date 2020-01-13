@@ -3,7 +3,7 @@
 namespace
 {
 	int nextGameObjectId = 100;
-	const auto orderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) {return a->zIndex < b->zIndex;};
+	const auto orderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) { return a->zIndex < b->zIndex; };
 }
 
 namespace AW
@@ -19,7 +19,7 @@ namespace AW
 	{
 		auto now = std::chrono::system_clock::now();
 		auto time = now.time_since_epoch().count();
-		return (int) std::chrono::nanoseconds(time).count();
+		return (int)std::chrono::nanoseconds(time).count();
 	}
 
 	GameObject::GameObject() : id(nextId()), bindingId(currentBindingId()), modules(SystemModuleBundle::getModuleBundle())
@@ -303,11 +303,13 @@ namespace AW
 		}
 
 		setTag(GTags::IsCurrentActive, parentPtr->getTag(GTags::IsCurrentActive) && getTag(GTags::IsCurrentActive));
-		if (parentPtr->getInputEnabled() && getInputMode() != InputMode::Disabled) {
+		if (parentPtr->getInputEnabled() && getInputMode() != InputMode::Disabled)
+		{
 			setInputMode(InputMode::ParentEnabled);
 		}
 
-		if (!getTag(GTags::Loaded) || getTag(GTags::RebuildOnLoad)) {
+		if (!getTag(GTags::Loaded) || getTag(GTags::RebuildOnLoad))
+		{
 
 			if (!getTag(GTags::DidInitialAttach))
 			{

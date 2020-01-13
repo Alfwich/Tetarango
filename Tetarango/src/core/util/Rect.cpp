@@ -23,7 +23,7 @@ namespace AW
 		);
 	}
 
-	Rect Rect::operator*(const Rect & other)
+	Rect Rect::operator*(const Rect& other)
 	{
 		return Rect(
 			x * other.x,
@@ -58,8 +58,7 @@ namespace AW
 	}
 
 	RectI::RectI()
-	{
-	}
+	{}
 
 	RectI::RectI(int x, int y, int w, int h)
 	{
@@ -89,7 +88,7 @@ namespace AW
 		);
 	}
 
-	RectI RectI::operator*(const RectI & other)
+	RectI RectI::operator*(const RectI& other)
 	{
 		return RectI();
 	}

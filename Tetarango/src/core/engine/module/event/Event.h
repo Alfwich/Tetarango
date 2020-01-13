@@ -13,7 +13,7 @@ namespace AW
 		class EnterFrameListenerBundle
 		{
 		public:
-			EnterFrameListenerBundle(std::shared_ptr<EnterFrameListener> ptr) : id(ptr->getObjectIdEnterFrame()), ptr(ptr) { }
+			EnterFrameListenerBundle(std::shared_ptr<EnterFrameListener> ptr) : id(ptr->getObjectIdEnterFrame()), ptr(ptr) {}
 			const int id;
 			const std::weak_ptr<EnterFrameListener> ptr;
 		};

@@ -268,4 +268,4 @@ namespace AW
 		processEvents();
 		processEnterFrames(frameTime);
 	}
-	}
+}

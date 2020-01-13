@@ -14,13 +14,12 @@ namespace AW
 
 	class FileReferenceWithAutoClose
 	{
-		SDL_RWops * const fileRef;
+		SDL_RWops* const fileRef;
 
 	public:
 		FileReferenceWithAutoClose(const std::string& path, const std::string& mode)
 			: fileRef(SDL_RWFromFile(path.c_str(), mode.c_str()))
-		{
-		}
+		{}
 
 		~FileReferenceWithAutoClose()
 		{
@@ -31,7 +30,7 @@ namespace AW
 			}
 		}
 
-		SDL_RWops * const get()
+		SDL_RWops* const get()
 		{
 			return fileRef;
 		}
@@ -94,19 +93,20 @@ namespace AW
 		auto bundle = std::make_shared<AsyncOperationBundle<Filesystem, std::string>>(thisServicePtr, std::make_shared<std::string>(path));
 
 		const auto workerId = thread->doWorkSharedPtr<std::string, AsyncOperationBundle<Filesystem, std::string>>(bundle,
-			[](std::shared_ptr<AsyncOperationBundle<Filesystem, std::string>> bundle) -> std::shared_ptr<std::string> {
-			try
+			[](std::shared_ptr<AsyncOperationBundle<Filesystem, std::string>> bundle) -> std::shared_ptr<std::string>
 			{
-				const auto opBundle = bundle->data;
-				const auto service = bundle->service;
-				const auto result = service->readContentsFromFile(*bundle->data);
-				return std::make_shared<std::string>(result);
+				try
+				{
+					const auto opBundle = bundle->data;
+					const auto service = bundle->service;
+					const auto result = service->readContentsFromFile(*bundle->data);
+					return std::make_shared<std::string>(result);
+				}
+				catch (...)
+				{
+					return nullptr;
+				}
 			}
-			catch (...)
-			{
-				return nullptr;
-			}
-		}
 		, callback, WorkerTaskCode::FILE_READ);
 
 		return workerId;
@@ -150,26 +150,28 @@ namespace AW
 		auto bundle = std::make_shared<AsyncOperationBundle<Filesystem, FileOpBundleData>>(thisServicePtr, std::make_shared<FileOpBundleData>(path, content));
 
 		const auto workerId = thread->doWorkSharedPtr<bool, AsyncOperationBundle<Filesystem, FileOpBundleData>>(bundle,
-			[](std::shared_ptr<AsyncOperationBundle<Filesystem, FileOpBundleData>> bundle) -> std::shared_ptr<bool> {
-			try
+			[](std::shared_ptr<AsyncOperationBundle<Filesystem, FileOpBundleData>> bundle) -> std::shared_ptr<bool>
 			{
-				const auto opBundle = bundle->data;
-				const auto service = bundle->service;
-				const auto result = service->appendContentToFile(opBundle->path, opBundle->content);
-				return std::make_shared<bool>(result);
+				try
+				{
+					const auto opBundle = bundle->data;
+					const auto service = bundle->service;
+					const auto result = service->appendContentToFile(opBundle->path, opBundle->content);
+					return std::make_shared<bool>(result);
+				}
+				catch (...)
+				{
+					return nullptr;
+				}
 			}
-			catch (...)
-			{
-				return nullptr;
-			}
-		}
 		, callback, WorkerTaskCode::FILE_APPEND);
 
 		return workerId;
 	}
 
 	Filesystem::FilesystemException::FilesystemException(const std::string& incMsg)
-		: msg(incMsg) {}
+		: msg(incMsg)
+	{}
 
 	const char* Filesystem::FilesystemException::what() const noexcept
 	{

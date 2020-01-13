@@ -59,7 +59,8 @@ namespace AW
 
 	void Texture::rebindTexture()
 	{
-		if (asset == nullptr || allowRebindWithRawPixelData) {
+		if (asset == nullptr || allowRebindWithRawPixelData)
+		{
 			return;
 		}
 

@@ -20,8 +20,7 @@ namespace AWGame
 	}
 
 	void TestScene::onLoadResources()
-	{
-	}
+	{}
 
 	void TestScene::onInitialAttach()
 	{
@@ -322,7 +321,7 @@ namespace AWGame
 				rect->layoutSpace = space;
 				rect->toBottomRightOf(target, offsetX, offsetY);
 			}
-			
+
 
 			{
 				const auto rect = layoutExampleRects[i++];

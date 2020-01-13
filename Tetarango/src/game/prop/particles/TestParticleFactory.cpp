@@ -3,8 +3,7 @@
 namespace AWGame
 {
 	TestParticleFactory::TestParticleFactory() : TestParticleFactory(0xff, 0xff, 0xff)
-	{
-	}
+	{}
 
 	TestParticleFactory::TestParticleFactory(int r, int g, int b)
 	{

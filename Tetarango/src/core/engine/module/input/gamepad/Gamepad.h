@@ -6,7 +6,8 @@
 namespace AW
 {
 
-	class GamepadIDBundle {
+	class GamepadIDBundle
+	{
 	public:
 		SDL_Joystick* joystick;
 		SDL_Haptic* haptic;

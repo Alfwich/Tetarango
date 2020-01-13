@@ -38,7 +38,7 @@ namespace AW
 		}
 	}
 
-	void DisplayBuffer::setClearColor(const Color & c)
+	void DisplayBuffer::setClearColor(const Color& c)
 	{
 		setClearColor(c.r, c.g, c.b, c.a);
 	}

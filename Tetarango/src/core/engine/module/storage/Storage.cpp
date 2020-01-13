@@ -247,12 +247,13 @@ namespace AW
 		auto bundle = std::make_shared<AsyncOperationBundle<std::pair<std::shared_ptr<Storage>, std::shared_ptr<Filesystem>>, std::string>>(pairPtr, std::make_shared<std::string>(scopeName));
 
 		const auto workerId = thread->doWorkSharedPtr<std::unordered_map<std::string, std::string>, AsyncOperationBundle<std::pair<std::shared_ptr<Storage>, std::shared_ptr<Filesystem>>, std::string>>(bundle,
-			[](std::shared_ptr<AsyncOperationBundle<std::pair<std::shared_ptr<Storage>, std::shared_ptr<Filesystem>>, std::string>> bundle) -> std::shared_ptr<std::unordered_map<std::string, std::string>> {
-			const auto storage = bundle->service->first;
-			const auto filesystem = bundle->service->second;
-			auto readResult = filesystem->readContentsFromFile((*bundle->data) + dataFileExtension);
-			return storage->hydrateRawDataToRawScope(readResult);
-		}
+			[](std::shared_ptr<AsyncOperationBundle<std::pair<std::shared_ptr<Storage>, std::shared_ptr<Filesystem>>, std::string>> bundle) -> std::shared_ptr<std::unordered_map<std::string, std::string>>
+			{
+				const auto storage = bundle->service->first;
+				const auto filesystem = bundle->service->second;
+				auto readResult = filesystem->readContentsFromFile((*bundle->data) + dataFileExtension);
+				return storage->hydrateRawDataToRawScope(readResult);
+			}
 		, weak_from_this(), WorkerTaskCode::STORE_LOAD_DATA);
 
 		asyncDataScopes[workerId] = std::make_pair(scopeName, callback);
@@ -277,12 +278,13 @@ namespace AW
 		auto bundle = std::make_shared<AsyncOperationBundle<Storage, std::string>>(thisServicePtr, std::make_shared<std::string>(scopeName));
 
 		const auto workerId = thread->doWorkSharedPtr<void, AsyncOperationBundle<Storage, std::string>>(bundle,
-			[](std::shared_ptr<AsyncOperationBundle<Storage, std::string>> bundle) -> std::shared_ptr<void> {
+			[](std::shared_ptr<AsyncOperationBundle<Storage, std::string>> bundle) -> std::shared_ptr<void>
+			{
 
-			const auto storage = bundle->service;
-			storage->cleanupScope((*bundle->data));
-			return nullptr;
-		}
+				const auto storage = bundle->service;
+				storage->cleanupScope((*bundle->data));
+				return nullptr;
+			}
 		, weak_from_this(), WorkerTaskCode::STORE_CLEANUP_SCOPE);
 
 		asyncDataScopes[workerId] = std::make_pair(scopeName, callback);
@@ -324,12 +326,13 @@ namespace AW
 		auto bundle = std::make_shared<AsyncOperationBundle<Storage, std::string>>(thisServicePtr, std::make_shared<std::string>(scopeName));
 
 		const auto workerId = thread->doWorkSharedPtr<void, AsyncOperationBundle<Storage, std::string>>(bundle,
-			[](std::shared_ptr<AsyncOperationBundle<Storage, std::string>> bundle) -> std::shared_ptr<void> {
+			[](std::shared_ptr<AsyncOperationBundle<Storage, std::string>> bundle) -> std::shared_ptr<void>
+			{
 
-			const auto storage = bundle->service;
-			storage->saveScope((*bundle->data));
-			return nullptr;
-		}
+				const auto storage = bundle->service;
+				storage->saveScope((*bundle->data));
+				return nullptr;
+			}
 		, weak_from_this(), WorkerTaskCode::STORE_SAVE_SCOPE);
 
 		asyncDataScopes[workerId] = std::make_pair(scopeName, callback);

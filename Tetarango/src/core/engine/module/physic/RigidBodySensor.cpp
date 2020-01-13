@@ -20,7 +20,7 @@ namespace AW
 		onBeginContact(bodyA, bodyB, fixtureA, fixtureB);
 	}
 
-	void RigidBodySensor::endContact(b2Fixture * fixtureA, b2Fixture * fixtureB)
+	void RigidBodySensor::endContact(b2Fixture* fixtureA, b2Fixture* fixtureB)
 	{
 		const auto bodyA = fixtureA->GetBody();
 		const auto bodyB = fixtureB->GetBody();

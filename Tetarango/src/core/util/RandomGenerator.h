@@ -42,7 +42,7 @@ namespace AW
 			(*it).second /= universeProb;
 		}
 
-		std::sort(probs.begin(), probs.end(), [](const std::pair<T, double>& a, const std::pair<T, double>& b) {return a.second < b.second;});
+		std::sort(probs.begin(), probs.end(), [](const std::pair<T, double>& a, const std::pair<T, double>& b) { return a.second < b.second; });
 
 		unsigned int probOffset = 0;
 		for (auto it = probs.begin(); it != probs.end(); ++it)

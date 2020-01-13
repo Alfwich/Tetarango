@@ -281,21 +281,22 @@ namespace AW
 
 	void Physic::startBackgroundThreadStepping()
 	{
-		thread->doWork(this, [](void* svc) {
-			const auto physic = (Physic*)svc;
-
-			while (physic->backgroundThreadSteppingEnabled())
+		thread->doWork(this, [](void* svc)
 			{
-				if (physic->shouldStep())
-				{
-					physic->lockSimulations();
-					physic->stepPhysicWorlds();
-					physic->markSteppedUnsafe();
-					physic->unlockSimulations();
-				}
-			}
+				const auto physic = (Physic*)svc;
 
-			return (void*)1;
+				while (physic->backgroundThreadSteppingEnabled())
+				{
+					if (physic->shouldStep())
+					{
+						physic->lockSimulations();
+						physic->stepPhysicWorlds();
+						physic->markSteppedUnsafe();
+						physic->unlockSimulations();
+					}
+				}
+
+				return (void*)1;
 			}, weak_from_this());
 	}
 

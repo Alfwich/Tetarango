@@ -10,7 +10,7 @@ namespace
 
 namespace AW
 {
-	ShaderType ShaderContainer::getShaderTypeFromPath(const std::string & path)
+	ShaderType ShaderContainer::getShaderTypeFromPath(const std::string& path)
 	{
 		return AW::StringHelper::contains(path, vertexShaderPathPrefix) ? ShaderType::Vertex : ShaderType::Fragment;
 	}

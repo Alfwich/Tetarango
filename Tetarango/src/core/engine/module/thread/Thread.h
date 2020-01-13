@@ -31,7 +31,7 @@ namespace AW
 		virtual ~Thread();
 
 		void processWorkers();
-		WORKER_ID doWork(void* data, void* (*toDo)(void*data), std::weak_ptr<INotifyOnCompletion> callback);
+		WORKER_ID doWork(void* data, void* (*toDo)(void* data), std::weak_ptr<INotifyOnCompletion> callback);
 
 		template <typename T, typename S>
 		WORKER_ID doWorkSharedPtr(std::shared_ptr<S> data, std::shared_ptr<T>(*toDo)(std::shared_ptr<S> data), std::weak_ptr<INotifyOnCompletion> callback, WorkerTaskCode code = WorkerTaskCode::UNSPECIFIED);

@@ -5,7 +5,8 @@
 namespace AW
 {
 
-	enum class Events {
+	enum class Events
+	{
 		Unspecified,
 		QuitRequested,
 		ReprovisionScreen

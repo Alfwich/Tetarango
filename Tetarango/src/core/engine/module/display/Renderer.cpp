@@ -329,7 +329,7 @@ namespace AW
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
-	void Renderer::openGLDrawPoints(RenderPackage * renderPackage, unsigned int vBuffer, unsigned int numPoints, bool isFilled)
+	void Renderer::openGLDrawPoints(RenderPackage* renderPackage, unsigned int vBuffer, unsigned int numPoints, bool isFilled)
 	{
 		if (renderPackage->stencilDepth > 0)
 		{
@@ -535,7 +535,7 @@ namespace AW
 		}
 	}
 
-	void Renderer::updateScreenConfig(const ScreenConfig & config)
+	void Renderer::updateScreenConfig(const ScreenConfig& config)
 	{
 		currentScreenConfig = config;
 
@@ -1237,7 +1237,7 @@ namespace AW
 		prim->markClean();
 	}
 
-	void Renderer::renderPolygonOpenGL(RenderPackage * renderPackage)
+	void Renderer::renderPolygonOpenGL(RenderPackage* renderPackage)
 	{
 		const auto poly = std::dynamic_pointer_cast<Polygon>(renderPackage->obj);
 		if (poly == nullptr) return;

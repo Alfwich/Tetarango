@@ -3,7 +3,7 @@
 namespace AW
 {
 
-	Worker::Worker(void* data, void *(*toDo)(void *data), std::weak_ptr<INotifyOnCompletion> callback, WORKER_ID workerId)
+	Worker::Worker(void* data, void* (*toDo)(void* data), std::weak_ptr<INotifyOnCompletion> callback, WORKER_ID workerId)
 	{
 		this->workerId = workerId;
 		status = WorkerStatus::NOT_STARTED;

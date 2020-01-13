@@ -11,7 +11,8 @@ namespace AW
 
 		virtual int getObjectIdEnterFrame() = 0;
 
-		virtual void enterFrame(const double& frameTime) { 
+		virtual void enterFrame(const double& frameTime)
+		{
 			if (this->enterFrameActivated) this->onEnterFrame(frameTime);
 		};
 

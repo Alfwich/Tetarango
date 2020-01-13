@@ -88,7 +88,7 @@ namespace AW
 		unsigned int currentTicks = time->getTicks();
 		unsigned int result = currentTicks - this->currentTicks;
 		this->currentTicks = currentTicks;
-		return (result)* getTimeFactor();
+		return (result)*getTimeFactor();
 	}
 
 	bool Timer::isAboveThresholdAndStop(unsigned int threshold)
@@ -114,7 +114,7 @@ namespace AW
 			return false;
 		}
 
-		if (getTicks() >= threshold) 
+		if (getTicks() >= threshold)
 		{
 			start();
 			return true;

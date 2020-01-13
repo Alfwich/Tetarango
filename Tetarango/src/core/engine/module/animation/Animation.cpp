@@ -27,7 +27,8 @@ namespace AW
 			framesAdded++;
 
 			cX += width;
-			if (cX >= sourceWidth) {
+			if (cX >= sourceWidth)
+			{
 				cX = 0;
 				cY += height;
 			}

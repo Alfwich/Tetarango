@@ -4,7 +4,8 @@
 
 namespace AW
 {
-	enum class InputMode {
+	enum class InputMode
+	{
 		Unspecified,
 		Enabled,
 		ParentEnabled,
@@ -12,7 +13,8 @@ namespace AW
 	};
 
 
-	class IInputListener {
+	class IInputListener
+	{
 		InputMode inputMode = InputMode::Unspecified;
 
 	public:
@@ -73,15 +75,17 @@ namespace AW
 			}
 		}
 
-		virtual void mouseMove(int x, int y) {
+		virtual void mouseMove(int x, int y)
+		{
 			if (!getInputEnabled()) return;
 
 			this->onMouseMove(x, y);
 		};
 
-		virtual void mouseWheel(int x, int y) {
+		virtual void mouseWheel(int x, int y)
+		{
 			if (!getInputEnabled()) return;
-			
+
 			this->onMouseWheel(x, y);
 		};
 

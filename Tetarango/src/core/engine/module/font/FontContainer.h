@@ -7,7 +7,7 @@ namespace AW
 {
 	class Font;
 
-	class FontPack 
+	class FontPack
 	{
 	public:
 		FontPack(std::string path, TTF_Font* font, int fontSize) { this->path = path, this->fontSizeToTTFFont[fontSize] = font; }

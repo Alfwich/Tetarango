@@ -3,8 +3,7 @@
 namespace AW
 {
 	Serialization::Serialization()
-	{
-	}
+	{}
 
 	void Serialization::bindThread(std::shared_ptr<Thread> thread)
 	{
@@ -23,19 +22,20 @@ namespace AW
 		auto bundle = std::make_shared<AsyncOperationBundle<Serialization, ISerializable>>(thisServicePtr, ser);
 
 		return thread->doWorkSharedPtr<std::string, AsyncOperationBundle<Serialization, ISerializable>>(bundle,
-			[](std::shared_ptr<AsyncOperationBundle<Serialization, ISerializable>> bundle) -> std::shared_ptr<std::string> {
-			try
+			[](std::shared_ptr<AsyncOperationBundle<Serialization, ISerializable>> bundle) -> std::shared_ptr<std::string>
 			{
-				const auto ser = bundle->data;
-				const auto service = bundle->service;
-				const auto result = service->serialize(ser);
-				return std::make_shared<std::string>(result);
+				try
+				{
+					const auto ser = bundle->data;
+					const auto service = bundle->service;
+					const auto result = service->serialize(ser);
+					return std::make_shared<std::string>(result);
+				}
+				catch (...)
+				{
+					return nullptr;
+				}
 			}
-			catch (...)
-			{
-				return nullptr;
-			}
-		}
 		, callback, WorkerTaskCode::SERIALIZATION);
 	}
 
@@ -51,18 +51,19 @@ namespace AW
 		auto bundle = std::make_shared<AsyncOperationBundle<Serialization, std::string>>(thisServicePtr, dataPtr);
 
 		return thread->doWorkSharedPtr<ISerializable, AsyncOperationBundle<Serialization, std::string>>(bundle,
-			[](std::shared_ptr<AsyncOperationBundle<Serialization, std::string>> bundle) -> std::shared_ptr<ISerializable> {
-			try
+			[](std::shared_ptr<AsyncOperationBundle<Serialization, std::string>> bundle) -> std::shared_ptr<ISerializable>
 			{
-				const auto string = bundle->data;
-				const auto service = bundle->service;
-				return service->hydrate(*string);
+				try
+				{
+					const auto string = bundle->data;
+					const auto service = bundle->service;
+					return service->hydrate(*string);
+				}
+				catch (...)
+				{
+					return nullptr;
+				}
 			}
-			catch (...)
-			{
-				return nullptr;
-			}
-		}
 		, callback, WorkerTaskCode::HYDRATION);
 	}
 

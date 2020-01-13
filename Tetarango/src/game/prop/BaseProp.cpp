@@ -16,14 +16,17 @@ namespace AWGame
 
 	BaseProp::BaseProp() :
 		propBaseName(""),
-		propType(PropType::Unspecified) {};
+		propType(PropType::Unspecified)
+	{};
 
 	BaseProp::BaseProp(PropParticleFactory factory) :
 		propBaseName(config.particleFactories.at(factory)),
-		propType(PropType::ParticleFactory) {}
+		propType(PropType::ParticleFactory)
+	{}
 
 	BaseProp::BaseProp(PropBlock block) :
 		propBaseName(config.blocks.at(block)),
-		propType(PropType::Block) {}
+		propType(PropType::Block)
+	{}
 }
 

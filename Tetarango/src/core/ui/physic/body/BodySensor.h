@@ -35,8 +35,8 @@ namespace AW
 
 		std::weak_ptr<IBodyListener> listener;
 
-		virtual void onBeginContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB);
-		virtual void onEndContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB);
+		virtual void onBeginContact(b2Body* bodyA, b2Body* bodyB, b2Fixture* fixtureA, b2Fixture* fixtureB);
+		virtual void onEndContact(b2Body* bodyA, b2Body* bodyB, b2Fixture* fixtureA, b2Fixture* fixtureB);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 

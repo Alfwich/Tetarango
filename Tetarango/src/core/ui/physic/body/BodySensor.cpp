@@ -102,7 +102,7 @@ namespace AW
 		}
 	}
 
-	void BodySensor::onBeginContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB)
+	void BodySensor::onBeginContact(b2Body* bodyA, b2Body* bodyB, b2Fixture* fixtureA, b2Fixture* fixtureB)
 	{
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)
@@ -115,7 +115,7 @@ namespace AW
 		}
 	}
 
-	void BodySensor::onEndContact(b2Body *bodyA, b2Body *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB)
+	void BodySensor::onEndContact(b2Body* bodyA, b2Body* bodyB, b2Fixture* fixtureA, b2Fixture* fixtureB)
 	{
 		const auto listenerPtr = listener.lock();
 		if (listenerPtr != nullptr)

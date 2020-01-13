@@ -72,7 +72,7 @@ namespace AWGame
 		}
 	}
 
-	void BaseScene::transitionToSceneWithBundle(SceneGame scene, AW::SceneTransitionBundle & bundle)
+	void BaseScene::transitionToSceneWithBundle(SceneGame scene, AW::SceneTransitionBundle& bundle)
 	{
 		transitionToSceneWithBundle(config.game.at(scene), bundle);
 	}

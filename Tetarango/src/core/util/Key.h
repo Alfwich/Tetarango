@@ -277,7 +277,8 @@ enum class AWKey
 	SDL_NUM_SCANCODES = 512
 };
 
-enum class AWMouseButton {
+enum class AWMouseButton
+{
 	Left,
 	Right,
 	Middle

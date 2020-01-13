@@ -8,7 +8,7 @@
 namespace AWGame
 {
 
-	class CheckBoxBasic: public BaseGui, public AW::Container
+	class CheckBoxBasic : public BaseGui, public AW::Container
 	{
 		std::string text;
 		std::shared_ptr<AW::Animated> checkbox;

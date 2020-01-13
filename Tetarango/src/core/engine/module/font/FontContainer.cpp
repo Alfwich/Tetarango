@@ -43,7 +43,7 @@ namespace AW
 		TTF_Font* font;
 
 		const auto ttfFont = asset->getAssetBundle(fontPack->path);
-		if (ttfFont!= nullptr)
+		if (ttfFont != nullptr)
 		{
 			SDL_RWops* rw = SDL_RWFromMem(ttfFont->data.get(), ttfFont->size);
 			font = TTF_OpenFontRW(rw, 1, fontSize);

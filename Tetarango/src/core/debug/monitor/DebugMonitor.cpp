@@ -18,7 +18,7 @@ namespace AW
 		GORegister(DebugMonitor);
 	}
 
-	std::string DebugMonitor::frameTimeToFPSString(const double & time)
+	std::string DebugMonitor::frameTimeToFPSString(const double& time)
 	{
 		const auto fpsInt = (int)std::round(time);
 		return std::to_string(fpsInt);
@@ -243,7 +243,7 @@ namespace AW
 		}
 	}
 
-	void DebugMonitor::onEnterFrame(const double & frameTime)
+	void DebugMonitor::onEnterFrame(const double& frameTime)
 	{
 		checkIfHovering();
 		updateFrameTimeInfo(frameTime);
@@ -266,7 +266,7 @@ namespace AW
 		{
 			auto screenRect = child->getScreenRect();
 			const auto textId = child->getId();
-			if (screenRect->y < mouseY && screenRect->y + screenRect->h > mouseY && textIdToSceneId.count(textId) == 1)
+			if (screenRect->y < mouseY && screenRect->y + screenRect->h > mouseY&& textIdToSceneId.count(textId) == 1)
 			{
 				const auto sceneEleId = textIdToSceneId.at(textId);
 				const auto itr = std::find(allowedCrawlElements.begin(), allowedCrawlElements.end(), sceneEleId);

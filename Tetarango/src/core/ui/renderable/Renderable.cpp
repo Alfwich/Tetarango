@@ -86,7 +86,8 @@ namespace AW
 
 	void Renderable::setColor(int r, int g, int b, int a)
 	{
-		if (colorModulation == nullptr) {
+		if (colorModulation == nullptr)
+		{
 			colorModulation = std::make_shared<Color>(r, g, b, a);
 		}
 		else
@@ -154,18 +155,18 @@ namespace AW
 		return hasClipRect;
 	}
 
-	const Rect * Renderable::getClipRect()
+	const Rect* Renderable::getClipRect()
 	{
 		return &clipRect;
 	}
 
-	void Renderable::setClipRect(const Rect * rect)
+	void Renderable::setClipRect(const Rect* rect)
 	{
 		clipRect = *rect;
 		hasClipRect = (clipRect.x > 0.0 || clipRect.y > 0.0 || clipRect.w > 0.0 || clipRect.h > 0.0);
 	}
 
-	void Renderable::setClipRect(const Rect & rect)
+	void Renderable::setClipRect(const Rect& rect)
 	{
 		setClipRect(&rect);
 	}
@@ -453,7 +454,7 @@ namespace AW
 		}
 	}
 
-	void Renderable::matchPosition(const Renderable * other, float xOffset, float yOffset)
+	void Renderable::matchPosition(const Renderable* other, float xOffset, float yOffset)
 	{
 		if (other != nullptr)
 		{

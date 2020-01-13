@@ -33,7 +33,8 @@ namespace AW
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &compileResult);
 		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLength);
 
-		if (compileResult == GL_FALSE && infoLength > 0) {
+		if (compileResult == GL_FALSE && infoLength > 0)
+		{
 			std::vector<char> infoText(infoLength + 1);
 			glGetShaderInfoLog(shaderId, infoLength, NULL, &infoText[0]);
 			Logger::instance()->logCritical("Shader::Failed to compile shader: " + std::string(infoText.begin(), infoText.end()));
@@ -74,7 +75,7 @@ namespace AW
 						line = std::string();
 					}
 				}
-				else if (dataPos + repeatToken.size()-1 < programData.size() && AW::StringHelper::startsWith(&programData.at(dataPos), repeatToken))
+				else if (dataPos + repeatToken.size() - 1 < programData.size() && AW::StringHelper::startsWith(&programData.at(dataPos), repeatToken))
 				{
 					for (auto i = 1; i < loc + 1; ++i)
 					{

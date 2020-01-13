@@ -7,11 +7,12 @@ namespace AW
 	class ContactBundle
 	{
 	public:
-		ContactBundle(void *bodyA, void *bodyB, b2Fixture *fixtureA, b2Fixture *fixtureB)
-			: bodyA(static_cast<Body*>(bodyA)), bodyB(static_cast<Body*>(bodyB)), fixtureA(fixtureA), fixtureB(fixtureB) {};
+		ContactBundle(void* bodyA, void* bodyB, b2Fixture* fixtureA, b2Fixture* fixtureB)
+			: bodyA(static_cast<Body*>(bodyA)), bodyB(static_cast<Body*>(bodyB)), fixtureA(fixtureA), fixtureB(fixtureB)
+		{};
 
-		Body *bodyA, *bodyB;
-		b2Fixture *fixtureA, *fixtureB;
+		Body* bodyA, * bodyB;
+		b2Fixture* fixtureA, * fixtureB;
 	};
 
 	class IBodyListener

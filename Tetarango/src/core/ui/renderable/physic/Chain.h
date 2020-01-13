@@ -7,7 +7,7 @@
 
 namespace AW
 {
-	class Chain: public AW::Polygon, public AW::IBodyListener, public AW::IBodyFixture
+	class Chain : public AW::Polygon, public AW::IBodyListener, public AW::IBodyFixture
 	{
 		std::shared_ptr<AW::Body> body;
 
