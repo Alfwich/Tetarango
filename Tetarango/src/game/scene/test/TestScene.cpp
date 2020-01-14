@@ -32,6 +32,7 @@ namespace AWGame
 				AWKey::ONE,
 				AWKey::TWO,
 				AWKey::THREE,
+				AWKey::FOUR,
 				AWKey::LEFT,
 				AWKey::RIGHT,
 				AWKey::UP,
@@ -417,6 +418,11 @@ namespace AWGame
 			obj2->renderMode = obj2->renderMode == AW::RenderMode::CachedElement ? AW::RenderMode::ChildrenOnly : AW::RenderMode::CachedElement;
 			obj2->markDirty();
 		}
+
+		if (key == AWKey::FOUR && isPressed)
+		{
+			modules->network->httpGet("arthurwut.com", "/misc/merge.html", std::dynamic_pointer_cast<AW::INetworkListener>(shared_from_this()));
+		}
 	}
 
 	void TestScene::onScrollBarScroll(int id, double pos)
@@ -447,5 +453,10 @@ namespace AWGame
 		{
 			obj2->markDirty();
 		}
+	}
+
+	void TestScene::onNetworkCallCompleted(int status, std::string& body)
+	{
+		std::cout << status << ", " << body << std::endl;
 	}
 }

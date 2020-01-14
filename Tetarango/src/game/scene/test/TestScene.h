@@ -14,7 +14,7 @@
 namespace AWGame
 {
 
-	class TestScene : public AW::Scene, public AW::ICameraListener, public IGuiListener
+	class TestScene : public AW::Scene, public AW::ICameraListener, public AW::INetworkListener, public IGuiListener
 	{
 		double currentIters = 15, layoutMotionTime = 0.0;
 		bool itersIncPressed = false, itersDecPressed = false;
@@ -43,7 +43,9 @@ namespace AWGame
 		void onKey(AWKey key, bool isPressed);
 
 		void onScrollBarScroll(int id, double pos);
+
 		void onCameraUpdate();
+		void onNetworkCallCompleted(int status, std::string& body) override;
 	};
 
 }

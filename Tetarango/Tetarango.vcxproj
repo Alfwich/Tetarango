@@ -242,6 +242,7 @@ bash ./make.sh</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='PROD_PROFILE|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
+    <ClCompile Include="src\core\engine\module\network\Network.cpp" />
     <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
     <ClCompile Include="src\core\engine\module\physic\PhysicRenderer.cpp" />
     <ClCompile Include="src\core\engine\module\physic\RigidBody.cpp" />
@@ -370,6 +371,8 @@ bash ./make.sh</Command>
     <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
     <ClInclude Include="src\core\engine\module\display\VertexBufferProxy.h" />
     <ClInclude Include="src\core\engine\module\ModuleBundleStatus.h" />
+    <ClInclude Include="src\core\engine\module\network\INetworkListener.h" />
+    <ClInclude Include="src\core\engine\module\network\Network.h" />
     <ClInclude Include="src\core\engine\module\physic\PhysicRenderer.h" />
     <ClInclude Include="src\core\engine\module\physic\RigidBody.h" />
     <ClInclude Include="src\core\engine\module\physic\Physic.h" />

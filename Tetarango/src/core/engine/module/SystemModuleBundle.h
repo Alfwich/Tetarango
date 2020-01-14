@@ -14,6 +14,7 @@
 #include "asset/Asset.h"
 #include "shader/ShaderContainer.h"
 #include "physic/Physic.h"
+#include "network/Network.h"
 
 namespace AW
 {
@@ -56,6 +57,7 @@ namespace AW
 		std::shared_ptr<Asset> asset;
 		std::shared_ptr<ShaderContainer> shader;
 		std::shared_ptr<Physic> physic;
+		std::shared_ptr<Network> network;
 
 		void onAssignConfig(std::shared_ptr<Config::GameConfig> config);
 		void onInit();

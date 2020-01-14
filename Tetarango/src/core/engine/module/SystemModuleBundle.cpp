@@ -28,6 +28,7 @@ namespace AW
 		filesystem->bindThread(thread);
 		storage->bindThread(thread);
 		physic->bindThread(thread);
+		network->bindThread(thread);
 		asset->bindFilesystem(filesystem);
 		asset->bindStorage(storage);
 		font->bindAsset(asset);
@@ -56,6 +57,7 @@ namespace AW
 		logger = createModule<Logger>();
 		asset = createModule<Asset>();
 		shader = createModule<ShaderContainer>();
+		network = createModule<Network>();
 
 		physic = createModule<Physic>();
 
