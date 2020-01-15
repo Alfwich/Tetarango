@@ -34,14 +34,7 @@ namespace AW
 		const auto id = thread->doWork(bundle.get(), [](void* data)
 			{
 				NetworkRequestBundle* bundle = (NetworkRequestBundle*)data;
-				httplib::Client client(bundle->host.c_str());
-				auto response = client.Get(bundle->path.c_str());
-				if (response)
-				{
-					bundle->status = response->status;
-					bundle->body = response->body;
-				}
-
+				bundle->doRequest();
 				return data;
 			}, weak_from_this());
 
@@ -54,7 +47,20 @@ namespace AW
 	{
 		processHostAndPath(host, path);
 
-		const auto bundle = std::make_shared<NetworkRequestBundle>(NetworkRequestMethod::Get, host, path, listener);
+		const auto params = std::unordered_map<std::string, std::string>();
+		const auto bundle = std::make_shared<NetworkRequestBundle>(this, method, host, path, params, listener);
+		const auto id = startRequest(bundle);
+
+		requestMap[id] = bundle;
+
+		return id;
+	}
+
+	int Network::createBundleWithParamsAndStartRequest(NetworkRequestMethod method, std::string host, std::string path, const std::unordered_map<std::string, std::string>& params, std::weak_ptr<INetworkListener> listener)
+	{
+		processHostAndPath(host, path);
+
+		const auto bundle = std::make_shared<NetworkRequestBundle>(this, method, host, path, params, listener);
 		const auto id = startRequest(bundle);
 
 		requestMap[id] = bundle;
@@ -82,15 +88,44 @@ namespace AW
 		}
 	}
 
-	int Network::httpGet(std::string host, std::string path, std::weak_ptr<INetworkListener> listener)
-	{
-		return createBundleAndStartRequest(NetworkRequestMethod::Get, host, path, listener);
-	}
-
 	int Network::httpGet(std::string url, std::weak_ptr<INetworkListener> listener)
 	{
 		const auto hostAndPath = breakUrlIntoHostAndPath(url);
-		return httpGet(std::get<0>(hostAndPath), std::get<1>(hostAndPath), listener);
+		return createBundleAndStartRequest(NetworkRequestMethod::Get, std::get<0>(hostAndPath), std::get<1>(hostAndPath), listener);
+	}
+
+	int Network::httpPost(std::string url, const std::unordered_map<std::string, std::string>& params, std::weak_ptr<INetworkListener> listener)
+	{
+		const auto hostAndPath = breakUrlIntoHostAndPath(url);
+		return createBundleWithParamsAndStartRequest(NetworkRequestMethod::Post, std::get<0>(hostAndPath), std::get<1>(hostAndPath), params, listener);
+	}
+
+	void Network::doRequest(NetworkRequestBundle* bundle)
+	{
+		httplib::Client client(bundle->host.c_str());
+
+		std::shared_ptr<httplib::Response> response;
+
+		if (bundle->method == NetworkRequestMethod::Get)
+		{
+			response = client.Get(bundle->path.c_str());
+		}
+		else if (bundle->method == NetworkRequestMethod::Post)
+		{
+			httplib::Params params;
+			for (auto paramKeyToValue : bundle->params)
+			{
+				params.emplace(paramKeyToValue.first, paramKeyToValue.second);
+			}
+
+			response = client.Post(bundle->path.c_str(), params);
+		}
+
+		if (response != nullptr)
+		{
+			bundle->status = response->status;
+			bundle->body = response->body;
+		}
 	}
 
 	void Network::onWorkDone(WORKER_ID workerId, WorkerTaskCode type, std::shared_ptr<AsyncResultBundle> result)

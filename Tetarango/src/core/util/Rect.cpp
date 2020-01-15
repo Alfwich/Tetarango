@@ -58,7 +58,8 @@ namespace AW
 	}
 
 	RectI::RectI()
-	{}
+	{
+	}
 
 	RectI::RectI(int x, int y, int w, int h)
 	{

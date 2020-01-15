@@ -301,5 +301,6 @@ namespace AWGame
 	}
 
 	void SceneTetris::onCameraUpdate()
-	{}
+	{
+	}
 }

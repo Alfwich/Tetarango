@@ -3,7 +3,8 @@
 namespace AW
 {
 	Serialization::Serialization()
-	{}
+	{
+	}
 
 	void Serialization::bindThread(std::shared_ptr<Thread> thread)
 	{

@@ -345,7 +345,8 @@ namespace AWGame
 	}
 
 	void SceneOptionsMenu::onTransitionedTo()
-	{}
+	{
+	}
 
 	void SceneOptionsMenu::onTimeoutCalled(int id)
 	{

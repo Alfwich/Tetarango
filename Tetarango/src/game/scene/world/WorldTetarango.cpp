@@ -46,5 +46,6 @@ namespace AWGame
 	}
 
 	void SceneWorldTetarango::onChildrenHydrated()
-	{}
+	{
+	}
 }

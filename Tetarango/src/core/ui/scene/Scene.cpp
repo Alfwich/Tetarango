@@ -3,7 +3,8 @@
 namespace AW
 {
 	Scene::Scene() : Scene(std::string())
-	{}
+	{
+	}
 
 	Scene::Scene(std::string sceneName)
 	{

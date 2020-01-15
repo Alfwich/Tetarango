@@ -20,7 +20,8 @@ namespace AWGame
 	}
 
 	void TestScene::onLoadResources()
-	{}
+	{
+	}
 
 	void TestScene::onInitialAttach()
 	{
@@ -421,7 +422,9 @@ namespace AWGame
 
 		if (key == AWKey::FOUR && isPressed)
 		{
-			modules->network->httpGet("http://arthurwut.com/misc/merge.html", std::dynamic_pointer_cast<AW::INetworkListener>(shared_from_this()));
+			//modules->network->httpGet("http://arthurwut.com/misc/merge.html", std::dynamic_pointer_cast<AW::INetworkListener>(shared_from_this()));
+			const std::unordered_map<std::string, std::string> params{ {"hello", "world"},{"lets", "go"} };
+			modules->network->httpPost("http://arthurwut.com/misc/merge.html", params, std::dynamic_pointer_cast<AW::INetworkListener>(shared_from_this()));
 		}
 	}
 

@@ -19,7 +19,8 @@ namespace AW
 	public:
 		FileReferenceWithAutoClose(const std::string& path, const std::string& mode)
 			: fileRef(SDL_RWFromFile(path.c_str(), mode.c_str()))
-		{}
+		{
+		}
 
 		~FileReferenceWithAutoClose()
 		{
@@ -171,7 +172,8 @@ namespace AW
 
 	Filesystem::FilesystemException::FilesystemException(const std::string& incMsg)
 		: msg(incMsg)
-	{}
+	{
+	}
 
 	const char* Filesystem::FilesystemException::what() const noexcept
 	{
