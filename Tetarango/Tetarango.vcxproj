@@ -213,8 +213,8 @@ bash ./make.sh</Command>
 python scripts/generateSerializationList.py .</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>cd ..
-bash ./make.sh</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -232,6 +232,10 @@ bash ./make.sh</Command>
     <None Include="libvorbis-0.dll" />
     <None Include="libvorbisfile-3.dll" />
     <None Include="libwebp-7.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
+    <None Include="SDL2_mixer.dll" />
+    <None Include="SDL2_ttf.dll" />
     <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
