@@ -421,7 +421,7 @@ namespace AWGame
 
 		if (key == AWKey::FOUR && isPressed)
 		{
-			modules->network->httpGet("arthurwut.com/misc/merge.html", std::dynamic_pointer_cast<AW::INetworkListener>(shared_from_this()));
+			modules->network->httpGet("http://arthurwut.com/misc/merge.html", std::dynamic_pointer_cast<AW::INetworkListener>(shared_from_this()));
 		}
 	}
 

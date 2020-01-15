@@ -2,6 +2,11 @@
 
 #include "httplib.h"
 
+namespace
+{
+	const auto httpProtocolPrefix = "http://";
+}
+
 namespace AW
 {
 	void Network::bindThread(std::shared_ptr<Thread> thread)
@@ -11,18 +16,17 @@ namespace AW
 
 	void Network::processHostAndPath(std::string& host, std::string& path)
 	{
+		if (!host.empty() && host.rfind(httpProtocolPrefix) == 0) host = host.substr(strlen(httpProtocolPrefix));
 		if (!path.empty() && path[0] != '/') path = '/' + path;
 	}
 
 	std::tuple<std::string, std::string> Network::breakUrlIntoHostAndPath(const std::string& url)
 	{
-		const auto delimitPos = url.find_first_of('/');
-		if (delimitPos != std::string::npos)
-		{
-			return std::make_tuple(url.substr(0, delimitPos), url.substr(delimitPos));
-		}
+		const std::string protocol = url.rfind(httpProtocolPrefix) == 0 ? httpProtocolPrefix : "";
+		const auto hostname = url.substr(protocol.size(), url.find_first_of("/", protocol.size()) - protocol.size());
+		const auto path = url.substr(protocol.size() + hostname.size());
 
-		return std::make_tuple(url, "");
+		return std::make_tuple(protocol + hostname, path);
 	}
 
 	int Network::startRequest(const std::shared_ptr<NetworkRequestBundle>& bundle)
