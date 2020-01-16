@@ -12,8 +12,7 @@ namespace AWGame
 
 		bool down = false, left = false, right = false, up = false;
 
-		int contacts = 0;
-		int airJumpsAllowed = 0;
+		int jumpsAllowed = 0;
 
 	public:
 		Player();

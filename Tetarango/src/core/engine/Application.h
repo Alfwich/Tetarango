@@ -47,7 +47,7 @@ namespace AW
 		virtual void onInit() { /* NO-OP */ };
 		virtual void onLoadResources() { /* NO-OP */ };
 		virtual void onPrimeSerialization() { /* NO-OP */ };
-		virtual void onReady() { /* NO-OP */ };
+		virtual void onReady() = 0;
 		virtual void onCleanup() { /* NO-OP */ };
 
 		void run(int argc, char* args[]);

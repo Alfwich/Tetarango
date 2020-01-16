@@ -12,6 +12,7 @@ namespace AWGame
 		void onAttach();
 
 		void onCreateChildren();
+		void onLayoutChildren();
 		void onChildrenHydrated();
 	};
 }

@@ -23,7 +23,7 @@ namespace AWGame
 	void SceneWorldTetarango::onCreateChildren()
 	{
 		const auto contentContainer = std::make_shared<AW::Container>();
-		contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
+		contentContainer->name = "cc";
 		add(contentContainer);
 
 		const auto ground = std::make_shared<AW::Chain>();
@@ -43,6 +43,15 @@ namespace AWGame
 		const auto gameCamera = std::make_shared<GameCamera>();
 		gameCamera->target = player;
 		contentContainer->add(gameCamera);
+	}
+
+	void SceneWorldTetarango::onLayoutChildren()
+	{
+		const auto contentContainer = findChildWithName<AW::Container>("cc");
+		if (contentContainer != nullptr)
+		{
+			contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
+		}
 	}
 
 	void SceneWorldTetarango::onChildrenHydrated()

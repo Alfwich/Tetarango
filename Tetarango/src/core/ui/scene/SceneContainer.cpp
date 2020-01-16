@@ -94,6 +94,7 @@ namespace AW
 		currentScene = sceneMap[sceneName];
 		currentSceneName = sceneName;
 		GameObject::add(currentScene);
+		currentScene->layout();
 		Logger::instance()->log("SceneContainer::Transitioned to scene sceneName=" + sceneName);
 
 		return true;

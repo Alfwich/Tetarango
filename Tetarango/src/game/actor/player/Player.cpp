@@ -10,6 +10,7 @@ namespace
 	const auto jumpImpulse = 20.0;
 	const auto moveForce = 120.0;
 	const auto maxLeftRightVelocity = 1.0;
+	const auto maxJumps = 2;
 	const auto playerStartTextureName = "player-start";
 	const auto playerAnimationSetName = "player-animations";
 }
@@ -113,14 +114,14 @@ namespace AWGame
 
 	void Player::onEnterFrame(const double& deltaTime)
 	{
-		if (up && (contacts > 0 || airJumpsAllowed > 0))
+		if (up && jumpsAllowed > 0)
 		{
 			body->applyImpulse(0.0, 1.0, jumpImpulse);
-			--airJumpsAllowed;
+			--jumpsAllowed;
 			up = false;
 		}
-		if (left && body->getVelocity().x > -maxLeftRightVelocity) body->applyForce(-1.0, 0.0, contacts > 0 ? moveForce : moveForce / 10);
-		if (right && body->getVelocity().x < maxLeftRightVelocity) body->applyForce(1.0, 0.0, contacts > 0 ? moveForce : moveForce / 10);
+		if (left && body->getVelocity().x > -maxLeftRightVelocity) body->applyForce(-1.0, 0.0, jumpsAllowed == maxJumps ? moveForce : moveForce / 10);
+		if (right && body->getVelocity().x < maxLeftRightVelocity) body->applyForce(1.0, 0.0, jumpsAllowed == maxJumps ? moveForce : moveForce / 10);
 		if (down) body->applyForce(0.0, -1.0, moveForce);
 
 		if (up) play("default");
@@ -149,12 +150,10 @@ namespace AWGame
 
 	void Player::onBeginContact(std::unique_ptr<AW::ContactBundle> bundle)
 	{
-		contacts++;
-		airJumpsAllowed = 2;
+		jumpsAllowed = maxJumps;
 	}
 
 	void Player::onEndContact(std::unique_ptr<AW::ContactBundle> bundle)
 	{
-		contacts--;
 	}
 }
