@@ -143,16 +143,24 @@ namespace AW
 			return;
 		}
 
+		if (!threads.empty())
+		{
+			Logger::instance()->log("Thread::Failed to onInit, we already have worker threads in operation");
+			return;
+		}
+
 		Logger::instance()->log("Thread::Creating worker threads");
-		const auto numWorkerThreads = NumberHelper::clamp<int>(SDL_GetCPUCount() * 2, 1, 8);
+		const auto numWorkerThreads = NumberHelper::clamp(SDL_GetCPUCount() * 2, 1, 8);
 		for (int i = 0; i < numWorkerThreads; ++i)
 		{
 			const auto thread = SDL_CreateThread([](void* data) -> int
 				{
 					const auto thread = (Thread*)data;
+					std::shared_ptr<Worker> worker = nullptr;
+
 					while (thread->applicationIsRunning())
 					{
-						const auto worker = thread->getWorkerFromWorkQueue();
+						worker = thread->getWorkerFromWorkQueue();
 
 						if (worker != nullptr)
 						{
@@ -180,7 +188,7 @@ namespace AW
 			return;
 		}
 
-		Logger::instance()->log("Thread::Draining work queue");
+		Logger::instance()->log("Thread::Draining work/result queue");
 		while (!workQueue.empty() || !resultQueue.empty() || !outstandingWorkers.empty())
 		{
 			this->processWorkers();

@@ -7,8 +7,8 @@
 
 namespace
 {
-	const auto jumpImpulse = 20.0;
-	const auto moveForce = 120.0;
+	const auto moveForce = 600.0;
+	const auto jumpImpulse = moveForce / 6.0;
 	const auto maxLeftRightVelocity = 1.0;
 	const auto maxJumps = 2;
 	const auto playerStartTextureName = "player-start";
@@ -62,7 +62,6 @@ namespace AWGame
 		}
 
 		modules->animation->addAnimationSet(animationSet, playerAnimationSetName);
-
 	}
 
 	void Player::onInitialAttach()
@@ -88,15 +87,16 @@ namespace AWGame
 		body->name = "body";
 		body->setFixedRotation(true);
 		body->setDynamicBody();
-		body->setFriction(0.2);
+		body->setFriction(0.3);
+		body->setDensity(20.0);
 		add(body);
 
 		const auto bodyCollider = std::make_shared<AW::Poly>();
-		const auto offset = (AW::NumberHelper::PI * 2.0) / 16.0;
-		const auto step = (AW::NumberHelper::PI * 2.0) / 8.0;
+		const auto offset = (AW::NumberHelper::PI * 2.0) / 32.0;
+		const auto step = (AW::NumberHelper::PI * 2.0) / 16.0;
 		for (auto i = 0; i < 8; ++i)
 		{
-			bodyCollider->addScreenPoint(std::cosf(offset + i * step) * 22.0, std::sinf(offset + i * step) * 24.0);
+			bodyCollider->addScreenPoint(std::cosf(offset + i * step) * 22.0, std::sinf(offset + i * step) * 48.0);
 		}
 		bodyCollider->centerBalancePoints();
 		body->add(bodyCollider);
@@ -120,14 +120,14 @@ namespace AWGame
 			--jumpsAllowed;
 			up = false;
 		}
-		if (left && body->getVelocity().x > -maxLeftRightVelocity) body->applyForce(-1.0, 0.0, jumpsAllowed == maxJumps ? moveForce : moveForce / 10);
-		if (right && body->getVelocity().x < maxLeftRightVelocity) body->applyForce(1.0, 0.0, jumpsAllowed == maxJumps ? moveForce : moveForce / 10);
-		if (down) body->applyForce(0.0, -1.0, moveForce);
+		else if (left && body->getVelocity().x > -maxLeftRightVelocity) body->applyForce(-1.0, 0.0, (float)(jumpsAllowed == maxJumps ? moveForce : moveForce / 10.0));
+		else if (right && body->getVelocity().x < maxLeftRightVelocity) body->applyForce(1.0, 0.0, (float)(jumpsAllowed == maxJumps ? moveForce : moveForce / 10.0));
+		else if (down) body->applyForce(0.0, -1.0, moveForce);
 
-		if (up) play("default");
-		else if (left) play("left");
+		if (left) play("left");
 		else if (right) play("right");
 		else if (down) play("duck");
+		else play("default");
 	}
 
 	void Player::onKey(AWKey key, bool isPressed)
@@ -140,7 +140,7 @@ namespace AWGame
 
 	std::shared_ptr<AW::Renderable> Player::getRenderableBody()
 	{
-		return std::dynamic_pointer_cast<AW::Renderable>(shared_from_this());
+		return sharedPtr<AW::Renderable>();
 	}
 
 	std::shared_ptr<AW::Body> Player::getBodyObject()

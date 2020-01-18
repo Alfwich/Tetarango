@@ -38,7 +38,11 @@ namespace AW
 	{
 		if (bodyReference == nullptr || fixture == nullptr) return;
 
-		fixtureDef.isSensor = fixture->isSensor();
+		if (fixture->isSensor())
+		{
+			fixtureDef.isSensor = fixture->isSensor();
+			fixtureDef.density = 0.0;
+		}
 
 		const auto worldSize = fixture->getBodyWorldSize();
 		switch (fixture->getBodyType())

@@ -72,13 +72,16 @@ namespace AW
 		template <typename T>
 		std::shared_ptr<T> findChildWithBindingIdWholeGraph(int bindingId);
 
+		std::shared_ptr<GameObject> getRootNode();
+
 		template <typename T>
 		std::weak_ptr<T> weakPtr();
 
 		template <typename T>
 		std::shared_ptr<T> sharedPtr();
 
-		std::shared_ptr<GameObject> getRootNode();
+		std::weak_ptr<GameObject> weakPtr() { return weak_from_this(); };
+		std::shared_ptr<GameObject> sharedPtr() { return shared_from_this(); };
 
 		static int nextId();
 		static int currentBindingId();

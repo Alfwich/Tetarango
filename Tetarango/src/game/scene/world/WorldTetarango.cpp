@@ -30,13 +30,12 @@ namespace AWGame
 		ground->setDynamic(false);
 		for (auto i = -60; i < 60; ++i)
 		{
-			ground->addWorldPoint(i * 0.5, AW::NumberHelper::random(-0.25, 0.25));
+			ground->addWorldPoint(i * 1.0, AW::NumberHelper::random(-0.25, 0.25));
 		}
 		ground->centerBalancePoints();
 		contentContainer->add(ground);
 
 		const auto player = std::make_shared<Player>();
-		player->layoutSpace = AW::LayoutSpace::World;
 		player->toTopOf(ground, 0, 1);
 		contentContainer->add(player);
 
