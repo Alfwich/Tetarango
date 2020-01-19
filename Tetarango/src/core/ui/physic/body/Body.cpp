@@ -38,11 +38,7 @@ namespace AW
 	{
 		if (bodyReference == nullptr || fixture == nullptr) return;
 
-		if (fixture->isSensor())
-		{
-			fixtureDef.isSensor = fixture->isSensor();
-			fixtureDef.density = 0.0;
-		}
+		fixtureDef.isSensor = fixture->isSensor();
 
 		const auto worldSize = fixture->getBodyWorldSize();
 		switch (fixture->getBodyType())
@@ -122,6 +118,14 @@ namespace AW
 		}
 		break;
 
+		default:
+			fixture->fixtureReference = nullptr;
+			return;
+		}
+
+		if (fixture->isSensor())
+		{
+			fixture->fixtureReference->SetDensity(0.0);
 		}
 	}
 
@@ -165,12 +169,14 @@ namespace AW
 
 	void Body::applyForce(float vX, float vY, float amount)
 	{
-		RigidBody::applyForce(vX, vY, amount * (modules->physic->getPhysicFrameDeltaTime() / 1000.0));
+		double deltaTime = modules->physic->getPhysicFrameTime() / 1000.0;
+		RigidBody::applyForce(vX, vY, amount * deltaTime);
 	}
 
 	void Body::applyForce(float vX, float vY, float cX, float cY, float amount)
 	{
-		RigidBody::applyForce(vX, vY, cX, cY, amount * (modules->physic->getPhysicFrameDeltaTime() / 1000.0));
+		double deltaTime = modules->physic->getPhysicFrameTime() / 1000.0;
+		RigidBody::applyForce(vX, vY, cX, cY, amount * deltaTime);
 	}
 
 	void Body::applyImpulse(float vX, float vY, float amount)
@@ -229,13 +235,14 @@ namespace AW
 		}
 		else
 		{
-			// Fallback to the listener as the fixture def
 			const auto fixture = getBodyFixtureFromListener();
 			if (fixture != nullptr)
 			{
 				createFixture(fixture);
 			}
 		}
+
+		bodyReference->ResetMassData();
 
 		return bodyReference;
 	}

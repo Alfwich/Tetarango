@@ -7,8 +7,8 @@
 
 namespace
 {
-	const auto moveForce = 600.0;
-	const auto jumpImpulse = moveForce / 6.0;
+	const auto moveForce = 1200.0;
+	const auto jumpImpulse = moveForce / 12.0;
 	const auto maxLeftRightVelocity = 1.0;
 	const auto maxJumps = 2;
 	const auto playerStartTextureName = "player-start";
@@ -120,9 +120,10 @@ namespace AWGame
 			--jumpsAllowed;
 			up = false;
 		}
-		else if (left && body->getVelocity().x > -maxLeftRightVelocity) body->applyForce(-1.0, 0.0, (float)(jumpsAllowed == maxJumps ? moveForce : moveForce / 10.0));
-		else if (right && body->getVelocity().x < maxLeftRightVelocity) body->applyForce(1.0, 0.0, (float)(jumpsAllowed == maxJumps ? moveForce : moveForce / 10.0));
 		else if (down) body->applyForce(0.0, -1.0, moveForce);
+
+		if (left && body->getVelocity().x > -maxLeftRightVelocity) body->applyForce(-1.0, 0.0, (float)(jumpsAllowed == maxJumps ? moveForce : moveForce / 10.0));
+		else if (right && body->getVelocity().x < maxLeftRightVelocity) body->applyForce(1.0, 0.0, (float)(jumpsAllowed == maxJumps ? moveForce : moveForce / 10.0));
 
 		if (left) play("left");
 		else if (right) play("right");

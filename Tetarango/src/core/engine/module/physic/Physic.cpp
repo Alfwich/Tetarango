@@ -101,7 +101,7 @@ namespace AW
 		worlds.at(worldId)->timescope = timescope;
 	}
 
-	double Physic::getPhysicFrameDeltaTime()
+	double Physic::getPhysicFrameTime()
 	{
 		return time->getDeltaTime();
 	}

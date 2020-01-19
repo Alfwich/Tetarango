@@ -86,7 +86,7 @@ namespace AW
 		void setWorldAllowSleeping(unsigned int worldId, bool flag);
 		void setWorldTimescope(unsigned int worldId, TimeScope timescope = TimeScope::Global);
 
-		double getPhysicFrameDeltaTime();
+		double getPhysicFrameTime();
 
 		void performDebugDraw(double screenWidth, double screenHeight);
 		PhysicRenderer& getDebugRenderer();
