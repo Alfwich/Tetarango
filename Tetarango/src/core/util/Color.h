@@ -4,6 +4,13 @@
 
 namespace AW
 {
+	class NormalizedColor
+	{
+	public:
+		const float r, g, b, a;
+
+		NormalizedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) : r(r / 255.f), g(g / 255.f), b(b / 255.f), a(a / 255.f) {}
+	};
 	class Color
 	{
 	public:
@@ -63,7 +70,7 @@ namespace AW
 			};
 		}
 
-		Color lerp(const Color& other, double p)
+		Color lerp(const Color& other, double p) const
 		{
 			return Color(
 				AW::NumberHelper::lerp<Uint8>(r, other.r, p),
@@ -73,5 +80,9 @@ namespace AW
 			);
 		}
 
+		NormalizedColor asNormalized() const
+		{
+			return NormalizedColor(r, g, b, a);
+		}
 	};
 }

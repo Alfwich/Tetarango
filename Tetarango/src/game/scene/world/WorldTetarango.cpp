@@ -6,6 +6,7 @@
 #include "ui/renderable/physic/Box.h"
 #include "ui/renderable/physic/Line.h"
 #include "ui/renderable/physic/Chain.h"
+#include "prop/environment/Environment.h"
 
 namespace AWGame
 {
@@ -42,6 +43,11 @@ namespace AWGame
 		const auto gameCamera = std::make_shared<GameCamera>();
 		gameCamera->target = player;
 		contentContainer->add(gameCamera);
+
+		const auto env = std::make_shared<Environment>();
+		env->name = "env";
+		env->zIndex = -1;
+		add(env);
 	}
 
 	void SceneWorldTetarango::onLayoutChildren()
@@ -50,6 +56,13 @@ namespace AWGame
 		if (contentContainer != nullptr)
 		{
 			contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
+		}
+
+		const auto env = findChildWithName<Environment>("env");
+		if (env != nullptr)
+		{
+			env->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
+			env->topLeftAlignSelf();
 		}
 	}
 
