@@ -17,7 +17,7 @@ namespace AW
 	protected:
 
 		bool doingPhysicUpdate = false;
-		float mass = 0.0;
+		float mass = 0.f;
 		b2BodyDef bodyDef;
 
 		b2Body* bodyReference = nullptr;

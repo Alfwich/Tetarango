@@ -126,6 +126,11 @@ namespace AW
 			fixture->fixtureReference = nullptr;
 			return;
 		}
+
+		if (fixture->fixtureReference != nullptr)
+		{
+			bodyReference->ResetMassData();
+		}
 	}
 
 	void Body::setAutoUpdate(bool flag)
