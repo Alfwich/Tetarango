@@ -39,5 +39,4 @@ namespace AW
 
 		void onLoadResources();
 	};
-
 }

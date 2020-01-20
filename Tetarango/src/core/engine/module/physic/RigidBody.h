@@ -9,7 +9,7 @@ namespace AW
 	class RigidBody : public ISerializableDataSubscriber
 	{
 
-		float originalMass = 0.f, cachedAV = 0.f, cachedAD = 0.f;
+		float cachedAV = 0.f, cachedAD = 0.f, density = 1.f, friction = 0.3f;
 		unsigned int worldId = 0;
 
 		b2Vec2 cachedLV;
@@ -17,10 +17,8 @@ namespace AW
 	protected:
 
 		bool doingPhysicUpdate = false;
-		float massFactor = 1.0;
+		float mass = 0.0;
 		b2BodyDef bodyDef;
-		b2FixtureDef fixtureDef;
-		b2MassData massData;
 
 		b2Body* bodyReference = nullptr;
 

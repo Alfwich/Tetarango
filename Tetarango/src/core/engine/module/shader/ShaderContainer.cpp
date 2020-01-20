@@ -173,6 +173,7 @@ namespace AW
 		loadShader("res/shader/fragment/circle.glsl", "f-circle");
 		loadShader("res/shader/fragment/repeat.glsl", "f-repeat");
 		loadShader("res/shader/fragment/vertical-gradient.glsl", "f-vgradient");
+		loadShader("res/shader/fragment/dither-texture.glsl", "f-dither-texture");
 
 		loadShader("res/shader/fragment/mandelbrot.glsl", "f-mandelbrot");
 	}

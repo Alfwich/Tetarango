@@ -13,10 +13,7 @@ namespace AW
 
 		if (hasBody())
 		{
-			bodyReference->GetMassData(&massData);
-			originalMass = massData.mass;
-			massData.mass = originalMass * massFactor;
-			bodyReference->SetMassData(&massData);
+			setMass(mass);
 
 			if (cachedLV.x != 0.f || cachedLV.y != 0.f)
 			{
@@ -135,9 +132,9 @@ namespace AW
 		auto client = injectedClient->getClient("__rigid_body__", hint);
 
 		bodyDef.type = (b2BodyType)client->serializeInt("body_type", (int)bodyDef.type);
-		massFactor = (float)client->serializeDouble("massFactor", massFactor);
-		fixtureDef.density = (float)client->serializeDouble("density", fixtureDef.density);
 		bodyDef.fixedRotation = client->serializeBool("fixed-rot", bodyDef.fixedRotation);
+		mass = (float)client->serializeDouble("mass", mass);
+		density = (float)client->serializeDouble("density", density);
 
 		if (hint == SerializationHint::SERIALIZE && hasBody())
 		{
@@ -171,47 +168,68 @@ namespace AW
 
 	void RigidBody::setMass(double m)
 	{
-		massFactor = (float)m;
+		mass = (float)m;
 		if (hasBody())
 		{
-			massData.mass = originalMass * massFactor;
-			bodyReference->SetMassData(&massData);
+			if (mass > 0.f)
+			{
+				b2MassData massData;
+				bodyReference->GetMassData(&massData);
+				massData.mass = mass;
+				bodyReference->SetMassData(&massData);
+			}
+			else
+			{
+				bodyReference->ResetMassData();
+			}
 		}
 	}
 
 	double RigidBody::getMass()
 	{
-		return massData.mass;
+		return mass;
 	}
 
 	void RigidBody::setDensity(double d)
 	{
-		fixtureDef.density = (float)d;
+		density = (float)d;
 		if (hasBody())
 		{
-			b2Fixture* fix = bodyReference->GetFixtureList();
-			fix->SetDensity(fixtureDef.density);
+			for (auto fix = bodyReference->GetFixtureList(); fix; fix->GetNext())
+			{
+				if (!fix->IsSensor())
+				{
+					fix->SetDensity(density);
+				}
+			}
+
+			bodyReference->ResetMassData();
 		}
 	}
 
 	double RigidBody::getDensity()
 	{
-		return fixtureDef.density;
+		return density;
 	}
 
 	void RigidBody::setFriction(double f)
 	{
-		fixtureDef.friction = (float)f;
+		friction = (float)f;
 		if (hasBody())
 		{
-			b2Fixture* fix = bodyReference->GetFixtureList();
-			fix->SetFriction(fixtureDef.friction);
+			for (auto fix = bodyReference->GetFixtureList(); fix; fix->GetNext())
+			{
+				if (!fix->IsSensor())
+				{
+					fix->SetFriction(friction);
+				}
+			}
 		}
 	}
 
 	double RigidBody::getFriction()
 	{
-		return fixtureDef.friction;
+		return friction;
 	}
 
 	void RigidBody::setFixedRotation(bool flag)

@@ -7,8 +7,6 @@ namespace AW
 {
 	Body::Body()
 	{
-		fixtureDef.friction = 1.0;
-		fixtureDef.density = 1.0;
 		GORegister(Body);
 	}
 
@@ -38,7 +36,13 @@ namespace AW
 	{
 		if (bodyReference == nullptr || fixture == nullptr) return;
 
+		b2FixtureDef fixtureDef;
 		fixtureDef.isSensor = fixture->isSensor();
+		if (!fixtureDef.isSensor)
+		{
+			fixtureDef.friction = getFriction();
+			fixtureDef.density = getDensity();
+		}
 
 		const auto worldSize = fixture->getBodyWorldSize();
 		switch (fixture->getBodyType())
@@ -121,11 +125,6 @@ namespace AW
 		default:
 			fixture->fixtureReference = nullptr;
 			return;
-		}
-
-		if (fixture->isSensor())
-		{
-			fixture->fixtureReference->SetDensity(0.0);
 		}
 	}
 
