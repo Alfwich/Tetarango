@@ -15,15 +15,6 @@ namespace
 		AW::Color(0x1b1722ff),
 		AW::Color(0x0e1425ff),
 		AW::Color(0x0e1425ff)
-		/*
-		AW::Color(0, 0, 0, 255),
-		AW::Color(0, 255, 0, 255),
-		AW::Color(0, 0, 0, 255),
-		AW::Color(0, 0, 0, 255),
-		AW::Color(0, 0, 255, 255),
-		AW::Color(0, 0, 0, 255),
-		AW::Color(0, 0, 0, 255)
-		*/
 	};
 
 	const auto dayLengthInSecondsParamKey = "env-length";
@@ -59,6 +50,25 @@ namespace AWGame
 		fragmentShader->setFloatV4IUParam("fColorB", cB.r, cB.g, cB.b, cB.a);
 	}
 
+	void Environment::updateBodies()
+	{
+		const auto currentGameTimeSeconds = currentGameTime / 1000.0;
+		const auto cycleP = (currentGameTimeSeconds / colors.size()) - std::floor(currentGameTimeSeconds / colors.size());
+
+		const auto moonR = (cycleP + 0.0) * AW::NumberHelper::PI * 2.0;
+		const auto sunR = (cycleP + 0.5) * AW::NumberHelper::PI * 2.0;
+
+		sun->setScreenPosition(
+			std::cos(sunR) * 600.0 + getScreenHalfWidth(),
+			std::sin(sunR) * 600.0 + getScreenHalfHeight()
+		);
+
+		moon->setScreenPosition(
+			std::cos(moonR) * 600.0 + getScreenHalfWidth(),
+			std::sin(moonR) * 600.0 + getScreenHalfHeight()
+		);
+	}
+
 	void Environment::updateGameTime(const double& frameTime)
 	{
 		currentGameTime += (frameTime / dayLengthInSeconds) * colors.size();
@@ -78,10 +88,39 @@ namespace AWGame
 		updateBackgroundGradient();
 	}
 
+	void Environment::onCreateChildren()
+	{
+		sun = std::make_shared<AW::Circle>();
+		sun->name = "sun";
+		sun->setColor(255, 0, 0);
+		sun->setScreenSize(300.0, 300.0);
+		sun->setEdgeFadeDistance(0.25);
+		add(sun);
+
+		moon = std::make_shared<AW::Circle>();
+		moon->name = "moon";
+		moon->setColor(192, 192, 255);
+		moon->setScreenSize(300.0, 300.0);
+		moon->setEdgeFadeDistance(0.25);
+		add(moon);
+	}
+
+	void Environment::onLayoutChildren()
+	{
+		updateBackgroundGradient();
+		updateBodies();
+	}
+
+	void Environment::onChildrenHydrated()
+	{
+		sun = findChildWithName<AW::Circle>("sun");
+		moon = findChildWithName<AW::Circle>("moon");
+	}
+
 	void Environment::onEnterFrame(const double& frameTime)
 	{
 		updateGameTime(frameTime);
-		updateBackgroundGradient();
+		layout();
 	}
 
 	void Environment::setLengthOfDayInSeconds(double length)
