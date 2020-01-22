@@ -36,7 +36,7 @@ namespace Config
 		{
 			std::map<Param, std::string> base
 			{
-					{ Param::version, "v0.16" },
+					{ Param::version, "v0.17" },
 					{ Param::saveVersion, "v1.00" },
 					{ Param::gameName, "Tetarango" },
 					{ Param::organizationName, "AW Games" },

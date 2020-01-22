@@ -2,24 +2,45 @@
 
 namespace
 {
-	const std::vector<AW::Color> colors = {
-		AW::Color(0x005086ff),
-		AW::Color(0xf69649ff),
-		AW::Color(0x318fb5ff),
-		AW::Color(0x65bbe3ff),
-		AW::Color(0x73c8f1ff),
-		AW::Color(0x73c8f1ff),
-		AW::Color(0x65bbe3ff),
-		AW::Color(0xea4b00ff),
-		AW::Color(0x61629eff),
-		AW::Color(0x1b1722ff),
-		AW::Color(0x0e1425ff),
-		AW::Color(0x0e1425ff)
+	const std::vector<AW::Color> standardColors = {
+		AW::Color(0x005086ff), // Early Light
+		AW::Color(0xf69649ff), // Dawn
+		AW::Color(0xf69649ff), // Dawn
+		AW::Color(0x65bbe3ff), // PrePost-Day
+		AW::Color(0x65bbe3ff), // PrePost-Day
+		AW::Color(0x73c8f1ff), // Day
+		AW::Color(0x73c8f1ff), // Day
+		AW::Color(0x73c8f1ff), // Day
+		AW::Color(0x73c8f1ff), // Day
+		AW::Color(0x73c8f1ff), // Day
+		AW::Color(0x73c8f1ff), // Day
+		AW::Color(0x73c8f1ff), // Day
+		AW::Color(0x65bbe3ff), // PrePost-Day
+		AW::Color(0x65bbe3ff), // PrePost-Day
+		AW::Color(0xea4b00ff), // Dusk
+		AW::Color(0xea4b00ff), // Dusk
+		AW::Color(0x1b1722ff), // PrePost-Night
+		AW::Color(0x1b1722ff), // PrePost-Night
+		AW::Color(0x0e1425ff), // Night
+		AW::Color(0x0e1425ff), // Night
+		AW::Color(0x0e1425ff), // Night
+		AW::Color(0x0e1425ff), // Night
+		AW::Color(0x0e1425ff), // Night
+		AW::Color(0x0e1425ff), // Night
+		AW::Color(0x0e1425ff), // Night
+		AW::Color(0x1b1722ff), // PrePost-Night
+		AW::Color(0x1b1722ff)  // PrePost-Night
 	};
 
 	const auto dayLengthInSecondsParamKey = "env-length";
 	const auto currentTimeParamKey = "env-ct";
+	const auto parallaxAmountParamKey = "env-p-amt";
+
 	const auto noiseTextureName = "noise-solid-512";
+
+	const auto layoutUpdateThreshold = 32;
+	const auto bodyHOffset = 150.0;
+	const auto bodyVOffset = 50.0;
 }
 
 namespace AWGame
@@ -39,9 +60,9 @@ namespace AWGame
 	{
 		const auto currentGameTimeSeconds = currentGameTime / 1000.0;
 		const auto p = ((currentGameTime / 1000.0) - std::floor(currentGameTimeSeconds)) / 1.0;
-		const auto colorA = colors[(int)std::floor((int)(currentGameTimeSeconds) % colors.size())];
-		const auto colorB = colors[(int)std::floor(((int)(currentGameTimeSeconds)+1) % colors.size())];
-		const auto colorC = colors[(int)std::floor(((int)(currentGameTimeSeconds)+2) % colors.size())];
+		const auto colorA = standardColors[(int)std::floor((int)(currentGameTimeSeconds) % standardColors.size())];
+		const auto colorB = standardColors[(int)std::floor(((int)(currentGameTimeSeconds)+1) % standardColors.size())];
+		const auto colorC = standardColors[(int)std::floor(((int)(currentGameTimeSeconds)+2) % standardColors.size())];
 
 		const auto cA = colorA.lerp(colorB, p).asNormalized();
 		const auto cB = colorB.lerp(colorC, p).asNormalized();
@@ -50,28 +71,34 @@ namespace AWGame
 		fragmentShader->setFloatV4IUParam("fColorB", cB.r, cB.g, cB.b, cB.a);
 	}
 
+	void Environment::updateParallaxContainer()
+	{
+		parallaxContainer->setScreenPosition(getScreenHalfWidth() + parallaxAmount * 0.5, getScreenHalfHeight());
+	}
+
 	void Environment::updateBodies()
 	{
 		const auto currentGameTimeSeconds = currentGameTime / 1000.0;
-		const auto cycleP = (currentGameTimeSeconds / colors.size()) - std::floor(currentGameTimeSeconds / colors.size());
+		const auto cycleP = (currentGameTimeSeconds / standardColors.size()) - std::floor(currentGameTimeSeconds / standardColors.size());
 
-		const auto moonR = (cycleP + 0.0) * AW::NumberHelper::PI * 2.0;
-		const auto sunR = (cycleP + 0.5) * AW::NumberHelper::PI * 2.0;
+		const auto cycleOffset = 0.0;
+		const auto moonR = (cycleP + 0.0 + cycleOffset) * AW::NumberHelper::PI * 2.0;
+		const auto sunR = (cycleP + 0.5 + cycleOffset) * AW::NumberHelper::PI * 2.0;
 
 		sun->setScreenPosition(
-			std::cos(sunR) * 600.0 + getScreenHalfWidth(),
-			std::sin(sunR) * 600.0 + getScreenHalfHeight()
+			std::cos(sunR) * (getScreenHalfWidth() - bodyHOffset) + getScreenHalfWidth(),
+			std::sin(sunR) * (getScreenHalfHeight() - bodyVOffset) + getScreenHalfHeight()
 		);
 
 		moon->setScreenPosition(
-			std::cos(moonR) * 600.0 + getScreenHalfWidth(),
-			std::sin(moonR) * 600.0 + getScreenHalfHeight()
+			std::cos(moonR) * (getScreenHalfWidth() - bodyHOffset) + getScreenHalfWidth(),
+			std::sin(moonR) * (getScreenHalfHeight() - bodyVOffset) + getScreenHalfHeight()
 		);
 	}
 
 	void Environment::updateGameTime(const double& frameTime)
 	{
-		currentGameTime += (frameTime / dayLengthInSeconds) * colors.size();
+		currentGameTime += (frameTime / dayLengthInSeconds) * standardColors.size();
 	}
 
 	void Environment::onBindShaders()
@@ -85,28 +112,46 @@ namespace AWGame
 	{
 		setTexture(noiseTextureName);
 		enableEnterFrame();
-		updateBackgroundGradient();
+
+		layoutUpdateTimer = modules->time->createTimer(AW::TimeScope::Game);
+		layoutUpdateTimer->start();
 	}
 
 	void Environment::onCreateChildren()
 	{
 		sun = std::make_shared<AW::Circle>();
 		sun->name = "sun";
-		sun->setColor(255, 0, 0);
-		sun->setScreenSize(300.0, 300.0);
+		sun->setColor(252, 212, 64);
+		sun->setScreenSize(150.0, 150.0);
 		sun->setEdgeFadeDistance(0.25);
 		add(sun);
 
 		moon = std::make_shared<AW::Circle>();
 		moon->name = "moon";
-		moon->setColor(192, 192, 255);
-		moon->setScreenSize(300.0, 300.0);
-		moon->setEdgeFadeDistance(0.25);
+		moon->setColor(225, 225, 255);
+		moon->setScreenSize(200.0, 200.0);
+		moon->setEdgeFadeDistance(0.15);
 		add(moon);
+
+		parallaxContainer = std::make_shared<AW::Container>();
+		parallaxContainer->name = "pc";
+		add(parallaxContainer);
+
+		for (auto x = 0; x < 10; ++x)
+		{
+			const auto rect = std::make_shared<AW::Rectangle>();
+			const auto mtnSize = AW::NumberHelper::random(800, 1600);
+			rect->setScreenSize(mtnSize, mtnSize);
+			rect->setScreenPosition(AW::NumberHelper::random(-2000, 2000), 400);
+			rect->setColor(AW::Color::random());
+			rect->setScreenRotation(45);
+			parallaxContainer->add(rect);
+		}
 	}
 
 	void Environment::onLayoutChildren()
 	{
+		updateParallaxContainer();
 		updateBackgroundGradient();
 		updateBodies();
 	}
@@ -115,17 +160,26 @@ namespace AWGame
 	{
 		sun = findChildWithName<AW::Circle>("sun");
 		moon = findChildWithName<AW::Circle>("moon");
+		parallaxContainer = findChildWithName<AW::Container>("pc");
 	}
 
 	void Environment::onEnterFrame(const double& frameTime)
 	{
 		updateGameTime(frameTime);
-		layout();
+		if (layoutUpdateTimer->isAboveThresholdAndRestart(layoutUpdateThreshold))
+		{
+			layout();
+		}
 	}
 
 	void Environment::setLengthOfDayInSeconds(double length)
 	{
 		dayLengthInSeconds = AW::NumberHelper::clamp(length, 1.0, DBL_MAX);
+	}
+
+	void Environment::setParallaxAmount(double amount)
+	{
+		parallaxAmount = amount;
 	}
 
 	std::shared_ptr<AW::SerializationClient> Environment::doSerialize(AW::SerializationHint hint)
@@ -134,6 +188,7 @@ namespace AWGame
 
 		currentGameTime = client->serializeDouble(currentTimeParamKey, currentGameTime);
 		dayLengthInSeconds = client->serializeDouble(dayLengthInSecondsParamKey, dayLengthInSeconds);
+		parallaxAmount = client->serializeDouble(parallaxAmountParamKey, parallaxAmount);
 
 		return Element::doSerialize(hint);
 	}

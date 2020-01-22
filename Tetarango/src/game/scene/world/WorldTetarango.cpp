@@ -46,6 +46,7 @@ namespace AWGame
 
 		const auto env = std::make_shared<Environment>();
 		env->name = "env";
+		env->setLengthOfDayInSeconds(600.0);
 		env->zIndex = -1;
 		add(env);
 	}
@@ -63,6 +64,7 @@ namespace AWGame
 		{
 			env->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 			env->topLeftAlignSelf();
+			env->layout();
 		}
 	}
 
