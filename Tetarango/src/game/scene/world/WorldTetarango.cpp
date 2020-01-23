@@ -36,6 +36,16 @@ namespace AWGame
 		ground->centerBalancePoints();
 		contentContainer->add(ground);
 
+		const auto groundCover = std::make_shared<AW::Polygon>();
+		const auto pts = ground->getScreenPoints();
+		groundCover->addScreenPoint(-10000, 5000);
+		for (const auto pt : pts)
+		{
+			groundCover->addScreenPoint(pt.x, pt.y);
+		}
+		groundCover->addScreenPoint(10000, 5000);
+		contentContainer->add(groundCover);
+
 		player = std::make_shared<Player>();
 		player->toTopOf(ground, 0, 1);
 		contentContainer->add(player);
