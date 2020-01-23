@@ -6,9 +6,10 @@
 
 namespace AWGame
 {
-	class Environment : public AW::Element
+	class Environment : public AW::Element, public AW::ICameraListener
 	{
-		double currentGameTime = 0.0, dayLengthInSeconds = 30.0, parallaxAmount = 0.0;
+		AW::Color environmentColor;
+		double currentGameTime = 0.0, dayLengthInSeconds = 30.0, parallaxAmountX = 0.0, parallaxAmountY = 0.0;
 		void updateGameTime(const double& frameTime);
 
 		void updateBackgroundGradient();
@@ -18,7 +19,8 @@ namespace AWGame
 		std::shared_ptr<AW::Circle> sun, moon;
 		std::shared_ptr<AW::Timer> layoutUpdateTimer;
 
-		std::shared_ptr<AW::Container> parallaxContainer;
+		std::shared_ptr<AW::Container> parallaxContainer1, parallaxContainer2;
+		std::shared_ptr<AW::Rectangle> farBackground;
 
 	public:
 		Environment();
@@ -34,7 +36,9 @@ namespace AWGame
 		void onEnterFrame(const double& frameTime) override;
 
 		void setLengthOfDayInSeconds(double length);
-		void setParallaxAmount(double amount);
+		void setParallaxAmount(double amountX, double amountY);
+
+		const AW::Color& getEnvironmentColor();
 
 		virtual std::shared_ptr<AW::SerializationClient> doSerialize(AW::SerializationHint hint) override;
 	};

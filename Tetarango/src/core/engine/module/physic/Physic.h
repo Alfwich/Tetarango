@@ -80,7 +80,7 @@ namespace AW
 
 		void registerWorld(unsigned int worldId, double gravityX = 0.0, double gravityY = -9.807);
 
-		void setWorldFps(unsigned int worldId, unsigned int timestepMS);
+		void setWorldFps(unsigned int worldId, unsigned int fps);
 		void setWorldVelocityAndPositionIterations(unsigned int worldId, unsigned int velocity = 6, unsigned int position = 2);
 		void setWorldGravity(unsigned int worldId, float gravityX = 0.f, float gravityY = -9.807f);
 		void setWorldAllowSleeping(unsigned int worldId, bool flag);

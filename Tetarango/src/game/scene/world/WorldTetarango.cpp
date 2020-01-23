@@ -1,12 +1,9 @@
 #include "WorldTetarango.h"
 
 #include "scene/game/SceneMainGame.h"
-#include "actor/player/Player.h"
-#include "gui/camera/GameCamera.h"
 #include "ui/renderable/physic/Box.h"
 #include "ui/renderable/physic/Line.h"
 #include "ui/renderable/physic/Chain.h"
-#include "prop/environment/Environment.h"
 
 namespace AWGame
 {
@@ -17,6 +14,9 @@ namespace AWGame
 
 	void SceneWorldTetarango::onAttach()
 	{
+		modules->physic->setWorldGravity(0);
+		modules->physic->setWorldFps(0, 120);
+
 		const auto mainGameScene = findFirstInParentChain<SceneMainGame>();
 		if (mainGameScene != nullptr) mainGameScene->enableMenu();
 	}
@@ -36,19 +36,21 @@ namespace AWGame
 		ground->centerBalancePoints();
 		contentContainer->add(ground);
 
-		const auto player = std::make_shared<Player>();
+		player = std::make_shared<Player>();
 		player->toTopOf(ground, 0, 1);
 		contentContainer->add(player);
 
-		const auto gameCamera = std::make_shared<GameCamera>();
+		gameCamera = std::make_shared<GameCamera>();
+		gameCamera->name = "gc";
 		gameCamera->target = player;
+		gameCamera->listener = weakPtr();
 		contentContainer->add(gameCamera);
 
-		const auto env = std::make_shared<Environment>();
-		env->name = "env";
-		env->setLengthOfDayInSeconds(600.0);
-		env->zIndex = -1;
-		add(env);
+		environment = std::make_shared<Environment>();
+		environment->name = "env";
+		environment->setLengthOfDayInSeconds(600.0);
+		environment->zIndex = -1;
+		add(environment);
 	}
 
 	void SceneWorldTetarango::onLayoutChildren()
@@ -59,16 +61,21 @@ namespace AWGame
 			contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		}
 
-		const auto env = findChildWithName<Environment>("env");
-		if (env != nullptr)
-		{
-			env->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
-			env->topLeftAlignSelf();
-			env->layout();
-		}
+		environment->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
+		environment->topLeftAlignSelf();
+		environment->layout();
 	}
 
 	void SceneWorldTetarango::onChildrenHydrated()
 	{
+		gameCamera = findChildWithName<GameCamera>("gc");
+		gameCamera->listener = weakPtr();
+		environment = findChildWithName<Environment>("env");
+	}
+
+	void SceneWorldTetarango::onCameraUpdate()
+	{
+		environment->setParallaxAmount(-gameCamera->getScreenAnchorX(), -gameCamera->getScreenAnchorY());
+		setColor(environment->getEnvironmentColor());
 	}
 }

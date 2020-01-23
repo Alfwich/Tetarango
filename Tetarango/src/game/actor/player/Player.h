@@ -27,7 +27,6 @@ namespace AWGame
 
 		void onKey(AWKey key, bool isPressed);
 
-
 		// Inherited via IBodyListener
 		virtual std::shared_ptr<Renderable> getRenderableBody() override;
 		// Inherited via IBodyListener

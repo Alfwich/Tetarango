@@ -34,9 +34,11 @@ namespace
 
 	const auto dayLengthInSecondsParamKey = "env-length";
 	const auto currentTimeParamKey = "env-ct";
-	const auto parallaxAmountParamKey = "env-p-amt";
+	const auto parallaxAmountXParamKey = "env-p-amt-x";
+	const auto parallaxAmountYParamKey = "env-p-amt-y";
 
 	const auto noiseTextureName = "noise-solid-512";
+	const auto mtn1TextureName = "env-mtn-1";
 
 	const auto layoutUpdateThreshold = 32;
 	const auto bodyHOffset = 150.0;
@@ -54,6 +56,7 @@ namespace AWGame
 	void Environment::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/noise/noise-solid-512.png", noiseTextureName);
+		modules->texture->loadTexture("res/image/prop/environment/mtn1.png", mtn1TextureName);
 	}
 
 	void Environment::updateBackgroundGradient()
@@ -64,16 +67,23 @@ namespace AWGame
 		const auto colorB = standardColors[(int)std::floor(((int)(currentGameTimeSeconds)+1) % standardColors.size())];
 		const auto colorC = standardColors[(int)std::floor(((int)(currentGameTimeSeconds)+2) % standardColors.size())];
 
-		const auto cA = colorA.lerp(colorB, p).asNormalized();
+		environmentColor = colorA.lerp(colorB, p);
+		const auto cAN = environmentColor.asNormalized();
 		const auto cB = colorB.lerp(colorC, p).asNormalized();
 
-		fragmentShader->setFloatV4IUParam("fColorA", cA.r, cA.g, cA.b, cA.a);
+		fragmentShader->setFloatV4IUParam("fColorA", cAN.r, cAN.g, cAN.b, cAN.a);
 		fragmentShader->setFloatV4IUParam("fColorB", cB.r, cB.g, cB.b, cB.a);
+
+		environmentColor.r = AW::NumberHelper::clamp(environmentColor.r * 2.0 + 50.0, 0.0, 255.0);
+		environmentColor.g = AW::NumberHelper::clamp(environmentColor.g * 2.0 + 50.0, 0.0, 255.0);
+		environmentColor.b = AW::NumberHelper::clamp(environmentColor.b * 2.0 + 50.0, 0.0, 255.0);
 	}
 
 	void Environment::updateParallaxContainer()
 	{
-		parallaxContainer->setScreenPosition(getScreenHalfWidth() + parallaxAmount * 0.5, getScreenHalfHeight());
+		parallaxContainer1->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.25, getScreenHalfHeight() + parallaxAmountY * 0.25);
+		parallaxContainer2->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.5, getScreenHalfHeight() + parallaxAmountY * 0.5);
+		farBackground->topLeftAlignSelf(0.0, 1000.0 + parallaxAmountY * 0.01);
 	}
 
 	void Environment::updateBodies()
@@ -120,32 +130,57 @@ namespace AWGame
 	void Environment::onCreateChildren()
 	{
 		sun = std::make_shared<AW::Circle>();
+		sun->renderColorMode = AW::RenderColorMode::Absolute;
 		sun->name = "sun";
 		sun->setColor(252, 212, 64);
 		sun->setScreenSize(150.0, 150.0);
-		sun->setEdgeFadeDistance(0.25);
+		sun->setEdgeFadeDistance(1.75);
 		add(sun);
 
 		moon = std::make_shared<AW::Circle>();
+		moon->renderColorMode = AW::RenderColorMode::Absolute;
 		moon->name = "moon";
 		moon->setColor(225, 225, 255);
-		moon->setScreenSize(200.0, 200.0);
+		moon->setScreenSize(150.0, 150.0);
 		moon->setEdgeFadeDistance(0.15);
 		add(moon);
 
-		parallaxContainer = std::make_shared<AW::Container>();
-		parallaxContainer->name = "pc";
-		add(parallaxContainer);
+		farBackground = std::make_shared<AW::Rectangle>();
+		farBackground->name = "fb";
+		farBackground->setScreenSize(4000, 1000);
+		farBackground->setColor(48, 155, 10);
+		farBackground->topLeftAlignSelf(0.0, 1000.0);
+		add(farBackground);
 
-		for (auto x = 0; x < 10; ++x)
+		parallaxContainer1 = std::make_shared<AW::Container>();
+		parallaxContainer1->name = "pc1";
+		parallaxContainer1->setColor(AW::Color(192, 192, 192));
+		add(parallaxContainer1);
+
+		for (auto x = -5; x < 5; ++x)
 		{
-			const auto rect = std::make_shared<AW::Rectangle>();
-			const auto mtnSize = AW::NumberHelper::random(800, 1600);
-			rect->setScreenSize(mtnSize, mtnSize);
-			rect->setScreenPosition(AW::NumberHelper::random(-2000, 2000), 400);
-			rect->setColor(AW::Color::random());
-			rect->setScreenRotation(45);
-			parallaxContainer->add(rect);
+			const auto mtn = std::make_shared<AW::Element>();
+			const auto mtnSize = 1024;
+			mtn->setTexture(mtn1TextureName);
+			mtn->setScreenSize(mtnSize * 2.0, mtnSize);
+			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-100, 100.0));
+			mtn->setColor(92, 192, 20);
+			parallaxContainer1->add(mtn);
+		}
+
+		parallaxContainer2 = std::make_shared<AW::Container>();
+		parallaxContainer2->name = "pc2";
+		add(parallaxContainer2);
+
+		for (auto x = -5; x < 5; ++x)
+		{
+			const auto mtn = std::make_shared<AW::Element>();
+			const auto mtnSize = 800;
+			mtn->setTexture(mtn1TextureName);
+			mtn->setScreenSize(mtnSize, mtnSize);
+			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(100.0, 200.0));
+			mtn->setColor(92, 192, 20);
+			parallaxContainer2->add(mtn);
 		}
 	}
 
@@ -160,7 +195,9 @@ namespace AWGame
 	{
 		sun = findChildWithName<AW::Circle>("sun");
 		moon = findChildWithName<AW::Circle>("moon");
-		parallaxContainer = findChildWithName<AW::Container>("pc");
+		parallaxContainer1 = findChildWithName<AW::Container>("pc1");
+		parallaxContainer2 = findChildWithName<AW::Container>("pc2");
+		farBackground = findChildWithName<AW::Rectangle>("fb");
 	}
 
 	void Environment::onEnterFrame(const double& frameTime)
@@ -177,9 +214,16 @@ namespace AWGame
 		dayLengthInSeconds = AW::NumberHelper::clamp(length, 1.0, DBL_MAX);
 	}
 
-	void Environment::setParallaxAmount(double amount)
+	void Environment::setParallaxAmount(double amountX, double amountY)
 	{
-		parallaxAmount = amount;
+		parallaxAmountX = amountX;
+		parallaxAmountY = amountY;
+		updateParallaxContainer();
+	}
+
+	const AW::Color& Environment::getEnvironmentColor()
+	{
+		return environmentColor;
 	}
 
 	std::shared_ptr<AW::SerializationClient> Environment::doSerialize(AW::SerializationHint hint)
@@ -188,7 +232,9 @@ namespace AWGame
 
 		currentGameTime = client->serializeDouble(currentTimeParamKey, currentGameTime);
 		dayLengthInSeconds = client->serializeDouble(dayLengthInSecondsParamKey, dayLengthInSeconds);
-		parallaxAmount = client->serializeDouble(parallaxAmountParamKey, parallaxAmount);
+
+		parallaxAmountX = client->serializeDouble(parallaxAmountXParamKey, parallaxAmountX);
+		parallaxAmountY = client->serializeDouble(parallaxAmountYParamKey, parallaxAmountY);
 
 		return Element::doSerialize(hint);
 	}
