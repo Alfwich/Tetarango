@@ -439,7 +439,7 @@ namespace AW
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
 			else
-				setWorldPosition(other->getWorldX() + xOffset, other->getWorldY() + yOffset);
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldY() - yOffset);
 		}
 	}
 
@@ -450,7 +450,7 @@ namespace AW
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenHalfWidth() + xOffset, other->getScreenHalfHeight() + yOffset);
 			else
-				setWorldPosition(other->getWorldHalfWidth() + xOffset, other->getWorldHalfHeight() + yOffset);
+				setWorldPosition(other->getWorldHalfWidth() + xOffset, other->getWorldHalfHeight() - yOffset);
 		}
 	}
 
@@ -461,7 +461,7 @@ namespace AW
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenX() + xOffset, other->getScreenY() + yOffset);
 			else
-				setWorldPosition(other->getWorldX() + xOffset, other->getWorldY() + yOffset);
+				setWorldPosition(other->getWorldX() + xOffset, other->getWorldY() - yOffset);
 		}
 	}
 
@@ -472,7 +472,7 @@ namespace AW
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldY() + yOffset);
+				setWorldPosition(other->getWorldLeft() - getWorldHalfWidth() - xOffset, other->getWorldY() - yOffset);
 		}
 	}
 
@@ -505,7 +505,7 @@ namespace AW
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
 			else
-				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldY() + yOffset);
+				setWorldPosition(other->getWorldRight() + getWorldHalfWidth() + xOffset, other->getWorldY() - yOffset);
 		}
 	}
 
@@ -637,7 +637,7 @@ namespace AW
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenLeft() + getScreenHalfWidth() + xOffset, other->getScreenY() + yOffset);
 			else
-				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldY() + yOffset);
+				setWorldPosition(other->getWorldLeft() + getWorldHalfWidth() + xOffset, other->getWorldY() - yOffset);
 		}
 	}
 
@@ -648,7 +648,7 @@ namespace AW
 			if (layoutSpace == LayoutSpace::Screen)
 				setScreenPosition(other->getScreenRight() - getScreenHalfWidth() - xOffset, other->getScreenY() + yOffset);
 			else
-				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldY() + yOffset);
+				setWorldPosition(other->getWorldRight() - getWorldHalfWidth() - xOffset, other->getWorldY() - yOffset);
 		}
 	}
 

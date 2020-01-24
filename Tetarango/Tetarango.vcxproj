@@ -264,7 +264,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClCompile Include="src\core\ui\renderable\element\ScreenImage.cpp" />
     <ClCompile Include="src\core\ui\physic\body\Body.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\Circle.cpp" />
-    <ClCompile Include="src\core\ui\renderable\primitive\Polygon.cpp" />
+    <ClCompile Include="src\core\ui\renderable\element\Polygon.cpp" />
     <ClCompile Include="src\game\actor\board\Board.cpp" />
     <ClCompile Include="src\game\actor\player\Player.cpp" />
     <ClCompile Include="src\game\gui\button\CheckBoxBasic.cpp" />
@@ -400,7 +400,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClInclude Include="src\core\ui\renderable\element\ScreenImage.h" />
     <ClInclude Include="src\core\ui\physic\body\Body.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\Circle.h" />
-    <ClInclude Include="src\core\ui\renderable\primitive\Polygon.h" />
+    <ClInclude Include="src\core\ui\renderable\element\Polygon.h" />
     <ClInclude Include="src\core\util\Key.h" />
     <ClInclude Include="src\core\util\profile\ProfileTimer.h" />
     <ClInclude Include="src\core\util\Vec.h" />

@@ -30,7 +30,7 @@ namespace AW
 		Color clearColor;
 
 		LM::mat4x4 mvp, p, pAbs, pBackground, m, t, tP;
-		unsigned int defaultVertexBuffer = 0, defaultTextureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0;
+		unsigned int defaultVertexBuffer = 0, defaultTextureUVBuffer = 0, vao = 0, currentProgramId = 0, backgroundRenderBuffer = 0, defaultWhiteTexture = 0;
 
 		std::vector<RenderPackage>::iterator nextPackage;
 		std::vector<RenderPackage> renderBuffer;
@@ -85,7 +85,7 @@ namespace AW
 		void renderPrimitive(RenderPackage* renderPackage);
 		void renderContainer(RenderPackage* renderPackage);
 
-		void renderElementChildrenIntoElementTexture(RenderPackage* renderPackage);
+		void renderRenderableChildrenIntoElementTexture(RenderPackage* renderPackage);
 
 		void updateClipRectOpenGL(RenderPackage* renderPackage);
 		void bindGLTexture(unsigned int textureId);

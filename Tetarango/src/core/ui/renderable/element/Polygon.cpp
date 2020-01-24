@@ -3,6 +3,7 @@
 namespace
 {
 	const auto sizeLimit = FLT_MAX;
+	const auto repeatAmountParamName = "poly-r-a";
 }
 
 namespace AW
@@ -11,6 +12,7 @@ namespace AW
 	Polygon::Polygon()
 	{
 		renderMode = RenderMode::Polygon;
+		renderTextureMode = RenderTextureMode::LinearWrapping;
 		GORegister(Polygon);
 	}
 
@@ -140,6 +142,15 @@ namespace AW
 		return filled;
 	}
 
+	void Polygon::onBindShaders()
+	{
+		if (fragmentShader == nullptr)
+		{
+			fragmentShader = modules->shader->getShader({ "f-repeat", "element" });
+			fragmentShader->setFloatIUParam("fRepeat", getRepeatAmount());
+		}
+	}
+
 	std::shared_ptr<SerializationClient> Polygon::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__polygon__", hint);
@@ -175,7 +186,17 @@ namespace AW
 			break;
 		}
 
-		return Primitive::doSerialize(hint);
+		return Element::doSerialize(hint);
+	}
+
+	void Polygon::setRepeatAmount(double amount)
+	{
+		serializationClient->setDouble(repeatAmountParamName, amount);
+	}
+
+	double Polygon::getRepeatAmount()
+	{
+		return serializationClient->getDouble(repeatAmountParamName, 1.0);
 	}
 
 	std::vector<AWVec2<float>> Polygon::getRenderPoints()

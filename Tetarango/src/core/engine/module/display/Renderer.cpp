@@ -6,7 +6,7 @@
 #include "ui/renderable/primitive/trace/Trace.h"
 #include "ui/renderable/primitive/Rectangle.h"
 #include "ui/renderable/element/DisplayBuffer.h"
-#include "ui/renderable/primitive/Polygon.h"
+#include "ui/renderable/element/Polygon.h"
 
 namespace
 {
@@ -120,6 +120,20 @@ namespace AW
 
 		layerFactor = (1 << 16) / maxLayers;
 
+		if (defaultWhiteTexture == 0)
+		{
+			glGenTextures(1, &defaultWhiteTexture);
+			unsigned char data[] = { 255, 255, 255, 255 };
+			glBindTexture(GL_TEXTURE_2D, defaultWhiteTexture);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		}
+
 		return true;
 	}
 
@@ -170,6 +184,12 @@ namespace AW
 		{
 			glDeleteRenderbuffers(1, &backgroundRenderBuffer);
 			backgroundRenderBuffer = 0;
+		}
+
+		if (defaultWhiteTexture != 0)
+		{
+			glDeleteTextures(1, &defaultWhiteTexture);
+			defaultWhiteTexture = 0;
 		}
 	}
 
@@ -359,7 +379,7 @@ namespace AW
 		}
 
 		GLDbgCall(setVertexAttributePointer(vBuffer, commonVertexStride, commonOffset));
-
+		setUVAttributePointer(vBuffer, commonVertexStride, commonOffset);
 		GLDbgCall(glDrawArrays(isFilled ? GL_TRIANGLE_FAN : GL_LINE_STRIP, 0, numPoints));
 
 		if (currentScreenConfig.openGlWireframeMode)
@@ -636,6 +656,7 @@ namespace AW
 		switch (rend->renderMode)
 		{
 		case RenderMode::Element:
+		case RenderMode::Polygon:
 			renderElement(renderPackage);
 			renderRecursiveRenderChildren(renderPackage);
 			break;
@@ -643,7 +664,7 @@ namespace AW
 		case RenderMode::CachedElement:
 			if (!rend->isClean())
 			{
-				renderElementChildrenIntoElementTexture(renderPackage);
+				renderRenderableChildrenIntoElementTexture(renderPackage);
 			}
 
 			renderElement(renderPackage);
@@ -651,7 +672,6 @@ namespace AW
 
 		case RenderMode::Primitive:
 		case RenderMode::ParticleSystem:
-		case RenderMode::Polygon:
 			renderPrimitive(renderPackage);
 			renderRecursiveRenderChildren(renderPackage);
 			break;
@@ -898,7 +918,16 @@ namespace AW
 			updateClipRectOpenGL(renderPackage);
 		}
 
-		renderElementOpenGL(renderPackage);
+		switch (renderPackage->obj->renderMode)
+		{
+		case RenderMode::Polygon:
+			renderPolygonOpenGL(renderPackage);
+			break;
+
+		default:
+			renderElementOpenGL(renderPackage);
+			break;
+		}
 	}
 
 	void Renderer::renderPrimitive(RenderPackage* renderPackage)
@@ -922,10 +951,6 @@ namespace AW
 		{
 		case RenderMode::ParticleSystem:
 			renderParticleSystemOpenGL(renderPackage);
-			break;
-
-		case RenderMode::Polygon:
-			renderPolygonOpenGL(renderPackage);
 			break;
 
 		default:
@@ -952,7 +977,7 @@ namespace AW
 		}
 	}
 
-	void Renderer::renderElementChildrenIntoElementTexture(RenderPackage* renderPackage)
+	void Renderer::renderRenderableChildrenIntoElementTexture(RenderPackage* renderPackage)
 	{
 		const auto cached = std::dynamic_pointer_cast<DisplayBuffer>(renderPackage->obj);
 		if (cached == nullptr)
@@ -1084,7 +1109,7 @@ namespace AW
 		setColorModParam(renderPackage);
 
 		const auto texture = ele->getTexture();
-		bindGLTexture(texture == nullptr ? 0 : texture->openGlTextureId());
+		bindGLTexture(texture == nullptr ? defaultWhiteTexture : texture->openGlTextureId());
 
 		openGLDrawTriangles(renderPackage);
 
@@ -1157,6 +1182,8 @@ namespace AW
 	void Renderer::bindGLTexture(unsigned int textureId)
 	{
 		glBindTexture(GL_TEXTURE_2D, textureId);
+
+		if (textureId == defaultWhiteTexture) return;
 
 		switch (textureModeStack.top())
 		{
@@ -1289,6 +1316,9 @@ namespace AW
 		const auto vertexBufferId = poly->vertexBuffer->id;
 		const auto vertexBufferSize = poly->vertexBuffer->size;
 
+		const auto texture = poly->getTexture();
+		bindGLTexture(texture == nullptr ? defaultWhiteTexture : texture->openGlTextureId());
+
 		openGLDrawPoints(renderPackage, vertexBufferId, vertexBufferSize, poly->getFilled());
 
 		poly->markClean();
@@ -1317,7 +1347,7 @@ namespace AW
 		for (const auto& particle : particleSystem->getParticles())
 		{
 			const auto particleTexture = particle->getTexture();
-			const auto glTextureId = particleTexture != nullptr ? particleTexture->openGlTextureId() : 0;
+			const auto glTextureId = particleTexture != nullptr ? particleTexture->openGlTextureId() : defaultWhiteTexture;
 			const auto cW = particle->w / 2.0;
 			const auto cH = particle->h / 2.0;
 			const auto cX = computed->x + particle->x + cW;
@@ -1338,7 +1368,7 @@ namespace AW
 
 			const auto clipRect = particle->clip;
 			double scaleX, scaleY, xOffset, yOffset;
-			if (glTextureId != 0)
+			if (glTextureId != defaultWhiteTexture)
 			{
 				scaleX = clipRect.w / particle->getTexture()->getWidth();
 				scaleY = clipRect.h / particle->getTexture()->getHeight();

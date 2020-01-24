@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ui/renderable/primitive/Primitive.h"
+#include "ui/renderable/element/Element.h"
 #include "engine/module/display/VertexBufferProxy.h"
 
 namespace AW
 {
-	class Polygon : public Primitive
+	class Polygon : public Element
 	{
 		std::vector<AWVec2<float>> screenPoints;
 
@@ -17,9 +17,12 @@ namespace AW
 		void insertWorldPoint(float x, float y);
 
 	public:
+		std::unique_ptr<VertexBufferProxy> vertexBuffer;
+
 		Polygon();
 
-		std::unique_ptr<VertexBufferProxy> vertexBuffer;
+		virtual void onBindShaders() override;
+		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint) override;
 
 		void addScreenPoint(AWVec2<float> p);
 		void addScreenPoint(float x, float y);
@@ -37,7 +40,8 @@ namespace AW
 		void setFilled(bool flag);
 		bool getFilled();
 
-		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
+		void setRepeatAmount(double amount);
+		double getRepeatAmount();
 
 		std::vector<AWVec2<float>> getRenderPoints();
 	};

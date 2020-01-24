@@ -1,6 +1,6 @@
 #include "Body.h"
 
-#include "ui/renderable/primitive/Polygon.h"
+#include "ui/renderable/element/Polygon.h"
 #include "ui/renderable/Renderable.h"
 
 namespace AW

@@ -28,6 +28,7 @@ namespace AWGame
 		add(contentContainer);
 
 		const auto ground = std::make_shared<AW::Chain>();
+		ground->setAlpha(0.5);
 		ground->setDynamic(false);
 		for (auto i = -60; i < 60; ++i)
 		{
@@ -44,6 +45,8 @@ namespace AWGame
 			groundCover->addScreenPoint(pt.x, pt.y);
 		}
 		groundCover->addScreenPoint(15000, 10000);
+		groundCover->setTexture("noise-solid-512");
+		groundCover->setRepeatAmount(5.0);
 		contentContainer->add(groundCover);
 
 		player = std::make_shared<Player>();

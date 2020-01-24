@@ -2,7 +2,7 @@
 
 #include "scene/BaseScene.h"
 #include "ui/renderable/element/DisplayBuffer.h"
-#include "ui/renderable/primitive/Polygon.h"
+#include "ui/renderable/element/Polygon.h"
 
 namespace
 {
@@ -166,6 +166,7 @@ namespace AWGame
 			const auto poly = std::make_shared<AW::Polygon>();
 
 			poly->setColor(AW::Color::red());
+			poly->setTexture("noise-solid-512");
 			poly->addScreenPoint(0.0, 0.0);
 			poly->addScreenPoint(100.0, 0.0);
 			poly->addScreenPoint(100.0, 500.0);
@@ -179,6 +180,7 @@ namespace AWGame
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
 			poly->setColor(AW::Color::random());
+			poly->setTexture("noise-solid-512");
 			const auto numP = AW::NumberHelper::randomInt(3, 20);
 			for (auto j = 0; j < numP; ++j)
 			{
