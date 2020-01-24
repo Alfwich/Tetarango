@@ -11,6 +11,12 @@ namespace AW
 		GORegister(Animated);
 	}
 
+	void Animated::onLoadResources()
+	{
+
+		modules->shader->registerShaderComposition({ "f-clip-texture", "f-color", "f-texture" }, "animated");
+	}
+
 	void Animated::updateFrame(double frameTime)
 	{
 		int targetFps = currentAnimation->getFps() + fpsOffset;
@@ -130,7 +136,7 @@ namespace AW
 
 	void Animated::onBindShaders()
 	{
-		fragmentShader = modules->shader->getShader({ "f-clip-texture", "element" });
+		fragmentShader = modules->shader->getShader({ "animated" });
 	}
 
 	void Animated::onInitialAttach()

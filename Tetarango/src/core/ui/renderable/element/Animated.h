@@ -26,6 +26,8 @@ namespace AW
 		bool sizeToAnimation = true;
 		Animated();
 
+		void onLoadResources() override;
+
 		virtual void play(std::string animationName = "");
 		void pause();
 		void stop();

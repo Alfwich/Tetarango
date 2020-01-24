@@ -13,13 +13,15 @@ namespace AWGame
 		void updateGameTime(const double& frameTime);
 
 		void updateBackgroundGradient();
-		void updateParallaxContainer();
+		void updateParallaxContainers();
+		void updateRepeatingParallaxElements();
+		void moveActiveParallaxElements(const double& frameTime);
 		void updateBodies();
 
 		std::shared_ptr<AW::Circle> sun, moon;
 		std::shared_ptr<AW::Timer> layoutUpdateTimer;
 
-		std::shared_ptr<AW::Container> parallaxContainer1, parallaxContainer2;
+		std::shared_ptr<AW::Container> parallaxContainer1, parallaxContainer2, parallaxContainer3;
 		std::shared_ptr<AW::Rectangle> farBackground;
 
 	public:

@@ -88,7 +88,7 @@ namespace AWGame
 		body->setFixedRotation(true);
 		body->setDynamicBody();
 		body->setFriction(0.3);
-		body->setDensity(20.0);
+		body->setDensity(10.0);
 		add(body);
 
 		const auto bodyCollider = std::make_shared<AW::Poly>();

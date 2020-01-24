@@ -31,19 +31,19 @@ namespace AWGame
 		ground->setDynamic(false);
 		for (auto i = -60; i < 60; ++i)
 		{
-			ground->addWorldPoint(i * 1.0, AW::NumberHelper::random(-0.25, 0.25));
+			ground->addWorldPoint(i * 0.5, AW::NumberHelper::random(-0.15, 0.15));
 		}
 		ground->centerBalancePoints();
 		contentContainer->add(ground);
 
 		const auto groundCover = std::make_shared<AW::Polygon>();
 		const auto pts = ground->getScreenPoints();
-		groundCover->addScreenPoint(-10000, 5000);
+		groundCover->addScreenPoint(-15000, 10000);
 		for (const auto pt : pts)
 		{
 			groundCover->addScreenPoint(pt.x, pt.y);
 		}
-		groundCover->addScreenPoint(10000, 5000);
+		groundCover->addScreenPoint(15000, 10000);
 		contentContainer->add(groundCover);
 
 		player = std::make_shared<Player>();
@@ -58,7 +58,7 @@ namespace AWGame
 
 		environment = std::make_shared<Environment>();
 		environment->name = "env";
-		environment->setLengthOfDayInSeconds(600.0);
+		environment->setLengthOfDayInSeconds(300.0);
 		environment->zIndex = -1;
 		add(environment);
 	}

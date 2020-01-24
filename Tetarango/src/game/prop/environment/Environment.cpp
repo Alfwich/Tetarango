@@ -1,5 +1,7 @@
 #include "Environment.h"
 
+#include "BackdropObject.h"
+
 namespace
 {
 	const std::vector<AW::Color> standardColors = {
@@ -19,6 +21,7 @@ namespace
 		AW::Color(0x65bbe3ff), // PrePost-Day
 		AW::Color(0xea4b00ff), // Dusk
 		AW::Color(0xea4b00ff), // Dusk
+		AW::Color(0x652000ff), // Late Dusk
 		AW::Color(0x1b1722ff), // PrePost-Night
 		AW::Color(0x1b1722ff), // PrePost-Night
 		AW::Color(0x0e1425ff), // Night
@@ -38,9 +41,8 @@ namespace
 	const auto parallaxAmountYParamKey = "env-p-amt-y";
 
 	const auto noiseTextureName = "noise-solid-512";
-	const auto mtn1TextureName = "env-mtn-1";
 
-	const auto layoutUpdateThreshold = 32;
+	const auto layoutUpdateThreshold = 16;
 	const auto bodyHOffset = 150.0;
 	const auto bodyVOffset = 50.0;
 }
@@ -56,7 +58,6 @@ namespace AWGame
 	void Environment::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/noise/noise-solid-512.png", noiseTextureName);
-		modules->texture->loadTexture("res/image/prop/environment/mtn1.png", mtn1TextureName);
 	}
 
 	void Environment::updateBackgroundGradient()
@@ -79,11 +80,65 @@ namespace AWGame
 		environmentColor.b = AW::NumberHelper::clamp(environmentColor.b * 2.0 + 50.0, 0.0, 255.0);
 	}
 
-	void Environment::updateParallaxContainer()
+	void Environment::updateParallaxContainers()
 	{
-		parallaxContainer1->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.25, getScreenHalfHeight() + parallaxAmountY * 0.25);
-		parallaxContainer2->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.5, getScreenHalfHeight() + parallaxAmountY * 0.5);
+		parallaxContainer1->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.35, getScreenHalfHeight() + parallaxAmountY * 0.35);
+		parallaxContainer2->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.65, getScreenHalfHeight() + parallaxAmountY * 0.65);
+		parallaxContainer3->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.75, getScreenHalfHeight() + parallaxAmountY * 0.75);
 		farBackground->topLeftAlignSelf(0.0, 1000.0 + parallaxAmountY * 0.01);
+	}
+
+	void Environment::updateRepeatingParallaxElements()
+	{
+		for (const auto child : parallaxContainer1->getChildrenOfType<AW::Renderable>())
+		{
+			const auto xO = parallaxContainer1->getScreenX();
+			if (child->getScreenX() + xO < -3500)
+			{
+				child->moveScreenPosition(7000.0, 0.0);
+			}
+
+			if (child->getScreenX() + xO > 3500)
+			{
+				child->moveScreenPosition(-7000.0, 0.0);
+			}
+		}
+
+		for (const auto child : parallaxContainer2->getChildrenOfType<AW::Renderable>())
+		{
+			const auto xO = parallaxContainer2->getScreenX();
+			if (child->getScreenX() + xO < -3500)
+			{
+				child->moveScreenPosition(7000.0, 0.0);
+			}
+
+			if (child->getScreenX() + xO > 3500)
+			{
+				child->moveScreenPosition(-7000.0, 0.0);
+			}
+		}
+
+		for (const auto child : parallaxContainer3->getChildrenOfType<AW::Renderable>())
+		{
+			const auto xO = parallaxContainer3->getScreenX();
+			if (child->getScreenX() + xO < -3500)
+			{
+				child->moveScreenPosition(7000.0, 0.0);
+			}
+
+			if (child->getScreenX() + xO > 3500)
+			{
+				child->moveScreenPosition(-7000.0, 0.0);
+			}
+		}
+	}
+
+	void Environment::moveActiveParallaxElements(const double& frameTime)
+	{
+		for (const auto child : parallaxContainer2->getChildrenOfType<BackdropObject>())
+		{
+			child->moveScreenPosition(child->velocity.x * (frameTime / 1000.0), 0.0);
+		}
 	}
 
 	void Environment::updateBodies()
@@ -157,14 +212,14 @@ namespace AWGame
 		parallaxContainer1->setColor(AW::Color(192, 192, 192));
 		add(parallaxContainer1);
 
-		for (auto x = -5; x < 5; ++x)
+		for (auto x = -7; x < 7; ++x)
 		{
-			const auto mtn = std::make_shared<AW::Element>();
+			const auto mtn = std::make_shared<BackdropObject>();
 			const auto mtnSize = 1024;
-			mtn->setTexture(mtn1TextureName);
+			mtn->setBackdropType(BackdropType::Mountain1);
 			mtn->setScreenSize(mtnSize * 2.0, mtnSize);
-			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-100, 100.0));
-			mtn->setColor(92, 192, 20);
+			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-200, 0.0));
+			mtn->setColor(82, 182, 15);
 			parallaxContainer1->add(mtn);
 		}
 
@@ -172,21 +227,46 @@ namespace AWGame
 		parallaxContainer2->name = "pc2";
 		add(parallaxContainer2);
 
-		for (auto x = -5; x < 5; ++x)
+		for (auto x = -7; x < 7; ++x)
 		{
-			const auto mtn = std::make_shared<AW::Element>();
+			const auto cld = std::make_shared<BackdropObject>();
+			cld->setBackdropType(BackdropType::Cloud);
+			cld->setScreenSize(512, 512);
+			cld->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-900.0, -200.0));
+			parallaxContainer2->add(cld);
+		}
+
+		for (auto x = -7; x < 7; ++x)
+		{
+			const auto mtn = std::make_shared<BackdropObject>();
 			const auto mtnSize = 800;
-			mtn->setTexture(mtn1TextureName);
+			mtn->setBackdropType(BackdropType::Mountain1);
 			mtn->setScreenSize(mtnSize, mtnSize);
-			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(100.0, 200.0));
-			mtn->setColor(92, 192, 20);
+			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-150.0, 50.0));
+			mtn->setColor(102, 192, 20);
 			parallaxContainer2->add(mtn);
+		}
+
+		parallaxContainer3 = std::make_shared<AW::Container>();
+		parallaxContainer3->name = "pc3";
+		add(parallaxContainer3);
+
+		for (auto x = -7; x < 7; ++x)
+		{
+			const auto mtn = std::make_shared<BackdropObject>();
+			const auto mtnSize = 650;
+			mtn->setBackdropType(BackdropType::Mountain1);
+			mtn->setScreenSize(mtnSize, mtnSize);
+			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-100, 50.0));
+			mtn->setColor(122, 212, 40);
+			parallaxContainer3->add(mtn);
 		}
 	}
 
 	void Environment::onLayoutChildren()
 	{
-		updateParallaxContainer();
+		updateParallaxContainers();
+		updateRepeatingParallaxElements();
 		updateBackgroundGradient();
 		updateBodies();
 	}
@@ -197,11 +277,13 @@ namespace AWGame
 		moon = findChildWithName<AW::Circle>("moon");
 		parallaxContainer1 = findChildWithName<AW::Container>("pc1");
 		parallaxContainer2 = findChildWithName<AW::Container>("pc2");
+		parallaxContainer3 = findChildWithName<AW::Container>("pc3");
 		farBackground = findChildWithName<AW::Rectangle>("fb");
 	}
 
 	void Environment::onEnterFrame(const double& frameTime)
 	{
+		moveActiveParallaxElements(frameTime);
 		updateGameTime(frameTime);
 		if (layoutUpdateTimer->isAboveThresholdAndRestart(layoutUpdateThreshold))
 		{
@@ -218,7 +300,7 @@ namespace AWGame
 	{
 		parallaxAmountX = amountX;
 		parallaxAmountY = amountY;
-		updateParallaxContainer();
+		updateParallaxContainers();
 	}
 
 	const AW::Color& Environment::getEnvironmentColor()
