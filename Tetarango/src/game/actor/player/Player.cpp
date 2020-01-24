@@ -9,7 +9,7 @@ namespace
 {
 	const auto moveForce = 1200.0;
 	const auto jumpImpulse = moveForce / 12.0;
-	const auto maxLeftRightVelocity = 1.0;
+	const auto maxLeftRightVelocity = 2.0;
 	const auto maxJumps = 2;
 	const auto playerStartTextureName = "player-start";
 	const auto playerAnimationSetName = "player-animations";

@@ -33,6 +33,8 @@ namespace AW
 		void addWorldPoints(const std::vector<AWVec2<float>>& points);
 
 		void centerBalancePoints();
+		void shiftScreenPoints(double xOffset, double yOffset);
+		void shiftWorldPoints(double xOffset, double yOffset);
 
 		const std::vector<AWVec2<float>>& getScreenPoints();
 		std::vector<AWVec2<float>> getWorldPoints();

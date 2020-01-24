@@ -112,6 +112,28 @@ namespace AW
 		}
 	}
 
+	void Polygon::shiftScreenPoints(double xOffset, double yOffset)
+	{
+		for (auto& pt : screenPoints)
+		{
+			pt.x += xOffset;
+			pt.y += yOffset;
+		}
+
+		updateSize();
+	}
+
+	void Polygon::shiftWorldPoints(double xOffset, double yOffset)
+	{
+		for (auto& pt : screenPoints)
+		{
+			pt.x += Renderable::worldToScreenPosition(xOffset);
+			pt.y += Renderable::worldToScreenPosition(yOffset);
+		}
+
+		updateSize();
+	}
+
 	const std::vector<AWVec2<float>>& Polygon::getScreenPoints()
 	{
 		return screenPoints;
@@ -119,9 +141,6 @@ namespace AW
 
 	std::vector<AWVec2<float>> Polygon::getWorldPoints()
 	{
-		const auto widthFactor = getWorldWidth();
-		const auto heightFactor = getWorldHeight();
-		const auto scaleFactor = AWVec2<float>(1.f / widthFactor, 1.f / heightFactor);
 		auto result = std::vector<AWVec2<float>>();
 
 		for (const auto pt : screenPoints)

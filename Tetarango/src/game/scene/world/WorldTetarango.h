@@ -13,6 +13,8 @@ namespace AWGame
 		std::shared_ptr<GameCamera> gameCamera;
 		std::shared_ptr<Environment> environment;
 
+		void expandWorldIfNeeded();
+
 	public:
 		SceneWorldTetarango();
 
