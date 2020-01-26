@@ -10,7 +10,6 @@ namespace AWGame
 {
 	SceneWorldTetarango::SceneWorldTetarango() : BaseScene(SceneGame::WorldTetarango)
 	{
-		setShouldRebuildOnLoad();
 		GORegister(SceneWorldTetarango);
 	}
 
@@ -45,7 +44,7 @@ namespace AWGame
 
 		environment = std::make_shared<Environment>();
 		environment->name = "env";
-		environment->setLengthOfDayInSeconds(60.0);
+		environment->setLengthOfDayInSeconds(600.0);
 		environment->zIndex = -1;
 		add(environment);
 	}

@@ -3,6 +3,7 @@
 #include "ui/renderable/element/Element.h"
 #include "ui/renderable/container/Container.h"
 #include "prop/environment/Sun.h"
+#include "prop/environment/Moon.h"
 
 namespace AWGame
 {
@@ -19,7 +20,7 @@ namespace AWGame
 		void updateBodies();
 
 		std::shared_ptr<Sun> sun;
-		std::shared_ptr<AW::Element> moon;
+		std::shared_ptr<Moon> moon;
 		std::shared_ptr<AW::Timer> layoutUpdateTimer;
 
 		std::shared_ptr<AW::Container> parallaxContainer1, parallaxContainer2, parallaxContainer3;

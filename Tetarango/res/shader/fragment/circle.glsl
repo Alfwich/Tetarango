@@ -1,6 +1,7 @@
 ﻿#version 330 core
 
 uniform float fCircleEdge;
+uniform float fCircleOffset;
 
 vec4 pColor;
 vec4 cRect;
@@ -13,8 +14,9 @@ void main()
 	float y = (center.y - cRect.y) - (tPos.y - cRect.y);
 	float r = sqrt(x * x + y * y);
 
-	float f = min(cRect.z, cRect.w) / (2.0 + fCircleEdge);
-	float t = min(cRect.z, cRect.w) / 2.0;
+	float f = (min(cRect.z, cRect.w) / (2.0 + fCircleEdge)) - fCircleOffset;
+	float t = (min(cRect.z, cRect.w) / 2.0) - fCircleOffset;
+
 	if (r > f)
 	{
 		float p = (r - f) / (t - f);

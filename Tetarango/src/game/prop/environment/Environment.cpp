@@ -41,7 +41,6 @@ namespace
 	const auto parallaxAmountYParamKey = "env-p-amt-y";
 
 	const auto noiseTextureName = "noise-solid-512";
-	const auto moonTextureName = "env-moon-texture";
 
 	const auto layoutUpdateThreshold = 16;
 	const auto bodyHOffset = 150.0;
@@ -62,8 +61,6 @@ namespace AWGame
 	void Environment::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/noise/noise-solid-512.png", noiseTextureName);
-
-		modules->texture->loadTexture("res/image/prop/environment/moon.png", moonTextureName);
 	}
 
 	void Environment::updateBackgroundGradient()
@@ -191,18 +188,15 @@ namespace AWGame
 	void Environment::onCreateChildren()
 	{
 		sun = std::make_shared<Sun>();
-		sun->renderColorMode = AW::RenderColorMode::Absolute;
 		sun->name = "sun";
 		sun->setColor(252, 212, 64);
 		sun->setScreenSize(150.0, 150.0);
 		add(sun);
 
-		moon = std::make_shared<AW::Element>();
-		moon->renderColorMode = AW::RenderColorMode::Absolute;
+		moon = std::make_shared<Moon>();
 		moon->name = "moon";
 		moon->setColor(225, 225, 255);
 		moon->setScreenSize(150.0, 150.0);
-		moon->setTexture(moonTextureName);
 		add(moon);
 
 		farBackground = std::make_shared<AW::Rectangle>();
@@ -280,7 +274,7 @@ namespace AWGame
 	void Environment::onChildrenHydrated()
 	{
 		sun = findChildWithName<Sun>("sun");
-		moon = findChildWithName<AW::Element>("moon");
+		moon = findChildWithName<Moon>("moon");
 		parallaxContainer1 = findChildWithName<AW::Container>("pc1");
 		parallaxContainer2 = findChildWithName<AW::Container>("pc2");
 		parallaxContainer3 = findChildWithName<AW::Container>("pc3");

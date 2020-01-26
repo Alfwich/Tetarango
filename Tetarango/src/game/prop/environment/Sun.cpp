@@ -19,6 +19,7 @@ namespace AWGame
 
 	void Sun::onInitialAttach()
 	{
+		renderColorMode = AW::RenderColorMode::Absolute;
 		enableEnterFrame();
 	}
 
