@@ -41,27 +41,28 @@ namespace
 	const auto parallaxAmountYParamKey = "env-p-amt-y";
 
 	const auto noiseTextureName = "noise-solid-512";
-	const auto sunTextureName = "env-sun-texture";
 	const auto moonTextureName = "env-moon-texture";
 
 	const auto layoutUpdateThreshold = 16;
 	const auto bodyHOffset = 150.0;
 	const auto bodyVOffset = 50.0;
+	const auto repeatingOffset = 3500.0;
+
+	const auto backgroundObjectOffset = 7;
 }
 
 namespace AWGame
 {
 	Environment::Environment()
 	{
-		GORegister(Environment);
 		renderTextureMode = AW::RenderTextureMode::LinearWrapping;
+		GORegister(Environment);
 	}
 
 	void Environment::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/noise/noise-solid-512.png", noiseTextureName);
 
-		modules->texture->loadTexture("res/image/prop/environment/sun.png", sunTextureName);
 		modules->texture->loadTexture("res/image/prop/environment/moon.png", moonTextureName);
 	}
 
@@ -98,42 +99,42 @@ namespace AWGame
 		for (const auto child : parallaxContainer1->getChildrenOfType<AW::Renderable>())
 		{
 			const auto xO = parallaxContainer1->getScreenX();
-			if (child->getScreenX() + xO < -3500)
+			while (child->getScreenX() + xO < -repeatingOffset)
 			{
-				child->moveScreenPosition(7000.0, 0.0);
+				child->moveScreenPosition(repeatingOffset * 2, 0.0);
 			}
 
-			if (child->getScreenX() + xO > 3500)
+			while (child->getScreenX() + xO > repeatingOffset)
 			{
-				child->moveScreenPosition(-7000.0, 0.0);
+				child->moveScreenPosition(-repeatingOffset * 2, 0.0);
 			}
 		}
 
 		for (const auto child : parallaxContainer2->getChildrenOfType<AW::Renderable>())
 		{
 			const auto xO = parallaxContainer2->getScreenX();
-			if (child->getScreenX() + xO < -3500)
+			while (child->getScreenX() + xO < -repeatingOffset)
 			{
-				child->moveScreenPosition(7000.0, 0.0);
+				child->moveScreenPosition(repeatingOffset * 2, 0.0);
 			}
 
-			if (child->getScreenX() + xO > 3500)
+			while (child->getScreenX() + xO > repeatingOffset)
 			{
-				child->moveScreenPosition(-7000.0, 0.0);
+				child->moveScreenPosition(-repeatingOffset * 2, 0.0);
 			}
 		}
 
 		for (const auto child : parallaxContainer3->getChildrenOfType<AW::Renderable>())
 		{
 			const auto xO = parallaxContainer3->getScreenX();
-			if (child->getScreenX() + xO < -3500)
+			while (child->getScreenX() + xO < -repeatingOffset)
 			{
-				child->moveScreenPosition(7000.0, 0.0);
+				child->moveScreenPosition(repeatingOffset * 2, 0.0);
 			}
 
-			if (child->getScreenX() + xO > 3500)
+			while (child->getScreenX() + xO > repeatingOffset)
 			{
-				child->moveScreenPosition(-7000.0, 0.0);
+				child->moveScreenPosition(-repeatingOffset * 2, 0.0);
 			}
 		}
 	}
@@ -189,12 +190,11 @@ namespace AWGame
 
 	void Environment::onCreateChildren()
 	{
-		sun = std::make_shared<AW::Element>();
+		sun = std::make_shared<Sun>();
 		sun->renderColorMode = AW::RenderColorMode::Absolute;
 		sun->name = "sun";
 		sun->setColor(252, 212, 64);
 		sun->setScreenSize(150.0, 150.0);
-		sun->setTexture(sunTextureName);
 		add(sun);
 
 		moon = std::make_shared<AW::Element>();
@@ -217,7 +217,7 @@ namespace AWGame
 		parallaxContainer1->setColor(AW::Color(192, 192, 192));
 		add(parallaxContainer1);
 
-		for (auto x = -7; x < 7; ++x)
+		for (auto x = -backgroundObjectOffset; x < backgroundObjectOffset; ++x)
 		{
 			const auto mtn = std::make_shared<BackdropObject>();
 			const auto mtnSize = 1024;
@@ -232,7 +232,7 @@ namespace AWGame
 		parallaxContainer2->name = "pc2";
 		add(parallaxContainer2);
 
-		for (auto x = -7; x < 7; ++x)
+		for (auto x = -backgroundObjectOffset; x < backgroundObjectOffset; ++x)
 		{
 			const auto cld = std::make_shared<BackdropObject>();
 			cld->setBackdropType(BackdropType::Cloud);
@@ -242,7 +242,7 @@ namespace AWGame
 			parallaxContainer2->add(cld);
 		}
 
-		for (auto x = -7; x < 7; ++x)
+		for (auto x = -backgroundObjectOffset; x < backgroundObjectOffset; ++x)
 		{
 			const auto mtn = std::make_shared<BackdropObject>();
 			const auto mtnSize = 800;
@@ -257,7 +257,7 @@ namespace AWGame
 		parallaxContainer3->name = "pc3";
 		add(parallaxContainer3);
 
-		for (auto x = -7; x < 7; ++x)
+		for (auto x = -backgroundObjectOffset; x < backgroundObjectOffset; ++x)
 		{
 			const auto mtn = std::make_shared<BackdropObject>();
 			const auto mtnSize = 650;
@@ -279,7 +279,7 @@ namespace AWGame
 
 	void Environment::onChildrenHydrated()
 	{
-		sun = findChildWithName<AW::Element>("sun");
+		sun = findChildWithName<Sun>("sun");
 		moon = findChildWithName<AW::Element>("moon");
 		parallaxContainer1 = findChildWithName<AW::Container>("pc1");
 		parallaxContainer2 = findChildWithName<AW::Container>("pc2");
@@ -291,6 +291,7 @@ namespace AWGame
 	{
 		moveActiveParallaxElements(frameTime);
 		updateGameTime(frameTime);
+
 		if (layoutUpdateTimer->isAboveThresholdAndRestart(layoutUpdateThreshold))
 		{
 			layout();

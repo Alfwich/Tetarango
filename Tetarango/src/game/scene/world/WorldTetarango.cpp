@@ -10,6 +10,7 @@ namespace AWGame
 {
 	SceneWorldTetarango::SceneWorldTetarango() : BaseScene(SceneGame::WorldTetarango)
 	{
+		setShouldRebuildOnLoad();
 		GORegister(SceneWorldTetarango);
 	}
 
@@ -27,7 +28,6 @@ namespace AWGame
 		const auto contentContainer = std::make_shared<AW::Container>();
 		contentContainer->name = "cc";
 		add(contentContainer);
-
 
 		ground = std::make_shared<Ground>();
 		ground->name = "ground";
