@@ -273,6 +273,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClCompile Include="src\game\prop\block\Block.cpp" />
     <ClCompile Include="src\game\prop\environment\BackdropObject.cpp" />
     <ClCompile Include="src\game\prop\environment\Environment.cpp" />
+    <ClCompile Include="src\game\prop\environment\GroundChunk.cpp" />
     <ClCompile Include="src\game\prop\environment\Ground.cpp" />
     <ClCompile Include="src\game\prop\particles\block\BlockParticleFactory.cpp" />
     <ClCompile Include="src\game\prop\particles\space\ParticleSpaceBackgroundFactory.cpp" />
@@ -413,6 +414,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClInclude Include="src\game\prop\block\Block.h" />
     <ClInclude Include="src\game\prop\environment\BackdropObject.h" />
     <ClInclude Include="src\game\prop\environment\Environment.h" />
+    <ClInclude Include="src\game\prop\environment\GroundChunk.h" />
     <ClInclude Include="src\game\prop\environment\Ground.h" />
     <ClInclude Include="src\game\prop\particles\block\BlockParticleFactory.h" />
     <ClInclude Include="src\game\prop\particles\space\ParticleSpaceBackgroundFactory.h" />

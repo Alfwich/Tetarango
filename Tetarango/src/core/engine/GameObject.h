@@ -201,11 +201,10 @@ namespace AW
 	inline std::shared_ptr<T> GameObject::findChildWithName(std::string name, bool checkChildren)
 	{
 		// Check immediate children
+		std::shared_ptr<T> castedPtr;
 		for (const auto child : children)
 		{
-			const auto castedPtr = std::dynamic_pointer_cast<T>(child);
-
-			if (castedPtr != nullptr && child->name == name)
+			if (child->name == name && (castedPtr = std::dynamic_pointer_cast<T>(child)) != nullptr)
 			{
 				return castedPtr;
 			}

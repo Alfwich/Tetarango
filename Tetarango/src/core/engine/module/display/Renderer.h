@@ -54,7 +54,7 @@ namespace AW
 		std::stack<RenderColorMode> renderColorMode;
 
 		unsigned int screenWidth = 0, screenHeight = 0;
-		int layerFactor = 1, maxLayers = 60, cullingOffset = 500;
+		int layerFactor = 1, maxLayers = 60;
 		bool depthEnabled = false, msaaEnabled = false, clearEnabled = true, hasFallenBackToRenderList = false;
 		double currentFrameTimestamp = 0.0;
 
@@ -116,6 +116,8 @@ namespace AW
 
 		void setVertexAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset);
 		void setUVAttributePointer(const unsigned int bufferId, const unsigned int stride, const unsigned int offset);
+
+		bool shouldCull(const RenderPackage* const renderPackage);
 
 	public:
 		Renderer(const ScreenConfig& screenConfig, std::shared_ptr<Renderer> oldRenderer);

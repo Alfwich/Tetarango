@@ -33,6 +33,7 @@ namespace
 	const auto commonUVStride = sizeof(float) * 2;
 	const auto commonOffset = 0;
 
+	const auto cullingDistance = 5000.0;
 }
 
 
@@ -420,6 +421,15 @@ namespace AW
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, bufferId);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (const void*)0);
+	}
+
+	bool Renderer::shouldCull(const RenderPackage* const renderPackage)
+	{
+		return
+			renderPackage->computed.x < -cullingDistance ||
+			renderPackage->computed.x > cullingDistance ||
+			renderPackage->computed.y < -cullingDistance ||
+			renderPackage->computed.y > cullingDistance;
 	}
 
 	void Renderer::changeProgram(RenderPackage* renderPackage)
@@ -913,6 +923,8 @@ namespace AW
 	{
 		renderUpdateRenderableRects(renderPackage);
 
+		if (shouldCull(renderPackage)) return;
+
 		if (renderPackage->obj->getHasClipRect())
 		{
 			updateClipRectOpenGL(renderPackage);
@@ -939,6 +951,9 @@ namespace AW
 		}
 
 		renderUpdateRenderableRects(renderPackage);
+
+		if (shouldCull(renderPackage)) return;
+
 		prim->preUpdateRender(&renderPackage->computed, renderPackage);
 		prim->preRender(&renderPackage->computed, renderPackage);
 

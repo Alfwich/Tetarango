@@ -41,6 +41,8 @@ namespace
 	const auto parallaxAmountYParamKey = "env-p-amt-y";
 
 	const auto noiseTextureName = "noise-solid-512";
+	const auto sunTextureName = "env-sun-texture";
+	const auto moonTextureName = "env-moon-texture";
 
 	const auto layoutUpdateThreshold = 16;
 	const auto bodyHOffset = 150.0;
@@ -58,6 +60,9 @@ namespace AWGame
 	void Environment::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/noise/noise-solid-512.png", noiseTextureName);
+
+		modules->texture->loadTexture("res/image/prop/environment/sun.png", sunTextureName);
+		modules->texture->loadTexture("res/image/prop/environment/moon.png", moonTextureName);
 	}
 
 	void Environment::updateBackgroundGradient()
@@ -184,20 +189,20 @@ namespace AWGame
 
 	void Environment::onCreateChildren()
 	{
-		sun = std::make_shared<AW::Circle>();
+		sun = std::make_shared<AW::Element>();
 		sun->renderColorMode = AW::RenderColorMode::Absolute;
 		sun->name = "sun";
 		sun->setColor(252, 212, 64);
 		sun->setScreenSize(150.0, 150.0);
-		sun->setEdgeFadeDistance(1.75);
+		sun->setTexture(sunTextureName);
 		add(sun);
 
-		moon = std::make_shared<AW::Circle>();
+		moon = std::make_shared<AW::Element>();
 		moon->renderColorMode = AW::RenderColorMode::Absolute;
 		moon->name = "moon";
 		moon->setColor(225, 225, 255);
 		moon->setScreenSize(150.0, 150.0);
-		moon->setEdgeFadeDistance(0.15);
+		moon->setTexture(moonTextureName);
 		add(moon);
 
 		farBackground = std::make_shared<AW::Rectangle>();
@@ -217,7 +222,7 @@ namespace AWGame
 			const auto mtn = std::make_shared<BackdropObject>();
 			const auto mtnSize = 1024;
 			mtn->setBackdropType(BackdropType::Mountain1);
-			mtn->setScreenSize(mtnSize * 2.0, mtnSize);
+			mtn->setScreenSize(mtnSize, mtnSize);
 			mtn->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-200, 0.0));
 			mtn->setColor(82, 182, 15);
 			parallaxContainer1->add(mtn);
@@ -231,6 +236,7 @@ namespace AWGame
 		{
 			const auto cld = std::make_shared<BackdropObject>();
 			cld->setBackdropType(BackdropType::Cloud);
+			cld->setAlpha(AW::NumberHelper::random(0.3, 0.75));
 			cld->setScreenSize(512, 512);
 			cld->setScreenPosition(x * 600.0 + AW::NumberHelper::random(-100, 100), AW::NumberHelper::random(-900.0, -200.0));
 			parallaxContainer2->add(cld);
@@ -273,8 +279,8 @@ namespace AWGame
 
 	void Environment::onChildrenHydrated()
 	{
-		sun = findChildWithName<AW::Circle>("sun");
-		moon = findChildWithName<AW::Circle>("moon");
+		sun = findChildWithName<AW::Element>("sun");
+		moon = findChildWithName<AW::Element>("moon");
 		parallaxContainer1 = findChildWithName<AW::Container>("pc1");
 		parallaxContainer2 = findChildWithName<AW::Container>("pc2");
 		parallaxContainer3 = findChildWithName<AW::Container>("pc3");

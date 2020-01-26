@@ -5,6 +5,7 @@ namespace
 	const auto backdropTypeParamKey = "bdo-b-t";
 	const auto mtn1TextureName = "env-mtn-1";
 	const auto mtn2TextureName = "env-mtn-2";
+	const auto mtn3TextureName = "env-mtn-3";
 	const auto cloudTextureName = "env-cloud";
 }
 
@@ -19,6 +20,7 @@ namespace AWGame
 	{
 		modules->texture->loadTexture("res/image/prop/environment/mtn1.png", mtn1TextureName);
 		modules->texture->loadTexture("res/image/prop/environment/mtn2.png", mtn2TextureName);
+		modules->texture->loadTexture("res/image/prop/environment/mtn3.png", mtn3TextureName);
 		modules->texture->loadTexture("res/image/prop/environment/cloud.png", cloudTextureName);
 	}
 
@@ -33,7 +35,7 @@ namespace AWGame
 		switch (type)
 		{
 		case AWGame::BackdropType::Mountain1:
-			switch (AW::NumberHelper::randomInt(0, 1))
+			switch (AW::NumberHelper::randomInt(0, 2))
 			{
 			case 0:
 				setTexture(mtn1TextureName);
@@ -42,14 +44,17 @@ namespace AWGame
 			case 1:
 				setTexture(mtn2TextureName);
 				break;
+
+			case 2:
+				setTexture(mtn3TextureName);
+				break;
 			}
 			break;
 
 		case AWGame::BackdropType::Cloud:
 			velocity.x = AW::NumberHelper::random(25.0, 50.0);
 			setTexture(cloudTextureName);
-			fragmentShader = modules->shader->getShader({ "f-blur", "animated" });
-			fragmentShader->setFloatIUParam("fBlurAmount", 0.5);
+			fragmentShader = modules->shader->getShader({ "animated" });
 			fragmentShader->setFloatIUParam("clipX", AW::NumberHelper::randomInt(0, 1) * 256.0);
 			fragmentShader->setFloatIUParam("clipY", AW::NumberHelper::randomInt(0, 1) * 256.0);
 			fragmentShader->setFloatIUParam("clipWidth", 256.0);

@@ -152,7 +152,7 @@ namespace AWGame
 		globalTransition->fadeInImmediately();
 		globalTransition->fadeOut();
 
-		hud = findChildWithName<BaseHud>(hudId);
+		//hud = findChildWithName<BaseHud>(hudId);
 	}
 
 	void SceneMainGame::onWorkError(AW::WORKER_ID workerId, AW::WorkerTaskCode code)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ui/renderable/element/Element.h"
-#include "ui/renderable/primitive/Circle.h"
 #include "ui/renderable/container/Container.h"
 
 namespace AWGame
@@ -18,7 +17,7 @@ namespace AWGame
 		void moveActiveParallaxElements(const double& frameTime);
 		void updateBodies();
 
-		std::shared_ptr<AW::Circle> sun, moon;
+		std::shared_ptr<AW::Element> sun, moon;
 		std::shared_ptr<AW::Timer> layoutUpdateTimer;
 
 		std::shared_ptr<AW::Container> parallaxContainer1, parallaxContainer2, parallaxContainer3;

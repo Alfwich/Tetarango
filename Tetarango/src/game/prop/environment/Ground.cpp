@@ -1,7 +1,13 @@
 #include "Ground.h"
 
-#include "ui/renderable/physic/Chain.h"
-#include "ui/renderable/element/Polygon.h"
+namespace
+{
+	const auto leftBoundParamName = "swt-l-b";
+	const auto rightBoundParamName = "swt-r-b";
+	const auto chunkExpandFactor = 1;
+	const auto chunkExpandDistanceThreshold = 1000.0;
+	const auto chunkSize = 5000.0;
+}
 
 namespace AWGame
 {
@@ -12,31 +18,61 @@ namespace AWGame
 
 	void Ground::onCreateChildren()
 	{
-		const auto ground = std::make_shared<AW::Chain>();
-		ground->visible = false;
-		ground->setAlpha(0.5);
-		ground->setDynamic(false);
-		for (auto i = -5; i < 6; ++i)
-		{
-			if (i == -5 || i == 5)
-				ground->addWorldPoint(i * 0.5, getWorldY());
-			else
-				ground->addWorldPoint(i * 0.5, AW::NumberHelper::random(-0.15, 0.15) + getWorldY());
-		}
-		ground->centerBalancePoints();
-		ground->shiftWorldPoints(getWorldX(), getWorldY());
+		// Center
+		const auto ground = std::make_shared<GroundChunk>(chunkSize);
+		ground->setScreenPosition(0.0, 0.0);
 		add(ground);
 
-		const auto groundCover = std::make_shared<AW::Polygon>();
-		const auto pts = ground->getScreenPoints();
-		groundCover->addScreenPoint(pts[0].x - getScreenX(), 2000 - getScreenY());
-		for (const auto pt : pts)
+		// Prime sides
+		for (auto i = -chunkExpandFactor; i < chunkExpandFactor + 1; ++i)
 		{
-			groundCover->addScreenPoint(pt.x - getScreenX(), pt.y - getScreenY());
+			if (i == 0) continue;
+
+			const auto ground = std::make_shared<GroundChunk>(chunkSize);
+			ground->setScreenPosition(i * chunkSize, 0.0);
+			add(ground);
 		}
-		groundCover->addScreenPoint(pts.back().x - getScreenX(), 2000 - getScreenY());
-		groundCover->setTexture("noise-solid-512");
-		groundCover->setRepeatAmount(5.0);
-		add(groundCover);
+
+		serializationClient->setDouble(leftBoundParamName, -chunkExpandFactor);
+		serializationClient->setDouble(rightBoundParamName, chunkExpandFactor);
 	}
+
+
+	void Ground::expandWorldIfNeeded(double worldCenterX)
+	{
+		const auto leftBound = serializationClient->getDouble(leftBoundParamName);
+		const auto rightBound = serializationClient->getDouble(rightBoundParamName);
+		const auto leftD = std::abs(leftBound * chunkSize - worldCenterX);
+		const auto rightD = std::abs(rightBound * chunkSize - worldCenterX);
+
+		if (leftD < chunkExpandDistanceThreshold)
+		{
+			for (auto i = leftBound - chunkExpandFactor; i < leftBound; ++i)
+			{
+				const auto ground = std::make_shared<GroundChunk>(chunkSize);
+				ground->setScreenPosition(i * chunkSize, 0.0);
+				add(ground);
+			}
+
+			serializationClient->setDouble(leftBoundParamName, leftBound - chunkExpandFactor);
+		}
+
+		if (rightD < chunkExpandDistanceThreshold)
+		{
+			for (auto i = rightBound + 1; i < rightBound + chunkExpandFactor + 1; ++i)
+			{
+				const auto ground = std::make_shared<GroundChunk>(chunkSize);
+				ground->setScreenPosition(i * chunkSize, 0.0);
+				add(ground);
+			}
+
+			serializationClient->setDouble(rightBoundParamName, rightBound + chunkExpandFactor);
+		}
+	}
+
+	void Ground::updateChunksForNewWorldCenter(double worldCenterX)
+	{
+		expandWorldIfNeeded(worldCenterX);
+	}
+
 }

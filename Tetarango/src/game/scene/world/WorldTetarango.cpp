@@ -6,54 +6,11 @@
 #include "ui/renderable/physic/Chain.h"
 #include "prop/environment/Ground.h"
 
-namespace
-{
-	const auto leftBoundParamName = "swt-l-b";
-	const auto rightBoundParamName = "swt-r-b";
-	const auto chunkExpandFactor = 1;
-	const auto chunkExpandDistanceThreshold = 1000.0;
-}
-
 namespace AWGame
 {
 	SceneWorldTetarango::SceneWorldTetarango() : BaseScene(SceneGame::WorldTetarango)
 	{
 		GORegister(SceneWorldTetarango);
-	}
-
-	void SceneWorldTetarango::expandWorldIfNeeded()
-	{
-		const auto leftBound = serializationClient->getDouble(leftBoundParamName);
-		const auto rightBound = serializationClient->getDouble(rightBoundParamName);
-		const auto leftD = std::abs(leftBound * 1000.0 - gameCamera->getScreenAnchorX());
-		const auto rightD = std::abs(rightBound * 1000.0 - gameCamera->getScreenAnchorX());
-
-		if (leftD < chunkExpandDistanceThreshold)
-		{
-			const auto contentContainer = findChildWithName<AW::Container>("cc");
-			for (auto i = leftBound - chunkExpandFactor; i < leftBound; ++i)
-			{
-				const auto ground = std::make_shared<Ground>();
-				ground->setScreenPosition(i * 1000.0, 0.0);
-				contentContainer->add(ground);
-			}
-
-			serializationClient->setDouble(leftBoundParamName, leftBound - chunkExpandFactor);
-		}
-
-		if (rightD < chunkExpandDistanceThreshold)
-		{
-			const auto contentContainer = findChildWithName<AW::Container>("cc");
-			for (auto i = rightBound + 1; i < rightBound + chunkExpandFactor + 1; ++i)
-			{
-				const auto ground = std::make_shared<Ground>();
-				ground->setScreenPosition(i * 1000.0, 0.0);
-				contentContainer->add(ground);
-			}
-
-			serializationClient->setDouble(rightBoundParamName, rightBound + chunkExpandFactor);
-		}
-
 	}
 
 	void SceneWorldTetarango::onAttach()
@@ -71,27 +28,14 @@ namespace AWGame
 		contentContainer->name = "cc";
 		add(contentContainer);
 
+
+		ground = std::make_shared<Ground>();
+		ground->name = "ground";
+		contentContainer->add(ground);
+
 		player = std::make_shared<Player>();
-
-		{
-			const auto ground = std::make_shared<Ground>();
-			ground->setScreenPosition(0.0, 0.0);
-			player->toTopOf(ground, 0, 1);
-			contentContainer->add(ground);
-		}
+		player->toTopOf(ground);
 		contentContainer->add(player);
-
-		for (auto i = -chunkExpandFactor; i < chunkExpandFactor + 1; ++i)
-		{
-			if (i == 0) continue;
-
-			const auto ground = std::make_shared<Ground>();
-			ground->setScreenPosition(i * 1000.0, 0.0);
-			contentContainer->add(ground);
-		}
-
-		serializationClient->setDouble(leftBoundParamName, -chunkExpandFactor);
-		serializationClient->setDouble(rightBoundParamName, chunkExpandFactor);
 
 		gameCamera = std::make_shared<GameCamera>();
 		gameCamera->name = "gc";
@@ -101,7 +45,7 @@ namespace AWGame
 
 		environment = std::make_shared<Environment>();
 		environment->name = "env";
-		environment->setLengthOfDayInSeconds(300.0);
+		environment->setLengthOfDayInSeconds(60.0);
 		environment->zIndex = -1;
 		add(environment);
 	}
@@ -124,12 +68,13 @@ namespace AWGame
 		gameCamera = findChildWithName<GameCamera>("gc");
 		gameCamera->listener = weakPtr();
 		environment = findChildWithName<Environment>("env");
+		ground = findChildWithName<Ground>("ground");
 	}
 
 	void SceneWorldTetarango::onCameraUpdate()
 	{
 		environment->setParallaxAmount(-gameCamera->getScreenAnchorX(), -gameCamera->getScreenAnchorY());
+		ground->updateChunksForNewWorldCenter(gameCamera->getScreenAnchorX());
 		setColor(environment->getEnvironmentColor());
-		expandWorldIfNeeded();
 	}
 }
