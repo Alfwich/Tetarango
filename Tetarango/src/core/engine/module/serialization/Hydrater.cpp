@@ -76,19 +76,15 @@ namespace AW
 		return StringHelper::getSliceOfCharVector(data, cursorPosition, endOfTypeNamePos);
 	}
 
-	std::unordered_map<std::string, std::string> Hydrater::getPramMap()
+	void Hydrater::getPramMap(std::unordered_map < std::string, std::string>& inMap)
 	{
-		auto map = std::unordered_map<std::string, std::string>();
-
 		while (!StringHelper::startsWith_Offset(data, cursorPosition, SerializationTags::PRAM_END_TAG))
 		{
 			std::string pramName = getPramName();
 			std::string value = getPramValue();
-			map[pramName] = value;
+			inMap[pramName] = value;
 		}
 		moveCursor(SerializationTags::PRAM_END_TAG);
-
-		return map;
 	}
 
 	std::string Hydrater::getPramName()
@@ -177,8 +173,9 @@ namespace AW
 			return nullptr;
 		}
 
-		std::unordered_map<std::string, std::string> pramValueBuffer = getPramMap();
-		ser->serializationClient->addData(pramValueBuffer);
+		auto params = std::unordered_map<std::string, std::string>();
+		getPramMap(params);
+		ser->addData(params);
 		ser->doSerialize(SerializationHint::HYDRATE);
 
 		if (!checkAndMoveIfCorrect(SerializationTags::CHILDREN_LIST_START))

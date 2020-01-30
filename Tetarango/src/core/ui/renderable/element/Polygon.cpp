@@ -139,6 +139,15 @@ namespace AW
 		return screenPoints;
 	}
 
+	void Polygon::setScreenPoint(unsigned int id, float x, float y)
+	{
+		if (id > 0 && id < screenPoints.size())
+		{
+			screenPoints[id] = AWVec2<float>(x, y);
+			vertexBuffer = nullptr;
+		}
+	}
+
 	std::vector<AWVec2<float>> Polygon::getWorldPoints()
 	{
 		auto result = std::vector<AWVec2<float>>();

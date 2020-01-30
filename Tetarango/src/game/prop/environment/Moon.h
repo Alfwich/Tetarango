@@ -8,6 +8,9 @@ namespace AWGame
 	class Moon : public AW::Container
 	{
 		std::shared_ptr<AW::Element> moon, inner, inner2, backgroundEffect;
+
+		void setBackgroundEffectFragmentShader();
+
 	public:
 		Moon();
 

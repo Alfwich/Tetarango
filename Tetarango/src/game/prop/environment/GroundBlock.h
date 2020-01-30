@@ -4,11 +4,15 @@
 
 namespace AWGame
 {
-	class GroundChunk : public AW::Container
+	class GroundBlock : public AW::Container
 	{
-		double chunkSize;
+		double blockSize;
+
 	public:
-		GroundChunk(double chunkSize = 2000.0);
+		GroundBlock(double blockSize = 1000.0);
+
+		void setBlockId(int id);
+		int getBlockId();
 
 		void onLoadResources() override;
 

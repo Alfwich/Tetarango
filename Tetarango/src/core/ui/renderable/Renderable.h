@@ -37,7 +37,8 @@ namespace AW
 		Unspecified,
 		Positioned,
 		Absolute,
-		AbsoluteSelfOnly
+		AbsoluteSelfOnly,
+		NoPositionSelfOnly
 	};
 
 	enum class RenderDepthTestMode

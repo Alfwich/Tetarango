@@ -159,6 +159,7 @@ namespace AW
 
 		loadShader("res/shader/fragment/texture.glsl", "f-texture");
 		loadShader("res/shader/fragment/color.glsl", "f-color");
+		loadShader("res/shader/fragment/color-saturation.glsl", "f-color-sat");
 		loadShader("res/shader/fragment/solid.glsl", "f-cliprect");
 		loadShader("res/shader/fragment/blur.glsl", "f-blur");
 		loadShader("res/shader/fragment/negate.glsl", "f-negate");

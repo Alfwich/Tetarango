@@ -273,7 +273,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClCompile Include="src\game\prop\block\Block.cpp" />
     <ClCompile Include="src\game\prop\environment\BackdropObject.cpp" />
     <ClCompile Include="src\game\prop\environment\Environment.cpp" />
-    <ClCompile Include="src\game\prop\environment\GroundChunk.cpp" />
+    <ClCompile Include="src\game\prop\environment\GroundBlock.cpp" />
     <ClCompile Include="src\game\prop\environment\Ground.cpp" />
     <ClCompile Include="src\game\prop\environment\Moon.cpp" />
     <ClCompile Include="src\game\prop\environment\Sun.cpp" />
@@ -405,6 +405,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClInclude Include="src\core\ui\physic\body\Body.h" />
     <ClInclude Include="src\core\ui\renderable\primitive\Circle.h" />
     <ClInclude Include="src\core\ui\renderable\element\Polygon.h" />
+    <ClInclude Include="src\core\util\GameObjectHelper.h" />
     <ClInclude Include="src\core\util\Key.h" />
     <ClInclude Include="src\core\util\profile\ProfileTimer.h" />
     <ClInclude Include="src\core\util\Vec.h" />
@@ -416,7 +417,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClInclude Include="src\game\prop\block\Block.h" />
     <ClInclude Include="src\game\prop\environment\BackdropObject.h" />
     <ClInclude Include="src\game\prop\environment\Environment.h" />
-    <ClInclude Include="src\game\prop\environment\GroundChunk.h" />
+    <ClInclude Include="src\game\prop\environment\GroundBlock.h" />
     <ClInclude Include="src\game\prop\environment\Ground.h" />
     <ClInclude Include="src\game\prop\environment\Moon.h" />
     <ClInclude Include="src\game\prop\environment\Sun.h" />

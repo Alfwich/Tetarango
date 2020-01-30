@@ -811,7 +811,9 @@ namespace AW
 	{
 		const auto& rend = renderPackage->obj;
 		const auto scale = renderPackage->zoom * rend->getScale();
-		const auto rect = rend->getRect() * Rect(renderPackage->zoom, renderPackage->zoom, scale, scale);
+		const auto rect = rend->renderPositionMode == RenderPositionMode::NoPositionSelfOnly
+			? (Rect(0.0, 0.0, rend->getRect().w * scale, rend->getRect().h * scale))
+			: (rend->getRect() * Rect(renderPackage->zoom, renderPackage->zoom, scale, scale));
 		const auto rotation = renderPackage->rotation;
 
 		auto rectMiddleX = (rect.x - (rend->getScreenWidth() / 2.0) * scale) + renderPackage->xOffset;

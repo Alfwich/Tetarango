@@ -9,8 +9,9 @@ namespace AWGame
 	class Sun : public AW::Container
 	{
 		double currentTime = 0.0;
-		std::shared_ptr<AW::Element> sun, inner, inner2;
-		std::shared_ptr<AW::Circle> backgroundEffect;
+		std::shared_ptr<AW::Element> sun, inner, inner2, backgroundEffect;
+
+		void setBackgroundEffectFragmentShader();
 	public:
 		Sun();
 

@@ -179,56 +179,6 @@ namespace AW
 		setValue(name, value ? SerializationTags::TYPE_BOOL_TRUE : SerializationTags::TYPE_BOOL_FALSE);
 	}
 
-	/*
-	std::string SerializationClient::bindString(std::string name, std::string defaultValue)
-	{
-		const auto myValue = getValue(name);
-
-		if (myValue.empty())
-		{
-			setValue(name, defaultValue);
-		}
-
-		return myValue.empty() ? defaultValue : myValue;
-	}
-
-	double SerializationClient::bindDouble(std::string name, double defaultValue)
-	{
-		const auto myValue = getValue(name);
-
-		if (myValue.empty())
-		{
-			setValue(name, std::to_string(defaultValue));
-		}
-
-		return myValue.empty() ? defaultValue : std::stod(myValue);
-	}
-
-	int SerializationClient::bindInt(std::string name, int defaultValue)
-	{
-		const auto myValue = getValue(name);
-
-		if (myValue.empty())
-		{
-			setValue(name, std::to_string(defaultValue));
-		}
-
-		return myValue.empty() ? defaultValue : std::stoi(myValue);
-	}
-
-	bool SerializationClient::bindBool(std::string name, bool defaultValue)
-	{
-		const auto myValue = getValue(name);
-
-		if (myValue.empty())
-		{
-			setValue(name, defaultValue ? SerializationTags::TYPE_BOOL_TRUE : SerializationTags::TYPE_BOOL_FALSE);
-		}
-
-		return myValue.empty() ? defaultValue : myValue == SerializationTags::TYPE_BOOL_TRUE;
-	}
-	*/
-
 	void SerializationClient::addData(const std::unordered_map<std::string, std::string>& data)
 	{
 		for (const auto keyValue : data)

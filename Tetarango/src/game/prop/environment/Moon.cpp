@@ -12,6 +12,16 @@ namespace AWGame
 		GORegister(Moon);
 	}
 
+	void Moon::setBackgroundEffectFragmentShader()
+	{
+		const auto fs = modules->shader->getShader({ "f-color", "f-circle", "f-repeat", "f-dither-texture" });
+		fs->setFloatIUParam("fCircleEdge", 10.0);
+		fs->setFloatIUParam("fCircleOffset", 0.1);
+		fs->setFloatIUParam("fRepeat", 64.0);
+		fs->setFloatIUParam("fDitherTextureAmount", 0.015);
+		backgroundEffect->setFragmentShader(fs);
+	}
+
 	void Moon::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/environment/moon.png", moonTextureName);
@@ -20,6 +30,7 @@ namespace AWGame
 	void Moon::onInitialAttach()
 	{
 		renderColorMode = AW::RenderColorMode::Absolute;
+		renderPositionProcessing = AW::RenderPositionProcessingMode::Floor;
 		enableEnterFrame();
 	}
 
@@ -45,28 +56,23 @@ namespace AWGame
 		inner2->setTexture(moonTextureName);
 		add(inner2);
 
-		const auto fs = modules->shader->getShader({ "f-color", "f-circle", "f-repeat", "f-dither-texture" });
-		fs->setFloatIUParam("fCircleEdge", 10.0);
-		fs->setFloatIUParam("fCircleOffset", 0.1);
-		fs->setFloatIUParam("fRepeat", 64.0);
-		fs->setFloatIUParam("fDitherTextureAmount", 0.015);
-
 		backgroundEffect = std::make_shared<AW::Element>();
 		backgroundEffect->name = "bg-e";
 		backgroundEffect->setColor(getColor());
 		backgroundEffect->setAlpha(0.15);
 		backgroundEffect->setTexture("noise-solid-512");
-		backgroundEffect->setFragmentShader(fs);
 		backgroundEffect->zIndex = -1;
+		setBackgroundEffectFragmentShader();
 		add(backgroundEffect);
 	}
 
 	void Moon::onChildrenHydrated()
 	{
-		moon = findChildWithName<AW::Element>("sun");
+		moon = findChildWithName<AW::Element>("moon");
 		inner = findChildWithName<AW::Element>("in");
 		inner2 = findChildWithName<AW::Element>("in2");
 		backgroundEffect = findChildWithName<AW::Element>("bg-e");
+		setBackgroundEffectFragmentShader();
 	}
 
 	void Moon::onLayoutChildren()

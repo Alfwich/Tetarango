@@ -37,6 +37,7 @@ namespace AW
 		void shiftWorldPoints(double xOffset, double yOffset);
 
 		const std::vector<AWVec2<float>>& getScreenPoints();
+		void setScreenPoint(unsigned int id, float x, float y);
 		std::vector<AWVec2<float>> getWorldPoints();
 
 		void setFilled(bool flag);

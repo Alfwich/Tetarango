@@ -21,7 +21,7 @@ namespace AW
 		bool checkAndMoveIfCorrect(const char* tag, int additionalOffset = 0);
 		std::string getTypeName();
 
-		std::unordered_map<std::string, std::string> getPramMap();
+		void getPramMap(std::unordered_map<std::string, std::string>& inMap);
 		std::string getPramName();
 		std::string getPramValue();
 

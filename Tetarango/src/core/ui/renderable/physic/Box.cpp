@@ -16,7 +16,11 @@ namespace AW
 
 	void Box::onBindShaders()
 	{
-		if (fragmentShader == nullptr)
+		if (texture != nullptr)
+		{
+			Element::onBindShaders();
+		}
+		else if (fragmentShader == nullptr)
 		{
 			fragmentShader = modules->shader->getShader({ "f-color" });
 		}

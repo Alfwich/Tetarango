@@ -224,7 +224,8 @@ namespace AW
 			return nullptr;
 		}
 
-		bodyDef.position.Set(renderTarget->getWorldX(), renderTarget->getWorldY());
+		const auto worldPosition = AWVec2<float>(renderTarget->getWorldX(), renderTarget->getWorldY());
+		bodyDef.position.Set(worldPosition.x, worldPosition.y);
 		bodyDef.angle = renderTarget->getWorldRotation();
 		bodyReference = world->CreateBody(&bodyDef);
 		bodyReference->SetUserData(this);

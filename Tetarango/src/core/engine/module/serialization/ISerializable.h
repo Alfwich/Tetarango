@@ -28,13 +28,17 @@ namespace AW
 
 	class ISerializable : public ISerializableDataSubscriber
 	{
+	protected:
+		std::shared_ptr<SerializationClient> serializationClient;
+
 	public:
 		ISerializable()
 		{
 			this->serializationClient = std::make_shared<SerializationClient>();
 		};
 		virtual ~ISerializable() = 0 {};
-		std::shared_ptr<SerializationClient> serializationClient;
+
+		void addData(const std::unordered_map<std::string, std::string>& data) { serializationClient->addData(data); }
 
 		std::string typeName;
 		virtual std::shared_ptr<Schematic> getSchematic() = 0;

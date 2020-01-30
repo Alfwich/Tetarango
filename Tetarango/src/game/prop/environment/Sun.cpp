@@ -12,6 +12,16 @@ namespace AWGame
 		GORegister(Sun);
 	}
 
+	void Sun::setBackgroundEffectFragmentShader()
+	{
+		const auto fs = modules->shader->getShader({ "f-color", "f-circle", "f-repeat", "f-dither-texture" });
+		fs->setFloatIUParam("fCircleEdge", 10.0);
+		fs->setFloatIUParam("fCircleOffset", 0.1);
+		fs->setFloatIUParam("fRepeat", 64.0);
+		fs->setFloatIUParam("fDitherTextureAmount", 0.015);
+		backgroundEffect->setFragmentShader(fs);
+	}
+
 	void Sun::onLoadResources()
 	{
 		modules->texture->loadTexture("res/image/prop/environment/sun.png", sunTextureName);
@@ -20,6 +30,7 @@ namespace AWGame
 	void Sun::onInitialAttach()
 	{
 		renderColorMode = AW::RenderColorMode::Absolute;
+		renderPositionProcessing = AW::RenderPositionProcessingMode::Floor;
 		enableEnterFrame();
 	}
 
@@ -45,12 +56,12 @@ namespace AWGame
 		inner2->setTexture(sunTextureName);
 		add(inner2);
 
-		backgroundEffect = std::make_shared<AW::Circle>();
+		backgroundEffect = std::make_shared<AW::Element>();
 		backgroundEffect->name = "bg-e";
 		backgroundEffect->setColor(getColor());
-		backgroundEffect->setEdgeFadeDistance(100.0);
 		backgroundEffect->setAlpha(0.5);
 		backgroundEffect->zIndex = -1;
+		setBackgroundEffectFragmentShader();
 		add(backgroundEffect);
 	}
 
@@ -59,7 +70,8 @@ namespace AWGame
 		sun = findChildWithName<AW::Element>("sun");
 		inner = findChildWithName<AW::Element>("in");
 		inner2 = findChildWithName<AW::Element>("in2");
-		backgroundEffect = findChildWithName<AW::Circle>("bg-e");
+		backgroundEffect = findChildWithName<AW::Element>("bg-e");
+		setBackgroundEffectFragmentShader();
 	}
 
 	void Sun::onLayoutChildren()

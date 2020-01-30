@@ -47,7 +47,7 @@ namespace
 	const auto bodyVOffset = 50.0;
 	const auto repeatingOffset = 3500.0;
 
-	const auto backgroundObjectOffset = 7;
+	const auto backgroundObjectOffset = 14;
 }
 
 namespace AWGame
@@ -85,9 +85,9 @@ namespace AWGame
 
 	void Environment::updateParallaxContainers()
 	{
-		parallaxContainer1->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.35, getScreenHalfHeight() + parallaxAmountY * 0.35);
-		parallaxContainer2->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.65, getScreenHalfHeight() + parallaxAmountY * 0.65);
-		parallaxContainer3->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.75, getScreenHalfHeight() + parallaxAmountY * 0.75);
+		parallaxContainer1->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.15, getScreenHalfHeight() + parallaxAmountY * 0.15);
+		parallaxContainer2->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.45, getScreenHalfHeight() + parallaxAmountY * 0.45);
+		parallaxContainer3->setScreenPosition(getScreenHalfWidth() + parallaxAmountX * 0.55, getScreenHalfHeight() + parallaxAmountY * 0.55);
 		farBackground->topLeftAlignSelf(0.0, 1000.0 + parallaxAmountY * 0.01);
 	}
 
