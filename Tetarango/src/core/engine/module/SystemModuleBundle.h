@@ -15,6 +15,7 @@
 #include "shader/ShaderContainer.h"
 #include "physic/Physic.h"
 #include "network/Network.h"
+#include "lua/Lua.h"
 
 namespace AW
 {
@@ -58,6 +59,7 @@ namespace AW
 		std::shared_ptr<ShaderContainer> shader;
 		std::shared_ptr<Physic> physic;
 		std::shared_ptr<Network> network;
+		std::shared_ptr<Lua> lua;
 
 		void onAssignConfig(std::shared_ptr<Config::GameConfig> config);
 		void onInit();

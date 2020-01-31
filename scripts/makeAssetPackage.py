@@ -3,7 +3,7 @@ import os, sys, datetime, glob, shutil, io, subprocess
 from distutils.dir_util import copy_tree
 
 resource_folders = ["Tetarango/res"]
-resource_include_files = [".png", ".wav", ".ttf", ".mp3", ".glsl"]
+resource_include_files = [".png", ".wav", ".ttf", ".mp3", ".glsl", ".lua"]
 
 output_file = "asset.pack"
 

@@ -34,6 +34,7 @@ namespace AW
 		font->bindAsset(asset);
 		sound->bindAsset(asset);
 		shader->bindAsset(asset);
+		lua->bindAsset(asset);
 		screen->bindShader(shader);
 		screen->bindTexture(texture);
 		screen->bindPhysic(physic);
@@ -58,6 +59,7 @@ namespace AW
 		asset = createModule<Asset>();
 		shader = createModule<ShaderContainer>();
 		network = createModule<Network>();
+		lua = createModule<Lua>();
 
 		physic = createModule<Physic>();
 

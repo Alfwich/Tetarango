@@ -56,8 +56,8 @@ namespace AWGame
 			{
 				const auto yPos = y * tileSize + tileSize / 2.0;
 				const auto block = std::make_shared<AW::Element>();
-				block->setScreenSize(tileSize, tileSize);
-				block->setScreenPosition(xPos, yPos);
+				block->setScreenSize(tileSize + 2.0, tileSize + 2.0);
+				block->setScreenPosition(xPos - 1.0, yPos - 1.0);
 
 				if (yPos < tileSize)
 				{
