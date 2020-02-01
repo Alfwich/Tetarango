@@ -4,6 +4,8 @@ namespace
 {
 	const std::string dummyCode = "";
 	const auto awCoreLibLocation = "res/lua/aw-core.lua";
+	const auto boundFunctionsGlobalName = "global_functions";
+	const auto boundObjectsGlobalName = "bound_objects";
 }
 
 namespace AW
@@ -122,7 +124,7 @@ namespace AW
 
 		if (contexts.count(id) == 0)
 		{
-			Logger::instance()->logCritical("Lua::Failed to change to context id:" + std::to_string(id) + ", as this context does not exist!");
+			Logger::instance()->logCritical("Lua::Failed to change to context id:" + std::to_string(id) + ", as this context does not exist");
 			currentActiveContextId = defaultContext;
 			return;
 		}
@@ -182,6 +184,71 @@ namespace AW
 		setActiveContextId(contextId);
 		executeLuaString(script);
 		setActiveContextId(prevContextId);
+	}
+
+	void Lua::registerFunction(const std::string& fnName, int(*fn)(void), const std::shared_ptr<ILuaCallbackTarget>& callbackObj)
+	{
+		const auto L = getCurrentContextLuaState();
+		if (L == nullptr)
+		{
+			Logger::instance()->logCritical("Lua::Failed to register function name: " + fnName + ", no active context available");
+			return;
+		}
+
+		const auto bindingId = std::to_string(callbackObj == nullptr ? 0 : callbackObj->getLuaBindingId());
+		const auto functionBundleKey = std::to_string(currentActiveContextId) + "-" + bindingId + "-" + fnName;
+		functionBundles[functionBundleKey] =
+			LuaFunctionBundle(fnName, fn, callbackObj,
+				[](lua_State* L)
+				{
+					LuaFunctionBundle* bundle = static_cast<LuaFunctionBundle*>(lua_touserdata(L, lua_upvalueindex(1)));
+
+					if (bundle->callback != nullptr)
+					{
+						return bundle->callback();
+					}
+
+					const auto callbackObjPtr = bundle->callbackObj.lock();
+					if (callbackObjPtr != nullptr)
+					{
+						return callbackObjPtr->onLuaCallback(bundle->fnName);
+					}
+
+					return 0;
+				}
+		);
+
+		if (bindingId == "0")
+		{
+			lua_getglobal(L, boundFunctionsGlobalName);
+		}
+		else
+		{
+			lua_getglobal(L, boundObjectsGlobalName);
+			lua_getfield(L, -1, bindingId.c_str());
+			if (lua_isnil(L, -1))
+			{
+				lua_pop(L, 1);
+				lua_newtable(L);
+				lua_setfield(L, -2, bindingId.c_str());
+				lua_getfield(L, -1, bindingId.c_str());
+			}
+		}
+
+		lua_pushlightuserdata(L, &functionBundles.at(functionBundleKey));
+		lua_pushcclosure(L, functionBundles.at(functionBundleKey).luaFunction, 1);
+		lua_setfield(L, -2, fnName.c_str());
+		lua_pop(L, 1);
+	}
+
+	void Lua::registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaCallbackTarget>& callbackObj)
+	{
+		registerFunction(fnName, nullptr, callbackObj);
+	}
+
+	void Lua::registerGlobalFunction(const std::string& fnName, int(*fn)(void))
+	{
+		registerFunction(fnName, fn, nullptr);
 	}
 
 	int Lua::getGlobalInt(const std::string& name)
@@ -326,8 +393,33 @@ namespace AW
 
 	void Lua::onInit()
 	{
+		class TestBindingObject : public ILuaCallbackTarget
+		{
+		public:
+			int getLuaBindingId() override
+			{
+				return 11;
+			};
+
+			int onLuaCallback(const std::string& func) override
+			{
+				std::cout << func << " called" << std::endl;
+				return 0;
+			}
+		};
+
 		createDefaultContext();
-		/*
+		registerGlobalFunction("testFn", []() { std::cout << "doSomething" << std::endl; return 0; });
+		registerGlobalFunction("testFn2", []() { std::cout << "doSomething too!" << std::endl; return 0; });
+		executeLuaString("global_functions.testFn()");
+		executeLuaString("global_functions.testFn2()");
+
+		const auto testObj = std::make_shared<TestBindingObject>();
+		registerBoundFunction("testFn", testObj);
+		registerBoundFunction("testFn2", testObj);
+		executeLuaString("bound_objects[\"" + std::to_string(testObj->getLuaBindingId()) + "\"].testFn()");
+		executeLuaString("bound_objects[\"" + std::to_string(testObj->getLuaBindingId()) + "\"].testFn2()");
+
 		executeLuaScript("res/lua/test.lua");
 		const auto testNum = getGlobalInt("testNum");
 		const auto testDouble = getGlobalDouble("testDouble");
@@ -335,7 +427,6 @@ namespace AW
 		const auto testTable = getGlobalTable("testTable");
 		const auto testRecord = getGlobalRecord("testRecord");
 		int x = 5;
-		*/
 	}
 
 	void Lua::onCleanup()
@@ -343,5 +434,7 @@ namespace AW
 		cleanupUserCreatedContexts();
 		cleanupDefaultContext();
 		contexts.clear();
+		fileScriptCache.clear();
+		functionBundles.clear();
 	}
 }

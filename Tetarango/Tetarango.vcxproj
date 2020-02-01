@@ -382,6 +382,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
     <ClInclude Include="src\core\engine\module\display\VertexBufferProxy.h" />
+    <ClInclude Include="src\core\engine\module\lua\ILuaCallbackTarget.h" />
     <ClInclude Include="src\core\engine\module\lua\Lua.h" />
     <ClInclude Include="src\core\engine\module\ModuleBundleStatus.h" />
     <ClInclude Include="src\core\engine\module\network\INetworkListener.h" />
