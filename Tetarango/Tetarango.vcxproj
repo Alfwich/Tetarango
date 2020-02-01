@@ -232,7 +232,6 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="libvorbis-0.dll" />
     <None Include="libvorbisfile-3.dll" />
     <None Include="libwebp-7.dll" />
-    <None Include="res\lua\test.lua" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_image.dll" />
     <None Include="SDL2_mixer.dll" />
