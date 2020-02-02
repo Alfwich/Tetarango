@@ -6,22 +6,35 @@
 namespace
 {
 	AW::GeneratedPrimeList primeList;
+	const auto bootstrapLuaConfigLocation = "res/lua/config.lua";
+	const auto devConfigLuaVariableName = "dev_config";
+	const auto prodConfigLuaVariableName = "prod_config";
 }
 
 namespace AW
 {
 	Application::Application()
 	{
-		gameConfig = std::make_shared<Config::GameConfig>();
+		modules = std::make_shared<SystemModuleBundle>();
+		loadEnvironmentBootstrapLuaConfig();
 		screenConfig.width = 640;
 		screenConfig.height = 480;
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
 	}
 
+	void Application::loadEnvironmentBootstrapLuaConfig()
+	{
+		const auto tmpContext = modules->lua->createNewContextAndSetActive();
+		modules->lua->executeLuaScript(bootstrapLuaConfigLocation, false);
+
+		const auto env = std::string(GAME_ENVIRONMENT);
+		gameConfig = std::make_shared<Config::GameConfig>(modules->lua->getGlobalRecord((env == "DEV" || env == "PROD_DEBUG") ? devConfigLuaVariableName : prodConfigLuaVariableName));
+
+		modules->lua->cleanupContext(tmpContext);
+	}
+
 	bool Application::init()
 	{
-		modules = std::make_shared<SystemModuleBundle>();
-		modules->logger->log("Application::Run");
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
@@ -115,6 +128,8 @@ namespace AW
 
 	void Application::run(int argc, char* args[])
 	{
+		modules->logger->log("Application::Run");
+
 		init();
 		ready();
 		while (running)

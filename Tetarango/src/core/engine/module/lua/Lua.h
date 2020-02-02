@@ -4,7 +4,7 @@
 #include "engine/module/asset/Asset.h"
 #include "engine/module/asset/ResourceBundle.h"
 #include "LuaBoundObject.h"
-#include "ILuaCallbackTarget.h"
+#include "ILuaObject.h"
 
 #include "lua.hpp"
 
@@ -16,7 +16,7 @@ namespace
 	public:
 		std::size_t operator()(const std::tuple<std::string, std::string, std::string>& k) const
 		{
-			return hasher(std::get<0>(k)) + hasher(std::get<1>(k)) + hasher(std::get<2>(k));
+			return hasher(std::get<0>(k) + std::get<1>(k) + std::get<2>(k));
 		}
 	};
 }
@@ -28,7 +28,7 @@ namespace AW
 		std::shared_ptr<Asset> asset;
 		int nextInactiveContextId = 0, currentActiveContextId = -1, defaultContext = -1;
 
-		std::unordered_map<std::tuple<std::string, std::string, std::string>, LuaBoundObject, tuple_hash> functionBundles;
+		std::unordered_map<std::tuple<std::string, std::string, std::string>, LuaBoundObject, tuple_hash> boundObjects;
 
 		std::unordered_map<std::string, std::string> fileScriptCache;
 		std::unordered_map<int, lua_State*> contexts;
@@ -43,12 +43,13 @@ namespace AW
 
 		lua_State* getCurrentContextLuaState();
 
-		void registerFunction(const std::string& fnName, void(*fn)(LuaBoundObject*), const std::shared_ptr<ILuaCallbackTarget>& callbackObj);
+		void registerFunction(const std::string& fnName, void(*fn)(LuaBoundObject*), const std::shared_ptr<ILuaObject>& callbackObj);
 
 	public:
 		void bindAsset(std::shared_ptr<Asset> asset);
 
 		int createNewContext(bool openLibs = true);
+		int createNewContextAndSetActive(bool openLibs = true);
 		void setActiveContext(int id);
 		void cleanupContext(int id);
 
@@ -58,10 +59,10 @@ namespace AW
 		void executeLuaScriptForContext(std::string path, int contextId, bool allowCached = true);
 		void executeLuaStringForContext(const std::string& script, int contextId);
 
-		void registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaCallbackTarget>& callbackObj);
+		void registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj);
 		void registerGlobalFunction(const std::string& fnName, void(*fn)(LuaBoundObject*));
 
-		void unregisterBoundFunctions(const std::shared_ptr<ILuaCallbackTarget>& obj);
+		void unregisterBoundFunctions(const std::shared_ptr<ILuaObject>& obj);
 		void unregisterGlobalFunctions(const std::string& fnName);
 
 		int getGlobalInt(const std::string& name);

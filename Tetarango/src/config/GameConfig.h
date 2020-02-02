@@ -29,64 +29,35 @@ namespace Config
 
 	class GameConfig : public BaseConfig<Param>
 	{
+		std::unordered_map<std::string, std::string> injectedConfig;
 	public:
+		GameConfig(const std::unordered_map<std::string, std::string>& injectedConfig) : injectedConfig(injectedConfig) {}
 
 	protected:
 		const std::map<Param, std::string> getConfig()
 		{
-			std::map<Param, std::string> base
+			return std::map<Param, std::string>
 			{
-					{ Param::version, "v0.17" },
-					{ Param::saveVersion, "v1.00" },
-					{ Param::gameName, "Tetarango" },
-					{ Param::organizationName, "AW Games" },
-					{ Param::logToConsole, TRUE },
-					{ Param::logToFile, TRUE },
-					{ Param::runTests, FALSE },
-					{ Param::saveOnClose, TRUE },
-					{ Param::saveReadableStoreFiles, FALSE },
-					{ Param::saveWholeSceneOnClose, FALSE },
-					{ Param::hydrateOnLoad, TRUE },
-					{ Param::launchToLastScene, FALSE },
-					{ Param::visualizeContainers, FALSE },
-					{ Param::visualizeClipRects, FALSE },
-					{ Param::useAssetPack, TRUE },
-					{ Param::assetPackName, "asset.pack" },
-					{ Param::enableTestScenes, FALSE },
-					{ Param::immediateDebugOutput, FALSE }
+				{ Param::version, injectedConfig.at("version") },
+				{ Param::saveVersion, injectedConfig.at("saveVersion") },
+				{ Param::gameName, injectedConfig.at("gameName") },
+				{ Param::organizationName, injectedConfig.at("organizationName") },
+				{ Param::storageLocation, injectedConfig.at("storageLocation") },
+				{ Param::assetPackName, injectedConfig.at("assetPackName") },
+				{ Param::logToConsole, injectedConfig.at("logToConsole") },
+				{ Param::logToFile, injectedConfig.at("logToFile") },
+				{ Param::runTests, injectedConfig.at("runTests") },
+				{ Param::saveOnClose, injectedConfig.at("saveOnClose") },
+				{ Param::saveReadableStoreFiles, injectedConfig.at("saveReadableStoreFiles") },
+				{ Param::saveWholeSceneOnClose, injectedConfig.at("saveWholeSceneOnClose") },
+				{ Param::hydrateOnLoad, injectedConfig.at("hydrateOnLoad") },
+				{ Param::launchToLastScene, injectedConfig.at("launchToLastScene") },
+				{ Param::visualizeContainers, injectedConfig.at("visualizeContainers") },
+				{ Param::visualizeClipRects, injectedConfig.at("visualizeClipRects") },
+				{ Param::useAssetPack, injectedConfig.at("useAssetPack") },
+				{ Param::enableTestScenes, injectedConfig.at("enableTestScenes") },
+				{ Param::immediateDebugOutput, injectedConfig.at("immediateDebugOutput") }
 			};
-
-			base[Param::storageLocation] = base[Param::gameName];
-
-			if (GAME_ENVIRONMENT == "DEV" || GAME_ENVIRONMENT == "PROD_DEBUG")
-			{
-				base[Param::gameName] = base[Param::gameName] + " - DEV - " + base[Param::version];
-				base[Param::storageLocation] += " " + base[Param::version] + " - Debug";
-				base[Param::useAssetPack] = FALSE;
-				base[Param::saveWholeSceneOnClose] = TRUE;
-				base[Param::immediateDebugOutput] = TRUE;
-				base[Param::launchToLastScene] = TRUE;
-				base[Param::enableTestScenes] = TRUE;
-				base[Param::runTests] = TRUE;
-				//base[Param::saveReadableStoreFiles] = TRUE;
-				//base[Param::hydrateOnLoad] = TRUE;
-				//base[Param::visualizeContainers] = TRUE;
-				//base[Param::visualizeClipRects] = TRUE;
-			}
-			else if (GAME_ENVIRONMENT == "PROD" || GAME_ENVIRONMENT == "PROD_PROFILE")
-			{
-				base[Param::enableTestScenes] = TRUE;
-				//base[Param::launchToLastScene] = TRUE;
-				//base[Param::saveWholeSceneOnClose] = TRUE;
-				//base[Param::saveReadableStoreFiles] = TRUE;
-				//base[Param::visualizeZones] = TRUE;
-			}
-			else
-			{
-				throw "GameConfig::Environment not found for value=" + std::string(GAME_ENVIRONMENT);
-			}
-
-			return base;
 		}
 	};
 

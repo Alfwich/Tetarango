@@ -232,6 +232,9 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="libvorbis-0.dll" />
     <None Include="libvorbisfile-3.dll" />
     <None Include="libwebp-7.dll" />
+    <None Include="res\lua\aw-core.lua" />
+    <None Include="res\lua\config.lua" />
+    <None Include="res\lua\test.lua" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_image.dll" />
     <None Include="SDL2_mixer.dll" />
@@ -382,7 +385,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClInclude Include="src\core\engine\module\asset\ImageBundle.h" />
     <ClInclude Include="src\core\engine\module\asset\ResourceBundle.h" />
     <ClInclude Include="src\core\engine\module\display\VertexBufferProxy.h" />
-    <ClInclude Include="src\core\engine\module\lua\ILuaCallbackTarget.h" />
+    <ClInclude Include="src\core\engine\module\lua\ILuaObject.h" />
     <ClInclude Include="src\core\engine\module\lua\Lua.h" />
     <ClInclude Include="src\core\engine\module\lua\LuaBoundObject.h" />
     <ClInclude Include="src\core\engine\module\ModuleBundleStatus.h" />

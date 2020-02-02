@@ -2,7 +2,8 @@
 
 namespace
 {
-	const std::string dummyCode = "";
+	const auto dummyCode = std::string();
+	const auto globalBindingId = std::string();
 	const auto awCoreLibLocation = "res/lua/aw-core.lua";
 	const auto boundFunctionsGlobalName = "aw_functions";
 	const auto boundObjectsGlobalName = "aw_objects";
@@ -31,16 +32,16 @@ namespace
 		std::vector<std::string> returnArgs;
 		AW::LuaBoundObject* bundle = static_cast<AW::LuaBoundObject*>(lua_touserdata(L, lua_upvalueindex(1)));
 
-		bundle->nArgs = lua_gettop(L);
-		for (auto i = 1; i <= bundle->nArgs; ++i)
+		bundle->args = lua_gettop(L);
+		for (unsigned int i = 1; i <= bundle->args; ++i)
 		{
-			if (bundle->args.size() == i - 1)
+			if (bundle->argV.size() == i - 1)
 			{
-				bundle->args.push_back(convertStackLocationToString(L, i));
+				bundle->argV.push_back(convertStackLocationToString(L, i));
 			}
 			else
 			{
-				bundle->args[i - 1] = convertStackLocationToString(L, i);
+				bundle->argV[i - 1] = convertStackLocationToString(L, i);
 			}
 		}
 
@@ -173,6 +174,14 @@ namespace AW
 		return id;
 	}
 
+	int Lua::createNewContextAndSetActive(bool openLibs)
+	{
+		const auto contextId = createNewContext(openLibs);
+		setActiveContext(contextId);
+
+		return contextId;
+	}
+
 	void Lua::setActiveContext(int id)
 	{
 		if (id == -1)
@@ -209,11 +218,11 @@ namespace AW
 		contexts.erase(id);
 
 		const auto strContextId = std::to_string(id);
-		for (auto it = functionBundles.begin(); it != functionBundles.end();)
+		for (auto it = boundObjects.begin(); it != boundObjects.end();)
 		{
 			if (std::get<0>((*it).first) == strContextId)
 			{
-				it = functionBundles.erase(it);
+				it = boundObjects.erase(it);
 			}
 			else
 			{
@@ -258,7 +267,7 @@ namespace AW
 		setActiveContext(prevContextId);
 	}
 
-	void Lua::registerFunction(const std::string& fnName, void(*fn)(LuaBoundObject*), const std::shared_ptr<ILuaCallbackTarget>& callbackObj)
+	void Lua::registerFunction(const std::string& fnName, void(*fn)(LuaBoundObject*), const std::shared_ptr<ILuaObject>& callbackObj)
 	{
 		const auto L = getCurrentContextLuaState();
 		if (L == nullptr)
@@ -267,11 +276,11 @@ namespace AW
 			return;
 		}
 
-		const auto bindingId = callbackObj == nullptr ? "0" : callbackObj->getLuaBindingId();
+		const auto bindingId = callbackObj == nullptr ? globalBindingId : callbackObj->getLuaBindingId();
 		const auto functionBundleKey = std::make_tuple(std::to_string(currentActiveContextId), bindingId, fnName);
-		functionBundles[functionBundleKey] = LuaBoundObject(fnName, fn, callbackObj, luaBindingAdapter);
+		boundObjects.emplace(std::piecewise_construct, functionBundleKey, std::make_tuple(fnName, fn, callbackObj, luaBindingAdapter));
 
-		if (bindingId == "0")
+		if (bindingId == globalBindingId)
 		{
 			lua_getglobal(L, boundFunctionsGlobalName);
 		}
@@ -279,6 +288,7 @@ namespace AW
 		{
 			lua_getglobal(L, boundObjectsGlobalName);
 			lua_getfield(L, -1, bindingId.c_str());
+
 			if (lua_isnil(L, -1))
 			{
 				lua_pop(L, 1);
@@ -288,14 +298,15 @@ namespace AW
 			}
 		}
 
-		lua_pushlightuserdata(L, &functionBundles.at(functionBundleKey));
-		lua_pushcclosure(L, functionBundles.at(functionBundleKey).luaFunction, 1);
+		lua_pushlightuserdata(L, &boundObjects.at(functionBundleKey));
+		lua_pushcclosure(L, boundObjects.at(functionBundleKey).luaFunction, 1);
 		lua_setfield(L, -2, fnName.c_str());
-		lua_pop(L, bindingId == "0" ? 1 : 2);
+
+		lua_pop(L, bindingId == globalBindingId ? 1 : 2);
 	}
 
 
-	void Lua::registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaCallbackTarget>& callbackObj)
+	void Lua::registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj)
 	{
 		registerFunction(fnName, nullptr, callbackObj);
 	}
@@ -305,14 +316,14 @@ namespace AW
 		registerFunction(fnName, fn, nullptr);
 	}
 
-	void Lua::unregisterBoundFunctions(const std::shared_ptr<ILuaCallbackTarget>& obj)
+	void Lua::unregisterBoundFunctions(const std::shared_ptr<ILuaObject>& obj)
 	{
 		const auto bindingId = obj->getLuaBindingId();
-		for (auto it = functionBundles.begin(); it != functionBundles.end();)
+		for (auto it = boundObjects.begin(); it != boundObjects.end();)
 		{
 			if (std::get<1>((*it).first) == bindingId)
 			{
-				it = functionBundles.erase(it);
+				it = boundObjects.erase(it);
 			}
 			else
 			{
@@ -326,28 +337,25 @@ namespace AW
 			lua_getglobal(L, boundObjectsGlobalName);
 			lua_getfield(L, -1, bindingId.c_str());
 
-			if (lua_istable(L, -1))
+			const auto isTable = lua_istable(L, -1);
+			if (isTable)
 			{
 				lua_pop(L, 1);
 				lua_pushnil(L);
 				lua_setfield(L, -2, bindingId.c_str());
 			}
-			else
-			{
-				lua_pop(L, 1);
-			}
 
-			lua_pop(L, 1);
+			lua_pop(L, isTable ? 1 : 2);
 		}
 	}
 
 	void Lua::unregisterGlobalFunctions(const std::string& fnName)
 	{
-		for (auto it = functionBundles.begin(); it != functionBundles.end();)
+		for (auto it = boundObjects.begin(); it != boundObjects.end();)
 		{
 			if (std::get<2>((*it).first) == fnName)
 			{
-				it = functionBundles.erase(it);
+				it = boundObjects.erase(it);
 			}
 			else
 			{
@@ -361,18 +369,15 @@ namespace AW
 			lua_getglobal(L, boundFunctionsGlobalName);
 			lua_getfield(L, -1, fnName.c_str());
 
-			if (lua_isfunction(L, -1))
+			const auto isFn = lua_isfunction(L, -1);
+			if (isFn)
 			{
 				lua_pop(L, 1);
 				lua_pushnil(L);
 				lua_setfield(L, -2, fnName.c_str());
 			}
-			else
-			{
-				lua_pop(L, 1);
-			}
 
-			lua_pop(L, 1);
+			lua_pop(L, isFn ? 1 : 2);
 		}
 	}
 
@@ -461,6 +466,7 @@ namespace AW
 		}
 
 		lua_getglobal(L, name.c_str());
+
 		if (lua_istable(L, -1))
 		{
 			lua_pushnil(L);
@@ -480,6 +486,7 @@ namespace AW
 				lua_pop(L, 1);
 			}
 		}
+
 		lua_pop(L, 1);
 
 		return result;
@@ -497,7 +504,7 @@ namespace AW
 
 		contexts.clear();
 		fileScriptCache.clear();
-		functionBundles.clear();
+		boundObjects.clear();
 	}
 
 	std::string Lua::getLuaBindingId()
@@ -507,7 +514,7 @@ namespace AW
 
 	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == "runScript" && !obj->args.empty()) executeLuaString(obj->args[0]);
+		if (func == "runScript" && !obj->argV.empty()) executeLuaString(obj->argV[0]);
 	}
 
 	std::unordered_map<int, int> Lua::debugInfo()

@@ -5,7 +5,7 @@ namespace AW
 {
 	class LuaBoundObject;
 
-	class ILuaCallbackTarget
+	class ILuaObject
 	{
 	public:
 		virtual std::string getLuaBindingId() = 0;

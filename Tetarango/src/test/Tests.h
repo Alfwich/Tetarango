@@ -42,7 +42,7 @@ namespace AWTest
 
 		static void luaTests(std::shared_ptr<AW::Lua> lua)
 		{
-			class TestBindingObject : public AW::ILuaCallbackTarget
+			class TestBindingObject : public AW::ILuaObject
 			{
 			public:
 				AW::LuaBoundObject* lastLuaCallbackObj = nullptr;
@@ -68,6 +68,7 @@ namespace AWTest
 			lua->setActiveContext(testContext);
 			for (int i = 0; i < 1000; ++i)
 			{
+				const auto startingStackInfo = lua->debugInfo();
 				lua->registerGlobalFunction("testFn", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething" << std::endl; });
 				lua->registerGlobalFunction("testFn2", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething too!" << std::endl; });
 
@@ -122,36 +123,36 @@ namespace AWTest
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(1, 2, \"hello-world\")");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->nArgs == 3);
-				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 1);
-				assert(std::stoi(testObj->lastLuaCallbackObj->args[1].c_str()) == 2);
-				assert(testObj->lastLuaCallbackObj->args[2] == "hello-world");
+				assert(testObj->lastLuaCallbackObj->args == 3);
+				assert(std::stoi(testObj->lastLuaCallbackObj->argV[0].c_str()) == 1);
+				assert(std::stoi(testObj->lastLuaCallbackObj->argV[1].c_str()) == 2);
+				assert(testObj->lastLuaCallbackObj->argV[2] == "hello-world");
 				testObj->lastLuaCallbackObj = nullptr;
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(0, 44, 56, \"hello-world\")");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->nArgs == 4);
-				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 0);
-				assert(std::stoi(testObj->lastLuaCallbackObj->args[1].c_str()) == 44);
-				assert(std::stoi(testObj->lastLuaCallbackObj->args[2].c_str()) == 56);
-				assert(testObj->lastLuaCallbackObj->args[3] == "hello-world");
+				assert(testObj->lastLuaCallbackObj->args == 4);
+				assert(std::stoi(testObj->lastLuaCallbackObj->argV[0].c_str()) == 0);
+				assert(std::stoi(testObj->lastLuaCallbackObj->argV[1].c_str()) == 44);
+				assert(std::stoi(testObj->lastLuaCallbackObj->argV[2].c_str()) == 56);
+				assert(testObj->lastLuaCallbackObj->argV[3] == "hello-world");
 				testObj->lastLuaCallbackObj = nullptr;
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(0)");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->nArgs == 1);
-				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 0);
+				assert(testObj->lastLuaCallbackObj->args == 1);
+				assert(std::stoi(testObj->lastLuaCallbackObj->argV[0].c_str()) == 0);
 				testObj->lastLuaCallbackObj = nullptr;
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(aw_objects[\"" + testObj->getLuaBindingId() + "\"].getArgs())");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->nArgs == 2);
-				assert(testObj->lastLuaCallbackObj->args[0] == "1");
-				assert(testObj->lastLuaCallbackObj->args[1] == "tester");
+				assert(testObj->lastLuaCallbackObj->args == 2);
+				assert(testObj->lastLuaCallbackObj->argV[0] == "1");
+				assert(testObj->lastLuaCallbackObj->argV[1] == "tester");
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn2())");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->nArgs == 0);
+				assert(testObj->lastLuaCallbackObj->args == 0);
 
 				lua->executeLuaString("aw_functions.testFn(6, 7, 8)");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
@@ -159,9 +160,14 @@ namespace AWTest
 				lua->unregisterBoundFunctions(testObj);
 				lua->unregisterGlobalFunctions("testFn");
 				lua->unregisterGlobalFunctions("testFn2");
+
+				const auto debugInfo = lua->debugInfo();
+				for (const auto contextToStackSize : debugInfo) // Ensure our Lua stacks are not "leaking" frames
+				{
+					assert(startingStackInfo.at(contextToStackSize.first) == contextToStackSize.second);
+				}
 			}
 
-			auto info = lua->debugInfo();
 			lua->cleanupContext(testContext);
 		}
 
