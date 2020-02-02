@@ -9,14 +9,14 @@ resource_folders = ["Tetarango/res"]
 resource_exclude_files = [".xcf"]
 dll_folders = ["Tetarango"]
 
-version_file_location = "Tetarango/src/config/GameConfig.h"
+version_file_location = "Tetarango/res/lua/game/config.lua"
 package_prefix = "TETARANGO_"
 output_folder = "packages"
 
 def getAppVersion():
     with open(version_file_location, "r") as f:
         for line in f.readlines():
-            if "Param::version" in line:
+            if "ver =" in line:
                 return line.split("\"")[1]
 
 def main():

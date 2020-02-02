@@ -4,9 +4,12 @@ namespace
 {
 	const auto dummyCode = std::string();
 	const auto globalBindingId = std::string();
-	const auto awCoreLibLocation = "res/lua/aw-core.lua";
+	const auto awCoreLibLocation = "res/lua/core/aw.lua";
 	const auto boundFunctionsGlobalName = "aw_functions";
 	const auto boundObjectsGlobalName = "aw_objects";
+
+	const auto doStringMethodName = "doString";
+	const auto doFileMethodName = "doFile";
 
 	std::string convertStackLocationToString(lua_State* L, unsigned int loc)
 	{
@@ -88,7 +91,7 @@ namespace AW
 
 		if (fileScriptCache.count(path) == 0)
 		{
-			Logger::instance()->logCritical("Lua::Failed to load code at path:" + path + ", this does not exist");
+			Logger::instance()->logCritical("Lua::Failed to load code at path=" + path + ", this does not exist");
 			return dummyCode;
 		}
 
@@ -119,7 +122,7 @@ namespace AW
 		if (luaL_dostring(L, script.c_str()) != LUA_OK)
 		{
 			std::string err = lua_tostring(L, -1);
-			Logger::instance()->logCritical("Lua::Error running script: " + err);
+			Logger::instance()->logCritical("Lua::Error running script\n" + err);
 		}
 	}
 
@@ -127,8 +130,8 @@ namespace AW
 	{
 		if (defaultContext == -1 && !isCleanedUp)
 		{
-			defaultContext = createNewContext();
-			setActiveContext(defaultContext);
+			defaultContext = createNewContextAndSetActive();
+			Logger::instance()->log("Lua::Created default context with contextId=" + std::to_string(defaultContext));
 		}
 	}
 
@@ -171,6 +174,9 @@ namespace AW
 
 		executeLuaScriptForContext(awCoreLibLocation, id);
 
+		registerBoundFunctionForContext(doStringMethodName, shared_from_this(), id);
+		registerBoundFunctionForContext(doFileMethodName, shared_from_this(), id);
+
 		return id;
 	}
 
@@ -182,35 +188,36 @@ namespace AW
 		return contextId;
 	}
 
-	void Lua::setActiveContext(int id)
+	bool Lua::setActiveContext(int id)
 	{
 		if (id == -1)
 		{
 			currentActiveContextId = defaultContext;
-			return;
+			return true;
 		}
 
 		if (contexts.count(id) == 0)
 		{
-			Logger::instance()->logCritical("Lua::Failed to change to context id:" + std::to_string(id) + ", as this context does not exist");
+			Logger::instance()->logCritical("Lua::Failed to change to context id=" + std::to_string(id) + ", as this context does not exist");
 			currentActiveContextId = defaultContext;
-			return;
+			return false;
 		}
 
 		currentActiveContextId = id;
+		return true;
 	}
 
 	void Lua::cleanupContext(int id)
 	{
 		if (contexts.count(id) == 0)
 		{
-			Logger::instance()->logCritical("Lua::Failed to cleanup context id:" + std::to_string(id) + ", no context exists for this id");
+			Logger::instance()->logCritical("Lua::Failed to cleanup context id=" + std::to_string(id) + ", no context exists for this id");
 			return;
 		}
 
 		if (id == defaultContext)
 		{
-			Logger::instance()->logCritical("Lua::Failed to cleanup context id:" + std::to_string(id) + ", as this is the default context");
+			Logger::instance()->logCritical("Lua::Failed to cleanup context id=" + std::to_string(id) + ", as this is the default context");
 			return;
 		}
 
@@ -244,20 +251,27 @@ namespace AW
 	void Lua::executeLuaScript(std::string path, bool allowCached)
 	{
 		const auto script = loadScriptForPath(path, allowCached);
-		executeLuaString(script);
+		if (!script.empty())
+		{
+			Logger::instance()->log("Lua::Executing script path=" + path + ", for contextId=" + std::to_string(currentActiveContextId));
+			executeLuaString(script);
+		}
 	}
 
 	void Lua::executeLuaScriptForContext(std::string path, int contextId, bool allowCached)
 	{
 		const auto script = loadScriptForPath(path, allowCached);
-		executeLuaStringForContext(script, contextId);
+		if (!script.empty())
+		{
+			executeLuaStringForContext(script, contextId);
+		}
 	}
 
 	void Lua::executeLuaStringForContext(const std::string& script, int contextId)
 	{
 		if (contexts.count(contextId) == 0)
 		{
-			Logger::instance()->logCritical("Lua::Failed to execute script for context id: " + std::to_string(contextId) + ", this context does not exist\n" + script);
+			Logger::instance()->logCritical("Lua::Failed to execute script for context id=" + std::to_string(contextId) + ", this context does not exist\n" + script);
 			return;
 		}
 
@@ -272,7 +286,7 @@ namespace AW
 		const auto L = getCurrentContextLuaState();
 		if (L == nullptr)
 		{
-			Logger::instance()->logCritical("Lua::Failed to register function name: " + fnName + ", no active context available");
+			Logger::instance()->logCritical("Lua::Failed to register function name=" + fnName + ", no active context available");
 			return;
 		}
 
@@ -314,6 +328,22 @@ namespace AW
 	void Lua::registerGlobalFunction(const std::string& fnName, void(*fn)(LuaBoundObject*))
 	{
 		registerFunction(fnName, fn, nullptr);
+	}
+
+	void Lua::registerBoundFunctionForContext(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj, int contextId)
+	{
+		const auto prevContextId = currentActiveContextId;
+		if (setActiveContext(contextId))
+			registerBoundFunction(fnName, callbackObj);
+		setActiveContext(prevContextId);
+	}
+
+	void Lua::registerGlobalFunctionForContext(const std::string& fnName, void(*fn)(LuaBoundObject*), int contextId)
+	{
+		const auto prevContextId = currentActiveContextId;
+		if (setActiveContext(contextId))
+			registerGlobalFunction(fnName, fn);
+		setActiveContext(prevContextId);
 	}
 
 	void Lua::unregisterBoundFunctions(const std::shared_ptr<ILuaObject>& obj)
@@ -514,7 +544,8 @@ namespace AW
 
 	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == "runScript" && !obj->argV.empty()) executeLuaString(obj->argV[0]);
+		if (func == doStringMethodName && obj->args != 0) executeLuaString(obj->argV[0]);
+		if (func == doFileMethodName && obj->args != 0) executeLuaScript(obj->argV[0]);
 	}
 
 	std::unordered_map<int, int> Lua::debugInfo()

@@ -88,7 +88,7 @@ namespace AWTest
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn2()");
 				assert(!AWTest::test_ss.str().empty() && testObj->lastLuaCallbackObj != nullptr); AWTest::test_ss.str(""); testObj->lastLuaCallbackObj = nullptr;
 
-				lua->executeLuaScript("res/lua/test.lua");
+				lua->executeLuaScript("res/lua/test/test.lua");
 				const auto testNum = lua->getGlobalInt("testNum");
 				assert(testNum == 1337);
 

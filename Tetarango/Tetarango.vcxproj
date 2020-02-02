@@ -232,9 +232,10 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="libvorbis-0.dll" />
     <None Include="libvorbisfile-3.dll" />
     <None Include="libwebp-7.dll" />
-    <None Include="res\lua\aw-core.lua" />
-    <None Include="res\lua\config.lua" />
-    <None Include="res\lua\test.lua" />
+    <None Include="res\lua\core\aw.lua" />
+    <None Include="res\lua\game\config.lua" />
+    <None Include="res\lua\core\table-helper.lua" />
+    <None Include="res\lua\test\test.lua" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_image.dll" />
     <None Include="SDL2_mixer.dll" />

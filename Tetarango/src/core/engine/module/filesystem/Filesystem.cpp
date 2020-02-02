@@ -76,7 +76,7 @@ namespace AW
 			}
 		}
 
-		Logger::instance()->log("Failed to read file on path=" + getAbsolutePathFromRelativePath(path) + ", file could not be opened");
+		Logger::instance()->log("Failed to read file on path=" + path + ", file could not be opened");
 		SDL_ClearError();
 
 		return std::string();
@@ -182,7 +182,7 @@ namespace AW
 
 	std::string Filesystem::getAbsolutePathFromRelativePath(const std::string& path)
 	{
-		if (sdlPrefPath.empty())
+		if (sdlPrefPath.empty() && gameConfig != nullptr)
 		{
 			char* incomingSdlPrefPath =
 				SDL_GetPrefPath(

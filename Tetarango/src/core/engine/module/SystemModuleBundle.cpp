@@ -67,6 +67,8 @@ namespace AW
 		event = createModule<Event>();
 
 		bindModules();
+
+
 	}
 
 	void SystemModuleBundle::onAssignConfig(std::shared_ptr<Config::GameConfig> config)

@@ -1,3 +1,5 @@
+-- print("Load test.lua")
+
 testNum = 1327 + 10
 testDouble = 1337.1337
 testString = "lol hello world dude!"

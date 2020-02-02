@@ -50,7 +50,7 @@ namespace AW
 
 		int createNewContext(bool openLibs = true);
 		int createNewContextAndSetActive(bool openLibs = true);
-		void setActiveContext(int id);
+		bool setActiveContext(int id);
 		void cleanupContext(int id);
 
 		void executeLuaScript(std::string path, bool allowCached = true);
@@ -61,6 +61,9 @@ namespace AW
 
 		void registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj);
 		void registerGlobalFunction(const std::string& fnName, void(*fn)(LuaBoundObject*));
+
+		void registerBoundFunctionForContext(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj, int contextId);
+		void registerGlobalFunctionForContext(const std::string& fnName, void(*fn)(LuaBoundObject*), int contextId);
 
 		void unregisterBoundFunctions(const std::shared_ptr<ILuaObject>& obj);
 		void unregisterGlobalFunctions(const std::string& fnName);

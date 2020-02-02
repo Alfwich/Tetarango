@@ -2,6 +2,11 @@
 
 #include <png.h>
 
+namespace
+{
+	const auto gobalAssetPackName = "asset.pack";
+}
+
 namespace AW
 {
 	void Asset::decodeAssetPack(std::string path)
@@ -152,16 +157,12 @@ namespace AW
 		this->storage = storage;
 	}
 
-	void Asset::onInit()
+	void Asset::loadGlobalAssetPack()
 	{
-		if (gameConfig->getConfigBool(Config::Param::useAssetPack))
+		if (!hasLoadedGlobalAssetPack)
 		{
-			decodeAssetPack(gameConfig->getConfigString(Config::Param::assetPackName));
-
-			if (assetPack.empty())
-			{
-				Logger::instance()->logFatal("Asset::Failed to load asset pack");
-			}
+			decodeAssetPack(gobalAssetPackName);
+			hasLoadedGlobalAssetPack = true;
 		}
 	}
 

@@ -14,6 +14,7 @@ namespace AW
 		std::shared_ptr<Filesystem> filesystem;
 
 		unsigned int cursorPosition = 0;
+		bool hasLoadedGlobalAssetPack = false;
 
 		const std::string assetPackStart = "##ASSET_PACK_START##";
 		const std::string assetPackEnd = "##ASSET_PACK_END##";
@@ -37,7 +38,7 @@ namespace AW
 		void bindFilesystem(std::shared_ptr<Filesystem> filesystem);
 		void bindStorage(std::shared_ptr<Storage> storage);
 
-		void onInit();
+		void loadGlobalAssetPack();
 
 		std::shared_ptr<ResourceBundle> getAssetBundle(std::string path);
 

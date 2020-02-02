@@ -62,6 +62,8 @@ namespace AW
 
 	void Logger::log(std::string msg, std::string prefix)
 	{
+		if (gameConfig != nullptr && !gameConfig->getConfigBool(Config::Param::loggingEnabled)) return;
+
 		std::stringstream ss;
 		ss << processLogMessage(msg, prefix) << std::endl;
 		writeConsole(ss.str());

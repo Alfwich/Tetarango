@@ -44,7 +44,7 @@ namespace AW
 		if (shader != nullptr && shader->compileShader())
 		{
 			loaderShaders[name] = shader;
-			Logger::instance()->log("ShaderContainer::Loaded shader loader with name= " + name);
+			Logger::instance()->log("ShaderContainer::Loaded shader loader with name=" + name);
 		}
 		else
 		{
@@ -66,7 +66,7 @@ namespace AW
 		if (shader != nullptr && shader->compileShader())
 		{
 			shaders[name] = shader;
-			Logger::instance()->log("ShaderContainer::Loaded shader with name= " + name + ", path=" + path);
+			Logger::instance()->log("ShaderContainer::Loaded shader with name=" + name + ", path=" + path);
 		}
 		else
 		{

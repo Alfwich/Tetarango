@@ -6,7 +6,7 @@
 namespace
 {
 	AW::GeneratedPrimeList primeList;
-	const auto bootstrapLuaConfigLocation = "res/lua/config.lua";
+	const auto bootstrapLuaConfigLocation = "res/lua/game/config.lua";
 	const auto devConfigLuaVariableName = "dev_config";
 	const auto prodConfigLuaVariableName = "prod_config";
 }
@@ -16,10 +16,21 @@ namespace AW
 	Application::Application()
 	{
 		modules = std::make_shared<SystemModuleBundle>();
+		loadGlobalAssetPack();
 		loadEnvironmentBootstrapLuaConfig();
 		screenConfig.width = 640;
 		screenConfig.height = 480;
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
+	}
+
+	void Application::loadGlobalAssetPack()
+	{
+		// Load the global asset pack as other modules could depend on this - DEV and PROD_DEBUG will always run with the res folder locally (by design) so this is not needed
+		const auto env = std::string(GAME_ENVIRONMENT);
+		if (env != "DEV" && env != "PROD_DEBUG")
+		{
+			modules->asset->loadGlobalAssetPack();
+		}
 	}
 
 	void Application::loadEnvironmentBootstrapLuaConfig()
