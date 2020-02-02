@@ -67,8 +67,8 @@ namespace Config
 				base[Param::immediateDebugOutput] = TRUE;
 				base[Param::launchToLastScene] = TRUE;
 				base[Param::enableTestScenes] = TRUE;
+				base[Param::runTests] = TRUE;
 				//base[Param::saveReadableStoreFiles] = TRUE;
-				//base[Param::runTests] = TRUE;
 				//base[Param::hydrateOnLoad] = TRUE;
 				//base[Param::visualizeContainers] = TRUE;
 				//base[Param::visualizeClipRects] = TRUE;

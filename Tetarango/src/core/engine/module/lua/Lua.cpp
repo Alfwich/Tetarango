@@ -4,8 +4,67 @@ namespace
 {
 	const std::string dummyCode = "";
 	const auto awCoreLibLocation = "res/lua/aw-core.lua";
-	const auto boundFunctionsGlobalName = "global_functions";
-	const auto boundObjectsGlobalName = "bound_objects";
+	const auto boundFunctionsGlobalName = "aw_functions";
+	const auto boundObjectsGlobalName = "aw_objects";
+
+	std::string convertStackLocationToString(lua_State* L, unsigned int loc)
+	{
+		const auto valueType = lua_type(L, loc);
+
+		switch (valueType)
+		{
+		case LUA_TNUMBER:
+			return std::to_string(lua_tonumber(L, loc));
+
+		case LUA_TSTRING:
+			return std::string(lua_tostring(L, loc));
+
+		case LUA_TBOOLEAN:
+			return std::to_string(lua_toboolean(L, -1));
+		}
+
+		return std::string();
+	}
+
+	int luaBindingAdapter(lua_State* L)
+	{
+		std::vector<std::string> returnArgs;
+		AW::LuaBoundObject* bundle = static_cast<AW::LuaBoundObject*>(lua_touserdata(L, lua_upvalueindex(1)));
+
+		bundle->nArgs = lua_gettop(L);
+		for (auto i = 1; i <= bundle->nArgs; ++i)
+		{
+			if (bundle->args.size() == i - 1)
+			{
+				bundle->args.push_back(convertStackLocationToString(L, i));
+			}
+			else
+			{
+				bundle->args[i - 1] = convertStackLocationToString(L, i);
+			}
+		}
+
+		if (bundle->callback != nullptr)
+		{
+			bundle->callback(bundle);
+		}
+		else
+		{
+			const auto callbackObjPtr = bundle->callbackObj.lock();
+			if (callbackObjPtr != nullptr)
+			{
+				callbackObjPtr->onLuaCallback(bundle->fnName, bundle);
+			}
+
+		}
+
+		for (const auto returnValue : bundle->returnValues)
+		{
+			lua_pushstring(L, returnValue.c_str());
+		}
+
+		return (int)bundle->returnValues.size();
+	}
 }
 
 namespace AW
@@ -68,7 +127,7 @@ namespace AW
 		if (defaultContext == -1 && !isCleanedUp)
 		{
 			defaultContext = createNewContext();
-			setActiveContextId(defaultContext);
+			setActiveContext(defaultContext);
 		}
 	}
 
@@ -114,7 +173,7 @@ namespace AW
 		return id;
 	}
 
-	void Lua::setActiveContextId(int id)
+	void Lua::setActiveContext(int id)
 	{
 		if (id == -1)
 		{
@@ -149,9 +208,22 @@ namespace AW
 		lua_close(contexts.at(id));
 		contexts.erase(id);
 
+		const auto strContextId = std::to_string(id);
+		for (auto it = functionBundles.begin(); it != functionBundles.end();)
+		{
+			if (std::get<0>((*it).first) == strContextId)
+			{
+				it = functionBundles.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
 		if (currentActiveContextId == id)
 		{
-			setActiveContextId(defaultContext);
+			setActiveContext(defaultContext);
 		}
 	}
 
@@ -181,12 +253,12 @@ namespace AW
 		}
 
 		const auto prevContextId = currentActiveContextId;
-		setActiveContextId(contextId);
+		setActiveContext(contextId);
 		executeLuaString(script);
-		setActiveContextId(prevContextId);
+		setActiveContext(prevContextId);
 	}
 
-	void Lua::registerFunction(const std::string& fnName, int(*fn)(void), const std::shared_ptr<ILuaCallbackTarget>& callbackObj)
+	void Lua::registerFunction(const std::string& fnName, void(*fn)(LuaBoundObject*), const std::shared_ptr<ILuaCallbackTarget>& callbackObj)
 	{
 		const auto L = getCurrentContextLuaState();
 		if (L == nullptr)
@@ -195,28 +267,9 @@ namespace AW
 			return;
 		}
 
-		const auto bindingId = std::to_string(callbackObj == nullptr ? 0 : callbackObj->getLuaBindingId());
-		const auto functionBundleKey = std::to_string(currentActiveContextId) + "-" + bindingId + "-" + fnName;
-		functionBundles[functionBundleKey] =
-			LuaFunctionBundle(fnName, fn, callbackObj,
-				[](lua_State* L)
-				{
-					LuaFunctionBundle* bundle = static_cast<LuaFunctionBundle*>(lua_touserdata(L, lua_upvalueindex(1)));
-
-					if (bundle->callback != nullptr)
-					{
-						return bundle->callback();
-					}
-
-					const auto callbackObjPtr = bundle->callbackObj.lock();
-					if (callbackObjPtr != nullptr)
-					{
-						return callbackObjPtr->onLuaCallback(bundle->fnName);
-					}
-
-					return 0;
-				}
-		);
+		const auto bindingId = callbackObj == nullptr ? "0" : callbackObj->getLuaBindingId();
+		const auto functionBundleKey = std::make_tuple(std::to_string(currentActiveContextId), bindingId, fnName);
+		functionBundles[functionBundleKey] = LuaBoundObject(fnName, fn, callbackObj, luaBindingAdapter);
 
 		if (bindingId == "0")
 		{
@@ -238,17 +291,89 @@ namespace AW
 		lua_pushlightuserdata(L, &functionBundles.at(functionBundleKey));
 		lua_pushcclosure(L, functionBundles.at(functionBundleKey).luaFunction, 1);
 		lua_setfield(L, -2, fnName.c_str());
-		lua_pop(L, 1);
+		lua_pop(L, bindingId == "0" ? 1 : 2);
 	}
+
 
 	void Lua::registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaCallbackTarget>& callbackObj)
 	{
 		registerFunction(fnName, nullptr, callbackObj);
 	}
 
-	void Lua::registerGlobalFunction(const std::string& fnName, int(*fn)(void))
+	void Lua::registerGlobalFunction(const std::string& fnName, void(*fn)(LuaBoundObject*))
 	{
 		registerFunction(fnName, fn, nullptr);
+	}
+
+	void Lua::unregisterBoundFunctions(const std::shared_ptr<ILuaCallbackTarget>& obj)
+	{
+		const auto bindingId = obj->getLuaBindingId();
+		for (auto it = functionBundles.begin(); it != functionBundles.end();)
+		{
+			if (std::get<1>((*it).first) == bindingId)
+			{
+				it = functionBundles.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
+		for (const auto idtoContext : contexts)
+		{
+			const auto L = idtoContext.second;
+			lua_getglobal(L, boundObjectsGlobalName);
+			lua_getfield(L, -1, bindingId.c_str());
+
+			if (lua_istable(L, -1))
+			{
+				lua_pop(L, 1);
+				lua_pushnil(L);
+				lua_setfield(L, -2, bindingId.c_str());
+			}
+			else
+			{
+				lua_pop(L, 1);
+			}
+
+			lua_pop(L, 1);
+		}
+	}
+
+	void Lua::unregisterGlobalFunctions(const std::string& fnName)
+	{
+		for (auto it = functionBundles.begin(); it != functionBundles.end();)
+		{
+			if (std::get<2>((*it).first) == fnName)
+			{
+				it = functionBundles.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
+		for (const auto idtoContext : contexts)
+		{
+			const auto L = idtoContext.second;
+			lua_getglobal(L, boundFunctionsGlobalName);
+			lua_getfield(L, -1, fnName.c_str());
+
+			if (lua_isfunction(L, -1))
+			{
+				lua_pop(L, 1);
+				lua_pushnil(L);
+				lua_setfield(L, -2, fnName.c_str());
+			}
+			else
+			{
+				lua_pop(L, 1);
+			}
+
+			lua_pop(L, 1);
+		}
 	}
 
 	int Lua::getGlobalInt(const std::string& name)
@@ -261,7 +386,10 @@ namespace AW
 		}
 
 		lua_getglobal(L, name.c_str());
-		return lua_isnumber(L, -1) ? (int)lua_tonumber(L, -1) : 0;
+		const auto result = lua_isnumber(L, -1) ? (int)lua_tonumber(L, -1) : 0;
+		lua_pop(L, 1);
+
+		return result;
 	}
 
 	double Lua::getGlobalDouble(const std::string& name)
@@ -274,7 +402,10 @@ namespace AW
 		}
 
 		lua_getglobal(L, name.c_str());
-		return lua_isnumber(L, -1) ? (double)lua_tonumber(L, -1) : 0.0;
+		const auto result = lua_isnumber(L, -1) ? (double)lua_tonumber(L, -1) : 0.0;
+		lua_pop(L, 1);
+
+		return result;
 	}
 
 	std::string Lua::getGlobalString(const std::string& name)
@@ -287,7 +418,10 @@ namespace AW
 		}
 
 		lua_getglobal(L, name.c_str());
-		return lua_isstring(L, -1) ? std::string(lua_tostring(L, -1)) : std::string();
+		const auto result = lua_isstring(L, -1) ? std::string(lua_tostring(L, -1)) : std::string();
+		lua_pop(L, 1);
+
+		return result;
 	}
 
 	std::vector<std::string> Lua::getGlobalTable(const std::string& name)
@@ -306,24 +440,11 @@ namespace AW
 			lua_pushnil(L);
 			while (lua_next(L, -2) != 0)
 			{
-				const auto valueType = lua_type(L, -1);
-				switch (valueType)
-				{
-				case LUA_TNUMBER:
-					result.push_back(std::to_string(lua_tonumber(L, -1)));
-					break;
-
-				case LUA_TSTRING:
-					result.push_back(std::string(lua_tostring(L, -1)));
-					break;
-
-				case LUA_TBOOLEAN:
-					result.push_back(std::to_string(lua_toboolean(L, -1)));
-					break;
-				}
+				result.push_back(convertStackLocationToString(L, -1));
 				lua_pop(L, 1);
 			}
 		}
+		lua_pop(L, 1);
 
 		return result;
 	}
@@ -348,36 +469,8 @@ namespace AW
 				const auto keyType = lua_type(L, -2);
 				const auto valueType = lua_type(L, -1);
 
-				std::string key, value;
-				switch (keyType)
-				{
-				case LUA_TNUMBER:
-					key = std::to_string(lua_tonumber(L, -2));
-					break;
-
-				case LUA_TSTRING:
-					key = std::string(lua_tostring(L, -2));
-					break;
-
-				case LUA_TBOOLEAN:
-					key = std::to_string(lua_toboolean(L, -2));
-					break;
-				}
-
-				switch (valueType)
-				{
-				case LUA_TNUMBER:
-					value = std::to_string(lua_tonumber(L, -1));
-					break;
-
-				case LUA_TSTRING:
-					value = std::string(lua_tostring(L, -1));
-					break;
-
-				case LUA_TBOOLEAN:
-					value = std::to_string(lua_toboolean(L, -1));
-					break;
-				}
+				auto key = convertStackLocationToString(L, -2);
+				auto value = convertStackLocationToString(L, -1);
 
 				if (!key.empty() && !value.empty())
 				{
@@ -387,54 +480,45 @@ namespace AW
 				lua_pop(L, 1);
 			}
 		}
+		lua_pop(L, 1);
 
 		return result;
 	}
 
 	void Lua::onInit()
 	{
-		class TestBindingObject : public ILuaCallbackTarget
-		{
-		public:
-			int getLuaBindingId() override
-			{
-				return 11;
-			};
-
-			int onLuaCallback(const std::string& func) override
-			{
-				std::cout << func << " called" << std::endl;
-				return 0;
-			}
-		};
-
 		createDefaultContext();
-		registerGlobalFunction("testFn", []() { std::cout << "doSomething" << std::endl; return 0; });
-		registerGlobalFunction("testFn2", []() { std::cout << "doSomething too!" << std::endl; return 0; });
-		executeLuaString("global_functions.testFn()");
-		executeLuaString("global_functions.testFn2()");
-
-		const auto testObj = std::make_shared<TestBindingObject>();
-		registerBoundFunction("testFn", testObj);
-		registerBoundFunction("testFn2", testObj);
-		executeLuaString("bound_objects[\"" + std::to_string(testObj->getLuaBindingId()) + "\"].testFn()");
-		executeLuaString("bound_objects[\"" + std::to_string(testObj->getLuaBindingId()) + "\"].testFn2()");
-
-		executeLuaScript("res/lua/test.lua");
-		const auto testNum = getGlobalInt("testNum");
-		const auto testDouble = getGlobalDouble("testDouble");
-		const auto testString = getGlobalString("testString");
-		const auto testTable = getGlobalTable("testTable");
-		const auto testRecord = getGlobalRecord("testRecord");
-		int x = 5;
 	}
 
 	void Lua::onCleanup()
 	{
 		cleanupUserCreatedContexts();
 		cleanupDefaultContext();
+
 		contexts.clear();
 		fileScriptCache.clear();
 		functionBundles.clear();
+	}
+
+	std::string Lua::getLuaBindingId()
+	{
+		return "lua";
+	}
+
+	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		if (func == "runScript" && !obj->args.empty()) executeLuaString(obj->args[0]);
+	}
+
+	std::unordered_map<int, int> Lua::debugInfo()
+	{
+		auto result = std::unordered_map<int, int>();
+
+		for (const auto idtoContext : contexts)
+		{
+			result[idtoContext.first] = lua_gettop(idtoContext.second);
+		}
+
+		return result;
 	}
 }

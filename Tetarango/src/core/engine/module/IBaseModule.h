@@ -1,11 +1,12 @@
 #pragma once
 
 #include "thread/INotifyOnCompletion.h"
+#include "lua/ILuaCallbackTarget.h"
 #include "GameConfig.h"
 
 namespace AW
 {
-	class IBaseModule : public INotifyOnCompletion, public std::enable_shared_from_this<IBaseModule>
+	class IBaseModule : public INotifyOnCompletion, public ILuaCallbackTarget, public std::enable_shared_from_this<IBaseModule>
 	{
 	public:
 		std::shared_ptr<Config::GameConfig> gameConfig;
@@ -19,5 +20,9 @@ namespace AW
 		virtual void onCleanup() { /* NO-OP */ };
 		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode type, std::shared_ptr<AsyncResultBundle> result) { /* NO-OP */ };
 		virtual void onWorkError(WORKER_ID workerId, WorkerTaskCode type) { /* NO-OP */ };
+
+		// Inherited via ILuaCallbackTarget
+		virtual std::string getLuaBindingId() override { return "module"; };
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override {};
 	};
 }

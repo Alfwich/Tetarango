@@ -8,6 +8,8 @@
 
 namespace AWTest
 {
+	std::stringstream test_ss;
+
 	class Tests
 	{
 	public:
@@ -18,6 +20,7 @@ namespace AWTest
 			Tests::textCompressionTests(modules->storage);
 			Tests::encodingTests(modules->storage);
 			Tests::rngTests();
+			Tests::luaTests(modules->lua);
 			//Tests::memoryAndDeepTreeTests(modules); // Infinite - Test as needed
 			SDL_ClearError();
 		}
@@ -35,6 +38,131 @@ namespace AWTest
 			{
 				Tests::throwException(category, "'" + a + "' does not equal '" + b + "'.");
 			}
+		}
+
+		static void luaTests(std::shared_ptr<AW::Lua> lua)
+		{
+			class TestBindingObject : public AW::ILuaCallbackTarget
+			{
+			public:
+				AW::LuaBoundObject* lastLuaCallbackObj = nullptr;
+				std::string getLuaBindingId() override
+				{
+					return "11";
+				};
+
+				void onLuaCallback(const std::string& func, AW::LuaBoundObject* obj) override
+				{
+					lastLuaCallbackObj = obj;
+					AWTest::test_ss << func << " called" << std::endl;
+
+					if (func == "getArgs")
+					{
+						obj->returnValues.push_back("1");
+						obj->returnValues.push_back("tester");
+					}
+				}
+			};
+
+			const auto testContext = lua->createNewContext();
+			lua->setActiveContext(testContext);
+			for (int i = 0; i < 1000; ++i)
+			{
+				lua->registerGlobalFunction("testFn", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething" << std::endl; });
+				lua->registerGlobalFunction("testFn2", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething too!" << std::endl; });
+
+				lua->executeLuaString("aw_functions.testFn()");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+
+				lua->executeLuaString("aw_functions.testFn2()");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+
+				const auto testObj = std::make_shared<TestBindingObject>();
+				lua->registerBoundFunction("testFn", testObj);
+				lua->registerBoundFunction("testFn2", testObj);
+				lua->registerBoundFunction("getArgs", testObj);
+
+				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn()");
+				assert(!AWTest::test_ss.str().empty() && testObj->lastLuaCallbackObj != nullptr); AWTest::test_ss.str(""); testObj->lastLuaCallbackObj = nullptr;
+				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn2()");
+				assert(!AWTest::test_ss.str().empty() && testObj->lastLuaCallbackObj != nullptr); AWTest::test_ss.str(""); testObj->lastLuaCallbackObj = nullptr;
+
+				lua->executeLuaScript("res/lua/test.lua");
+				const auto testNum = lua->getGlobalInt("testNum");
+				assert(testNum == 1337);
+
+				const auto testDouble = lua->getGlobalDouble("testDouble");
+				assert(std::abs(testDouble - 1337.1337) < 0.001);
+
+
+				const auto testString = lua->getGlobalString("testString");
+				assert(testString == "lol hello world dude!");
+
+				const auto testTable = lua->getGlobalTable("testTable");
+				assert(std::atoi(testTable[0].c_str()) == 1);
+				assert(std::atoi(testTable[1].c_str()) == 2);
+				assert(testTable[2] == "lol!");
+				assert(testTable[3] == "0");
+				assert(testTable[4] == "1");
+				assert(std::abs(std::atof(testTable[5].c_str()) - 13337.77f) < 0.001);
+				assert(std::abs(std::atof(testTable[6].c_str()) - 11.22f) < 0.001);
+
+				std::unordered_map<std::string, std::string> cmp = {
+					{ "x", "1" },
+					{ "y", "2" },
+					{ "g", "lol!" }
+				};
+
+				const auto testRecord = lua->getGlobalRecord("testRecord");
+
+				for (auto entry : cmp)
+				{
+					assert(testRecord.at(entry.first) == entry.second);
+				}
+
+				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(1, 2, \"hello-world\")");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+				assert(testObj->lastLuaCallbackObj->nArgs == 3);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 1);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[1].c_str()) == 2);
+				assert(testObj->lastLuaCallbackObj->args[2] == "hello-world");
+				testObj->lastLuaCallbackObj = nullptr;
+
+				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(0, 44, 56, \"hello-world\")");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+				assert(testObj->lastLuaCallbackObj->nArgs == 4);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 0);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[1].c_str()) == 44);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[2].c_str()) == 56);
+				assert(testObj->lastLuaCallbackObj->args[3] == "hello-world");
+				testObj->lastLuaCallbackObj = nullptr;
+
+				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(0)");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+				assert(testObj->lastLuaCallbackObj->nArgs == 1);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 0);
+				testObj->lastLuaCallbackObj = nullptr;
+
+				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(aw_objects[\"" + testObj->getLuaBindingId() + "\"].getArgs())");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+				assert(testObj->lastLuaCallbackObj->nArgs == 2);
+				assert(testObj->lastLuaCallbackObj->args[0] == "1");
+				assert(testObj->lastLuaCallbackObj->args[1] == "tester");
+
+				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn2())");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+				assert(testObj->lastLuaCallbackObj->nArgs == 0);
+
+				lua->executeLuaString("aw_functions.testFn(6, 7, 8)");
+				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+
+				lua->unregisterBoundFunctions(testObj);
+				lua->unregisterGlobalFunctions("testFn");
+				lua->unregisterGlobalFunctions("testFn2");
+			}
+
+			auto info = lua->debugInfo();
+			lua->cleanupContext(testContext);
 		}
 
 		static void filesystemTests(std::shared_ptr<AW::Filesystem> fs)

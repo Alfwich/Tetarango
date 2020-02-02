@@ -1,11 +1,16 @@
 #pragma once
 
+
 namespace AW
 {
+	class LuaBoundObject;
+
 	class ILuaCallbackTarget
 	{
 	public:
-		virtual int getLuaBindingId() = 0;
-		virtual int onLuaCallback(const std::string& func) = 0;
+		virtual std::string getLuaBindingId() = 0;
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) = 0;
 	};
 }
+
+#include "LuaBoundObject.h"

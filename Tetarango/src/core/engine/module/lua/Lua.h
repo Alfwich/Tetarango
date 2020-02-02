@@ -3,33 +3,33 @@
 #include "engine/module/IBaseModule.h"
 #include "engine/module/asset/Asset.h"
 #include "engine/module/asset/ResourceBundle.h"
+#include "LuaBoundObject.h"
 #include "ILuaCallbackTarget.h"
 
 #include "lua.hpp"
 
-namespace AW
+namespace
 {
-	class LuaFunctionBundle
+	std::hash<std::string> hasher;
+	class tuple_hash : public std::unary_function<std::tuple<std::string, std::string, std::string>, std::size_t>
 	{
 	public:
-		LuaFunctionBundle() {};
-		LuaFunctionBundle(const std::string& fnName, int (callback)(void), std::shared_ptr<ILuaCallbackTarget> callbackObj, lua_CFunction lFn)
-			: fnName(fnName), callback(callback), callbackObj(callbackObj), luaFunction(lFn)
+		std::size_t operator()(const std::tuple<std::string, std::string, std::string>& k) const
 		{
+			return hasher(std::get<0>(k)) + hasher(std::get<1>(k)) + hasher(std::get<2>(k));
 		}
-
-		std::string fnName;
-		lua_CFunction luaFunction;
-		int (*callback)(void);
-		std::weak_ptr<ILuaCallbackTarget> callbackObj;
 	};
+}
 
+namespace AW
+{
 	class Lua : public IBaseModule
 	{
 		std::shared_ptr<Asset> asset;
 		int nextInactiveContextId = 0, currentActiveContextId = -1, defaultContext = -1;
 
-		std::unordered_map<std::string, LuaFunctionBundle> functionBundles;
+		std::unordered_map<std::tuple<std::string, std::string, std::string>, LuaBoundObject, tuple_hash> functionBundles;
+
 		std::unordered_map<std::string, std::string> fileScriptCache;
 		std::unordered_map<int, lua_State*> contexts;
 
@@ -43,13 +43,13 @@ namespace AW
 
 		lua_State* getCurrentContextLuaState();
 
-		void registerFunction(const std::string& fnName, int(*fn)(void), const std::shared_ptr<ILuaCallbackTarget>& callbackObj);
+		void registerFunction(const std::string& fnName, void(*fn)(LuaBoundObject*), const std::shared_ptr<ILuaCallbackTarget>& callbackObj);
 
 	public:
 		void bindAsset(std::shared_ptr<Asset> asset);
 
 		int createNewContext(bool openLibs = true);
-		void setActiveContextId(int id);
+		void setActiveContext(int id);
 		void cleanupContext(int id);
 
 		void executeLuaScript(std::string path, bool allowCached = true);
@@ -59,7 +59,10 @@ namespace AW
 		void executeLuaStringForContext(const std::string& script, int contextId);
 
 		void registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaCallbackTarget>& callbackObj);
-		void registerGlobalFunction(const std::string& fnName, int(*fn)(void));
+		void registerGlobalFunction(const std::string& fnName, void(*fn)(LuaBoundObject*));
+
+		void unregisterBoundFunctions(const std::shared_ptr<ILuaCallbackTarget>& obj);
+		void unregisterGlobalFunctions(const std::string& fnName);
 
 		int getGlobalInt(const std::string& name);
 		double getGlobalDouble(const std::string& name);
@@ -69,5 +72,11 @@ namespace AW
 
 		void onInit() override;
 		void onCleanup() override;
+
+		// Inherited via IBaseModule
+		virtual std::string getLuaBindingId() override;
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
+
+		std::unordered_map<int, int> debugInfo();
 	};
 }
