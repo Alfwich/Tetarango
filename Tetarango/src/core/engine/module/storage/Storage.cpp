@@ -77,7 +77,7 @@ namespace AW
 		if (archiveVersion != expectedVersion)
 		{
 			// TODO: Convert old save files to new format if needed
-			Logger::instance()->logCritical("Storage::Found different save file version: " + archiveVersion + " than what was expected: " + expectedVersion);
+			Logger::instance()->logCritical("Storage::Save file format=" + archiveVersion + "is different than what was expected=" + expectedVersion);
 			return;
 		}
 
@@ -127,7 +127,7 @@ namespace AW
 		if (archiveVersion != expectedVersion)
 		{
 			// TODO: Convert old save files to new format if needed
-			Logger::instance()->logCritical("Storage::Found different save file version: " + archiveVersion + " than what was expected: " + expectedVersion);
+			Logger::instance()->logCritical("Storage::Save file format=" + archiveVersion + "is different than what was expected=" + expectedVersion);
 			return result;
 		}
 
@@ -144,7 +144,7 @@ namespace AW
 
 			if (result.count(key) == 1)
 			{
-				Logger::instance()->logCritical("Storage::Clobbering data in store with key= " + key + " which had value: " + result[key]);
+				Logger::instance()->logCritical("Storage::Clobbering data in store with key= " + key + " which had value=" + result[key]);
 			}
 
 			result[key] = value;
@@ -162,7 +162,7 @@ namespace AW
 			return true;
 		}
 
-		Logger::instance()->logCritical("Storage::Found corrupt data at position: " + std::to_string(cursorPosition) + ", looking for tag: " + tag);
+		Logger::instance()->logCritical("Storage::Found corrupt data at position=" + std::to_string(cursorPosition) + ", looking for tag=" + tag);
 		return false;
 	}
 

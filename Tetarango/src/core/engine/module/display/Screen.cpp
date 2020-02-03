@@ -282,7 +282,7 @@ namespace AW
 		SDL_DisplayMode mode = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
 		if (SDL_GetCurrentDisplayMode(0, &mode))
 		{
-			Logger::instance()->logCritical("Screen::Could not get display mode for video display: " + std::string(SDL_GetError()));
+			Logger::instance()->logCritical("Screen::Could not get display mode for video display\n" + std::string(SDL_GetError()));
 		}
 		else
 		{
@@ -313,7 +313,7 @@ namespace AW
 
 			if (SDL_GetDisplayMode(0, i, &mode))
 			{
-				Logger::instance()->logCritical("Screen::Could not get display mode for video display: " + std::string(SDL_GetError()));
+				Logger::instance()->logCritical("Screen::Could not get display mode for video display\n" + std::string(SDL_GetError()));
 			}
 			else
 			{

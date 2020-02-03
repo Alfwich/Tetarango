@@ -554,7 +554,7 @@ namespace AW
 		const auto L = getCurrentContextLuaState();
 		if (L == nullptr)
 		{
-			Logger::instance()->logCritical("Lua::Failed to get global int, context could not be acquired");
+			Logger::instance()->logCritical("Lua::Failed to get global double, context could not be acquired");
 			return 0.0;
 		}
 
@@ -570,7 +570,7 @@ namespace AW
 		const auto L = getCurrentContextLuaState();
 		if (L == nullptr)
 		{
-			Logger::instance()->logCritical("Lua::Failed to get global int, context could not be acquired");
+			Logger::instance()->logCritical("Lua::Failed to get global string, context could not be acquired");
 			return std::string();
 		}
 

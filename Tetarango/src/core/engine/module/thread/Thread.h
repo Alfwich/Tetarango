@@ -55,7 +55,7 @@ namespace AW
 	{
 		if (SDL_GetThreadID(NULL) != this->mainThreadId)
 		{
-			Logger::instance()->log("Thread::Failed to create worker, the calling thread is not the main thread.");
+			Logger::instance()->log("Thread::Failed to create worker, the calling thread is not the main thread");
 			return -1;
 		}
 

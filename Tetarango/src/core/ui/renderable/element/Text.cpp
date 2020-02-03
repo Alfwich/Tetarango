@@ -48,7 +48,7 @@ namespace AW
 		auto textureText = std::static_pointer_cast<TextureText>(cachedTextureText);
 		if (!textureText)
 		{
-			Logger::instance()->logCritical("Text::Failed to render text. Internal Texture is not a TextureText.");
+			Logger::instance()->logCritical("Text::Failed to render text. Internal Texture is not a AW::TextureText");
 			return;
 		}
 

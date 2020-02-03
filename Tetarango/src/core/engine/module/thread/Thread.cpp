@@ -24,7 +24,7 @@ namespace AW
 	{
 		if (!isMainThread())
 		{
-			Logger::instance()->log("Thread::Failed to processWorkers, the calling thread is not the main thread.");
+			Logger::instance()->log("Thread::Failed to processWorkers, the calling thread is not the main thread");
 			return;
 		}
 
@@ -184,7 +184,7 @@ namespace AW
 	{
 		if (!isMainThread())
 		{
-			Logger::instance()->logCritical("Thread::Failed to onCleanup, the calling thread is not the main thread.");
+			Logger::instance()->logCritical("Thread::Failed to onCleanup, the calling thread is not the main thread");
 			return;
 		}
 

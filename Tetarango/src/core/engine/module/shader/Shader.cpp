@@ -37,7 +37,7 @@ namespace AW
 		{
 			std::vector<char> infoText(infoLength + 1);
 			glGetShaderInfoLog(shaderId, infoLength, NULL, &infoText[0]);
-			Logger::instance()->logCritical("Shader::Failed to compile shader: " + std::string(infoText.begin(), infoText.end()));
+			Logger::instance()->logCritical("Shader::Failed to compile shader\n" + std::string(infoText.begin(), infoText.end()));
 		}
 
 		locToShaderIds[locId] = shaderId;

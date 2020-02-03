@@ -30,9 +30,9 @@ namespace AW
 		bool checkAndMoveIfCorrect(char* data, std::string tag);
 		bool beginsWith(char* data, unsigned int pos, std::string tag);
 
-		std::string assetNameFromPath(std::string path);
+		std::string assetNameFromPath(const std::string& path);
 
-		void decodeAssetPack(std::string packName);
+		void decodeAssetPack(const std::string& packName);
 
 	public:
 		void bindFilesystem(std::shared_ptr<Filesystem> filesystem);

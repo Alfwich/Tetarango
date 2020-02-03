@@ -23,7 +23,6 @@ namespace Config
 		visualizeContainers,
 		visualizeClipRects,
 		useAssetPack,
-		assetPackName,
 		enableTestScenes,
 		immediateDebugOutput
 	};
@@ -44,7 +43,6 @@ namespace Config
 				{ Param::gameName, injectedConfig.at("gameName") },
 				{ Param::organizationName, injectedConfig.at("organizationName") },
 				{ Param::storageLocation, injectedConfig.at("storageLocation") },
-				{ Param::assetPackName, injectedConfig.at("assetPackName") },
 				{ Param::loggingEnabled, injectedConfig.at("loggingEnabled") },
 				{ Param::logToConsole, injectedConfig.at("logToConsole") },
 				{ Param::logToFile, injectedConfig.at("logToFile") },

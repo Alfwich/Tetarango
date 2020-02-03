@@ -82,7 +82,7 @@ namespace AW
 			std::string error = std::string(SDL_GetError());
 			if (error.size())
 			{
-				Logger::instance()->logCritical("SDL::Error reported from SDL: " + error);
+				Logger::instance()->logCritical("SDL::Error reported from SDL\n" + error);
 				SDL_ClearError();
 			}
 		}
@@ -91,7 +91,7 @@ namespace AW
 			std::string error = std::string(IMG_GetError());
 			if (error.size())
 			{
-				Logger::instance()->logCritical("SDL::Error reported from SDL_IMG: " + error);
+				Logger::instance()->logCritical("SDL::Error reported from SDL_IMG\n" + error);
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace AW
 			std::string error = std::string(TTF_GetError());
 			if (error.size())
 			{
-				Logger::instance()->logCritical("SDL::Error reported from SDL_TTF: " + error);
+				Logger::instance()->logCritical("SDL::Error reported from SDL_TTF\n" + error);
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace AW
 			std::string error = std::string(Mix_GetError());
 			if (error.size())
 			{
-				Logger::instance()->logCritical("SDL::Error reported from SDL_MIX: " + error);
+				Logger::instance()->logCritical("SDL::Error reported from SDL_MIX\n" + error);
 			}
 		}
 	}

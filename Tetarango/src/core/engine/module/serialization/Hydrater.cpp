@@ -65,7 +65,7 @@ namespace AW
 			return true;
 		}
 
-		Logger::instance()->logCritical("Hydrater::Found corrupt data at position: " + std::to_string(cursorPosition) + ", looking for tag: " + tag);
+		Logger::instance()->logCritical("Hydrater::Found corrupt data at position=" + std::to_string(cursorPosition) + ", looking for tag=" + tag);
 		return false;
 	}
 
@@ -121,7 +121,7 @@ namespace AW
 
 	void Hydrater::reportError()
 	{
-		Logger::instance()->logCritical("Hydrater::Found corrupt data at position: " + std::to_string(cursorPosition));;
+		Logger::instance()->logCritical("Hydrater::Found corrupt data at position=" + std::to_string(cursorPosition));;
 	}
 
 	std::shared_ptr<ISerializable> Hydrater::hydrateData(std::string data)

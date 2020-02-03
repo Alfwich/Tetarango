@@ -17,8 +17,11 @@ namespace AW
 	{
 		modules = std::make_shared<SystemModuleBundle>();
 		modules->logger->log("Application::Ctor");
+		modules->logger->log("Application::Created module bundle");
+
 		loadGlobalAssetPack();
 		loadEnvironmentBootstrapLuaConfig();
+
 		screenConfig.width = 640;
 		screenConfig.height = 480;
 		screenConfig.windowFlags = SDL_WINDOW_SHOWN;
@@ -30,12 +33,14 @@ namespace AW
 		const auto env = std::string(GAME_ENVIRONMENT);
 		if (env != "DEV" && env != "PROD_DEBUG")
 		{
+			modules->logger->log("Application::Load global asset pack");
 			modules->asset->loadGlobalAssetPack();
 		}
 	}
 
 	void Application::loadEnvironmentBootstrapLuaConfig()
 	{
+		modules->logger->log("Application::Load Lua bootstrap config");
 		const auto tmpContext = modules->lua->createNewContextAndSetActive();
 		modules->lua->executeLuaScript(bootstrapLuaConfigLocation, false);
 

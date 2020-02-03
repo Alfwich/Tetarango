@@ -9,13 +9,12 @@ namespace
 
 namespace AW
 {
-	void Asset::decodeAssetPack(std::string path)
+	void Asset::decodeAssetPack(const std::string& path)
 	{
+		if (path.empty()) return;
+
 		SDL_RWops* file = SDL_RWFromFile(path.c_str(), "rb");
-		if (file == nullptr)
-		{
-			return;
-		}
+		if (file == nullptr) return;
 
 		Sint64 res_size = SDL_RWsize(file);
 		auto res = std::make_unique<char[]>(res_size);
@@ -39,19 +38,19 @@ namespace AW
 
 		cursorPosition = 0;
 
-		unsigned int kPos = 0;
+		unsigned int kPos = 0, packedAssets = 0;
 		while (cursorPosition < res_size)
 		{
 			if (!checkAndMoveIfCorrect(res.get(), assetStart))
 			{
-				Logger::instance()->logFatal("Asset::Failed to read asset package.");
+				Logger::instance()->logFatal("Asset::Failed to read asset package");
 			}
 
 			std::string assetName = getAssetNameFromRaw(res.get());
 
 			if (!checkAndMoveIfCorrect(res.get(), binaryDelimiter))
 			{
-				Logger::instance()->logFatal("Asset::Failed to read asset package.");
+				Logger::instance()->logFatal("Asset::Failed to read asset package");
 			}
 
 			unsigned int size;
@@ -59,11 +58,21 @@ namespace AW
 
 			if (!checkAndMoveIfCorrect(res.get(), assetEnd))
 			{
-				Logger::instance()->logFatal("Asset::Failed to read asset package.");
+				Logger::instance()->logFatal("Asset::Failed to read asset package");
 			}
 
-			assetPack[assetName] = std::make_shared<ResourceBundle>(std::move(data), size);
+			if (assetPack.count(assetName) == 0)
+			{
+				assetPack[assetName] = std::make_shared<ResourceBundle>(std::move(data), size);
+				packedAssets++;
+			}
+			else
+			{
+				Logger::instance()->logCritical("Asset::Pack name=" + path + " contained duplicate key=" + assetName + " which was ignored");
+			}
 		}
+
+		Logger::instance()->log("Asset::Loaded asset pack name=" + path + ", which contained " + std::to_string(packedAssets) + " new assets");
 	}
 
 	bool Asset::checkAndMoveIfCorrect(char* data, std::string tag)
@@ -92,7 +101,7 @@ namespace AW
 		return true;
 	}
 
-	std::string Asset::assetNameFromPath(std::string path)
+	std::string Asset::assetNameFromPath(const std::string& path)
 	{
 		std::string result;
 		unsigned int i = 0;
@@ -185,7 +194,7 @@ namespace AW
 			}
 		}
 
-		Logger::instance()->logFatal("Asset::Attempted to pull asset for name= " + name + ", this does not exist in asset pack");
+		Logger::instance()->logFatal("Asset::Attempted to pull asset for name=" + name + ", this does not exist in asset pack");
 		return nullptr;
 	}
 

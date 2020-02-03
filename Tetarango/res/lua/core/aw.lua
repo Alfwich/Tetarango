@@ -12,13 +12,13 @@ require = function(libPath)
 end
 
 function getLua()
-	if aw_objects["lua"] ~= nil then
+	if aw_objects.lua ~= nil then
 		return aw_objects.lua;
 	end
 end
 
 function getLogger()
-	if aw_objects["logger"] ~= nil then
+	if aw_objects.logger ~= nil then
 		return aw_objects.logger;
 	end
 end

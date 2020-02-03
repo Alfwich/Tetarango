@@ -63,7 +63,7 @@ namespace AW
 
 		if (err != GL_NO_ERROR)
 		{
-			AW::Logger::instance()->logCritical("ScreenImage::OpenGL Error reported: " + std::to_string(err));
+			AW::Logger::instance()->logCritical("ScreenImage::OpenGL Error reported\n" + std::to_string(err));
 			return false;
 		}
 

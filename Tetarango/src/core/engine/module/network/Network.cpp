@@ -38,7 +38,7 @@ namespace AW
 				return data;
 			}, weak_from_this());
 
-		Logger::instance()->log("Network::Started network request for host: " + bundle->host + ", path: " + bundle->path + ", on worker: " + std::to_string(id));
+		Logger::instance()->log("Network::Started network request for host=" + bundle->host + ", with path=" + bundle->path + ", on worker=" + std::to_string(id));
 
 		return id;
 	}
@@ -79,7 +79,7 @@ namespace AW
 		const auto bundle = requestMap[id];
 		requestMap.erase(id);
 
-		Logger::instance()->log("Network::Ended network request for worker: " + std::to_string(id) + ", status: " + std::to_string(bundle->status));
+		Logger::instance()->log("Network::Ended network request for worker=" + std::to_string(id) + ", with status=" + std::to_string(bundle->status));
 
 		const auto listener = bundle->listener.lock();
 		if (listener != nullptr)

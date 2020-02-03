@@ -30,7 +30,7 @@ namespace AW
 	{
 		if (animations.count(name) == 0)
 		{
-			Logger::instance()->log("AnimationSet::Failed to find Animation for key: " + name);
+			Logger::instance()->log("AnimationSet::Failed to find Animation for key=" + name);
 			return nullptr;
 		}
 

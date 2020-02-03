@@ -24,7 +24,6 @@ _base_config =
 	visualizeContainers = FALSE,
 	visualizeClipRects = FALSE,
 	useAssetPack = TRUE,
-	assetPackName = "asset.pack",
 	enableTestScenes = FALSE,
 	immediateDebugOutput = FALSE
 }

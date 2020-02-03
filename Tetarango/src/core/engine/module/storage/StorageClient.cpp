@@ -32,7 +32,7 @@ namespace AW
 	{
 		if (store.count(key) == 0)
 		{
-			Logger::instance()->logCritical("StorageReader::Attempted to read key=" + key + ", this does not exist");
+			Logger::instance()->logCritical("StorageReader::Attempted to read key=" + key + ", which does not exist");
 			return std::string();
 		}
 

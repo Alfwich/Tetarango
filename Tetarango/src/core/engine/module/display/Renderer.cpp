@@ -80,7 +80,7 @@ namespace AW
 		GLenum glewError = glewInit();
 		if (glewError != GLEW_OK)
 		{
-			Logger::instance()->logFatal("Renderer::GLEW failed to init: " + std::string((char*)glewGetErrorString(glewError)));
+			Logger::instance()->logFatal("Renderer::GLEW failed to init\n" + std::string((char*)glewGetErrorString(glewError)));
 			return false;
 		}
 
@@ -524,7 +524,7 @@ namespace AW
 				int len;
 				glGetProgramInfoLog(programId, sizeof(logBuf), &len, logBuf);
 				reportOpenGLErrors();
-				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program: " + std::string(logBuf, len));
+				Logger::instance()->logFatal("Renderer::OpenGL::Failed to link program\n" + std::string(logBuf, len));
 				programs[key] = 0;
 			}
 			else
@@ -561,7 +561,7 @@ namespace AW
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
 		{
-			Logger::instance()->logCritical("OpenGL::Error reported: " + std::to_string(err));
+			Logger::instance()->logCritical("OpenGL::Error reported\n" + std::to_string(err));
 		}
 	}
 

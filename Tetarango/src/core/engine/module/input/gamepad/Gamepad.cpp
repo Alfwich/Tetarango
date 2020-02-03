@@ -269,7 +269,7 @@ namespace AW
 		}
 		else
 		{
-			Logger::instance()->logCritical("Gamepad::Failed to open gamepad DeviceId: " + std::to_string(index));
+			Logger::instance()->logCritical("Gamepad::Failed to open gamepad DeviceId=" + std::to_string(index));
 		}
 
 		return (bool)gamepad;

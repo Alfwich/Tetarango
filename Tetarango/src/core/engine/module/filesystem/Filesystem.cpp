@@ -27,7 +27,7 @@ namespace AW
 			if (fileRef != NULL
 				&& SDL_RWclose(fileRef) != 0)
 			{
-				Logger::instance()->log("error: Filesystem::There was a problem trying to close a read stream.");
+				Logger::instance()->logCritical("Filesystem::Error closing file stream");
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace AW
 			}
 		}
 
-		Logger::instance()->log("Failed to read file on path=" + path + ", file could not be opened");
+		Logger::instance()->log("Filesystem::Failed to read file on path=" + path + ", the file could not be opened");
 		SDL_ClearError();
 
 		return std::string();
@@ -125,7 +125,7 @@ namespace AW
 			}
 		}
 
-		Logger::instance()->log("Failed to write or append (" + appendOrWrite + ") file on path=" + getAbsolutePathFromRelativePath(path) + ", file could not be opened");
+		Logger::instance()->log("Filesystem::Failed to write or append (" + appendOrWrite + ") file on path=" + getAbsolutePathFromRelativePath(path) + ", file could not be opened");
 		return false;
 	}
 
@@ -197,7 +197,7 @@ namespace AW
 			}
 			else
 			{
-				Logger::instance()->logCritical("SDL_GetPrefPath returned NULL, meaning there was some problem.");
+				Logger::instance()->logCritical("Filesystem::Could not get SDL_GetPrefPath");
 			}
 
 		}
