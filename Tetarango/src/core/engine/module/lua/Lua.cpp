@@ -192,6 +192,9 @@ namespace AW
 
 	bool Lua::setActiveContext(int id)
 	{
+		if (currentActiveContextId == id) return true;
+
+		const auto prevContextId = currentActiveContextId;
 		if (id == -1)
 		{
 			currentActiveContextId = defaultContext;
@@ -201,7 +204,7 @@ namespace AW
 		if (contexts.count(id) == 0)
 		{
 			Logger::instance()->logCritical("Lua::Failed to change to context id=" + std::to_string(id) + ", as this context does not exist");
-			currentActiveContextId = defaultContext;
+			currentActiveContextId = prevContextId;
 			return false;
 		}
 
@@ -227,11 +230,49 @@ namespace AW
 		contexts.erase(id);
 
 		const auto strContextId = std::to_string(id);
-		for (auto it = boundObjects.begin(); it != boundObjects.end();)
+		for (auto it = bindings.begin(); it != bindings.end();)
 		{
-			if (std::get<0>((*it).first) == strContextId)
+			const auto key = (*it).first;
+			if (std::get<0>(key) == strContextId)
 			{
-				it = boundObjects.erase(it);
+				// Cleanup bound objects for deleted context
+				const auto bindingId = std::get<1>(key);
+				if (!bindingId.empty() && keyToBindings.count(bindingId))
+				{
+					auto& bindingVector = keyToBindings[bindingId];
+					for (auto it2 = bindingVector.begin(); it2 != bindingVector.end();)
+					{
+						if ((*it2) == key)
+						{
+							it2 = bindingVector.erase(it2);
+						}
+						else
+						{
+							++it2;
+						}
+					}
+				}
+
+				// Cleanup global functions for deleted context
+				const auto functionName = std::get<2>(key);
+				if (bindingId.empty() && !functionName.empty() && keyToBindings.count(functionName))
+				{
+					auto& bindingVector = keyToBindings[functionName];
+					for (auto it2 = bindingVector.begin(); it2 != bindingVector.end();)
+					{
+						if ((*it2) == key)
+						{
+							it2 = bindingVector.erase(it2);
+						}
+						else
+						{
+							++it2;
+						}
+					}
+				}
+
+
+				it = bindings.erase(it);
 			}
 			else
 			{
@@ -294,7 +335,8 @@ namespace AW
 
 		const auto bindingId = callbackObj == nullptr ? globalBindingId : callbackObj->getLuaBindingId();
 		const auto functionBundleKey = std::make_tuple(std::to_string(currentActiveContextId), bindingId, fnName);
-		boundObjects.emplace(std::piecewise_construct, functionBundleKey, std::make_tuple(fnName, fn, callbackObj, luaBindingAdapter));
+		bindings.emplace(std::piecewise_construct, functionBundleKey, std::make_tuple(fnName, fn, callbackObj, luaBindingAdapter));
+		keyToBindings[bindingId.empty() ? fnName : bindingId].push_back(functionBundleKey);
 
 		if (bindingId == globalBindingId)
 		{
@@ -314,13 +356,86 @@ namespace AW
 			}
 		}
 
-		lua_pushlightuserdata(L, &boundObjects.at(functionBundleKey));
-		lua_pushcclosure(L, boundObjects.at(functionBundleKey).luaFunction, 1);
+		lua_pushlightuserdata(L, &bindings.at(functionBundleKey));
+		lua_pushcclosure(L, bindings.at(functionBundleKey).luaFunction, 1);
 		lua_setfield(L, -2, fnName.c_str());
 
 		lua_pop(L, bindingId == globalBindingId ? 1 : 2);
 	}
 
+
+	void Lua::callGlobalFunction(const std::string& function, const std::vector<std::string>& args)
+	{
+		const auto L = getCurrentContextLuaState();
+		if (L == nullptr)
+		{
+			Logger::instance()->logCritical("Lua::Failed to call global function name=" + function + ", no active context available");
+			return;
+		}
+
+		lua_getglobal(L, boundFunctionsGlobalName);
+		lua_getfield(L, -1, function.c_str());
+
+		const auto isFn = lua_isfunction(L, -1);
+		if (isFn)
+		{
+			for (const auto arg : args)
+			{
+				lua_pushstring(L, arg.c_str());
+			}
+
+			lua_call(L, (int)args.size(), 0);
+		}
+
+		lua_pop(L, isFn ? 1 : 2);
+	}
+
+	void Lua::callBoundFunction(const std::string& bindingId, const std::string& function, const std::vector<std::string>& args)
+	{
+		const auto L = getCurrentContextLuaState();
+		if (L == nullptr)
+		{
+			Logger::instance()->logCritical("Lua::Failed to call bound function for bindingId=" + bindingId + ", function name=" + function + ", no active context available");
+			return;
+		}
+
+		lua_getglobal(L, boundObjectsGlobalName);
+		lua_getfield(L, -1, bindingId.c_str());
+		if (lua_istable(L, -1))
+		{
+			lua_getfield(L, -1, function.c_str());
+			if (lua_isfunction(L, -1))
+			{
+				for (const auto arg : args)
+				{
+					lua_pushstring(L, arg.c_str());
+				}
+
+				lua_call(L, (int)args.size(), 0);
+			}
+			else
+			{
+				lua_pop(L, 1);
+			}
+		}
+		lua_pop(L, 2);
+	}
+
+	void Lua::callGlobalFunctionForContext(const std::string& function, int contextId, const std::vector<std::string>& args)
+	{
+		const auto prevContextId = currentActiveContextId;
+		if (setActiveContext(contextId))
+			callGlobalFunction(function, args);
+		setActiveContext(prevContextId);
+	}
+
+	void Lua::callBoundFunctionForContext(const std::string& bindingId, const std::string& function, int contextId, const std::vector<std::string>& args)
+	{
+		const auto prevContextId = currentActiveContextId;
+		if (setActiveContext(contextId))
+			callBoundFunction(bindingId, function, args);
+		setActiveContext(prevContextId);
+	}
 
 	void Lua::registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj)
 	{
@@ -348,19 +463,21 @@ namespace AW
 		setActiveContext(prevContextId);
 	}
 
-	void Lua::unregisterBoundFunctions(const std::shared_ptr<ILuaObject>& obj)
+	void Lua::unregisterBoundFunctions(const std::string& bindingId)
 	{
-		const auto bindingId = obj->getLuaBindingId();
-		for (auto it = boundObjects.begin(); it != boundObjects.end();)
+		if (keyToBindings.count(bindingId) != 0)
 		{
-			if (std::get<1>((*it).first) == bindingId)
+			auto& fns = keyToBindings.at(bindingId);
+			for (auto it = fns.begin(); it != fns.end(); ++it)
 			{
-				it = boundObjects.erase(it);
+				const auto key = (*it);
+				if (bindings.count(key) == 1)
+				{
+					bindings.erase(key);
+				}
 			}
-			else
-			{
-				++it;
-			}
+
+			keyToBindings.erase(bindingId);
 		}
 
 		for (const auto idtoContext : contexts)
@@ -383,16 +500,19 @@ namespace AW
 
 	void Lua::unregisterGlobalFunctions(const std::string& fnName)
 	{
-		for (auto it = boundObjects.begin(); it != boundObjects.end();)
+		if (keyToBindings.count(fnName) != 0)
 		{
-			if (std::get<2>((*it).first) == fnName)
+			auto& fns = keyToBindings.at(fnName);
+			for (auto it = fns.begin(); it != fns.end(); ++it)
 			{
-				it = boundObjects.erase(it);
+				const auto key = (*it);
+				if (bindings.count(key) == 1)
+				{
+					bindings.erase(key);
+				}
 			}
-			else
-			{
-				++it;
-			}
+
+			keyToBindings.erase(fnName);
 		}
 
 		for (const auto idtoContext : contexts)
@@ -536,7 +656,8 @@ namespace AW
 
 		contexts.clear();
 		fileScriptCache.clear();
-		boundObjects.clear();
+		bindings.clear();
+		keyToBindings.clear();
 	}
 
 	std::string Lua::getLuaBindingId()

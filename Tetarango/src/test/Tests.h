@@ -54,12 +54,23 @@ namespace AWTest
 				void onLuaCallback(const std::string& func, AW::LuaBoundObject* obj) override
 				{
 					lastLuaCallbackObj = obj;
-					AWTest::test_ss << func << " called" << std::endl;
 
 					if (func == "getArgs")
 					{
 						obj->returnValues.push_back("1");
 						obj->returnValues.push_back("tester");
+					}
+
+					if (func == "getInArgs")
+					{
+						for (unsigned int i = 0; i < obj->args; ++i)
+						{
+							AWTest::test_ss << obj->argV[i];
+						}
+					}
+					else
+					{
+						AWTest::test_ss << func << " called" << std::endl;
 					}
 				}
 			};
@@ -75,20 +86,22 @@ namespace AWTest
 				lua->registerGlobalFunction("testFn", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething" << std::endl; });
 				lua->registerGlobalFunction("testFn2", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething too!" << std::endl; });
 
-				lua->executeLuaString("aw_functions.testFn()");
+				//lua->executeLuaString("aw_functions.testFn()");
+				lua->callGlobalFunction("testFn");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
 
-				lua->executeLuaString("aw_functions.testFn2()");
+				lua->callGlobalFunction("testFn2");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
 
 				const auto testObj = std::make_shared<TestBindingObject>();
 				lua->registerBoundFunction("testFn", testObj);
 				lua->registerBoundFunction("testFn2", testObj);
 				lua->registerBoundFunction("getArgs", testObj);
+				lua->registerBoundFunction("getInArgs", testObj);
 
-				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn()");
+				lua->callBoundFunction(testObj->getLuaBindingId(), "testFn");
 				assert(!AWTest::test_ss.str().empty() && testObj->lastLuaCallbackObj != nullptr); AWTest::test_ss.str(""); testObj->lastLuaCallbackObj = nullptr;
-				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn2()");
+				lua->callBoundFunction(testObj->getLuaBindingId(), "testFn2");
 				assert(!AWTest::test_ss.str().empty() && testObj->lastLuaCallbackObj != nullptr); AWTest::test_ss.str(""); testObj->lastLuaCallbackObj = nullptr;
 
 				lua->executeLuaScript("res/lua/test/test.lua");
@@ -157,12 +170,23 @@ namespace AWTest
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
 				assert(testObj->lastLuaCallbackObj->args == 0);
 
-				lua->executeLuaString("aw_functions.testFn(6, 7, 8)");
-				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+				lua->registerGlobalFunction("testArgs", [](AW::LuaBoundObject* o) { for (unsigned int i = 0; i < o->args; ++i) AWTest::test_ss << o->argV[i]; });
+				lua->callGlobalFunction("testArgs", { "1", "2", "3" });
+				assert(AWTest::test_ss.str() == "123"); AWTest::test_ss.str("");
 
-				lua->unregisterBoundFunctions(testObj);
+				lua->callGlobalFunction("NOT_A_DEF_GLOBAL_FN", { "1", "2", "3" });
+				assert(AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+
+				lua->callBoundFunction(testObj->getLuaBindingId(), "getInArgs", { "1", "2", "3" });
+				assert(AWTest::test_ss.str() == "123"); AWTest::test_ss.str("");
+
+				lua->callBoundFunction(testObj->getLuaBindingId(), "NOT_A_DEF_BOUND_FN", { "1", "2", "3" });
+				assert(AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+
+				lua->unregisterBoundFunctions(testObj->getLuaBindingId());
 				lua->unregisterGlobalFunctions("testFn");
 				lua->unregisterGlobalFunctions("testFn2");
+				lua->unregisterGlobalFunctions("testArgs");
 
 				const auto debugInfo = lua->debugInfo();
 				for (const auto contextToStackSize : debugInfo) // Ensure our Lua stacks are not "leaking" frames

@@ -34,6 +34,8 @@ namespace AWGame
 				AWKey::TWO,
 				AWKey::THREE,
 				AWKey::FOUR,
+				AWKey::FIVE,
+				AWKey::SIX,
 				AWKey::LEFT,
 				AWKey::RIGHT,
 				AWKey::UP,
@@ -427,6 +429,12 @@ namespace AWGame
 			modules->network->httpGet("http://arthurwut.com/misc/merge.html", weakPtr<AW::INetworkListener>());
 			modules->network->httpPost("http://arthurwut.com/misc/test.php", { {"hello", "world"}, {"lets", "go!" } }, weakPtr<AW::INetworkListener>());
 		}
+
+		if (key == AWKey::FIVE && isPressed)
+		{
+			modules->lua->executeLuaScript("res/lua/test/test-element.lua");
+		}
+
 	}
 
 	void TestScene::onScrollBarScroll(int id, double pos)

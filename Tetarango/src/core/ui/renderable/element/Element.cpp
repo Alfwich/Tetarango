@@ -14,6 +14,12 @@ namespace AW
 		GORegister(Element);
 	}
 
+	void Element::onRegisterLuaHooks()
+	{
+		Renderable::onRegisterLuaHooks(modules->lua, sharedPtr());
+		registerBoundLuaMethod("setTexture");
+	}
+
 	void Element::onLoadResources()
 	{
 		modules->shader->registerShaderComposition({ "f-texture", "f-color" }, "element");
@@ -84,6 +90,13 @@ namespace AW
 	bool Element::getMatchSizeToTexture()
 	{
 		return serializationClient->getBool(elementAutoSizeToTextureParam, false);
+	}
+
+	void Element::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		Renderable::onLuaCallback(func, obj);
+
+		if (func == "setTexture" && obj->args == 1) setTexture(obj->argV[0]);
 	}
 
 	std::shared_ptr<SerializationClient> Element::doSerialize(SerializationHint hint)

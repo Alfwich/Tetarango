@@ -3,6 +3,7 @@
 #include "engine/module/serialization/ISerializable.h"
 #include "engine/module/shader/ShaderReference.h"
 #include "engine/module/display/RenderPackage.h"
+#include "engine/module/lua/ILuaObject.h"
 
 namespace AW
 {
@@ -79,7 +80,7 @@ namespace AW
 		World
 	};
 
-	class Renderable : public ISerializableDataSubscriber
+	class Renderable : public ISerializableDataSubscriber, public ILuaObject
 	{
 		double rot = 0.0, alpha = 1.0, scale = 1.0;
 		bool hasClipRect = false, dirty = true;
@@ -275,5 +276,11 @@ namespace AW
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
-	};
+
+		void onRegisterLuaHooks(std::shared_ptr<Lua>& lua, const std::shared_ptr<ILuaObject>& obj);
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override;
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
+};
 }

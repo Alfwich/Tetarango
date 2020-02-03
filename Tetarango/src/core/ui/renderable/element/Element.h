@@ -19,8 +19,9 @@ namespace AW
 	public:
 		Element();
 
-		void onLoadResources();
-		void onBindShaders();
+		void onLoadResources() override;
+		void onRegisterLuaHooks() override;
+		void onBindShaders() override;
 
 		virtual void setTexture(std::string key);
 		virtual void setTexture(std::shared_ptr<Texture> texture);
@@ -31,6 +32,8 @@ namespace AW
 
 		void setMatchSizeToTexture(bool flag);
 		bool getMatchSizeToTexture();
+
+		void onLuaCallback(const std::string& func, LuaBoundObject* obj);
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 	};

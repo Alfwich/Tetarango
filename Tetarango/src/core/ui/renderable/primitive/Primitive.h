@@ -16,8 +16,12 @@ namespace AW
 		virtual void preUpdateRender(Rect* renderRect, RenderPackage* renderPackage) { /* NO-OP */ };
 		virtual void preRender(Rect* renderRect, RenderPackage* renderPackage) { /* NO-OP */ };
 
+		virtual void onRegisterLuaHooks() override;
+
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual double getAlpha();
+
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 
 }

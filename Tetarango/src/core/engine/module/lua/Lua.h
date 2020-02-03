@@ -28,7 +28,8 @@ namespace AW
 		std::shared_ptr<Asset> asset;
 		int nextInactiveContextId = 0, currentActiveContextId = -1, defaultContext = -1;
 
-		std::unordered_map<std::tuple<std::string, std::string, std::string>, LuaBoundObject, tuple_hash> boundObjects;
+		std::unordered_map<std::tuple<std::string, std::string, std::string>, LuaBoundObject, tuple_hash> bindings;
+		std::unordered_map<std::string, std::vector<std::tuple<std::string, std::string, std::string>>> keyToBindings;
 
 		std::unordered_map<std::string, std::string> fileScriptCache;
 		std::unordered_map<int, lua_State*> contexts;
@@ -59,13 +60,19 @@ namespace AW
 		void executeLuaScriptForContext(std::string path, int contextId, bool allowCached = true);
 		void executeLuaStringForContext(const std::string& script, int contextId);
 
+		void callGlobalFunction(const std::string& function, const std::vector<std::string>& args = std::vector<std::string>());
+		void callBoundFunction(const std::string& bindingId, const std::string& function, const std::vector<std::string>& args = std::vector<std::string>());
+
+		void callGlobalFunctionForContext(const std::string& function, int contextId, const std::vector<std::string>& args = std::vector<std::string>());
+		void callBoundFunctionForContext(const std::string& bindingId, const std::string& function, int contextId, const std::vector<std::string>& args = std::vector<std::string>());
+
 		void registerBoundFunction(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj);
 		void registerGlobalFunction(const std::string& fnName, void(*fn)(LuaBoundObject*));
 
 		void registerBoundFunctionForContext(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj, int contextId);
 		void registerGlobalFunctionForContext(const std::string& fnName, void(*fn)(LuaBoundObject*), int contextId);
 
-		void unregisterBoundFunctions(const std::shared_ptr<ILuaObject>& obj);
+		void unregisterBoundFunctions(const std::string& bindingId);
 		void unregisterGlobalFunctions(const std::string& fnName);
 
 		int getGlobalInt(const std::string& name);

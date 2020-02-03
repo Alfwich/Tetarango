@@ -22,6 +22,11 @@ namespace AW
 		setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
+	void Container::onRegisterLuaHooks()
+	{
+		Renderable::onRegisterLuaHooks(modules->lua, sharedPtr());
+	}
+
 	std::shared_ptr<SerializationClient> Container::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__container__", hint);
@@ -86,6 +91,11 @@ namespace AW
 	{
 		Renderable::setScreenHeight(newHeight);
 		shouldAutoLayout = true;
+	}
+
+	void Container::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		Renderable::onLuaCallback(func, obj);
 	}
 
 	void Container::performAutoLayoutIfNeeded()

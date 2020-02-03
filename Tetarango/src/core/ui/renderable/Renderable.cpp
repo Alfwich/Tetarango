@@ -1002,6 +1002,28 @@ namespace AW
 
 	}
 
+
+	std::string Renderable::getLuaBindingId()
+	{
+		return std::string();
+	}
+
+	void Renderable::onRegisterLuaHooks(std::shared_ptr<Lua>& lua, const std::shared_ptr<ILuaObject>& obj)
+	{
+		lua->registerBoundFunction("setColor", obj);
+	}
+
+	void Renderable::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		if (func == "setColor" && obj->args == 4)
+			setColor(
+				std::atoi(obj->argV[0].c_str()),
+				std::atoi(obj->argV[1].c_str()),
+				std::atoi(obj->argV[2].c_str()),
+				std::atoi(obj->argV[3].c_str())
+			);
+	}
+
 	void Renderable::markDirty()
 	{
 		dirty = true;

@@ -8,6 +8,11 @@ namespace AW
 		renderMode = RenderMode::Primitive;
 	}
 
+	void Primitive::onRegisterLuaHooks()
+	{
+		Renderable::onRegisterLuaHooks(modules->lua, sharedPtr());
+	}
+
 	std::shared_ptr<SerializationClient> Primitive::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__primitive__", hint);
@@ -28,5 +33,10 @@ namespace AW
 		}
 
 		return Renderable::getAlpha();
+	}
+
+	void Primitive::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		Renderable::onLuaCallback(func, obj);
 	}
 }

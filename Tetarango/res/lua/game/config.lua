@@ -2,7 +2,7 @@ require("core/table-helper")
 
 TRUE = "true"
 FALSE = "false"
-ver = "v0.18"
+ver = "v0.19"
 gName = "Tetarango"
 
 _base_config = 

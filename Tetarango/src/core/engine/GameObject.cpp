@@ -32,6 +32,11 @@ namespace AW
 		GORegister(GameObject);
 	}
 
+	GameObject::~GameObject()
+	{
+		modules->lua->unregisterBoundFunctions(getLuaBindingId());
+	}
+
 	void GameObject::setTag(GTags tag, bool value)
 	{
 		tags[(unsigned int)tag] = value ? 1 : 0;
@@ -267,6 +272,11 @@ namespace AW
 		layout();
 	}
 
+	void GameObject::registerBoundLuaMethod(const std::string& methodName)
+	{
+		modules->lua->registerBoundFunction(methodName, sharedPtr());
+	}
+
 	void GameObject::enterFrame(const double& frameTime)
 	{
 		const auto timeScope = getTimeScope();
@@ -300,6 +310,12 @@ namespace AW
 		{
 			onBindShaders();
 			setTag(GTags::HasBoundShaders, true);
+		}
+
+		if (!getTag(GTags::HasRegisteredLuaBindings))
+		{
+			onRegisterLuaHooks();
+			setTag(GTags::HasRegisteredLuaBindings, true);
 		}
 
 		setTag(GTags::IsCurrentActive, parentPtr->getTag(GTags::IsCurrentActive) && getTag(GTags::IsCurrentActive));
@@ -428,6 +444,7 @@ namespace AW
 			setTag(GTags::HasHydratedChildren, false);
 			setTag(GTags::HasBoundShaders, false);
 			setTag(GTags::Loaded, false);
+			setTag(GTags::HasRegisteredLuaBindings, false);
 		}
 		break;
 		}
@@ -508,7 +525,7 @@ namespace AW
 
 	std::string GameObject::getLuaBindingId()
 	{
-		return std::to_string(id);
+		return std::to_string(getId());
 	}
 
 	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)

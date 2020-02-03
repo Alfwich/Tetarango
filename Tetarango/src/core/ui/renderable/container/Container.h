@@ -16,6 +16,8 @@ namespace AW
 
 		void setSizeToScreenSize();
 
+		virtual void onRegisterLuaHooks() override;
+
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 
 		void resizeSelfToChildrenAndCenterChildren();
@@ -23,6 +25,8 @@ namespace AW
 
 		void setScreenWidth(double newWidth);
 		void setScreenHeight(double newHeight);
+
+		void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 
 }

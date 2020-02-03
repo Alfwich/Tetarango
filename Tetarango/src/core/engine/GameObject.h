@@ -33,7 +33,8 @@ namespace AW
 		HasCreatedChildren,
 		HasHydratedChildren,
 		HasClipRect,
-		HasBoundShaders
+		HasBoundShaders,
+		HasRegisteredLuaBindings
 	};
 
 	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ILuaObject, public std::enable_shared_from_this<GameObject>
@@ -86,6 +87,7 @@ namespace AW
 		static int currentBindingId();
 
 		GameObject();
+		~GameObject();
 
 		int getId();
 		virtual int getBindingId();
@@ -127,6 +129,8 @@ namespace AW
 		void destroyChildren();
 		void rebuild();
 
+		void registerBoundLuaMethod(const std::string& methodName);
+
 		void attach();
 		void layout();
 		void detach();
@@ -138,6 +142,7 @@ namespace AW
 		virtual void onTransitionedTo() { /* NO-OP */ };
 		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { onTransitionedTo(); };
 		virtual void onBindShaders() { /* NO-OP */ };
+		virtual void onRegisterLuaHooks() { /* NO-OP */ }
 		virtual void onInitialAttach() { /* NO-OP */ };
 		virtual void onCreateChildren() { /* NO-OP */ };
 		virtual void onLayoutChildren() { /* NO-OP */ };
