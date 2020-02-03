@@ -8,6 +8,7 @@ namespace AW
 	class Time;
 	class Timer;
 	class Thread;
+	class Lua;
 
 	class Logger : public IBaseModule
 	{
@@ -53,8 +54,13 @@ namespace AW
 		void logFatal(std::string msg);
 		void logFatal(char* msg);
 
-		void onInit();
-		void onCleanup();
+		void onInit() override;
+		void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+		void onCleanup() override;
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override;
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 
 }
@@ -63,3 +69,4 @@ namespace AW
 #include "engine/module/time/Timer.h"
 #include "engine/module/time/Time.h"
 #include "engine/module/thread/Thread.h"
+#include "engine/module/lua/Lua.h"

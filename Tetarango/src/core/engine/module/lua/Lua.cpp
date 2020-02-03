@@ -5,6 +5,7 @@ namespace
 	const auto dummyCode = std::string();
 	const auto globalBindingId = std::string();
 	const auto awCoreLibLocation = "res/lua/core/aw.lua";
+	const auto contextIdBindingName = std::string("aw_cid");
 	const auto boundFunctionsGlobalName = "aw_functions";
 	const auto boundObjectsGlobalName = "aw_objects";
 
@@ -173,6 +174,7 @@ namespace AW
 		contexts[id] = L;
 
 		executeLuaScriptForContext(awCoreLibLocation, id);
+		executeLuaStringForContext(contextIdBindingName + "=" + std::to_string(id), id);
 
 		registerBoundFunctionForContext(doStringMethodName, shared_from_this(), id);
 		registerBoundFunctionForContext(doFileMethodName, shared_from_this(), id);

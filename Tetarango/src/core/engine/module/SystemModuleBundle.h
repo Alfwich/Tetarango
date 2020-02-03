@@ -64,6 +64,7 @@ namespace AW
 		void onAssignConfig(std::shared_ptr<Config::GameConfig> config);
 		void onInit();
 		void onLoadResources();
+		void onBindLuaHooks();
 		void onReady();
 		void onEnterFrame(const double& frameTime);
 		void onCleanup();

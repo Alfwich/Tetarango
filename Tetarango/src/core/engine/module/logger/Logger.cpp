@@ -1,5 +1,10 @@
 #include "Logger.h"
 
+namespace
+{
+	const auto logFunctionName = "log";
+}
+
 namespace AW
 {
 	Logger* Logger::staticLoggerInstance = nullptr;
@@ -115,10 +120,25 @@ namespace AW
 		logToFileEnabled = gameConfig->getConfigBool(Config::Param::logToFile);
 	}
 
+	void Logger::onBindLuaHooks(const std::shared_ptr<Lua>& lua)
+	{
+		lua->registerBoundFunction("log", shared_from_this());
+	}
+
 	void Logger::onCleanup()
 	{
 		purgeToLogFile();
 		logToFileEnabled = false;
+	}
+
+	std::string Logger::getLuaBindingId()
+	{
+		return "logger";
+	}
+
+	void Logger::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		if (func == logFunctionName && obj->args > 1) log(obj->argV[0], "lua:" + obj->argV[1]);
 	}
 
 	void Logger::writeConsole(std::string msg)

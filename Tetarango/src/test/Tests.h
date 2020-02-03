@@ -64,6 +64,9 @@ namespace AWTest
 				}
 			};
 
+			// Logger Test
+			lua->executeLuaScript("res/lua/test/test-logger.lua");
+
 			const auto testContext = lua->createNewContext();
 			lua->setActiveContext(testContext);
 			for (int i = 0; i < 1000; ++i)

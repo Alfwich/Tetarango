@@ -5,6 +5,7 @@
 
 namespace AW
 {
+	class Logger;
 	class AsyncResultBundle;
 	class Worker;
 

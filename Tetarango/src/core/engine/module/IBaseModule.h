@@ -6,6 +6,8 @@
 
 namespace AW
 {
+	class Lua;
+
 	class IBaseModule : public INotifyOnCompletion, public ILuaObject, public std::enable_shared_from_this<IBaseModule>
 	{
 	public:
@@ -15,6 +17,7 @@ namespace AW
 		virtual void onInit() { /* NO-OP */ };
 		virtual void onLoadResources() { /* NO-OP */ };
 		virtual void onReady() { /* NO-OP */ };
+		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) { /* NO-OP */ };
 		virtual void onEnterFrame(const double& frameTime) { onEnterFrame(); };
 		virtual void onEnterFrame() { /* NO-OP */ };
 		virtual void onCleanup() { /* NO-OP */ };
@@ -26,3 +29,5 @@ namespace AW
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override {};
 	};
 }
+
+#include "engine/module/lua/Lua.h"

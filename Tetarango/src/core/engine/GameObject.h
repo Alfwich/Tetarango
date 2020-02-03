@@ -36,9 +36,8 @@ namespace AW
 		HasBoundShaders
 	};
 
-	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public std::enable_shared_from_this<GameObject>
+	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ILuaObject, public std::enable_shared_from_this<GameObject>
 	{
-		static std::unordered_map<std::string, bool> resourcesLoadedMap;
 		const int id;
 		int bindingId;
 
@@ -175,7 +174,11 @@ namespace AW
 
 		int setTimeout(double timeoutMS);
 		void setTimeout(double timeoutMS, int* timeoutIdLocation);
-	};
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override;
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
+};
 
 	template<typename T>
 	inline std::shared_ptr<T> GameObject::findFirstInParentChain()

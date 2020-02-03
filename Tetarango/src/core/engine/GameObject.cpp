@@ -506,6 +506,16 @@ namespace AW
 		*timeoutIdLocation = setTimeout(timeoutMS);
 	}
 
+	std::string GameObject::getLuaBindingId()
+	{
+		return std::to_string(id);
+	}
+
+	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		// TODO: Implement GO related callbacks
+	}
+
 	std::shared_ptr<GameObject> GameObject::getRootNode()
 	{
 		const auto parentPtr = getParent().lock();

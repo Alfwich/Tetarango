@@ -16,6 +16,7 @@ namespace AW
 	Application::Application()
 	{
 		modules = std::make_shared<SystemModuleBundle>();
+		modules->logger->log("Application::Ctor");
 		loadGlobalAssetPack();
 		loadEnvironmentBootstrapLuaConfig();
 		screenConfig.width = 640;
@@ -108,6 +109,9 @@ namespace AW
 
 		modules->logger->log("Application::onPrimeSerialization");
 		onPrimeSerialization();
+
+		modules->logger->log("Application::onBindLuaHooks");
+		modules->onBindLuaHooks();
 
 		if (gameConfig->getConfigBool(Config::Param::runTests))
 		{

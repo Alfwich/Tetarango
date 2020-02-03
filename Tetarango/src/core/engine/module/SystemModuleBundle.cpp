@@ -107,6 +107,14 @@ namespace AW
 		loaded = true;
 	}
 
+	void SystemModuleBundle::onBindLuaHooks()
+	{
+		for (const auto module : modules)
+		{
+			module->onBindLuaHooks(lua);
+		}
+	}
+
 	void SystemModuleBundle::onReady()
 	{
 		if (ready) return;
