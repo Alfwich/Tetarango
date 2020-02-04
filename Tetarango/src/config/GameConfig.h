@@ -23,7 +23,6 @@ namespace Config
 		visualizeContainers,
 		visualizeClipRects,
 		useAssetPack,
-		allowAssetPackCaching,
 		enableTestScenes,
 		immediateDebugOutput
 	};
@@ -56,7 +55,6 @@ namespace Config
 				{ Param::visualizeContainers, injectedConfig.at("visualizeContainers") },
 				{ Param::visualizeClipRects, injectedConfig.at("visualizeClipRects") },
 				{ Param::useAssetPack, injectedConfig.at("useAssetPack") },
-				{ Param::allowAssetPackCaching, injectedConfig.at("allowAssetPackCaching") },
 				{ Param::enableTestScenes, injectedConfig.at("enableTestScenes") },
 				{ Param::immediateDebugOutput, injectedConfig.at("immediateDebugOutput") }
 			};

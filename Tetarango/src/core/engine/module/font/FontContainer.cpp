@@ -42,7 +42,7 @@ namespace AW
 
 		TTF_Font* font;
 
-		const auto ttfFont = asset->getAssetBundle(fontPack->path);
+		const auto ttfFont = nameToFontPack.at(name)->pack;
 		if (ttfFont != nullptr)
 		{
 			SDL_RWops* rw = SDL_RWFromMem(ttfFont->data.get(), ttfFont->size);
@@ -87,7 +87,8 @@ namespace AW
 			return false;
 		}
 
-		nameToFontPack[name] = std::make_unique<FontPack>(path, font, fontSize);
+		nameToFontPack[name] = std::make_unique<FontPack>(path, font, fontSize, ttfFont);
+
 		Logger::instance()->log("FontContainer::Loaded font name=" + name + ", size=" + std::to_string(fontSize) + ", path=" + path);
 
 		return true;

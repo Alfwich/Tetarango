@@ -178,6 +178,8 @@ namespace AW
 		registerBoundFunctionForContext(doStringMethodName, shared_from_this(), id);
 		registerBoundFunctionForContext(doFileMethodName, shared_from_this(), id);
 
+		Logger::instance()->log("Lua::Created new execution context with id=" + std::to_string(id));
+
 		return id;
 	}
 

@@ -10,8 +10,15 @@ namespace AW
 	class FontPack
 	{
 	public:
-		FontPack(std::string path, TTF_Font* font, int fontSize) { this->path = path, this->fontSizeToTTFFont[fontSize] = font; }
-		std::string path;
+		FontPack(std::string path, TTF_Font* font, int fontSize, const std::shared_ptr<ResourceBundle> ttfFont)
+			: path(path), pack(ttfFont)
+		{
+			this->fontSizeToTTFFont[fontSize] = font;
+		}
+
+		const std::string path;
+		const std::shared_ptr<ResourceBundle> pack;
+
 		std::unordered_map<int, TTF_Font*> fontSizeToTTFFont;
 	};
 

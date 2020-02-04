@@ -178,8 +178,8 @@ namespace AW
 	std::shared_ptr<ResourceBundle> Asset::getAssetBundle(std::string path, bool allowCached)
 	{
 		const auto name = assetNameFromPath(path);
-		const auto allowCachedAndConfigEnabled = allowCached && (gameConfig == nullptr || gameConfig->getConfigBool(Config::Param::allowAssetPackCaching));
-		if (allowCachedAndConfigEnabled && assetPack.count(name) != 0)
+		const auto assetPackEnabled = gameConfig != nullptr && gameConfig->getConfigBool(Config::Param::useAssetPack);
+		if (allowCached && assetPackEnabled && assetPack.count(name) == 1)
 		{
 			return assetPack.at(name);
 		}
@@ -188,9 +188,15 @@ namespace AW
 			const auto data = filesystem->readContentsFromFile(path, true);
 			if (!data.empty())
 			{
-				assetPack.emplace(name, std::make_shared<ResourceBundle>(data));
-				return assetPack[name];
+				assetPack[name] = std::make_shared<ResourceBundle>(data);
+				return assetPack.at(name);
 			}
+		}
+
+		if (assetPack.count(name) == 1)
+		{
+			Logger::instance()->log("Asset::Falling back to asset in asset pack for name=" + name);
+			return assetPack.at(name);
 		}
 
 		Logger::instance()->logFatal("Asset::Attempted to pull asset for name=" + name + ", this does not exist in asset pack nor the filesystem");
