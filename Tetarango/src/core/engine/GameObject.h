@@ -34,6 +34,8 @@ namespace AW
 		HasHydratedChildren,
 		HasClipRect,
 		HasBoundShaders,
+
+		LuaBindingsEnabled,
 		HasRegisteredLuaBindings
 	};
 
@@ -106,6 +108,9 @@ namespace AW
 
 		void setShouldLayoutOnLoad(bool flag = true);
 		bool shouldLayoutOnLoad();
+
+		void setLuaBindingsEnabled(bool flag = true);
+		bool luaBindingsEnabled();
 
 		bool isAttached();
 		bool isRootElement();
@@ -181,6 +186,7 @@ namespace AW
 		void setTimeout(double timeoutMS, int* timeoutIdLocation);
 
 		// Inherited via ILuaObject
+		virtual std::string getAwType() override;
 		virtual std::string getLuaBindingId() override;
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 };

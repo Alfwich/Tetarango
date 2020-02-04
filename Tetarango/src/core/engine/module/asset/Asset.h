@@ -40,7 +40,7 @@ namespace AW
 
 		void loadGlobalAssetPack();
 
-		std::shared_ptr<ResourceBundle> getAssetBundle(std::string path);
+		std::shared_ptr<ResourceBundle> getAssetBundle(std::string path, bool allowCached = true);
 
 		void compressRawImageToPng(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);
 		void uncompressPngImageToRaw(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);

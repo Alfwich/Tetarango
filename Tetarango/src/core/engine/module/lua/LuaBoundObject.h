@@ -21,8 +21,8 @@ namespace AW
 		void (*callback)(LuaBoundObject*);
 		std::weak_ptr<ILuaObject> callbackObj;
 
-		unsigned int args = 0;
-		std::vector<std::string> argV;
+		unsigned int numArgs = 0;
+		std::vector<std::string> args;
 		std::vector<std::string> returnValues;
 	};
 }

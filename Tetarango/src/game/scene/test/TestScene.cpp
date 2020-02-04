@@ -181,6 +181,7 @@ namespace AWGame
 		for (auto i = 0; i < 100; ++i)
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
+			poly->setLuaBindingsEnabled(true);
 			poly->setColor(AW::Color::random());
 			poly->setTexture("noise-solid-512");
 			const auto numP = AW::NumberHelper::randomInt(3, 20);
@@ -432,7 +433,7 @@ namespace AWGame
 
 		if (key == AWKey::FIVE && isPressed)
 		{
-			modules->lua->executeLuaScript("res/lua/test/test-element.lua");
+			modules->lua->executeLuaScript("res/lua/test/test-element.lua", false);
 		}
 
 	}

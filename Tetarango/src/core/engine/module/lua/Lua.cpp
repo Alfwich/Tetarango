@@ -33,22 +33,22 @@ namespace
 
 	int luaBindingAdapter(lua_State* L)
 	{
-		std::vector<std::string> returnArgs;
 		AW::LuaBoundObject* bundle = static_cast<AW::LuaBoundObject*>(lua_touserdata(L, lua_upvalueindex(1)));
 
-		bundle->args = lua_gettop(L);
-		for (unsigned int i = 1; i <= bundle->args; ++i)
+		bundle->numArgs = lua_gettop(L);
+		for (unsigned int i = 1; i <= bundle->numArgs; ++i)
 		{
-			if (bundle->argV.size() == i - 1)
+			if (bundle->args.size() == i - 1)
 			{
-				bundle->argV.push_back(convertStackLocationToString(L, i));
+				bundle->args.push_back(convertStackLocationToString(L, i));
 			}
 			else
 			{
-				bundle->argV[i - 1] = convertStackLocationToString(L, i);
+				bundle->args[i - 1] = convertStackLocationToString(L, i);
 			}
 		}
 
+		bundle->returnValues.clear();
 		if (bundle->callback != nullptr)
 		{
 			bundle->callback(bundle);
@@ -60,7 +60,6 @@ namespace
 			{
 				callbackObjPtr->onLuaCallback(bundle->fnName, bundle);
 			}
-
 		}
 
 		for (const auto returnValue : bundle->returnValues)
@@ -83,7 +82,7 @@ namespace AW
 	{
 		if (!allowCached || fileScriptCache.count(path) == 0)
 		{
-			const auto bundle = asset->getAssetBundle(path);
+			const auto bundle = asset->getAssetBundle(path, allowCached);
 			if (bundle != nullptr)
 			{
 				fileScriptCache[path] = std::string(bundle->data.get(), bundle->size);
@@ -353,6 +352,10 @@ namespace AW
 				lua_newtable(L);
 				lua_setfield(L, -2, bindingId.c_str());
 				lua_getfield(L, -1, bindingId.c_str());
+
+				const auto typeName = callbackObj->getAwType();
+				lua_pushstring(L, typeName.c_str());
+				lua_setfield(L, -2, "_type");
 			}
 		}
 
@@ -362,7 +365,6 @@ namespace AW
 
 		lua_pop(L, bindingId == globalBindingId ? 1 : 2);
 	}
-
 
 	void Lua::callGlobalFunction(const std::string& function, const std::vector<std::string>& args)
 	{
@@ -667,8 +669,8 @@ namespace AW
 
 	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == doStringMethodName && obj->args != 0) executeLuaString(obj->argV[0]);
-		if (func == doFileMethodName && obj->args != 0) executeLuaScript(obj->argV[0]);
+		if (func == doStringMethodName && obj->numArgs != 0) executeLuaString(obj->args[0]);
+		if (func == doFileMethodName && obj->numArgs != 0) executeLuaScript(obj->args[0]);
 	}
 
 	std::unordered_map<int, int> Lua::debugInfo()

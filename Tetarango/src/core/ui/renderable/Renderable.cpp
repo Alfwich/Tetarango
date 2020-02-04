@@ -1011,17 +1011,48 @@ namespace AW
 	void Renderable::onRegisterLuaHooks(std::shared_ptr<Lua>& lua, const std::shared_ptr<ILuaObject>& obj)
 	{
 		lua->registerBoundFunction("setColor", obj);
+		lua->registerBoundFunction("setShaderUniform", obj);
+		lua->registerBoundFunction("setShaderUniformV2", obj);
+		lua->registerBoundFunction("setShaderUniformV3", obj);
+		lua->registerBoundFunction("setShaderUniformV4", obj);
+		lua->registerBoundFunction("setPosition", obj);
+		lua->registerBoundFunction("setSize", obj);
 	}
 
 	void Renderable::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == "setColor" && obj->args == 4)
+		if (func == "setColor" && obj->numArgs == 3)
 			setColor(
-				std::atoi(obj->argV[0].c_str()),
-				std::atoi(obj->argV[1].c_str()),
-				std::atoi(obj->argV[2].c_str()),
-				std::atoi(obj->argV[3].c_str())
+				std::stoi(obj->args[0]),
+				std::stoi(obj->args[1]),
+				std::stoi(obj->args[2])
 			);
+
+		else if (func == "setColor" && obj->numArgs == 4)
+			setColor(
+				std::stoi(obj->args[0]),
+				std::stoi(obj->args[1]),
+				std::stoi(obj->args[2]),
+				std::stoi(obj->args[3])
+			);
+
+		else if (func == "setShaderUniform" && obj->numArgs == 2 && fragmentShader != nullptr)
+			fragmentShader->setFloatIUParam(obj->args[0], std::stod(obj->args[1]));
+
+		else if (func == "setShaderUniformV2" && obj->numArgs == 3 && fragmentShader != nullptr)
+			fragmentShader->setFloatV2IUParam(obj->args[0], std::stod(obj->args[1]), std::stod(obj->args[2]));
+
+		else if (func == "setShaderUniformV3" && obj->numArgs == 4 && fragmentShader != nullptr)
+			fragmentShader->setFloatV3IUParam(obj->args[0], std::stod(obj->args[1]), std::stod(obj->args[2]), std::stod(obj->args[3]));
+
+		else if (func == "setShaderUniformV4" && obj->numArgs == 5 && fragmentShader != nullptr)
+			fragmentShader->setFloatV4IUParam(obj->args[0], std::stod(obj->args[1]), std::stod(obj->args[2]), std::stod(obj->args[3]), std::stod(obj->args[4]));
+
+		else if (func == "setPosition" && obj->numArgs == 2)
+			setScreenPosition(std::stod(obj->args[0]), std::stod(obj->args[1]));
+
+		else if (func == "setSize" && obj->numArgs == 2)
+			setScreenSize(std::stod(obj->args[0]), std::stod(obj->args[1]));
 	}
 
 	void Renderable::markDirty()

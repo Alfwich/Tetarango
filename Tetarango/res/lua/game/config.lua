@@ -24,6 +24,7 @@ _base_config =
 	visualizeContainers = FALSE,
 	visualizeClipRects = FALSE,
 	useAssetPack = TRUE,
+	allowAssetPackCaching = TRUE,
 	enableTestScenes = FALSE,
 	immediateDebugOutput = FALSE
 }
@@ -32,6 +33,7 @@ dev_config = table_helper.copy(_base_config)
 dev_config.gameName = gName .. " - Debug - " .. ver
 dev_config.storageLocation = gName .. "-" .. ver .. "-Debug"
 dev_config.useAssetPack = FALSE
+dev_config.allowAssetPackCaching = FALSE
 dev_config.saveWholeSceneOnClose = TRUE
 dev_config.immediateDebugOutput = TRUE
 dev_config.launchToLastScene = TRUE

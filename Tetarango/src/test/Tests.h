@@ -63,9 +63,9 @@ namespace AWTest
 
 					if (func == "getInArgs")
 					{
-						for (unsigned int i = 0; i < obj->args; ++i)
+						for (unsigned int i = 0; i < obj->numArgs; ++i)
 						{
-							AWTest::test_ss << obj->argV[i];
+							AWTest::test_ss << obj->args[i];
 						}
 					}
 					else
@@ -86,7 +86,6 @@ namespace AWTest
 				lua->registerGlobalFunction("testFn", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething" << std::endl; });
 				lua->registerGlobalFunction("testFn2", [](AW::LuaBoundObject*) { AWTest::test_ss << "doSomething too!" << std::endl; });
 
-				//lua->executeLuaString("aw_functions.testFn()");
 				lua->callGlobalFunction("testFn");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
 
@@ -139,38 +138,38 @@ namespace AWTest
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(1, 2, \"hello-world\")");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->args == 3);
-				assert(std::stoi(testObj->lastLuaCallbackObj->argV[0].c_str()) == 1);
-				assert(std::stoi(testObj->lastLuaCallbackObj->argV[1].c_str()) == 2);
-				assert(testObj->lastLuaCallbackObj->argV[2] == "hello-world");
+				assert(testObj->lastLuaCallbackObj->numArgs == 3);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 1);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[1].c_str()) == 2);
+				assert(testObj->lastLuaCallbackObj->args[2] == "hello-world");
 				testObj->lastLuaCallbackObj = nullptr;
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(0, 44, 56, \"hello-world\")");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->args == 4);
-				assert(std::stoi(testObj->lastLuaCallbackObj->argV[0].c_str()) == 0);
-				assert(std::stoi(testObj->lastLuaCallbackObj->argV[1].c_str()) == 44);
-				assert(std::stoi(testObj->lastLuaCallbackObj->argV[2].c_str()) == 56);
-				assert(testObj->lastLuaCallbackObj->argV[3] == "hello-world");
+				assert(testObj->lastLuaCallbackObj->numArgs == 4);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 0);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[1].c_str()) == 44);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[2].c_str()) == 56);
+				assert(testObj->lastLuaCallbackObj->args[3] == "hello-world");
 				testObj->lastLuaCallbackObj = nullptr;
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(0)");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->args == 1);
-				assert(std::stoi(testObj->lastLuaCallbackObj->argV[0].c_str()) == 0);
+				assert(testObj->lastLuaCallbackObj->numArgs == 1);
+				assert(std::stoi(testObj->lastLuaCallbackObj->args[0].c_str()) == 0);
 				testObj->lastLuaCallbackObj = nullptr;
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(aw_objects[\"" + testObj->getLuaBindingId() + "\"].getArgs())");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->args == 2);
-				assert(testObj->lastLuaCallbackObj->argV[0] == "1");
-				assert(testObj->lastLuaCallbackObj->argV[1] == "tester");
+				assert(testObj->lastLuaCallbackObj->numArgs == 2);
+				assert(testObj->lastLuaCallbackObj->args[0] == "1");
+				assert(testObj->lastLuaCallbackObj->args[1] == "tester");
 
 				lua->executeLuaString("aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn(aw_objects[\"" + testObj->getLuaBindingId() + "\"].testFn2())");
 				assert(!AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
-				assert(testObj->lastLuaCallbackObj->args == 0);
+				assert(testObj->lastLuaCallbackObj->numArgs == 0);
 
-				lua->registerGlobalFunction("testArgs", [](AW::LuaBoundObject* o) { for (unsigned int i = 0; i < o->args; ++i) AWTest::test_ss << o->argV[i]; });
+				lua->registerGlobalFunction("testArgs", [](AW::LuaBoundObject* o) { for (unsigned int i = 0; i < o->numArgs; ++i) AWTest::test_ss << o->args[i]; });
 				lua->callGlobalFunction("testArgs", { "1", "2", "3" });
 				assert(AWTest::test_ss.str() == "123"); AWTest::test_ss.str("");
 

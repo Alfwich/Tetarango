@@ -92,6 +92,27 @@ namespace AW
 		return getTag(GTags::LayoutOnLoad);
 	}
 
+	void GameObject::setLuaBindingsEnabled(bool flag)
+	{
+		if (!luaBindingsEnabled() && !getTag(GTags::HasRegisteredLuaBindings) && flag)
+		{
+			onRegisterLuaHooks();
+			setTag(GTags::HasRegisteredLuaBindings, true);
+		}
+		else if (luaBindingsEnabled() && getTag(GTags::HasRegisteredLuaBindings) && !flag)
+		{
+			modules->lua->unregisterBoundFunctions(getLuaBindingId());
+			setTag(GTags::HasRegisteredLuaBindings, false);
+		}
+
+		setTag(GTags::LuaBindingsEnabled, flag);
+	}
+
+	bool GameObject::luaBindingsEnabled()
+	{
+		return false;
+	}
+
 	bool GameObject::isAttached()
 	{
 		const auto parentPtr = parent.lock();
@@ -312,7 +333,7 @@ namespace AW
 			setTag(GTags::HasBoundShaders, true);
 		}
 
-		if (!getTag(GTags::HasRegisteredLuaBindings))
+		if (luaBindingsEnabled() && !getTag(GTags::HasRegisteredLuaBindings))
 		{
 			onRegisterLuaHooks();
 			setTag(GTags::HasRegisteredLuaBindings, true);
@@ -521,6 +542,11 @@ namespace AW
 		}
 
 		*timeoutIdLocation = setTimeout(timeoutMS);
+	}
+
+	std::string GameObject::getAwType()
+	{
+		return schematic == nullptr ? "" : schematic->typeName.substr(schematic->typeName.find_last_of(':') + 1);
 	}
 
 	std::string GameObject::getLuaBindingId()

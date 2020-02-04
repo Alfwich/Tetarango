@@ -175,26 +175,25 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<ResourceBundle> Asset::getAssetBundle(std::string path)
+	std::shared_ptr<ResourceBundle> Asset::getAssetBundle(std::string path, bool allowCached)
 	{
 		const auto name = assetNameFromPath(path);
-
-		if (assetPack.count(name) != 0)
+		const auto allowCachedAndConfigEnabled = allowCached && (gameConfig == nullptr || gameConfig->getConfigBool(Config::Param::allowAssetPackCaching));
+		if (allowCachedAndConfigEnabled && assetPack.count(name) != 0)
 		{
 			return assetPack.at(name);
-
 		}
 		else
 		{
 			const auto data = filesystem->readContentsFromFile(path, true);
 			if (!data.empty())
 			{
-				assetPack[name] = std::make_shared<ResourceBundle>(data);
+				assetPack.emplace(name, std::make_shared<ResourceBundle>(data));
 				return assetPack[name];
 			}
 		}
 
-		Logger::instance()->logFatal("Asset::Attempted to pull asset for name=" + name + ", this does not exist in asset pack");
+		Logger::instance()->logFatal("Asset::Attempted to pull asset for name=" + name + ", this does not exist in asset pack nor the filesystem");
 		return nullptr;
 	}
 

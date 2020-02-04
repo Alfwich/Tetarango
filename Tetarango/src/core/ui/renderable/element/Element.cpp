@@ -96,7 +96,7 @@ namespace AW
 	{
 		Renderable::onLuaCallback(func, obj);
 
-		if (func == "setTexture" && obj->args == 1) setTexture(obj->argV[0]);
+		if (func == "setTexture" && obj->numArgs == 1) setTexture(obj->args[0]);
 	}
 
 	std::shared_ptr<SerializationClient> Element::doSerialize(SerializationHint hint)
