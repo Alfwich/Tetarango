@@ -32,8 +32,6 @@ namespace AW
 		void doCallback();
 	};
 
-
-
 	template <typename T, typename S>
 	class SharedPtrWorker : public Worker
 	{

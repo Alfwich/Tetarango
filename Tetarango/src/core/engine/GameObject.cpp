@@ -4,6 +4,7 @@ namespace
 {
 	int nextGameObjectId = 100;
 	const auto orderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) { return a->zIndex < b->zIndex; };
+	const auto luaImplKeyParamName = "go_lua_impl_key";
 }
 
 namespace AW
@@ -22,7 +23,7 @@ namespace AW
 		return (int)std::chrono::nanoseconds(time).count();
 	}
 
-	GameObject::GameObject() : id(nextId()), bindingId(currentBindingId()), modules(SystemModuleBundle::getModuleBundle())
+	GameObject::GameObject() : id(nextId()), idString(std::to_string(id)), bindingId(currentBindingId()), modules(SystemModuleBundle::getModuleBundle())
 	{
 		setTag(GTags::IsActive, true);
 		setTag(GTags::LayoutOnLoad, true);
@@ -106,6 +107,12 @@ namespace AW
 		}
 
 		setTag(GTags::LuaBindingsEnabled, flag);
+	}
+
+	void GameObject::setLuaImplementation(const std::string& implKey)
+	{
+		serializationClient->setString(luaImplKeyParamName, implKey);
+		modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
 	}
 
 	bool GameObject::luaBindingsEnabled()
@@ -456,6 +463,12 @@ namespace AW
 		enterFramePriority = client->serializeInt("e-f-p", enterFramePriority);
 		setInputMode((InputMode)client->serializeInt("i-n-m", (int)getInputMode()));
 
+		const auto luaImplKey = serializationClient->getString(luaImplKeyParamName);
+		if (!luaImplKey.empty())
+		{
+			setLuaImplementation(luaImplKey);
+		}
+
 		switch (hint)
 		{
 		case SerializationHint::HYDRATE:
@@ -515,7 +528,7 @@ namespace AW
 		if (isActive() && !enterFrameActivated)
 		{
 			enterFrameActivated = true;
-			modules->event->registerOnEnterFrame(shared_from_this(), priority);
+			modules->event->registerOnEnterFrame(sharedPtr(), priority);
 		}
 	}
 
@@ -531,7 +544,7 @@ namespace AW
 
 	int GameObject::setTimeout(double timeoutMS)
 	{
-		return modules->event->registerTimeoutCallback(shared_from_this(), timeoutMS);
+		return modules->event->registerTimeoutCallback(sharedPtr(), timeoutMS);
 	}
 
 	void GameObject::setTimeout(double timeoutMS, int* timeoutIdLocation)
@@ -551,7 +564,7 @@ namespace AW
 
 	std::string GameObject::getLuaBindingId()
 	{
-		return std::to_string(getId());
+		return idString;
 	}
 
 	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)

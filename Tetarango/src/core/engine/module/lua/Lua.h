@@ -32,6 +32,7 @@ namespace AW
 		std::unordered_map<std::string, std::vector<std::tuple<std::string, std::string, std::string>>> keyToBindings;
 
 		std::unordered_map<std::string, std::string> fileScriptCache;
+		std::unordered_map<std::string, std::string> registeredImpls;
 		std::unordered_map<int, lua_State*> contexts;
 
 		const std::string& loadScriptForPath(const std::string& path, bool allowCached = true);
@@ -45,6 +46,8 @@ namespace AW
 		lua_State* getCurrentContextLuaState();
 
 		void registerFunction(const std::string& fnName, void(*fn)(LuaBoundObject*), const std::shared_ptr<ILuaObject>& callbackObj);
+
+		void primeContext(int contextId);
 
 	public:
 		void bindAsset(std::shared_ptr<Asset> asset);
@@ -72,8 +75,13 @@ namespace AW
 		void registerBoundFunctionForContext(const std::string& fnName, const std::shared_ptr<ILuaObject>& callbackObj, int contextId);
 		void registerGlobalFunctionForContext(const std::string& fnName, void(*fn)(LuaBoundObject*), int contextId);
 
+		void unregisterBoundFunction(const std::string& bindingId, const std::string& fnName = std::string());
 		void unregisterBoundFunctions(const std::string& bindingId);
+
 		void unregisterGlobalFunctions(const std::string& fnName);
+
+		void registerObjectImplementation(const std::string& implFilePath, const std::string& implKey);
+		void setObjectImplementation(const std::string& bindingId, const std::string& implKey);
 
 		int getGlobalInt(const std::string& name);
 		double getGlobalDouble(const std::string& name);
@@ -82,6 +90,7 @@ namespace AW
 		std::unordered_map<std::string, std::string> getGlobalRecord(const std::string& name);
 
 		void onInit() override;
+		void onEnterFrame(const double& frameTime);
 		void onCleanup() override;
 
 		// Inherited via IBaseModule

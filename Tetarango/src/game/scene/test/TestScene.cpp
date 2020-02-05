@@ -21,6 +21,7 @@ namespace AWGame
 
 	void TestScene::onLoadResources()
 	{
+		modules->lua->registerObjectImplementation("res/lua/game/object/color-changer.lua", "color-changer");
 	}
 
 	void TestScene::onInitialAttach()
@@ -182,6 +183,7 @@ namespace AWGame
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
 			poly->setLuaBindingsEnabled(true);
+			poly->setLuaImplementation("color-changer");
 			poly->setColor(AW::Color::random());
 			poly->setTexture("noise-solid-512");
 			const auto numP = AW::NumberHelper::randomInt(3, 20);
@@ -436,9 +438,7 @@ namespace AWGame
 
 		if (key == AWKey::FIVE && isPressed)
 		{
-			modules->lua->executeLuaScript("res/lua/test/test-element.lua", false);
 		}
-
 	}
 
 	void TestScene::onScrollBarScroll(int id, double pos)

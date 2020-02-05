@@ -182,6 +182,10 @@ namespace AWTest
 				lua->callBoundFunction(testObj->getLuaBindingId(), "NOT_A_DEF_BOUND_FN", { "1", "2", "3" });
 				assert(AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
 
+				lua->unregisterBoundFunction(testObj->getLuaBindingId(), "getInArgs");
+				lua->callBoundFunction(testObj->getLuaBindingId(), "getInArgs", { "1", "2", "3" });
+				assert(AWTest::test_ss.str().empty()); AWTest::test_ss.str("");
+
 				lua->unregisterBoundFunctions(testObj->getLuaBindingId());
 				lua->unregisterGlobalFunctions("testFn");
 				lua->unregisterGlobalFunctions("testFn2");

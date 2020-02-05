@@ -42,6 +42,7 @@ namespace AW
 	class GameObject : public IInputListener, public EnterFrameListener, public ISerializable, public INotifyOnCompletion, public ILuaObject, public std::enable_shared_from_this<GameObject>
 	{
 		const int id;
+		const std::string idString;
 		int bindingId;
 
 		std::bitset<32> tags;
@@ -110,6 +111,7 @@ namespace AW
 		bool shouldLayoutOnLoad();
 
 		void setLuaBindingsEnabled(bool flag = true);
+		void setLuaImplementation(const std::string& implKey);
 		bool luaBindingsEnabled();
 
 		bool isAttached();

@@ -233,9 +233,9 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="libvorbisfile-3.dll" />
     <None Include="libwebp-7.dll" />
     <None Include="res\lua\core\aw.lua" />
-    <None Include="res\lua\game\config.lua" />
     <None Include="res\lua\core\table-helper.lua" />
-    <None Include="res\lua\test\test-element.lua" />
+    <None Include="res\lua\game\config.lua" />
+    <None Include="res\lua\game\object\color-changer.lua" />
     <None Include="res\lua\test\test-logger.lua" />
     <None Include="res\lua\test\test.lua" />
     <None Include="SDL2.dll" />

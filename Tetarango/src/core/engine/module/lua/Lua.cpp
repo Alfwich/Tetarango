@@ -172,11 +172,7 @@ namespace AW
 
 		contexts[id] = L;
 
-		executeLuaScriptForContext(awCoreLibLocation, id);
-		executeLuaStringForContext(contextIdBindingName + "=" + std::to_string(id), id);
-
-		registerBoundFunctionForContext(doStringMethodName, shared_from_this(), id);
-		registerBoundFunctionForContext(doFileMethodName, shared_from_this(), id);
+		primeContext(id);
 
 		Logger::instance()->log("Lua::Created new execution context with id=" + std::to_string(id));
 
@@ -368,6 +364,14 @@ namespace AW
 		lua_pop(L, bindingId == globalBindingId ? 1 : 2);
 	}
 
+	void Lua::primeContext(int contextId)
+	{
+		executeLuaScriptForContext(awCoreLibLocation, contextId);
+		executeLuaStringForContext(contextIdBindingName + "=" + std::to_string(contextId), contextId);
+		registerBoundFunctionForContext(doStringMethodName, shared_from_this(), contextId);
+		registerBoundFunctionForContext(doFileMethodName, shared_from_this(), contextId);
+	}
+
 	void Lua::callGlobalFunction(const std::string& function, const std::vector<std::string>& args)
 	{
 		const auto L = getCurrentContextLuaState();
@@ -467,6 +471,61 @@ namespace AW
 		setActiveContext(prevContextId);
 	}
 
+	void Lua::unregisterBoundFunction(const std::string& bindingId, const std::string& fnName)
+	{
+		if (keyToBindings.count(bindingId) != 0)
+		{
+			auto& fns = keyToBindings.at(bindingId);
+			for (auto it = fns.begin(), end = fns.end(); it != end;)
+			{
+				const auto bindingKey = *it;
+				if (std::get<2>(bindingKey) == fnName)
+				{
+					if (bindings.count(bindingKey) == 1)
+					{
+						bindings.erase(bindingKey);
+					}
+
+					it = fns.erase(it);
+					break;
+				}
+				else
+				{
+					++it;
+				}
+			}
+
+			if (fns.empty())
+			{
+				keyToBindings.erase(bindingId);
+			}
+		}
+
+		for (const auto idtoContext : contexts)
+		{
+			const auto L = idtoContext.second;
+			lua_getglobal(L, boundObjectsGlobalName);
+			lua_getfield(L, -1, bindingId.c_str());
+
+			const auto isTable = lua_istable(L, -1);
+			if (isTable)
+			{
+				lua_getfield(L, -1, fnName.c_str());
+				const auto isFn = lua_isfunction(L, -1);
+				if (isFn)
+				{
+					lua_pop(L, 1);
+					lua_pushnil(L);
+					lua_setfield(L, -2, fnName.c_str());
+				}
+
+				lua_pop(L, isFn ? 1 : 2);
+			}
+
+			lua_pop(L, isTable ? 1 : 2);
+		}
+	}
+
 	void Lua::unregisterBoundFunctions(const std::string& bindingId)
 	{
 		if (keyToBindings.count(bindingId) != 0)
@@ -474,10 +533,10 @@ namespace AW
 			auto& fns = keyToBindings.at(bindingId);
 			for (auto it = fns.begin(); it != fns.end(); ++it)
 			{
-				const auto key = (*it);
-				if (bindings.count(key) == 1)
+				const auto bindingKey = (*it);
+				if (bindings.count(bindingKey) == 1)
 				{
-					bindings.erase(key);
+					bindings.erase(bindingKey);
 				}
 			}
 
@@ -535,6 +594,29 @@ namespace AW
 
 			lua_pop(L, isFn ? 1 : 2);
 		}
+	}
+
+	void Lua::registerObjectImplementation(const std::string& implFilePath, const std::string& implKey)
+	{
+		if (registeredImpls.count(implKey) == 0)
+		{
+			registeredImpls[implKey] = implFilePath;
+
+			if (defaultContext != -1)
+			{
+				callGlobalFunctionForContext("AW_registerObjectImpl", defaultContext, { implFilePath, implKey });
+				Logger::instance()->log("Lua::Registered object implementation for implKey=" + implKey);
+			}
+		}
+		else
+		{
+			Logger::instance()->logCritical("Lua::Attempting to reregister object implementation for implKey=" + implKey + ", with implFilePath=" + implFilePath);
+		}
+	}
+
+	void Lua::setObjectImplementation(const std::string& bindingId, const std::string& implKey)
+	{
+		callGlobalFunctionForContext("AW_setObjectImpl", defaultContext, { bindingId, implKey });
 	}
 
 	int Lua::getGlobalInt(const std::string& name)
@@ -651,6 +733,17 @@ namespace AW
 	void Lua::onInit()
 	{
 		createDefaultContext();
+
+		for (const auto implKeyToImplFilePath : registeredImpls)
+		{
+			callGlobalFunctionForContext("AW_registerObjectImpl", defaultContext, { implKeyToImplFilePath.second, implKeyToImplFilePath.first });
+			Logger::instance()->log("Lua::Registered object implementation for implKey=" + implKeyToImplFilePath.first);
+		}
+	}
+
+	void Lua::onEnterFrame(const double& frameTime)
+	{
+		callGlobalFunctionForContext("AW_enterFrame", defaultContext, { std::to_string(frameTime) });
 	}
 
 	void Lua::onCleanup()
