@@ -27,8 +27,8 @@ namespace AW
 
 		std::string getAssetNameFromRaw(char* data);
 		std::unique_ptr<char[]> getAssetDataFromRaw(char* data, unsigned int& size, unsigned int& kPos);
-		bool checkAndMoveIfCorrect(char* data, std::string tag);
-		bool beginsWith(char* data, unsigned int pos, std::string tag);
+		bool checkAndMoveIfCorrect(char* data, const std::string& tag);
+		bool beginsWith(char* data, unsigned int pos, const std::string& tag);
 
 		std::string assetNameFromPath(const std::string& path);
 
@@ -40,7 +40,7 @@ namespace AW
 
 		void loadGlobalAssetPack();
 
-		std::shared_ptr<ResourceBundle> getAssetBundle(std::string path, bool allowCached = true);
+		std::shared_ptr<ResourceBundle> getAssetBundle(const std::string& path, bool allowCached = true);
 
 		void compressRawImageToPng(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);
 		void uncompressPngImageToRaw(std::shared_ptr<ImageBundle> inBundle, std::shared_ptr<ImageBundle> outBundle);

@@ -7,7 +7,7 @@ namespace AW
 		this->asset = asset;
 	}
 
-	void SoundContainer::loadSoundClip(std::string path, std::string name)
+	void SoundContainer::loadSoundClip(const std::string& path, const std::string& name)
 	{
 		if (shaders.count(name) == 1)
 		{
@@ -20,7 +20,7 @@ namespace AW
 		Logger::instance()->log("Sound::Loaded sound name= " + name + ", path=" + path);
 	}
 
-	std::shared_ptr<SoundClip> SoundContainer::getSoundClip(std::string name)
+	std::shared_ptr<SoundClip> SoundContainer::getSoundClip(const std::string& name)
 	{
 		if (shaders.count(name) == 0)
 		{
@@ -31,7 +31,7 @@ namespace AW
 		return shaders[name];
 	}
 
-	void SoundContainer::loadMusic(std::string path, std::string name)
+	void SoundContainer::loadMusic(const std::string& path, const std::string& name)
 	{
 		if (musics.count(name) == 1)
 		{
@@ -44,7 +44,7 @@ namespace AW
 		Logger::instance()->log("Sound::Loaded sound name= " + name + ", path=" + path);
 	}
 
-	std::shared_ptr<Music> SoundContainer::getMusic(std::string name)
+	std::shared_ptr<Music> SoundContainer::getMusic(const std::string& name)
 	{
 		if (musics.count(name) == 0)
 		{

@@ -12,14 +12,14 @@ namespace AW
 		this->event = event;
 	}
 
-	void AnimationContainer::addAnimationSet(std::shared_ptr<AnimationSet> animationSet, std::string name)
+	void AnimationContainer::addAnimationSet(std::shared_ptr<AnimationSet> animationSet, const std::string& name)
 	{
 		animationSet->load();
 		animationSets[name] = animationSet;
 		Logger::instance()->log("AnimationContainer::Added animation set name=" + name);
 	}
 
-	std::shared_ptr<AnimationSet> AnimationContainer::getAnimationSet(std::string name)
+	std::shared_ptr<AnimationSet> AnimationContainer::getAnimationSet(const std::string& name)
 	{
 		if (animationSets.count(name) == 0)
 		{
@@ -30,7 +30,7 @@ namespace AW
 		return animationSets[name];
 	}
 
-	bool AnimationContainer::hasAnimationSet(std::string name)
+	bool AnimationContainer::hasAnimationSet(const std::string& name)
 	{
 		return animationSets.count(name) == 1;
 	}

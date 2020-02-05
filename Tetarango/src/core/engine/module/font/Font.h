@@ -14,7 +14,7 @@ namespace AW
 		std::string fontName;
 		FontContainer* container;
 	public:
-		Font(std::string name, TTF_Font* font, int fontSize, FontContainer* container);
+		Font(const std::string& name, TTF_Font* font, int fontSize, FontContainer* container);
 
 		void setFontSize(int fontSize);
 		TTF_Font* getTTFFont();

@@ -16,11 +16,11 @@ namespace AW
 	public:
 		void bindAsset(std::shared_ptr<Asset> asset);
 
-		void loadSoundClip(std::string path, std::string name);
-		std::shared_ptr<SoundClip> getSoundClip(std::string name);
+		void loadSoundClip(const std::string& path, const std::string& name);
+		std::shared_ptr<SoundClip> getSoundClip(const std::string& name);
 
-		void loadMusic(std::string path, std::string name);
-		std::shared_ptr<Music> getMusic(std::string name);
+		void loadMusic(const std::string& path, const std::string& name);
+		std::shared_ptr<Music> getMusic(const std::string& name);
 
 		void cleanup();
 	};

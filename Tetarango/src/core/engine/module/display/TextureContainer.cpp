@@ -12,7 +12,7 @@ namespace AW
 		this->asset = asset;
 	}
 
-	bool TextureContainer::loadTexture(std::string path, std::string key)
+	bool TextureContainer::loadTexture(const std::string& path, const std::string& key)
 	{
 		if (textureCache.count(key) > 0)
 		{
@@ -26,7 +26,7 @@ namespace AW
 		return textureCache[key]->isLoaded();
 	}
 
-	std::shared_ptr<Texture> TextureContainer::getTexture(std::string key)
+	std::shared_ptr<Texture> TextureContainer::getTexture(const std::string& key)
 	{
 		if (textureCache.count(key) == 0)
 		{
@@ -37,7 +37,7 @@ namespace AW
 		return textureCache[key];
 	}
 
-	std::shared_ptr<Texture> TextureContainer::getEmptyTextureForKey(std::string key)
+	std::shared_ptr<Texture> TextureContainer::getEmptyTextureForKey(const std::string& key)
 	{
 		if (textureCache.count(key) != 0)
 		{
@@ -51,7 +51,7 @@ namespace AW
 
 	}
 
-	std::shared_ptr<Texture> TextureContainer::getEmptyTextureTextForKey(std::string key)
+	std::shared_ptr<Texture> TextureContainer::getEmptyTextureTextForKey(const std::string& key)
 	{
 		if (textureCache.count(key) != 0)
 		{
@@ -64,12 +64,12 @@ namespace AW
 		return textureCache[key];
 	}
 
-	bool TextureContainer::hasTexture(std::string key)
+	bool TextureContainer::hasTexture(const std::string& key)
 	{
 		return textureCache.count(key) > 0;
 	}
 
-	void TextureContainer::removeTexture(std::string key)
+	void TextureContainer::removeTexture(const std::string& key)
 	{
 		if (hasTexture(key))
 		{

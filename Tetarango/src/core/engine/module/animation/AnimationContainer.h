@@ -18,9 +18,9 @@ namespace AW
 		void bindTime(std::shared_ptr<Time> time);
 		void bindEvent(std::shared_ptr<Event> event);
 
-		void addAnimationSet(std::shared_ptr<AnimationSet> animationSet, std::string name);
-		std::shared_ptr<AnimationSet> getAnimationSet(std::string name);
-		bool hasAnimationSet(std::string name);
+		void addAnimationSet(std::shared_ptr<AnimationSet> animationSet, const std::string& name);
+		std::shared_ptr<AnimationSet> getAnimationSet(const std::string& name);
+		bool hasAnimationSet(const std::string& name);
 
 		std::shared_ptr<Transition> createTransition();
 		std::shared_ptr<Transition> createGameTransition();

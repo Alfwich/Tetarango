@@ -3,7 +3,7 @@
 namespace AW
 {
 
-	Font::Font(std::string name, TTF_Font* font, int fontSize, FontContainer* container)
+	Font::Font(const std::string& name, TTF_Font* font, int fontSize, FontContainer* container)
 	{
 		fontName = name;
 		this->font = font;

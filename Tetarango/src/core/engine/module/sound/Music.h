@@ -12,7 +12,7 @@ namespace AW
 		void loadMusic(std::string path);
 
 	public:
-		Music(std::string soundPath, std::shared_ptr<Asset> asset);
+		Music(const std::string& soundPath, std::shared_ptr<Asset> asset);
 		virtual ~Music();
 
 		Mix_Music* getMusic();

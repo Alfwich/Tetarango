@@ -18,13 +18,13 @@ namespace AW
 		void bindScreen(std::shared_ptr<Screen> screen);
 		void bindAsset(std::shared_ptr<Asset> asset);
 
-		bool loadTexture(std::string path, std::string key);
-		bool hasTexture(std::string key);
-		void removeTexture(std::string key);
+		bool loadTexture(const std::string& path, const std::string& key);
+		bool hasTexture(const std::string& key);
+		void removeTexture(const std::string& key);
 
-		std::shared_ptr<Texture> getTexture(std::string key);
-		std::shared_ptr<Texture> getEmptyTextureForKey(std::string key);
-		std::shared_ptr<Texture> getEmptyTextureTextForKey(std::string key);
+		std::shared_ptr<Texture> getTexture(const std::string& key);
+		std::shared_ptr<Texture> getEmptyTextureForKey(const std::string& key);
+		std::shared_ptr<Texture> getEmptyTextureTextForKey(const std::string& key);
 
 		void releaseAllTextures();
 		void rebindAllTextures();

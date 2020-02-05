@@ -10,7 +10,7 @@ namespace AW
 	class FontPack
 	{
 	public:
-		FontPack(std::string path, TTF_Font* font, int fontSize, const std::shared_ptr<ResourceBundle> ttfFont)
+		FontPack(const std::string& path, TTF_Font* font, int fontSize, const std::shared_ptr<ResourceBundle> ttfFont)
 			: path(path), pack(ttfFont)
 		{
 			this->fontSizeToTTFFont[fontSize] = font;
@@ -29,8 +29,8 @@ namespace AW
 
 		int defaultFontSize;
 		std::unordered_map<std::string, std::shared_ptr<FontPack>> nameToFontPack;
-		bool loadFont(std::string name, int fontSize);
-		bool loadNewFont(std::string path, std::string name, int fontSize);
+		bool loadFont(const std::string& name, int fontSize);
+		bool loadNewFont(const std::string& path, const std::string& name, int fontSize);
 		void cleanupFont(TTF_Font* font);
 
 	public:
@@ -39,13 +39,13 @@ namespace AW
 		void bindAsset(std::shared_ptr<Asset> asset);
 
 		void setDefaultFontSize(int fontSize);
-		TTF_Font* prepareTTFFontForSize(std::string name, int fontSize);
+		TTF_Font* prepareTTFFontForSize(const std::string& name, int fontSize);
 
-		bool loadFont(std::string path, std::string name, int fontSize = 24);
+		bool loadFont(const std::string& path, const std::string& name, int fontSize = 24);
 
-		std::shared_ptr<Font> createFont(std::string name, int fontSize = -1);
+		std::shared_ptr<Font> createFont(const std::string& name, int fontSize = -1);
 
-		bool hasFont(std::string name);
+		bool hasFont(const std::string& name);
 
 	};
 }

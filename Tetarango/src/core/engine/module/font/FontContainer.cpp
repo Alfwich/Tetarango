@@ -31,7 +31,7 @@ namespace AW
 		TTF_CloseFont(font);
 	}
 
-	bool FontContainer::loadFont(std::string name, int fontSize)
+	bool FontContainer::loadFont(const std::string& name, int fontSize)
 	{
 		std::shared_ptr<FontPack> fontPack = nameToFontPack[name];
 
@@ -66,7 +66,7 @@ namespace AW
 		return true;
 	}
 
-	bool FontContainer::loadNewFont(std::string path, std::string name, int fontSize)
+	bool FontContainer::loadNewFont(const std::string& path, const std::string& name, int fontSize)
 	{
 		TTF_Font* font;
 
@@ -94,7 +94,7 @@ namespace AW
 		return true;
 	}
 
-	bool FontContainer::loadFont(std::string path, std::string name, int fontSize)
+	bool FontContainer::loadFont(const std::string& path, const std::string& name, int fontSize)
 	{
 		if (nameToFontPack.count(name) == 1)
 		{
@@ -111,7 +111,7 @@ namespace AW
 		return loaded;
 	}
 
-	TTF_Font* FontContainer::prepareTTFFontForSize(std::string name, int fontSize)
+	TTF_Font* FontContainer::prepareTTFFontForSize(const std::string& name, int fontSize)
 	{
 		if (nameToFontPack.count(name) == 0)
 		{
@@ -131,7 +131,7 @@ namespace AW
 			: fontPack->fontSizeToTTFFont[defaultFontSize];
 	}
 
-	std::shared_ptr<Font> FontContainer::createFont(std::string name, int fontSize)
+	std::shared_ptr<Font> FontContainer::createFont(const std::string& name, int fontSize)
 	{
 		TTF_Font* font = prepareTTFFontForSize(name, fontSize);
 
@@ -143,7 +143,7 @@ namespace AW
 		return std::make_unique<Font>(name, font, fontSize, this);
 	}
 
-	bool FontContainer::hasFont(std::string name)
+	bool FontContainer::hasFont(const std::string& name)
 	{
 		return nameToFontPack.count(name) == 1;
 	}

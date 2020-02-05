@@ -2,7 +2,7 @@
 
 namespace AW
 {
-	Music::Music(std::string path, std::shared_ptr<Asset> asset)
+	Music::Music(const std::string& path, std::shared_ptr<Asset> asset)
 	{
 		this->asset = asset;
 		loadMusic(path);

@@ -8,11 +8,12 @@ namespace
 	const auto sdlLogoTextureName = "splash-sdl-logo";
 	const auto openGLLogoTextureName = "splash-opengl-logo";
 	const auto box2dLogoTextureName = "splash-box2d-logo";
+	const auto luaLogoTextureName = "splash-lua-logo";
 	const auto loadingPattenTextureName = "splash-loading-pattern";
 	const auto awGamesLogoTextureName = "splash-aw-games-logo";
 
 	const auto verticalOffset = -128.0;
-	const auto splashTransitionTimeInSeconds = 16.5;
+	const auto splashTransitionTimeInSeconds = 18.5;
 	const auto fadeInHorMovement = 250.0;
 	const auto animationScalingFactorIn = 0.25;
 	const auto animationScalingFactorOut = 1 / animationScalingFactorIn;
@@ -43,6 +44,7 @@ namespace AWGame
 		modules->texture->loadTexture("res/image/splash/sdl-logo.png", sdlLogoTextureName);
 		modules->texture->loadTexture("res/image/splash/opengl-logo.png", openGLLogoTextureName);
 		modules->texture->loadTexture("res/image/splash/box2d-logo.png", box2dLogoTextureName);
+		modules->texture->loadTexture("res/image/splash/lua-logo.png", luaLogoTextureName);
 		modules->texture->loadTexture("res/image/splash/loading-pattern.png", loadingPattenTextureName);
 		modules->texture->loadTexture("res/image/splash/aw-games-logo.png", awGamesLogoTextureName);
 	}
@@ -144,12 +146,28 @@ namespace AWGame
 			splashImage->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashText->getScreenHeight() + verticalOffset);
 			splashImage->setAlpha(1.0 - scaledMainPositionOut);
 
+			if (tryToGotoNextState(position, 1.0))
+			{
+				splashImage->setTexture(luaLogoTextureName);
+			}
+		}
+		else if (state == 4)
+		{
+			splashImage->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashText->getScreenHeight() + verticalOffset);
+			splashImage->setAlpha(scaledMainPositionIn);
+
+			tryToGotoNextState(position, 2.0);
+		}
+		else if (state == 5)
+		{
+			splashImage->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashText->getScreenHeight() + verticalOffset);
+			splashImage->setAlpha(1.0 - scaledMainPositionOut);
+
 			splashText->toTopOf(splashImage);
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
 
 			if (tryToGotoNextState(position, 1.0))
 			{
-				splashText->setFontSize(titleFontSizeBig);
 				const auto orgName = modules->gameConfig->getConfigString(Config::Param::organizationName);
 				splashText->setText(orgName + " Presents");
 				splashImage->setTexture(awGamesLogoTextureName);
@@ -159,7 +177,7 @@ namespace AWGame
 				}
 			}
 		}
-		else if (state == 4)
+		else if (state == 6)
 		{
 			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getScreenHalfHeight());
 			splashText->setAlpha(scaledMainPositionIn);
@@ -169,7 +187,7 @@ namespace AWGame
 
 			tryToGotoNextState(position, 2.0);
 		}
-		else if (state == 5)
+		else if (state == 7)
 		{
 			splashText->setAlpha(1.0 - scaledMainPositionOut);
 			splashText->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * fadeInHorMovement), getDisplayScreenHeight() / 2.0 + splashImage->getScreenHalfHeight());
@@ -198,7 +216,7 @@ namespace AWGame
 				titleGame->visible = true;
 			}
 		}
-		else if (state == 6)
+		else if (state == 8)
 		{
 			titleGame->setScreenPosition(getDisplayScreenWidth() / 2.0 - ((1.0 - scaledMainPositionIn) * fadeInHorMovement), getDisplayScreenHeight() / 2.0);
 			titleGame->setAlpha(scaledMainPositionIn);
@@ -215,7 +233,7 @@ namespace AWGame
 
 			tryToGotoNextState(position, 6.0);
 		}
-		else if (state == 7)
+		else if (state == 9)
 		{
 			titleGame->setScreenPosition(getDisplayScreenWidth() / 2.0 + (scaledMainPositionOut * 0.0), getDisplayScreenHeight() / 2.0);
 

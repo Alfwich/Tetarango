@@ -15,7 +15,11 @@ namespace
 }
 
 #ifdef _DEBUG
+#ifdef DEBUG_CALL
 #define GLDbgCall(x) GLClearError(); x; GLBreakError();
+#else
+#define GLDbgCall(x) x;
+#endif
 #else
 #define GLDbgCall(x) x;
 #endif // _DEBUG

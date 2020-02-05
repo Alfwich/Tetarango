@@ -75,7 +75,7 @@ namespace AW
 		Logger::instance()->log("Asset::Loaded asset pack name=" + path + ", which contained " + std::to_string(packedAssets) + " new assets");
 	}
 
-	bool Asset::checkAndMoveIfCorrect(char* data, std::string tag)
+	bool Asset::checkAndMoveIfCorrect(char* data, const std::string& tag)
 	{
 		if (beginsWith(data, cursorPosition, tag))
 		{
@@ -86,7 +86,7 @@ namespace AW
 		return false;
 	}
 
-	bool Asset::beginsWith(char* data, unsigned int pos, std::string tag)
+	bool Asset::beginsWith(char* data, unsigned int pos, const std::string& tag)
 	{
 		const auto tagSize = tag.size();
 
@@ -175,7 +175,7 @@ namespace AW
 		}
 	}
 
-	std::shared_ptr<ResourceBundle> Asset::getAssetBundle(std::string path, bool allowCached)
+	std::shared_ptr<ResourceBundle> Asset::getAssetBundle(const std::string& path, bool allowCached)
 	{
 		const auto name = assetNameFromPath(path);
 		const auto assetPackEnabled = gameConfig != nullptr && gameConfig->getConfigBool(Config::Param::useAssetPack);

@@ -394,6 +394,9 @@ namespace AWGame
 			exC.r = 64;
 			exC.b = 255;
 		}
+
+		//rebuild();
+		onKey(AWKey::FIVE, true);
 	}
 
 	void TestScene::onKeyPressed(AWKey key)
