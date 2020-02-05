@@ -25,7 +25,7 @@ namespace AW
 		this->time = time;
 	}
 
-	void ShaderContainer::loadShaderLoader(std::string path, std::string name)
+	void ShaderContainer::loadShaderLoader(const std::string& path, const std::string& name)
 	{
 		if (loaderShaders.count(name) == 1)
 		{
@@ -52,7 +52,7 @@ namespace AW
 		}
 	}
 
-	void ShaderContainer::loadShader(std::string path, std::string name)
+	void ShaderContainer::loadShader(const std::string& path, const std::string& name)
 	{
 		if (shaders.count(name) == 1)
 		{

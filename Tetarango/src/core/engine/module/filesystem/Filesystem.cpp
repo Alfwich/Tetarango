@@ -37,7 +37,7 @@ namespace AW
 		}
 	};
 
-	std::string Filesystem::readContentsFromFile(std::string path, bool isLocal)
+	std::string Filesystem::readContentsFromFile(const std::string& path, bool isLocal)
 	{
 		const auto resPath = isLocal ? path : getAbsolutePathFromRelativePath(path);
 		FileReferenceWithAutoClose fileRef(resPath, "r");
@@ -82,7 +82,7 @@ namespace AW
 		return std::string();
 	}
 
-	WORKER_ID Filesystem::readContentsFromFileAsync(std::string path, std::weak_ptr<INotifyOnCompletion> callback)
+	WORKER_ID Filesystem::readContentsFromFileAsync(const std::string& path, std::weak_ptr<INotifyOnCompletion> callback)
 	{
 		if (thread->isCleanedUp)
 		{
@@ -129,17 +129,17 @@ namespace AW
 		return false;
 	}
 
-	bool Filesystem::writeContentToFile(std::string path, const std::string& content)
+	bool Filesystem::writeContentToFile(const std::string& path, const std::string& content)
 	{
 		return appendOrWriteContentToFile(path, content, "w");
 	}
 
-	bool Filesystem::appendContentToFile(std::string path, const std::string& content)
+	bool Filesystem::appendContentToFile(const std::string& path, const std::string& content)
 	{
 		return appendOrWriteContentToFile(path, content, "a");
 	}
 
-	WORKER_ID Filesystem::appendContentToFileAsync(std::string path, std::string content, std::weak_ptr<INotifyOnCompletion> callback)
+	WORKER_ID Filesystem::appendContentToFileAsync(const std::string& path, const std::string& content, std::weak_ptr<INotifyOnCompletion> callback)
 	{
 		if (thread->isCleanedUp)
 		{

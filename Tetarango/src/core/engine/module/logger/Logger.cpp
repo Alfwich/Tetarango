@@ -65,7 +65,7 @@ namespace AW
 		log("Logger::Changing log file to fileName=" + fileName);
 	}
 
-	void Logger::log(std::string msg, std::string prefix)
+	void Logger::log(const std::string& msg, const std::string& prefix)
 	{
 		if (gameConfig != nullptr && !gameConfig->getConfigBool(Config::Param::loggingEnabled)) return;
 
@@ -75,7 +75,7 @@ namespace AW
 		writeToFile(ss.str());
 	}
 
-	void Logger::logCritical(std::string msg)
+	void Logger::logCritical(const std::string& msg)
 	{
 		log(msg, "!! critical !!");
 	}
@@ -85,7 +85,7 @@ namespace AW
 		logCritical(std::string(msg));
 	}
 
-	void Logger::logFatal(std::string msg)
+	void Logger::logFatal(const std::string& msg)
 	{
 		log(msg, "!! FATAL !!");
 		this->purgeToLogFile(true);
@@ -100,7 +100,7 @@ namespace AW
 		logFatal(std::string(msg));
 	}
 
-	void Logger::log(char* msg, std::string prefix)
+	void Logger::log(char* msg, const std::string& prefix)
 	{
 		log(std::string(msg), prefix);
 	}
@@ -141,7 +141,7 @@ namespace AW
 		if (func == logFunctionName && obj->numArgs > 1) log(obj->args[0], "lua:" + obj->args[1]);
 	}
 
-	void Logger::writeConsole(std::string msg)
+	void Logger::writeConsole(const std::string& msg)
 	{
 		if (logToConsoleEnabled)
 		{
@@ -149,7 +149,7 @@ namespace AW
 		}
 	}
 
-	void Logger::writeToFile(std::string msg)
+	void Logger::writeToFile(const std::string& msg)
 	{
 		if (filesystem == nullptr)
 		{
@@ -204,12 +204,12 @@ namespace AW
 		}
 	}
 
-	std::string Logger::processLogMessage(std::string msg, std::string prefix)
+	std::string Logger::processLogMessage(const std::string& msg, const std::string& prefix)
 	{
 		return '[' + getTimestamp() + "] " + '[' + prefix + "] " + msg;
 	}
 
-	std::string Logger::getCurrentDate(std::string format)
+	std::string Logger::getCurrentDate(const std::string& format)
 	{
 		time_t rawtime;
 		struct tm* timeinfo;

@@ -46,7 +46,6 @@ namespace AW
 			return true;
 		}
 
-
 		bool static inline startsWith_Offset(std::string* source, int sourceOffset, std::string val)
 		{
 			if (source->size() < val.size())
@@ -64,6 +63,25 @@ namespace AW
 
 			return true;
 		}
+
+		bool static inline startsWith_Offset(const std::string& source, int sourceOffset, std::string val)
+		{
+			if (source.size() < val.size())
+			{
+				return false;
+			}
+
+			for (unsigned int i = 0; i < val.size(); ++i)
+			{
+				if (i + sourceOffset >= source.size() || source[i + sourceOffset] != val[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 
 		bool static inline startsWith(std::string* source, std::string* val)
 		{
@@ -101,6 +119,19 @@ namespace AW
 			return -1;
 		}
 
+		int static inline distanceToLeft_offset(const std::string& source, int sourceOffset, std::string val)
+		{
+			for (unsigned int i = sourceOffset; i < source.size(); ++i)
+			{
+				if (source[i] == val[0] && StringHelper::startsWith_Offset(source, i, val))
+				{
+					return i - sourceOffset;
+				}
+			}
+
+			return -1;
+		}
+
 		std::string static inline getSliceOfCharVector(std::string* source, unsigned int start, unsigned int length)
 		{
 			if (start + length > source->size())
@@ -113,6 +144,23 @@ namespace AW
 			for (unsigned int i = start; i < start + length; ++i)
 			{
 				result += (*source)[i];
+			}
+
+			return result;
+		}
+
+		std::string static inline getSliceOfCharVector(const std::string& source, unsigned int start, unsigned int length)
+		{
+			if (start + length > source.size())
+			{
+				length = (unsigned int)source.size() - start;
+			}
+
+			std::string result;
+
+			for (unsigned int i = start; i < start + length; ++i)
+			{
+				result += source[i];
 			}
 
 			return result;

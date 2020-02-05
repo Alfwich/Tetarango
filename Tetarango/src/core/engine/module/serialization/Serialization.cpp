@@ -40,12 +40,12 @@ namespace AW
 		, callback, WorkerTaskCode::SERIALIZATION);
 	}
 
-	std::shared_ptr<ISerializable> Serialization::hydrate(std::string data)
+	std::shared_ptr<ISerializable> Serialization::hydrate(const std::string& data)
 	{
-		return Hydrater().hydrateData(data);
+		return Hydrater(data).hydrateData();
 	}
 
-	WORKER_ID Serialization::hydrateAsync(std::string data, std::weak_ptr<INotifyOnCompletion> callback)
+	WORKER_ID Serialization::hydrateAsync(const std::string& data, std::weak_ptr<INotifyOnCompletion> callback)
 	{
 		auto dataPtr = std::make_shared<std::string>(data);
 		auto thisServicePtr = std::static_pointer_cast<Serialization>(shared_from_this());
@@ -68,7 +68,7 @@ namespace AW
 		, callback, WorkerTaskCode::HYDRATION);
 	}
 
-	bool Serialization::hasSchematic(std::string name)
+	bool Serialization::hasSchematic(const std::string& name)
 	{
 		return Hydrater::hasSchematic(name);
 	}
@@ -78,7 +78,7 @@ namespace AW
 		Hydrater::registerSchematic(schematic);
 	}
 
-	std::shared_ptr<Schematic> Serialization::getSchematic(std::string name)
+	std::shared_ptr<Schematic> Serialization::getSchematic(const std::string& name)
 	{
 		return Hydrater::getSchematic(name);
 	}

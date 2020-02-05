@@ -11,7 +11,7 @@ namespace AW
 		static std::unordered_map<std::string, std::shared_ptr<Schematic>> schematics;
 
 		unsigned int cursorPosition;
-		std::string* data;
+		const std::string& data;
 
 		std::shared_ptr<ISerializable> hydrateDataRecursive();
 		std::shared_ptr<ISerializable> createObjectForType(std::string typeName);
@@ -29,13 +29,13 @@ namespace AW
 		void reportError();
 
 	public:
-		static bool hasSchematic(std::string name);
+		static bool hasSchematic(const std::string& name);
 		static void registerSchematic(std::shared_ptr<Schematic> schematic);
-		static std::shared_ptr<Schematic> getSchematic(std::string name);
+		static std::shared_ptr<Schematic> getSchematic(const std::string& name);
 
-		Hydrater();
+		Hydrater(const std::string& data);
 
-		std::shared_ptr<ISerializable> hydrateData(std::string data);
+		std::shared_ptr<ISerializable> hydrateData();
 	};
 
 }

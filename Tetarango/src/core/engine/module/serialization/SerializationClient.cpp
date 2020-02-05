@@ -9,7 +9,7 @@ namespace AW
 		this->parentClient = parentClient;
 	}
 
-	std::string SerializationClient::getValue(std::string name)
+	std::string SerializationClient::getValue(const std::string& name)
 	{
 		if (parentClient != nullptr)
 		{
@@ -24,7 +24,7 @@ namespace AW
 		return "";
 	}
 
-	void SerializationClient::setValue(std::string name, std::string value)
+	void SerializationClient::setValue(const std::string& name, const std::string& value)
 	{
 		if (parentClient != nullptr)
 		{
@@ -38,24 +38,24 @@ namespace AW
 	{
 	}
 
-	SerializationClient::SerializationClient(std::string scope) : SerializationClient(scope, SerializationHint::UNSPECIFIED)
+	SerializationClient::SerializationClient(const std::string& scope) : SerializationClient(scope, SerializationHint::UNSPECIFIED)
 	{
 	}
 
-	SerializationClient::SerializationClient(std::string scope, SerializationHint hint)
+	SerializationClient::SerializationClient(const std::string& scope, SerializationHint hint)
 	{
 		this->scope = scope;
 		this->hint = hint;
 	}
 
-	std::shared_ptr<SerializationClient> SerializationClient::getClient(std::string scope, SerializationHint hint)
+	std::shared_ptr<SerializationClient> SerializationClient::getClient(const std::string& scope, SerializationHint hint)
 	{
 		const auto client = std::make_shared<SerializationClient>(scope, hint);
 		client->bindClient(this);
 		return client;
 	}
 
-	std::string SerializationClient::serializeString(std::string name, std::string value)
+	std::string SerializationClient::serializeString(const std::string& name, const std::string& value)
 	{
 		const auto myValue = getValue(name);
 
@@ -75,7 +75,7 @@ namespace AW
 		return std::string();
 	}
 
-	double SerializationClient::serializeDouble(std::string name, double value)
+	double SerializationClient::serializeDouble(const std::string& name, double value)
 	{
 		const auto myValue = getValue(name);
 
@@ -95,7 +95,7 @@ namespace AW
 		return 0.0;
 	}
 
-	int SerializationClient::serializeInt(std::string name, int value)
+	int SerializationClient::serializeInt(const std::string& name, int value)
 	{
 		const auto myValue = getValue(name);
 
@@ -115,7 +115,7 @@ namespace AW
 		return 0;
 	}
 
-	bool SerializationClient::serializeBool(std::string name, bool value)
+	bool SerializationClient::serializeBool(const std::string& name, bool value)
 	{
 		const auto myValue = getValue(name);
 
@@ -135,46 +135,46 @@ namespace AW
 		return false;
 	}
 
-	std::string SerializationClient::getString(std::string name, std::string defaultValue)
+	std::string SerializationClient::getString(const std::string& name, const std::string& defaultValue)
 	{
 		const auto result = getValue(name);
 		return result.empty() ? defaultValue : result;
 	}
 
-	double SerializationClient::getDouble(std::string name, double defaultValue)
+	double SerializationClient::getDouble(const std::string& name, double defaultValue)
 	{
 		const auto myValue = getValue(name);
 		return myValue.empty() ? defaultValue : std::stod(myValue);
 	}
 
-	int SerializationClient::getInt(std::string name, int defaultValue)
+	int SerializationClient::getInt(const std::string& name, int defaultValue)
 	{
 		const auto myValue = getValue(name);
 		return myValue.empty() ? defaultValue : std::stoi(myValue);
 	}
 
-	bool SerializationClient::getBool(std::string name, bool defaultValue)
+	bool SerializationClient::getBool(const std::string& name, bool defaultValue)
 	{
 		const auto myValue = getValue(name);
 		return myValue.empty() ? defaultValue : myValue == SerializationTags::TYPE_BOOL_TRUE;
 	}
 
-	void SerializationClient::setString(std::string name, std::string value)
+	void SerializationClient::setString(const std::string& name, const std::string& value)
 	{
 		setValue(name, value);
 	}
 
-	void SerializationClient::setDouble(std::string name, double value)
+	void SerializationClient::setDouble(const std::string& name, double value)
 	{
 		setValue(name, std::to_string(value));
 	}
 
-	void SerializationClient::setInt(std::string name, int value)
+	void SerializationClient::setInt(const std::string& name, int value)
 	{
 		setValue(name, std::to_string(value));
 	}
 
-	void SerializationClient::setBool(std::string name, bool value)
+	void SerializationClient::setBool(const std::string& name, bool value)
 	{
 		setValue(name, value ? SerializationTags::TYPE_BOOL_TRUE : SerializationTags::TYPE_BOOL_FALSE);
 	}

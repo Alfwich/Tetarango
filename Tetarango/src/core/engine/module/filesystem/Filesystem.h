@@ -19,11 +19,11 @@ namespace AW
 		void bindThread(std::shared_ptr<Thread> thread);
 
 		bool isReadyToLog();
-		std::string readContentsFromFile(std::string path, bool isLocal = false);
-		WORKER_ID readContentsFromFileAsync(std::string path, std::weak_ptr<INotifyOnCompletion> callback = std::weak_ptr<INotifyOnCompletion>());
-		bool writeContentToFile(std::string path, const std::string& content);
-		bool appendContentToFile(std::string path, const std::string& content);
-		WORKER_ID appendContentToFileAsync(std::string path, std::string content, std::weak_ptr<INotifyOnCompletion> callback = std::weak_ptr<INotifyOnCompletion>());
+		std::string readContentsFromFile(const std::string& path, bool isLocal = false);
+		WORKER_ID readContentsFromFileAsync(const std::string& path, std::weak_ptr<INotifyOnCompletion> callback = std::weak_ptr<INotifyOnCompletion>());
+		bool writeContentToFile(const std::string& path, const std::string& content);
+		bool appendContentToFile(const std::string& path, const std::string& content);
+		WORKER_ID appendContentToFileAsync(const std::string& path, const std::string& content, std::weak_ptr<INotifyOnCompletion> callback = std::weak_ptr<INotifyOnCompletion>());
 
 		class FilesystemException : std::exception
 		{

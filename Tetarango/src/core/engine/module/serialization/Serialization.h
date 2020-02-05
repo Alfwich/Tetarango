@@ -21,11 +21,11 @@ namespace AW
 		std::string serialize(std::shared_ptr<ISerializable> ser, bool humanReadable = false);
 		WORKER_ID serializeAsync(std::shared_ptr<ISerializable> ser, std::weak_ptr<INotifyOnCompletion> callback);
 
-		std::shared_ptr<ISerializable> hydrate(std::string data);
-		WORKER_ID hydrateAsync(std::string data, std::weak_ptr<INotifyOnCompletion> callback);
+		std::shared_ptr<ISerializable> hydrate(const std::string& data);
+		WORKER_ID hydrateAsync(const std::string& data, std::weak_ptr<INotifyOnCompletion> callback);
 
-		bool hasSchematic(std::string name);
+		bool hasSchematic(const std::string& name);
 		void registerSchematic(std::shared_ptr<Schematic> schematic);
-		std::shared_ptr<Schematic> getSchematic(std::string name);
+		std::shared_ptr<Schematic> getSchematic(const std::string& name);
 	};
 }

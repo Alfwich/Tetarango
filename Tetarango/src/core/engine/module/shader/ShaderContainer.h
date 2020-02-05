@@ -25,8 +25,8 @@ namespace AW
 		void bindAsset(std::shared_ptr<Asset> asset);
 		void bindTime(std::shared_ptr<Time> time);
 
-		void loadShaderLoader(std::string path, std::string name);
-		void loadShader(std::string path, std::string name);
+		void loadShaderLoader(const std::string& path, const std::string& name);
+		void loadShader(const std::string& path, const std::string& name);
 
 		void registerShaderComposition(std::vector<std::string> shaderNames, std::string name);
 

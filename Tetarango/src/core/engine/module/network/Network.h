@@ -36,8 +36,8 @@ namespace AW
 	public:
 		void bindThread(std::shared_ptr<Thread> thread);
 
-		int httpGet(std::string url, std::weak_ptr<INetworkListener> listener);
-		int httpPost(std::string url, const std::unordered_map<std::string, std::string>& params, std::weak_ptr<INetworkListener> listener);
+		int httpGet(const std::string& url, std::weak_ptr<INetworkListener> listener);
+		int httpPost(const std::string& url, const std::unordered_map<std::string, std::string>& params, std::weak_ptr<INetworkListener> listener);
 
 		virtual void onWorkDone(WORKER_ID workerId, WorkerTaskCode type, std::shared_ptr<AsyncResultBundle> result) override;
 	};

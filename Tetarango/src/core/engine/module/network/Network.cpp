@@ -88,13 +88,13 @@ namespace AW
 		}
 	}
 
-	int Network::httpGet(std::string url, std::weak_ptr<INetworkListener> listener)
+	int Network::httpGet(const std::string& url, std::weak_ptr<INetworkListener> listener)
 	{
 		const auto hostAndPath = breakUrlIntoHostAndPath(url);
 		return createBundleAndStartRequest(NetworkRequestMethod::Get, std::get<0>(hostAndPath), std::get<1>(hostAndPath), listener);
 	}
 
-	int Network::httpPost(std::string url, const std::unordered_map<std::string, std::string>& params, std::weak_ptr<INetworkListener> listener)
+	int Network::httpPost(const std::string& url, const std::unordered_map<std::string, std::string>& params, std::weak_ptr<INetworkListener> listener)
 	{
 		const auto hostAndPath = breakUrlIntoHostAndPath(url);
 		return createBundleWithParamsAndStartRequest(NetworkRequestMethod::Post, std::get<0>(hostAndPath), std::get<1>(hostAndPath), params, listener);

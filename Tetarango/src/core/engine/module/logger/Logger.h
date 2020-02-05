@@ -30,11 +30,11 @@ namespace AW
 		std::string convertAndPad(unsigned int i, const size_t num, const char paddingChar = ' ');
 		std::string getTimestamp();
 
-		std::string processLogMessage(std::string msg, std::string prefix = "debug");
-		void writeConsole(std::string msg);
-		void writeToFile(std::string msg);
+		std::string processLogMessage(const std::string& msg, const std::string& prefix = "debug");
+		void writeConsole(const std::string& msg);
+		void writeToFile(const std::string& msg);
 		void purgeToLogFile(bool immediate = false);
-		std::string getCurrentDate(std::string format);
+		std::string getCurrentDate(const std::string& format);
 
 	public:
 		static Logger* instance();
@@ -47,11 +47,11 @@ namespace AW
 
 		void setLogFileName(std::string fileName);
 
-		void log(std::string msg, std::string prefix = "debug");
-		void log(char* msg, std::string prefix = "debug");
-		void logCritical(std::string msg);
+		void log(const std::string& msg, const std::string& prefix = "debug");
+		void log(char* msg, const std::string& prefix = "debug");
+		void logCritical(const std::string& msg);
 		void logCritical(char* msg);
-		void logFatal(std::string msg);
+		void logFatal(const std::string& msg);
 		void logFatal(char* msg);
 
 		void onInit() override;

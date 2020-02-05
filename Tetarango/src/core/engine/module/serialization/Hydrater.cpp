@@ -5,7 +5,7 @@ namespace AW
 
 	std::unordered_map<std::string, std::shared_ptr<Schematic>> Hydrater::schematics;
 
-	bool Hydrater::hasSchematic(std::string name)
+	bool Hydrater::hasSchematic(const std::string& name)
 	{
 		return Hydrater::schematics.count(name) == 1;
 	}
@@ -20,7 +20,7 @@ namespace AW
 		Hydrater::schematics[schematic->typeName] = schematic;
 	}
 
-	std::shared_ptr<Schematic> Hydrater::getSchematic(std::string name)
+	std::shared_ptr<Schematic> Hydrater::getSchematic(const std::string& name)
 	{
 		if (Hydrater::schematics.count(name) == 0)
 		{
@@ -31,7 +31,8 @@ namespace AW
 		return Hydrater::schematics[name];
 	}
 
-	Hydrater::Hydrater()
+	Hydrater::Hydrater(const std::string& data)
+		: data(data)
 	{
 		cursorPosition = 0;
 	}
@@ -124,10 +125,9 @@ namespace AW
 		Logger::instance()->logCritical("Hydrater::Found corrupt data at position=" + std::to_string(cursorPosition));;
 	}
 
-	std::shared_ptr<ISerializable> Hydrater::hydrateData(std::string data)
+	std::shared_ptr<ISerializable> Hydrater::hydrateData()
 	{
 		cursorPosition = 0;
-		this->data = &data;
 		if (!checkAndMoveIfCorrect(SerializationTags::ARCHIVE_START_TAG))
 		{
 			reportError();
