@@ -96,4 +96,14 @@ namespace AW
 			textureNameToTexture.second->rebind();
 		}
 	}
+
+	void TextureContainer::onBindLuaHooks(const std::shared_ptr<Lua>& lua)
+	{
+		lua->registerBoundFunction("loadTexture", shared_from_this());
+	}
+
+	void TextureContainer::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		if (func == "loadTexture" && obj->args.size() == 2) loadTexture("res/image/" + obj->args[0], obj->args[1]);
+	}
 }

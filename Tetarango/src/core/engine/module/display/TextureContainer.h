@@ -28,6 +28,12 @@ namespace AW
 
 		void releaseAllTextures();
 		void rebindAllTextures();
+
+		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override { return "texture"; };
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 
 }

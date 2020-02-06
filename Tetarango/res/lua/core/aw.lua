@@ -1,42 +1,35 @@
 -- AW Core binding layer and util
 
-_require = require;
+-- Rebind system functions
+local _require = require;
 require = function(libPath)
-	local lua = get_lua()
+	local lua = aw_get_lua()
 	if lua.doFile ~= nil then
 		lua.doFile("res/lua/" .. libPath .. ".lua")
 	end
 end
 
-function get_lua()
+-- Private API
+function aw_get_lua()
 	if aw_objects.lua ~= nil then
 		return aw_objects.lua;
 	end
 end
 
-function get_logger()
+function aw_get_logger()
 	if aw_objects.logger ~= nil then
 		return aw_objects.logger;
 	end
 end
 
-function log(msg)
-	local logger = get_logger()
-	if logger.log ~= nil then
-		logger.log(msg, tostring(aw_cid))
+function aw_get_texture()
+	if aw_objects.texture ~= nil then
+		return aw_objects.texture;
 	end
 end
 
-function aw_impl(implTable)
-	if aw_impl_key ~= nil then
-		aw_impls[aw_impl_key] = implTable
-		aw_impl_key = nil
-	else
-		log("Failed to define object implemetation")
-	end
-end
-
-function aw_set_impl(bindingId, implKey)
+aw_resource_loaded_for_impl = {}
+local function aw_set_impl(bindingId, implKey)
 	if aw_objects[bindingId] == nil then
 		aw_objects[bindingId] = {}
 	end
@@ -46,6 +39,12 @@ function aw_set_impl(bindingId, implKey)
 		for key, fn in pairs(aw_impls[implKey]) do
 			obj[key] = fn
 		end
+
+		if obj.onLoadResources ~= nil and aw_resource_loaded_for_impl[implKey] == false then
+			obj:onLoadResources()
+			aw_resource_loaded_for_impl[implKey] = true
+		end
+
 		if obj.onInit ~= nil then
 			obj:onInit()
 		end
@@ -65,17 +64,15 @@ end
 
 local function AW_registerObjectImpl(implFile, implKey)
 	aw_impl_key = implKey
-	get_lua().doFile(implFile, false)
+	aw_get_lua().doFile(implFile, false)
 end
 
 local function AW_setObjectImpl(bindingId, implKey)
 	aw_set_impl(bindingId, implKey)
 end
 
--- Context Id
+-- Public API
 aw_cid = nil
-
--- Current IMPL key for next aw_impl call
 aw_impl_key = nil
 aw_impls = {}
 
@@ -85,3 +82,29 @@ aw_functions = {
 	AW_setObjectImpl=AW_setObjectImpl
 }
 aw_objects = {}
+
+function define_impl(implTable)
+	if aw_impl_key ~= nil then
+		aw_impls[aw_impl_key] = implTable
+		aw_resource_loaded_for_impl[aw_impl_key] = false
+		aw_impl_key = nil
+	else
+		log("Failed to define object implemetation")
+	end
+end
+
+function log(msg)
+	local logger = aw_get_logger()
+	if logger.log ~= nil then
+		logger.log(msg, tostring(aw_cid))
+	end
+end
+
+function loadTexture(path, key)
+	local texture = aw_get_texture()
+	if texture.loadTexture ~= nil then
+		texture.loadTexture(path, key)
+	end
+end
+
+
