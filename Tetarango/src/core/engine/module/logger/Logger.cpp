@@ -138,7 +138,7 @@ namespace AW
 
 	void Logger::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == logFunctionName && obj->numArgs > 1) log(obj->args[0], "lua:" + obj->args[1]);
+		if (func == logFunctionName && obj->args.size() > 1) log(obj->args[0], "lua:" + obj->args[1]);
 	}
 
 	void Logger::writeConsole(const std::string& msg)

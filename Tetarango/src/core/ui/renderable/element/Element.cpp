@@ -16,6 +16,7 @@ namespace AW
 
 	void Element::onRegisterLuaHooks()
 	{
+		GameObject::onRegisterLuaHooks();
 		Renderable::onRegisterLuaHooks(modules->lua, sharedPtr());
 		registerBoundLuaMethod("setTexture");
 	}
@@ -94,15 +95,16 @@ namespace AW
 
 	void Element::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
+		GameObject::onLuaCallback(func, obj);
 		Renderable::onLuaCallback(func, obj);
 
-		if (func == "setTexture" && obj->numArgs == 1) setTexture(obj->args[0]);
+		if (func == "setTexture" && obj->args.size() == 1) setTexture(obj->args[0]);
 	}
 
 	std::shared_ptr<SerializationClient> Element::doSerialize(SerializationHint hint)
 	{
 		const auto client = serializationClient->getClient("__element__", hint);
-		currentTextureName = client->serializeString("cTexName", currentTextureName);
+		currentTextureName = client->serializeString("c-t-n", currentTextureName);
 
 		Renderable::doManualSerialize(hint, client);
 

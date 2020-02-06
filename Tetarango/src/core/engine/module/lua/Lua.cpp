@@ -9,6 +9,8 @@ namespace
 	const auto boundFunctionsGlobalName = "aw_functions";
 	const auto boundObjectsGlobalName = "aw_objects";
 
+	const auto luaBindingObjectTypeNameFieldName = "aw_type";
+
 	const auto doStringMethodName = "doString";
 	const auto doFileMethodName = "doFile";
 
@@ -35,16 +37,13 @@ namespace
 	{
 		AW::LuaBoundObject* bundle = static_cast<AW::LuaBoundObject*>(lua_touserdata(L, lua_upvalueindex(1)));
 
-		bundle->numArgs = lua_gettop(L);
-		for (unsigned int i = 1; i <= bundle->numArgs; ++i)
+		bundle->args.clear();
+		for (unsigned int i = 1, end = lua_gettop(L); i <= end; ++i)
 		{
-			if (bundle->args.size() == i - 1)
+			const auto value = convertStackLocationToString(L, i);
+			if (!value.empty())
 			{
-				bundle->args.push_back(convertStackLocationToString(L, i));
-			}
-			else
-			{
-				bundle->args[i - 1] = convertStackLocationToString(L, i);
+				bundle->args.push_back(value);
 			}
 		}
 
@@ -123,6 +122,9 @@ namespace AW
 		{
 			std::string err = lua_tostring(L, -1);
 			Logger::instance()->logCritical("Lua::Error running script\n" + err);
+#if _DEBUG
+			__debugbreak();
+#endif
 		}
 	}
 
@@ -353,7 +355,7 @@ namespace AW
 
 				const auto typeName = callbackObj->getAwType();
 				lua_pushstring(L, typeName.c_str());
-				lua_setfield(L, -2, "_type");
+				lua_setfield(L, -2, luaBindingObjectTypeNameFieldName);
 			}
 		}
 
@@ -598,19 +600,25 @@ namespace AW
 
 	void Lua::registerObjectImplementation(const std::string& implFilePath, const std::string& implKey)
 	{
-		if (registeredImpls.count(implKey) == 0)
+		if (defaultContext != -1)
 		{
-			registeredImpls[implKey] = implFilePath;
+			callGlobalFunctionForContext("AW_registerObjectImpl", defaultContext, { implFilePath, implKey });
 
-			if (defaultContext != -1)
+			if (registeredImpls.count(implKey) == 1)
 			{
-				callGlobalFunctionForContext("AW_registerObjectImpl", defaultContext, { implFilePath, implKey });
+				Logger::instance()->logCritical("Lua::Reregistered object implementation for implKey=" + implKey + ", with implFilePath=" + implFilePath);
+
+			}
+			else
+			{
+				registeredImpls.emplace(implKey, implFilePath);
 				Logger::instance()->log("Lua::Registered object implementation for implKey=" + implKey);
 			}
+
 		}
 		else
 		{
-			Logger::instance()->logCritical("Lua::Attempting to reregister object implementation for implKey=" + implKey + ", with implFilePath=" + implFilePath);
+			Logger::instance()->logCritical("Lua::Failed to register object implementation for implKey=" + implKey + ", with implFilePath=" + implFilePath + ", defaultContext could not be acquired");
 		}
 	}
 
@@ -764,8 +772,9 @@ namespace AW
 
 	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == doStringMethodName && obj->numArgs != 0) executeLuaString(obj->args[0]);
-		if (func == doFileMethodName && obj->numArgs != 0) executeLuaScript(obj->args[0]);
+		if (func == doStringMethodName && obj->args.size() == 1) executeLuaString(obj->args[0]);
+		if (func == doFileMethodName && obj->args.size() == 1) executeLuaScript(obj->args[0]);
+		if (func == doFileMethodName && obj->args.size() == 2) executeLuaScript(obj->args[0], obj->args[1] == "1");
 	}
 
 	std::unordered_map<int, int> Lua::debugInfo()

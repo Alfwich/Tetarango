@@ -1021,14 +1021,14 @@ namespace AW
 
 	void Renderable::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == "setColor" && obj->numArgs == 3)
+		if (func == "setColor" && obj->args.size() == 3)
 			setColor(
 				std::stoi(obj->args[0]),
 				std::stoi(obj->args[1]),
 				std::stoi(obj->args[2])
 			);
 
-		else if (func == "setColor" && obj->numArgs == 4)
+		else if (func == "setColor" && obj->args.size() == 4)
 			setColor(
 				std::stoi(obj->args[0]),
 				std::stoi(obj->args[1]),
@@ -1036,22 +1036,22 @@ namespace AW
 				std::stoi(obj->args[3])
 			);
 
-		else if (func == "setShaderUniform" && obj->numArgs == 2 && fragmentShader != nullptr)
+		else if (func == "setShaderUniform" && obj->args.size() == 2 && fragmentShader != nullptr)
 			fragmentShader->setFloatIUParam(obj->args[0], std::stod(obj->args[1]));
 
-		else if (func == "setShaderUniformV2" && obj->numArgs == 3 && fragmentShader != nullptr)
+		else if (func == "setShaderUniformV2" && obj->args.size() == 3 && fragmentShader != nullptr)
 			fragmentShader->setFloatV2IUParam(obj->args[0], std::stod(obj->args[1]), std::stod(obj->args[2]));
 
-		else if (func == "setShaderUniformV3" && obj->numArgs == 4 && fragmentShader != nullptr)
+		else if (func == "setShaderUniformV3" && obj->args.size() == 4 && fragmentShader != nullptr)
 			fragmentShader->setFloatV3IUParam(obj->args[0], std::stod(obj->args[1]), std::stod(obj->args[2]), std::stod(obj->args[3]));
 
-		else if (func == "setShaderUniformV4" && obj->numArgs == 5 && fragmentShader != nullptr)
+		else if (func == "setShaderUniformV4" && obj->args.size() == 5 && fragmentShader != nullptr)
 			fragmentShader->setFloatV4IUParam(obj->args[0], std::stod(obj->args[1]), std::stod(obj->args[2]), std::stod(obj->args[3]), std::stod(obj->args[4]));
 
-		else if (func == "setPosition" && obj->numArgs == 2)
+		else if (func == "setPosition" && obj->args.size() == 2)
 			setScreenPosition(std::stod(obj->args[0]), std::stod(obj->args[1]));
 
-		else if (func == "setSize" && obj->numArgs == 2)
+		else if (func == "setSize" && obj->args.size() == 2)
 			setScreenSize(std::stod(obj->args[0]), std::stod(obj->args[1]));
 	}
 

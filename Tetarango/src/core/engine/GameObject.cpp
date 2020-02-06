@@ -99,6 +99,12 @@ namespace AW
 		{
 			onRegisterLuaHooks();
 			setTag(GTags::HasRegisteredLuaBindings, true);
+
+			const auto implKey = serializationClient->getString(luaImplKeyParamName);
+			if (!implKey.empty())
+			{
+				modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
+			}
 		}
 		else if (luaBindingsEnabled() && getTag(GTags::HasRegisteredLuaBindings) && !flag)
 		{
@@ -109,15 +115,34 @@ namespace AW
 		setTag(GTags::LuaBindingsEnabled, flag);
 	}
 
+	void GameObject::enableLuaBindings()
+	{
+		setLuaBindingsEnabled(true);
+	}
+
+	void GameObject::disableLuaBindings()
+	{
+		setLuaBindingsEnabled(false);
+	}
+
 	void GameObject::setLuaImplementation(const std::string& implKey)
 	{
 		serializationClient->setString(luaImplKeyParamName, implKey);
-		modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
+		if (getTag(GTags::HasRegisteredLuaBindings))
+		{
+			modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
+		}
+	}
+
+	void GameObject::setLuaImplementationAndEnable(const std::string& implKey)
+	{
+		setLuaImplementation(implKey);
+		enableLuaBindings();
 	}
 
 	bool GameObject::luaBindingsEnabled()
 	{
-		return false;
+		return getTag(GTags::LuaBindingsEnabled);
 	}
 
 	bool GameObject::isAttached()
@@ -344,6 +369,11 @@ namespace AW
 		{
 			onRegisterLuaHooks();
 			setTag(GTags::HasRegisteredLuaBindings, true);
+			const auto implKey = serializationClient->getString(luaImplKeyParamName);
+			if (!implKey.empty())
+			{
+				modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
+			}
 		}
 
 		setTag(GTags::IsCurrentActive, parentPtr->getTag(GTags::IsCurrentActive) && getTag(GTags::IsCurrentActive));
@@ -462,12 +492,6 @@ namespace AW
 		enterFrameActivated = client->serializeBool("e-f-a", enterFrameActivated);
 		enterFramePriority = client->serializeInt("e-f-p", enterFramePriority);
 		setInputMode((InputMode)client->serializeInt("i-n-m", (int)getInputMode()));
-
-		const auto luaImplKey = serializationClient->getString(luaImplKeyParamName);
-		if (!luaImplKey.empty())
-		{
-			setLuaImplementation(luaImplKey);
-		}
 
 		switch (hint)
 		{

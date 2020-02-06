@@ -63,6 +63,7 @@ namespace AWGame
 	void TestScene::onCreateChildren()
 	{
 		const auto contentContainer = std::make_shared<AW::Rectangle>();
+		contentContainer->name = "cc";
 		contentContainer->renderColorMode = AW::RenderColorMode::Absolute;
 		contentContainer->setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 		contentContainer->topLeftAlignSelf();
@@ -182,16 +183,12 @@ namespace AWGame
 		for (auto i = 0; i < 100; ++i)
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
-			poly->setLuaBindingsEnabled(true);
-			poly->setLuaImplementation("color-changer");
-			poly->setColor(AW::Color::random());
-			poly->setTexture("noise-solid-512");
+			poly->setLuaImplementationAndEnable("color-changer");
 			const auto numP = AW::NumberHelper::randomInt(3, 20);
 			for (auto j = 0; j < numP; ++j)
 			{
 				poly->addScreenPoint(AW::NumberHelper::random(-50, 50), AW::NumberHelper::random(-50, 50));
 			}
-			poly->setScreenPosition(AW::NumberHelper::random(-1000.0, 1000.0), AW::NumberHelper::random(-1000.0, 1000.0));
 			contentContainer->add(poly);
 		}
 
@@ -212,6 +209,7 @@ namespace AWGame
 
 	void TestScene::onEnterFrame(const double& deltaTime)
 	{
+		if (obj4 == nullptr) return;
 		if ((itersIncPressed || itersDecPressed) && iterTimer->isAboveThresholdAndRestart(10))
 		{
 			if (itersIncPressed)
@@ -396,9 +394,6 @@ namespace AWGame
 			exC.r = 64;
 			exC.b = 255;
 		}
-
-		//rebuild();
-		onKey(AWKey::FIVE, true);
 	}
 
 	void TestScene::onKeyPressed(AWKey key)
@@ -438,6 +433,11 @@ namespace AWGame
 
 		if (key == AWKey::FIVE && isPressed)
 		{
+			modules->lua->registerObjectImplementation("res/lua/game/object/color-changer.lua", "color-changer");
+			for (const auto poly: findChildWithName<GameObject>("cc")->getChildrenOfType<AW::Polygon>())
+			{
+				poly->setLuaImplementationAndEnable("color-changer");
+			}
 		}
 	}
 

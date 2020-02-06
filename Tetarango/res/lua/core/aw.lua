@@ -2,36 +2,32 @@
 
 _require = require;
 require = function(libPath)
-	local lua = getLua()
+	local lua = get_lua()
 	if lua.doFile ~= nil then
 		lua.doFile("res/lua/" .. libPath .. ".lua")
 	end
 end
 
-function getLua()
+function get_lua()
 	if aw_objects.lua ~= nil then
 		return aw_objects.lua;
 	end
 end
 
-function getLogger()
+function get_logger()
 	if aw_objects.logger ~= nil then
 		return aw_objects.logger;
 	end
 end
 
 function log(msg)
-	local logger = getLogger()
+	local logger = get_logger()
 	if logger.log ~= nil then
 		logger.log(msg, tostring(aw_cid))
 	end
 end
 
-function hasObjectImpl(implKey)
-	return aw_impls[implKey] ~= nil
-end
-
-function defObjectImpl(implTable)
+function aw_impl(implTable)
 	if aw_impl_key ~= nil then
 		aw_impls[aw_impl_key] = implTable
 		aw_impl_key = nil
@@ -40,7 +36,7 @@ function defObjectImpl(implTable)
 	end
 end
 
-function setObjectImpl(bindingId, implKey)
+function aw_set_impl(bindingId, implKey)
 	if aw_objects[bindingId] == nil then
 		aw_objects[bindingId] = {}
 	end
@@ -50,32 +46,39 @@ function setObjectImpl(bindingId, implKey)
 		for key, fn in pairs(aw_impls[implKey]) do
 			obj[key] = fn
 		end
+		if obj.onInit ~= nil then
+			obj:onInit()
+		end
 	else
 		log("Failed to set obj implemetation for bindingId=" .. bindingId .. ", for implKey=" .. implKey)
 	end
-end
-
-local function AW_setObjectImpl(bindingId, implKey)
-	setObjectImpl(bindingId, implKey)
-end
-
-local function AW_registerObjectImpl(implFile, implKey)
-	aw_impl_key = implKey
-	getLua().doFile(implFile)
 end
 
 local function AW_enterFrame(frameTime)
 	frameTime = tonumber(frameTime)
 	for key, obj in pairs(aw_objects) do
 		if obj.onEnterFrame ~= nil then
-			obj.onEnterFrame(frameTime)
+			obj:onEnterFrame(frameTime)
 		end
 	end
 end
 
+local function AW_registerObjectImpl(implFile, implKey)
+	aw_impl_key = implKey
+	get_lua().doFile(implFile, false)
+end
+
+local function AW_setObjectImpl(bindingId, implKey)
+	aw_set_impl(bindingId, implKey)
+end
+
+-- Context Id
 aw_cid = nil
+
+-- Current IMPL key for next aw_impl call
 aw_impl_key = nil
 aw_impls = {}
+
 aw_functions = {
 	AW_enterFrame=AW_enterFrame,
 	AW_registerObjectImpl=AW_registerObjectImpl,
