@@ -1,20 +1,23 @@
 -- AW Core binding layer and util
 -- Globals `aw_objects`, `aw_functions`, `aw_cid` are defined before any scripts execute
 
--- Custom `require` system
+-- Custom `require` system - module files are expected to set the `exports` field on exit to define their return value
 aw_require_results = {}
-exports = nil
+exports = {}
 require = function(libPath)
 	if aw_require_results[libPath] == nil then
-		aw_objects.lua.doFile("res/lua/" .. libPath .. ".lua")
-		aw_require_results[libPath] = exports
-		exports = nil
+		aw_require_results[libPath] = {}
+		aw_objects.lua:doFile("res/lua/" .. libPath .. ".lua")
+		for key, value in pairs(exports) do
+			aw_require_results[libPath][key] = value 
+			exports[key] = nil
+		end
 	end
 
 	return aw_require_results[libPath]
 end
 
--- AW global functions
+-- AW global functions which are callable from the host
 aw_functions.AW_enterFrame = function(frameTime)
 	frameTime = tonumber(frameTime)
 	for key, obj in pairs(aw_objects) do
@@ -26,15 +29,15 @@ end
 
 impl = require("core/impl")
 aw_functions.AW_loadImplResources = function()
-	impl.loadResources()
+	impl:loadResources()
 end
 
 aw_functions.AW_registerObjectImpl = function(implFile, implKey)
-	impl.setNextImplKey(implKey)
-	aw_objects.lua.doFile(implFile, false)
+	impl:setNextImplKey(implKey)
+	aw_objects.lua:doFile(implFile, false)
 end
 
 aw_functions.AW_setObjectImpl = function(bindingId, implKey)
-	impl.set(bindingId, implKey)
+	impl:set(bindingId, implKey)
 end
 

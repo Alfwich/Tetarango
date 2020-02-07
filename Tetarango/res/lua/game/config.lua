@@ -28,7 +28,7 @@ local base_config =
 	immediateDebugOutput = FALSE
 }
 
-dev_config = table_helper.copy(base_config)
+dev_config = table_helper:copy(base_config)
 dev_config.gameName = gName .. " - Debug - " .. ver
 dev_config.storageLocation = gName .. "-" .. ver .. "-Debug"
 dev_config.useAssetPack = FALSE
@@ -42,7 +42,7 @@ dev_config.enableTestScenes = TRUE
 --dev_config.visualizeContainers = TRUE
 --dev_config.visualizeClipRects = TRUE
 
-prod_config = table_helper.copy(base_config)
+prod_config = table_helper:copy(base_config)
 prod_config.enableTestScenes = TRUE
 prod_config.loggingEnabled = FALSE 
 --prod_config.useAssetPack = FALSE

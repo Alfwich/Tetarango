@@ -1,71 +1,42 @@
 
-local function aw_get_sound()
-	if aw_objects.sound ~= nil then
-	return aw_objects.sound
-	end
-end
-
 exports = {
-	loadSound = function(path, key)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.loadSound ~= nil then
-			sound.loadSound(path, key)
-		end
+	module = function(self)
+		return aw_objects.sound
 	end,
 
-	playSound = function(key, vol)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.playSound ~= nil then
-			sound.playSound(key, vol)
-		end
+	loadSound = function(self, path, key)
+		self:module().loadSound(path, key)
 	end,
 
-	loadMusic = function(path, key)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.loadMusic ~= nil then
-			sound.loadMusic(key, vol)
-		end
+	playSound = function(self, key, vol)
+		self:module().playSound(key, vol)
 	end,
 
-	playMusic = function(key, fadeInMs)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.playMusic ~= nil then
-			sound.playMusic(key, fadeInMs)
-		end
+	loadMusic = function(self, path, key)
+		self:module().loadMusic(path, key)
 	end,
 
-	stopMusic = function(key, fadeOutMs)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.stopMusic ~= nil then
-			sound.stopMusic(key, fadeOutMs)
-		end
+	playMusic = function(self, key, fadeInMs)
+		self:module().playMusic(key, fadeInMs)
 	end,
 
-	stopAllSounds = function(fadeOutMs)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.stopAllSounds ~= nil then
-			sound.stopAllSounds(fadeOutMs)
-		end
+	stopMusic = function(self, key, fadeOutMs)
+		self:module().stopMusic(key, fadeOutMs)
 	end,
 
-	setMasterVolume = function(vol)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.setMasterVolume~= nil then
-			sound.setMasterVolume(vol)
-		end
+	stopAllSounds = function(self, fadeOutMs)
+		self:module().stopAllSounds(fadeOutMs)
 	end,
 
-	setMusicVolume = function(vol)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.setMusicVolume~= nil then
-			sound.setMusicVolume(vol)
-		end
+	setMasterVolume = function(self, vol)
+		self:module().setMasterVolume(vol)
 	end,
 
-	setEffectVolume = function(vol)
-		local sound = aw_get_sound()
-		if sound ~= nil and sound.setEffectVolume~= nil then
-			sound.setEffectVolume(vol)
-		end
+	setMusicVolume = function(self, vol)
+		self:module().setMusicVolume(vol)
+	end,
+
+	setEffectVolume = function(self, vol)
+		self:module().setEffectVolume(vol)
 	end
 }
