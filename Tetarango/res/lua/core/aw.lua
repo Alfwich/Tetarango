@@ -1,5 +1,5 @@
 -- AW Core binding layer and util
--- Globals `aw_objects`, `aw_functions`, `aw_cid` are defined before any scripts execute
+-- Globals `aw_objects`, `aw_functions`, `aw_cid` are defined by the host before any scripts are executed
 
 -- Custom `require` system - module files are expected to set the `exports` field on exit to define their return value
 aw_require_results = {}
@@ -27,7 +27,7 @@ aw_functions.AW_enterFrame = function(frameTime)
 	end
 end
 
-impl = require("core/impl")
+local impl = require("core/impl")
 aw_functions.AW_loadImplResources = function()
 	impl:loadResources()
 end

@@ -190,7 +190,6 @@ namespace AW
 		int setTimeout(double timeoutMS);
 		void setTimeout(double timeoutMS, int* timeoutIdLocation);
 
-		// Inherited via ILuaObject
 		virtual std::string getAwType() override;
 		virtual std::string getLuaBindingId() override;
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;

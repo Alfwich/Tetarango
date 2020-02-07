@@ -236,6 +236,7 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="res\lua\core\font.lua" />
     <None Include="res\lua\core\impl.lua" />
     <None Include="res\lua\core\logger.lua" />
+    <None Include="res\lua\core\screen.lua" />
     <None Include="res\lua\core\sound.lua" />
     <None Include="res\lua\core\table-helper.lua" />
     <None Include="res\lua\core\texture.lua" />

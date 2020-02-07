@@ -355,4 +355,16 @@ namespace AW
 	{
 		bindDefaultShaders();
 	}
+
+	void Screen::onBindLuaHooks(const std::shared_ptr<Lua>& lua)
+	{
+		lua->registerBoundFunction("screenWidth", shared_from_this());
+		lua->registerBoundFunction("screenHeight", shared_from_this());
+	}
+
+	void Screen::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		if (func == "screenWidth") obj->returnValues.push_back(std::to_string(getWidth()));
+		if (func == "screenHeight") obj->returnValues.push_back(std::to_string(getHeight()));
+	}
 }

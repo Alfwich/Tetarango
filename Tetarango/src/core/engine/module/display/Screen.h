@@ -86,6 +86,12 @@ namespace AW
 		void render(std::shared_ptr<Renderable> obj);
 
 		void onReady();
+
+		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override { return "screen"; };
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 }
 

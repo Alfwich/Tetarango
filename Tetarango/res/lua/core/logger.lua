@@ -4,7 +4,7 @@ exports = {
 		return aw_objects.logger
 	end,
 
-	log = function(msg)
+	log = function(self, msg)
 		self:module().log(msg, tostring(aw_cid))
 	end
 }

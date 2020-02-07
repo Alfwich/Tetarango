@@ -2,6 +2,8 @@ local impl = require("core/impl")
 local sound = require("core/sound")
 local texture = require("core/texture")
 local font = require("core/font")
+local screen = require("core/screen")
+local logger = require("core/logger")
 
 local moveDistance = 1000
 
@@ -11,6 +13,9 @@ impl:define({
 		font:createFont("test-font", 99)
 		texture:loadTexture("prop/environment/moon.png", "my-moon")
 		sound:loadSound("game-over.wav", "test-snd")
+		local sws = tostring(screen:width()) 
+		local shs = tostring(screen:height()) 
+		logger:log("Screen width=" .. sws .. ", height="..shs)
 	end,
 	onInit = function (self)
 		self.mX = math.random(100, 1000)
