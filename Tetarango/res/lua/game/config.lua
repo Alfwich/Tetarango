@@ -1,11 +1,11 @@
-table_helper = require("core/table-helper")
+local table_helper = require("core/table-helper")
 
 local TRUE = "true"
 local FALSE = "false"
 local ver = "v0.20"
 local gName = "Tetarango"
 
-local _base_config = 
+local base_config = 
 {
 	version = ver,
 	saveVersion = "v1.00",
@@ -28,7 +28,7 @@ local _base_config =
 	immediateDebugOutput = FALSE
 }
 
-dev_config = table_helper.copy(_base_config)
+dev_config = table_helper.copy(base_config)
 dev_config.gameName = gName .. " - Debug - " .. ver
 dev_config.storageLocation = gName .. "-" .. ver .. "-Debug"
 dev_config.useAssetPack = FALSE
@@ -42,7 +42,7 @@ dev_config.enableTestScenes = TRUE
 --dev_config.visualizeContainers = TRUE
 --dev_config.visualizeClipRects = TRUE
 
-prod_config = table_helper.copy(_base_config)
+prod_config = table_helper.copy(base_config)
 prod_config.enableTestScenes = TRUE
 prod_config.loggingEnabled = FALSE 
 --prod_config.useAssetPack = FALSE
