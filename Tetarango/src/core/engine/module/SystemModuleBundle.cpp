@@ -38,6 +38,7 @@ namespace AW
 		screen->bindShader(shader);
 		screen->bindTexture(texture);
 		screen->bindPhysic(physic);
+		event->bindLua(lua);
 	}
 
 	SystemModuleBundle::SystemModuleBundle()

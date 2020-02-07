@@ -233,6 +233,7 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="libvorbisfile-3.dll" />
     <None Include="libwebp-7.dll" />
     <None Include="res\lua\core\aw.lua" />
+    <None Include="res\lua\core\event.lua" />
     <None Include="res\lua\core\font.lua" />
     <None Include="res\lua\core\impl.lua" />
     <None Include="res\lua\core\logger.lua" />

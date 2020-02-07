@@ -21,8 +21,10 @@ namespace AW
 		class TimeoutBundle
 		{
 		public:
-			TimeoutBundle(int id, std::shared_ptr<EnterFrameListener> ptr, double time) : ptr(ptr), time(time), id(id) {}
-			const int id = 0;
+			TimeoutBundle(int id, int luaId, double time) : time(time), id(id), luaId(luaId) {}
+			TimeoutBundle(int id, std::shared_ptr<EnterFrameListener> ptr, double time) : ptr(ptr), time(time), id(id), luaId(-1) {}
+
+			const int id = 0, luaId = 0;
 			const std::weak_ptr<EnterFrameListener> ptr;
 
 			double time = 0.0;
@@ -30,12 +32,14 @@ namespace AW
 
 		std::shared_ptr<Input> input;
 		std::shared_ptr<Thread> thread;
+		std::shared_ptr<Lua> lua;
 
 		int timeoutId = 100;
 		bool processingOnEnterFrames = false;
 
 		std::set<int> enterFrameObjects;
 		std::map<int, std::list<std::shared_ptr<EnterFrameListenerBundle>>, std::greater<int>> onEnterFrameCallbacks;
+		std::map<int, int> luaBindingIdToTimeoutId;
 		std::list<std::shared_ptr<EnterFrameListener>> cleanupObjects;
 		std::list<std::shared_ptr<TimeoutBundle>> timeoutCallbacks;
 		std::list<std::shared_ptr<TimeoutBundle>> timeoutProcessedCallbacks;
@@ -46,14 +50,18 @@ namespace AW
 		void processEnterFrames(const double& frameTime);
 		void processEvents();
 
+		int setLuaTimeout(int luaId, double timeoutMS = 0.0);
+		void clearLuaTimeout(int luaId);
+
 	public:
 		void bindInput(std::shared_ptr<Input> input);
 		void bindThread(std::shared_ptr<Thread> thread);
+		void bindLua(std::shared_ptr<Lua> lua);
 
 		void pushEvent(std::shared_ptr<ApplicationEvent> event);
 		const std::list<std::shared_ptr<ApplicationEvent>>& getEvents();
 
-		void registerOnEnterFrame(std::shared_ptr<EnterFrameListener> listener, int priority = 0);
+		void registerOnEnterFrame(std::shared_ptr<EnterFrameListener> listener, int priority = 0.0);
 		void unregisterOnEnterFrame(std::shared_ptr<EnterFrameListener> listener);
 
 		int registerTimeoutCallback(std::shared_ptr<EnterFrameListener> listener, double timeoutMS);
@@ -61,5 +69,10 @@ namespace AW
 
 		void onCleanup();
 		void onEnterFrame(const double& frameTime);
+		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override { return "event"; };
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 }

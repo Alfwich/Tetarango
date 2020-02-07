@@ -789,4 +789,9 @@ namespace AW
 
 		return result;
 	}
+
+	void Lua::fireTimeoutCallback(int timeoutBindingId)
+	{
+		callGlobalFunctionForContext("AW_exe_timeout", defaultContext, { std::to_string(timeoutBindingId) });
+	}
 }

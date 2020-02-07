@@ -99,5 +99,7 @@ namespace AW
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 
 		std::unordered_map<int, int> debugInfo();
+
+		void fireTimeoutCallback(int timeoutBindingId);
 	};
 }

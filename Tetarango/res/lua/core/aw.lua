@@ -2,29 +2,29 @@
 -- Globals `aw_objects`, `aw_functions`, `aw_cid` are defined by the host before any scripts are executed
 
 -- Custom `require` system - module files are expected to set the `exports` field on exit to define their return value
-aw_require_results = {}
+aw_modules = {}
 exports = {}
 require = function(libPath)
-	if aw_require_results[libPath] == nil then
-		aw_require_results[libPath] = {}
+	if aw_modules[libPath] == nil then
+		aw_modules[libPath] = {}
 		aw_objects.lua:doFile("res/lua/" .. libPath .. ".lua")
 		for key, value in pairs(exports) do
-			aw_require_results[libPath][key] = value 
+			aw_modules[libPath][key] = value 
 			exports[key] = nil
 		end
 	end
 
-	return aw_require_results[libPath]
+	return aw_modules[libPath]
 end
 
 -- AW global functions which are callable from the host
+local event = require("core/event")
 aw_functions.AW_enterFrame = function(frameTime)
-	frameTime = tonumber(frameTime)
-	for key, obj in pairs(aw_objects) do
-		if obj.onEnterFrame ~= nil then
-			obj:onEnterFrame(frameTime)
-		end
-	end
+	event:enterFrames(frameTime)
+end
+
+aw_functions.AW_exe_timeout = function(id)
+	event:executeTimeout(id)
 end
 
 local impl = require("core/impl")

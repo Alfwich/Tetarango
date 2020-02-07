@@ -14,6 +14,11 @@ namespace AW
 		this->thread = thread;
 	}
 
+	void Event::bindLua(std::shared_ptr<Lua> lua)
+	{
+		this->lua = lua;
+	}
+
 	void Event::pushEvent(std::shared_ptr<ApplicationEvent> event)
 	{
 		events.push_back(event);
@@ -74,6 +79,30 @@ namespace AW
 			reportSdlErrors();
 		}
 #endif // _DEBUG
+	}
+
+	int Event::setLuaTimeout(int luaId, double timeoutMS)
+	{
+		const auto bundle = std::make_shared<TimeoutBundle>(timeoutId++, luaId, timeoutMS);
+
+		if (processingOnEnterFrames)
+		{
+			timeoutProcessedCallbacks.push_back(bundle);
+		}
+		else
+		{
+			timeoutCallbacks.push_back(bundle);
+		}
+
+		return bundle->id;
+	}
+
+	void Event::clearLuaTimeout(int luaId)
+	{
+		if (luaBindingIdToTimeoutId.count(luaId) == 1)
+		{
+			luaBindingIdToTimeoutId.erase(luaId);
+		}
 	}
 
 	void Event::reportSdlErrors()
@@ -141,10 +170,18 @@ namespace AW
 			bundle->time -= frameTime;
 			if (bundle->time <= 0)
 			{
-				const auto ptr = bundle->ptr.lock();
-				if (ptr != nullptr)
+				if (bundle->luaId == -1)
 				{
-					ptr->onTimeoutCalled(bundle->id);
+					const auto ptr = bundle->ptr.lock();
+					if (ptr != nullptr)
+					{
+						ptr->onTimeoutCalled(bundle->id);
+					}
+				}
+				else if (luaBindingIdToTimeoutId.count(bundle->luaId) == 1)
+				{
+					lua->fireTimeoutCallback(bundle->luaId);
+					luaBindingIdToTimeoutId.erase(bundle->luaId);
 				}
 
 				it = timeoutCallbacks.erase(it);
@@ -222,6 +259,7 @@ namespace AW
 	int Event::registerTimeoutCallback(std::shared_ptr<EnterFrameListener> listener, double timeoutMS)
 	{
 		const auto bundle = std::make_shared<TimeoutBundle>(timeoutId++, listener, timeoutMS);
+
 		if (processingOnEnterFrames)
 		{
 			timeoutProcessedCallbacks.push_back(bundle);
@@ -267,5 +305,24 @@ namespace AW
 	{
 		processEvents();
 		processEnterFrames(frameTime);
+	}
+
+	void Event::onBindLuaHooks(const std::shared_ptr<Lua>& lua)
+	{
+		lua->registerBoundFunction("setTimeout", shared_from_this());
+		lua->registerBoundFunction("clearTimeout", shared_from_this());
+	}
+
+	void Event::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		if (func == "setTimeout" && obj->args.size() == 2)
+		{
+			const auto luaId = std::stoi(obj->args[0]);
+			const auto callbackMs = std::stod(obj->args[1]);
+			const auto timeoutId = setLuaTimeout(luaId, callbackMs);
+
+			luaBindingIdToTimeoutId[luaId] = timeoutId;
+		}
+		else if (func == "clearTimeout" && obj->args.size() == 1) clearLuaTimeout(std::stoi(obj->args[0]));
 	}
 }
