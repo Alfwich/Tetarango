@@ -147,4 +147,17 @@ namespace AW
 	{
 		return nameToFontPack.count(name) == 1;
 	}
+
+	void FontContainer::onBindLuaHooks(const std::shared_ptr<Lua>& lua)
+	{
+		lua->registerBoundFunction("loadFont", shared_from_this());
+		lua->registerBoundFunction("createFont", shared_from_this());
+	}
+
+	void FontContainer::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		if (func == "loadFont" && obj->args.size() == 2) loadFont("res/font/" + obj->args[0], obj->args[1]);
+		else if (func == "createFont" && obj->args.size() == 1) createFont(obj->args[0]);
+		else if (func == "createFont" && obj->args.size() == 2) createFont(obj->args[0], std::stoi(obj->args[1]));
+	}
 }

@@ -1,11 +1,14 @@
 local impl = require("core/impl")
 local sound = require("core/sound")
 local texture = require("core/texture")
+local font = require("core/font")
 
 local moveDistance = 1000
 
 impl.define({
 	onLoadResources = function (self)
+		font.loadFont("Roboto-ThinItalic.ttf", "test-font")
+		font.createFont("test-font", 99)
 		texture.loadTexture("prop/environment/moon.png", "my-moon")
 		sound.loadSound("game-over.wav", "test-snd")
 	end,

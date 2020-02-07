@@ -750,6 +750,11 @@ namespace AW
 		}
 	}
 
+	void Lua::onLoadResources()
+	{
+		callGlobalFunctionForContext("AW_loadImplResources", defaultContext);
+	}
+
 	void Lua::onEnterFrame(const double& frameTime)
 	{
 		callGlobalFunctionForContext("AW_enterFrame", defaultContext, { std::to_string(frameTime) });
@@ -764,11 +769,6 @@ namespace AW
 		fileScriptCache.clear();
 		bindings.clear();
 		keyToBindings.clear();
-	}
-
-	std::string Lua::getLuaBindingId()
-	{
-		return "lua";
 	}
 
 	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)

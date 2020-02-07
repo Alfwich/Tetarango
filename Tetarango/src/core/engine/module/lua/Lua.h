@@ -90,11 +90,12 @@ namespace AW
 		std::unordered_map<std::string, std::string> getGlobalRecord(const std::string& name);
 
 		void onInit() override;
+		void onLoadResources() override;
 		void onEnterFrame(const double& frameTime);
 		void onCleanup() override;
 
 		// Inherited via IBaseModule
-		virtual std::string getLuaBindingId() override;
+		virtual std::string getLuaBindingId() override { return "lua"; };
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 
 		std::unordered_map<int, int> debugInfo();

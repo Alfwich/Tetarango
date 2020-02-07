@@ -47,6 +47,11 @@ namespace AW
 
 		bool hasFont(const std::string& name);
 
+		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override { return "font"; };
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 }
 
