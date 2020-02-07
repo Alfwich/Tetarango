@@ -1,10 +1,13 @@
+local impl = require("core/impl")
+local sound = require("core/sound")
+local texture = require("core/texture")
+
 local moveDistance = 1000
 
-
-define_impl({
+impl.define({
 	onLoadResources = function (self)
-		loadTexture("actor/pawn/humanoid/pawn-humanoid.png", "pawn-human")
-		loadTexture("prop/environment/moon.png", "my-moon")
+		texture.loadTexture("prop/environment/moon.png", "my-moon")
+		sound.loadSound("game-over.wav", "test-snd")
 	end,
 	onInit = function (self)
 		self.mX = math.random(100, 1000)
@@ -21,6 +24,10 @@ define_impl({
 	end,
 
 	onEnterFrame = function (self, frameTime) 
+		if (math.random(0, 10000) == 50) then
+			sound.playSound("test-snd")
+		end
+
 		self.p = self.p + (frameTime / 1000.0) / 10.0
 		self.xO = math.cos(self.p * math.pi * 2) * self.mX
 		self.yO = math.sin(self.p * math.pi * 2) * self.mY

@@ -10,6 +10,7 @@ namespace
 	const auto boundObjectsGlobalName = "aw_objects";
 
 	const auto luaBindingObjectTypeNameFieldName = "aw_type";
+	const auto primeInlineScript = std::string(boundObjectsGlobalName) + "={}\n" + std::string(boundFunctionsGlobalName) + "={}\n";
 
 	const auto doStringMethodName = "doString";
 	const auto doFileMethodName = "doFile";
@@ -368,10 +369,10 @@ namespace AW
 
 	void Lua::primeContext(int contextId)
 	{
-		executeLuaScriptForContext(awCoreLibLocation, contextId);
-		executeLuaStringForContext(contextIdBindingName + "=" + std::to_string(contextId), contextId);
+		executeLuaStringForContext(primeInlineScript + contextIdBindingName + "=" + std::to_string(contextId), contextId);
 		registerBoundFunctionForContext(doStringMethodName, shared_from_this(), contextId);
 		registerBoundFunctionForContext(doFileMethodName, shared_from_this(), contextId);
+		executeLuaScriptForContext(awCoreLibLocation, contextId);
 	}
 
 	void Lua::callGlobalFunction(const std::string& function, const std::vector<std::string>& args)
@@ -773,8 +774,8 @@ namespace AW
 	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
 		if (func == doStringMethodName && obj->args.size() == 1) executeLuaString(obj->args[0]);
-		if (func == doFileMethodName && obj->args.size() == 1) executeLuaScript(obj->args[0]);
-		if (func == doFileMethodName && obj->args.size() == 2) executeLuaScript(obj->args[0], obj->args[1] == "1");
+		else if (func == doFileMethodName && obj->args.size() == 1) executeLuaScript(obj->args[0]);
+		else if (func == doFileMethodName && obj->args.size() == 2) executeLuaScript(obj->args[0], obj->args[1] == "1");
 	}
 
 	std::unordered_map<int, int> Lua::debugInfo()

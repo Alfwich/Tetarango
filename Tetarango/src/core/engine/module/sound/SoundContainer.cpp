@@ -17,7 +17,7 @@ namespace AW
 
 		auto clip = std::make_shared<SoundClip>(path, asset);
 		shaders[name] = clip;
-		Logger::instance()->log("Sound::Loaded sound name= " + name + ", path=" + path);
+		Logger::instance()->log("Sound::Loaded sound name=" + name + ", path=" + path);
 	}
 
 	std::shared_ptr<SoundClip> SoundContainer::getSoundClip(const std::string& name)

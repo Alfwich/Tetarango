@@ -20,13 +20,13 @@ namespace AW
 
 		void bindAsset(std::shared_ptr<Asset> asset);
 
-		void loadSoundClip(std::string path, std::string name);
-		void playSoundClip(std::string name, double volume = 1.0);
+		void loadSoundClip(const std::string& path, const std::string& name);
+		void playSoundClip(const std::string& name, double volume = 1.0);
 		void stopAllSoundClips(int fadeOutMS = 1000);
 
-		void loadMusic(std::string path, std::string name);
-		void playMusic(std::string name, int fadeInMS = 1000);
-		void stopMusic(std::string name = "", int fadeOutMS = 1000);
+		void loadMusic(const std::string& path, const std::string& name);
+		void playMusic(const std::string& name, int fadeInMS = 1000);
+		void stopMusic(const std::string& name = "", int fadeOutMS = 1000);
 
 		void stopAllSounds(int fadeOutMS = 1000);
 
@@ -40,6 +40,12 @@ namespace AW
 		double getEffectVolume();
 
 		void onCleanup();
+
+		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+
+		// Inherited via ILuaObject
+		virtual std::string getLuaBindingId() override { return "sound"; };
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 
 }

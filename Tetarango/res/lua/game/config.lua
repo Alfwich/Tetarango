@@ -1,4 +1,4 @@
-require("core/table-helper")
+table_helper = require("core/table-helper")
 
 local TRUE = "true"
 local FALSE = "false"
