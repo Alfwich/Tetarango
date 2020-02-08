@@ -5,7 +5,9 @@ namespace
 	int nextGameObjectId = 100;
 	const auto orderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) { return a->zIndex < b->zIndex; };
 	const auto luaImplKeyParamName = "go_lua_impl_key";
+
 	const auto luaEnterFrameFunctionName = "AW_enterFrame";
+	const auto luaOnKeyFunctionName = "AW_onKey";
 }
 
 namespace AW
@@ -603,6 +605,14 @@ namespace AW
 	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
 		// TODO: Implement GO related callbacks
+	}
+
+	void GameObject::onKey(AWKey code, bool pressed)
+	{
+		if (getTag(GTags::LuaBindingsEnabled))
+		{
+			modules->lua->callBoundFunction(getLuaBindingId(), luaOnKeyFunctionName, { std::to_string((int)code), pressed ? "1" : "0" });
+		}
 	}
 
 	std::shared_ptr<GameObject> GameObject::getRootNode()

@@ -194,6 +194,8 @@ namespace AW
 		std::string getAwType() override;
 		std::string getLuaBindingId() override;
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
+
+		virtual void onKey(AWKey code, bool pressed) override;
 	};
 
 	template<typename T>

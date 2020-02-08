@@ -345,8 +345,10 @@ namespace AW
 
 		const auto bindingId = callbackObj == nullptr ? globalBindingId : callbackObj->getLuaBindingId();
 		const auto functionBundleKey = std::make_tuple(std::to_string(currentActiveContextId), bindingId, fnName);
-		bindings.emplace(std::piecewise_construct, functionBundleKey, std::make_tuple(fnName, fn, callbackObj, luaBindingAdapter));
-		bindingsLuaAdapterMap[bindings.at(functionBundleKey).bundleId] = &bindings.at(functionBundleKey);
+
+		bindingIdToBoundObject[bindingId] = callbackObj;
+		bindings[functionBundleKey] = std::make_shared<LuaBoundObject>(fnName, fn, callbackObj, luaBindingAdapter);
+		bindingsLuaAdapterMap[bindings.at(functionBundleKey)->bundleId] = bindings.at(functionBundleKey);
 		keyToBindings[bindingId.empty() ? fnName : bindingId].push_back(functionBundleKey);
 
 		if (bindingId == globalBindingId)
@@ -372,8 +374,8 @@ namespace AW
 		}
 
 		lua_pushlightuserdata(L, (void*)this);
-		lua_pushinteger(L, bindings.at(functionBundleKey).bundleId);
-		lua_pushcclosure(L, bindings.at(functionBundleKey).luaFunction, 2);
+		lua_pushinteger(L, bindings.at(functionBundleKey)->bundleId);
+		lua_pushcclosure(L, bindings.at(functionBundleKey)->luaFunction, 2);
 		lua_setfield(L, -2, fnName.c_str());
 
 		lua_pop(L, bindingId == globalBindingId ? 1 : 2);
@@ -552,9 +554,9 @@ namespace AW
 				if (bindings.count(bindingKey) == 1)
 				{
 					const auto bundle = bindings.at(bindingKey);
-					if (bindingsLuaAdapterMap.count(bundle.bundleId) == 1)
+					if (bindingsLuaAdapterMap.count(bundle->bundleId) == 1)
 					{
-						bindingsLuaAdapterMap.erase(bundle.bundleId);
+						bindingsLuaAdapterMap.erase(bundle->bundleId);
 					}
 
 					bindings.erase(bindingKey);
@@ -563,7 +565,12 @@ namespace AW
 
 			keyToBindings.erase(bindingId);
 		}
-		
+
+		if (bindingIdToBoundObject.count(bindingId) == 1)
+		{
+			bindingIdToBoundObject.erase(bindingId);
+		}
+
 		for (const auto idtoContext : contexts)
 		{
 			const auto L = idtoContext.second;
@@ -593,9 +600,9 @@ namespace AW
 				if (bindings.count(bindingKey) == 1)
 				{
 					const auto bundle = bindings.at(bindingKey);
-					if (bindingsLuaAdapterMap.count(bundle.bundleId) == 1)
+					if (bindingsLuaAdapterMap.count(bundle->bundleId) == 1)
 					{
-						bindingsLuaAdapterMap.erase(bundle.bundleId);
+						bindingsLuaAdapterMap.erase(bundle->bundleId);
 					}
 
 					bindings.erase(bindingKey);
@@ -766,7 +773,7 @@ namespace AW
 	LuaBoundObject* Lua::getBoundObjectBundleForId(int id)
 	{
 		return (bindingsLuaAdapterMap.count(id) == 1)
-			? bindingsLuaAdapterMap.at(id)
+			? bindingsLuaAdapterMap.at(id).get()
 			: nullptr;
 	}
 
@@ -819,6 +826,14 @@ namespace AW
 
 	void Lua::fireTimeoutCallback(int timeoutBindingId)
 	{
+		// TODO: Move into Event module
 		callGlobalFunctionForContext("AW_exe_timeout", defaultContext, { std::to_string(timeoutBindingId) });
+	}
+
+	std::shared_ptr<ILuaObject> Lua::getILuaObjectObjectForBindingId(std::string luaBindingId)
+	{
+		return (bindingIdToBoundObject.count(luaBindingId) == 1)
+			? bindingIdToBoundObject.at(luaBindingId)
+			: nullptr;
 	}
 }

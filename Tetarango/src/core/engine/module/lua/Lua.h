@@ -28,8 +28,9 @@ namespace AW
 		std::shared_ptr<Asset> asset;
 		int nextInactiveContextId = 0, currentActiveContextId = -1, defaultContext = -1;
 
-		std::unordered_map<int, LuaBoundObject*> bindingsLuaAdapterMap;
-		std::unordered_map<std::tuple<std::string, std::string, std::string>, LuaBoundObject, tuple_hash> bindings;
+		std::unordered_map<int, std::shared_ptr<LuaBoundObject>> bindingsLuaAdapterMap;
+		std::unordered_map<std::string, std::shared_ptr<ILuaObject>> bindingIdToBoundObject;
+		std::unordered_map<std::tuple<std::string, std::string, std::string>, std::shared_ptr<LuaBoundObject>, tuple_hash> bindings;
 		std::unordered_map<std::string, std::vector<std::tuple<std::string, std::string, std::string>>> keyToBindings;
 
 		std::unordered_map<std::string, std::string> fileScriptCache;
@@ -103,5 +104,7 @@ namespace AW
 		std::unordered_map<int, int> debugInfo();
 
 		void fireTimeoutCallback(int timeoutBindingId);
+
+		std::shared_ptr<ILuaObject> getILuaObjectObjectForBindingId(std::string luaBindingKey);
 	};
 }

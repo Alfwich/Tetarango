@@ -8,7 +8,7 @@ namespace AW
 		oldKeyValues[code] = 0;
 	}
 
-	void Keyboard::registerKeys(std::vector<AWKey> codes, std::weak_ptr<IInputListener> listener)
+	void Keyboard::registerKeys(const std::vector<AWKey>& codes, std::weak_ptr<IInputListener> listener)
 	{
 		for (auto code : codes)
 		{

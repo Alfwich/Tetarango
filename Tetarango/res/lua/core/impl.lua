@@ -1,4 +1,5 @@
 local logger = require("core/logger")
+local gameObject = require("core/game-object")
 
 return {
 	resource_loaded_for_impl = {},
@@ -12,6 +13,7 @@ return {
 
 		if self.impls[impl_key] ~= nil then
 			local obj = aw_objects[binding_id]
+			obj.id = binding_id
 			for key, fn in pairs(self.impls[impl_key]) do
 				obj[key] = fn
 			end
@@ -22,10 +24,7 @@ return {
 				self.resource_loaded_for_impl[impl_key] = true
 			end
 
-			local shouldRegisterHostCallableEnterFrame = obj.onEnterFrame ~= nil
-			if shouldRegisterHostCallableEnterFrame then
-				obj.AW_enterFrame = function(frameTime) obj:onEnterFrame(frameTime) end
-			end
+			gameObject:bindGameObjectMethods(obj)
 
 			if obj.onInit ~= nil then
 				obj:onInit()

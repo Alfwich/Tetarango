@@ -11,10 +11,18 @@ namespace AW
 	{
 	public:
 		Input();
+
+		void bindLua(std::shared_ptr<Lua> lua);
+		std::shared_ptr<Lua> lua;
+
 		std::shared_ptr<Keyboard> keyboard;
 		std::shared_ptr<Mouse> mouse;
 		std::shared_ptr<Gamepad> gamepad;
 
-		void onCleanup();
+		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+		virtual void onCleanup() override;
+
+		virtual std::string getLuaBindingId() override { return "input"; };
+		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};
 }

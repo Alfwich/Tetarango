@@ -5,6 +5,8 @@ local font = require("core/font")
 local screen = require("core/screen")
 local logger = require("core/logger")
 local event = require("core/event")
+local input = require("core/input")
+local keys = require("core/keymap")
 
 local moveI = 100
 local moveDistance = 1000
@@ -39,6 +41,7 @@ impl:define({
 		self:setPosition(self.x + self.xO, self.y + self.yO)
 		self:setColor(math.random(0, 255), math.random(0, 255), math.random(0, 255))
 		event:setTimeout(function() self:setColor(0, 0, 0) end, 5000)
+		input:registerKey({ keys.A, keys.B }, self)
 	end,
 
 	onEnterFrame = function (self, frameTime) 
@@ -57,5 +60,15 @@ impl:define({
 		self.xO = math.cos(self.p * math.pi * 2) * self.mX
 		self.yO = math.sin(self.p * math.pi * 2) * self.mY
 		self:setPosition(self.x + self.xO, self.y + self.yO)
+	end,
+
+	onKey = function(self, key, pressed)
+		if key == keys.A and pressed then
+			print(key, pressed)
+		end
+
+		if key == keys.B and not pressed then
+			print(key, pressed)
+		end
 	end
 })

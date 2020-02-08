@@ -11,7 +11,7 @@ namespace AW
 	public:
 
 		void registerKey(AWKey code, std::weak_ptr<IInputListener> listener);
-		void registerKeys(std::vector<AWKey> codes, std::weak_ptr<IInputListener> listener);
+		void registerKeys(const std::vector<AWKey>& codes, std::weak_ptr<IInputListener> listener);
 		void unregisterKey(AWKey code, std::weak_ptr<IInputListener> listener);
 		void unregisterObject(std::weak_ptr<IInputListener> listener);
 

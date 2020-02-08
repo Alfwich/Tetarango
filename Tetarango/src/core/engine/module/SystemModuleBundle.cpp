@@ -39,6 +39,7 @@ namespace AW
 		screen->bindTexture(texture);
 		screen->bindPhysic(physic);
 		event->bindLua(lua);
+		input->bindLua(lua);
 	}
 
 	SystemModuleBundle::SystemModuleBundle()

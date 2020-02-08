@@ -235,7 +235,10 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="res\lua\core\aw.lua" />
     <None Include="res\lua\core\event.lua" />
     <None Include="res\lua\core\font.lua" />
+    <None Include="res\lua\core\game-object.lua" />
     <None Include="res\lua\core\impl.lua" />
+    <None Include="res\lua\core\input.lua" />
+    <None Include="res\lua\core\keymap.lua" />
     <None Include="res\lua\core\logger.lua" />
     <None Include="res\lua\core\screen.lua" />
     <None Include="res\lua\core\sound.lua" />
