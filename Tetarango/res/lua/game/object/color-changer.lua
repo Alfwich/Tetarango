@@ -13,62 +13,48 @@ local moveDistance = 1000
 
 impl:define({
 	onLoadResources = function (self)
-		font:loadFont("Roboto-ThinItalic.ttf", "test-font")
-		font:createFont("test-font", 99)
-		texture:loadTexture("prop/environment/moon.png", "my-moon")
-		sound:loadSound("game-over.wav", "test-snd")
-		sound:loadSound("tetarango.wav", "test-snd2")
-		local sws = tostring(screen:width()) 
-		local shs = tostring(screen:height()) 
-		logger:log("Screen width=" .. sws .. ", height="..shs)
-		event:setTimeout(function() sound:playSound("test-snd2") end, 4000)
 	end,
 
 	onInit = function (self)
-		self.mX = moveI
-		self.mY = moveI
-		self.x = moveI
-		self.y = moveI
-		if (moveI > 1000) then
-			moveI = 100
-		else
-			moveI = moveI + 10
+		self.r = math.random(0, 255)
+		self.g = math.random(0, 255)
+		self.b = math.random(0, 255)
+		self.x = math.random(-1000, 1000)
+		self.y = math.random(-1000, 1000)
+
+		self.moveSpeed = 100 + math.random() * 50;
+
+		self:updateColor()
+		self:setPosition(self.x, self.y)
+		input:registerKey({ keys.W, keys.A, keys.S, keys.D }, self)
+	end,
+
+	updateColor = function(self)
+		self.r = self.r + 1
+		if self.r >= 255 then
+			self.r = 0
+			self.g = self.g + 1
+			if self.g >= 255 then
+				self.g = 0
+				self.b = self.b + 1
+				if self.b >= 255 then
+					self.b = 0
+				end
+			end
 		end
-		self.xO = 0
-		self.yO = 0
-		self.p = math.random() * math.pi * 2
-		self:setTexture("my-moon")
-		self:setPosition(self.x + self.xO, self.y + self.yO)
-		self:setColor(math.random(0, 255), math.random(0, 255), math.random(0, 255))
-		event:setTimeout(function() self:setColor(0, 0, 0) end, 5000)
-		input:registerKey({ keys.A, keys.B }, self)
+
+		self:setColor(self.r, self.g, self.b)
 	end,
 
 	onEnterFrame = function (self, frameTime) 
-		if math.random(0, 10000) == 50 then
-			sound:playSound("test-snd")
-		end
+		self:updateColor()
 
-		if self.colorTimeoutId == nil then
-			self.colorTimeoutId = event:setTimeout(function() 
-				self:setColor(math.random(0, 255), math.random(0, 255), math.random(0, 255)) 
-				self.colorTimeoutId = nil
-			end, math.random(1000, 3000))
-		end
+		local deltaTime = frameTime / 1000
+		local dX = (self.key_states[keys.A] and -(deltaTime * self.moveSpeed)) or (self.key_states[keys.D] and (deltaTime * self.moveSpeed)) or 0
+		local dY = (self.key_states[keys.W] and -(deltaTime * self.moveSpeed)) or (self.key_states[keys.S] and (deltaTime * self.moveSpeed)) or 0
 
-		self.p = self.p + (frameTime / 1000.0) / 10.0
-		self.xO = math.cos(self.p * math.pi * 2) * self.mX
-		self.yO = math.sin(self.p * math.pi * 2) * self.mY
-		self:setPosition(self.x + self.xO, self.y + self.yO)
-	end,
-
-	onKey = function(self, key, pressed)
-		if key == keys.A and pressed then
-			print(key, pressed)
-		end
-
-		if key == keys.B and not pressed then
-			print(key, pressed)
+		if math.abs(dX) + math.abs(dY) > 0 then
+			self:movePosition(dX, dY)
 		end
 	end
 })

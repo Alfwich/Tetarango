@@ -1,16 +1,15 @@
 
 return {
 	bindGameObjectMethods = function(self, obj) 
-		local shouldRegisterHostCallableEnterFrame = obj.onEnterFrame ~= nil
-		if shouldRegisterHostCallableEnterFrame then
-			obj.AW_enterFrame = function(frameTime) obj:onEnterFrame(frameTime) end
-		end
 
-		local shouldRegisterHostCallableOnKey = obj.onKey ~= nil
-		if shouldRegisterHostCallableOnKey then
-			obj.AW_onKey = function(key, pressed) 
-				obj.key_states[tonumber(key)] = pressed == "1"
-				obj:onKey(tonumber(key), pressed == "1") 
+		obj.AW_enterFrame = function(frameTime) obj:onEnterFrame(frameTime) end
+
+		obj.key_states = {}
+		obj.AW_onKey = function(key, pressed) 
+			local keyNum = tonumber(key)
+			obj.key_states[keyNum] = pressed == "1"
+			if obj.onKey ~= nil then
+				obj:onKey(keyNum, pressed == "1") 
 			end
 		end
 	end

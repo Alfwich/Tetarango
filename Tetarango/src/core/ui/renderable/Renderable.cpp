@@ -1017,11 +1017,15 @@ namespace AW
 		lua->registerBoundFunction("setShaderUniformV4", obj);
 		lua->registerBoundFunction("setPosition", obj);
 		lua->registerBoundFunction("setSize", obj);
+		lua->registerBoundFunction("movePosition", obj);
 	}
 
 	void Renderable::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == "setColor" && obj->args.size() == 3)
+		if (func == "movePosition" && obj->args.size() == 2)
+			moveScreenPosition(std::stod(obj->args[0]), std::stod(obj->args[1]));
+
+		else if (func == "setColor" && obj->args.size() == 3)
 			setColor(
 				std::stoi(obj->args[0]),
 				std::stoi(obj->args[1]),
