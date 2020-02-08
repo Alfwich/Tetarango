@@ -1,5 +1,5 @@
 
-exports = {
+return {
 	module = function(self)
 		return aw_objects.logger
 	end,

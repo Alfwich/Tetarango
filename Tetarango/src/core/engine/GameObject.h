@@ -152,7 +152,8 @@ namespace AW
 		virtual void onTransitionedTo() { /* NO-OP */ };
 		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { onTransitionedTo(); };
 		virtual void onBindShaders() { /* NO-OP */ };
-		virtual void onRegisterLuaHooks() { /* NO-OP */ }
+		virtual void onEnterFrame(const double& frameTime) override;
+		virtual void onRegisterLuaHooks() { /* NO-OP */ };
 		virtual void onInitialAttach() { /* NO-OP */ };
 		virtual void onCreateChildren() { /* NO-OP */ };
 		virtual void onLayoutChildren() { /* NO-OP */ };
@@ -190,10 +191,10 @@ namespace AW
 		int setTimeout(double timeoutMS);
 		void setTimeout(double timeoutMS, int* timeoutIdLocation);
 
-		virtual std::string getAwType() override;
-		virtual std::string getLuaBindingId() override;
+		std::string getAwType() override;
+		std::string getLuaBindingId() override;
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
-};
+	};
 
 	template<typename T>
 	inline std::shared_ptr<T> GameObject::findFirstInParentChain()

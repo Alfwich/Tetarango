@@ -27,7 +27,11 @@ impl:define({
 		self.mY = moveI
 		self.x = moveI
 		self.y = moveI
-		moveI = moveI + 10
+		if (moveI > 1000) then
+			moveI = 100
+		else
+			moveI = moveI + 10
+		end
 		self.xO = 0
 		self.yO = 0
 		self.p = math.random() * math.pi * 2

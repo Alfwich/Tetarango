@@ -129,7 +129,7 @@ namespace AWGame
 		for (int i = 0; i < 100; ++i)
 		{
 			const auto btn = std::make_shared<ButtonBasic>();
-			btn->setText("Hello World!");
+			btn->setText("Hello World!" + std::to_string(btn->getId()));
 			btn->setScreenPosition(AW::NumberHelper::random(-1000.0, -2000.0), AW::NumberHelper::random(-1000.0, -2000.0));
 			btn->setScale(AW::NumberHelper::random(0.5, 2.0));
 			btn->setColor(AW::Color::random());
@@ -184,7 +184,8 @@ namespace AWGame
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
 			poly->setLuaImplementationAndEnable("color-changer");
-			const auto numP = AW::NumberHelper::randomInt(3, 20);
+			poly->enableEnterFrame();
+			const auto numP = AW::NumberHelper::randomInt(3, 5);
 			for (auto j = 0; j < numP; ++j)
 			{
 				poly->addScreenPoint(AW::NumberHelper::random(-50, 50), AW::NumberHelper::random(-50, 50));
@@ -210,6 +211,7 @@ namespace AWGame
 	void TestScene::onEnterFrame(const double& deltaTime)
 	{
 		if (obj4 == nullptr) return;
+
 		if ((itersIncPressed || itersDecPressed) && iterTimer->isAboveThresholdAndRestart(10))
 		{
 			if (itersIncPressed)

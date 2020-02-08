@@ -28,6 +28,7 @@ namespace AW
 		std::shared_ptr<Asset> asset;
 		int nextInactiveContextId = 0, currentActiveContextId = -1, defaultContext = -1;
 
+		std::unordered_map<int, LuaBoundObject*> bindingsLuaAdapterMap;
 		std::unordered_map<std::tuple<std::string, std::string, std::string>, LuaBoundObject, tuple_hash> bindings;
 		std::unordered_map<std::string, std::vector<std::tuple<std::string, std::string, std::string>>> keyToBindings;
 
@@ -89,9 +90,10 @@ namespace AW
 		std::vector<std::string> getGlobalTable(const std::string& name);
 		std::unordered_map<std::string, std::string> getGlobalRecord(const std::string& name);
 
+		LuaBoundObject* getBoundObjectBundleForId(int id);
+
 		void onInit() override;
 		void onLoadResources() override;
-		void onEnterFrame(const double& frameTime);
 		void onCleanup() override;
 
 		// Inherited via IBaseModule

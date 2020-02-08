@@ -1,5 +1,5 @@
 
-exports = {
+return {
 	copy = function (self, t)
 	  local u = {}
 	  for k, v in pairs(t) do u[k] = v end

@@ -1,16 +1,15 @@
 -- AW Core binding layer and util
 -- Globals `aw_objects`, `aw_functions`, `aw_cid` are defined by the host before any scripts are executed
 
--- Custom `require` system - module files are expected to set the `exports` field on exit to define their return value
-aw_modules = {}
-exports = {}
+-- Custom `require` system - module files are expected to return their public interface table
+local aw_modules = {}
 require = function(libPath)
 	if aw_modules[libPath] == nil then
 		aw_modules[libPath] = {}
-		aw_objects.lua:doFile("res/lua/" .. libPath .. ".lua")
-		for key, value in pairs(exports) do
+		local export = aw_objects.lua:doFile("res/lua/" .. libPath .. ".lua")
+		assert(type(export) == "table", "Expect `require(...)` libPath=" .. libPath .. " to return public interface table, got type=" .. type(export) .. " instead")
+		for key, value in pairs(export) do
 			aw_modules[libPath][key] = value 
-			exports[key] = nil
 		end
 	end
 

@@ -36,10 +36,19 @@ namespace
 
 	int luaBindingAdapter(lua_State* L)
 	{
-		AW::LuaBoundObject* bundle = static_cast<AW::LuaBoundObject*>(lua_touserdata(L, lua_upvalueindex(1)));
+		AW::Lua* svc = static_cast<AW::Lua*>(lua_touserdata(L, lua_upvalueindex(1)));
+		int bundleId = (int)lua_tointeger(L, lua_upvalueindex(2));
+		AW::LuaBoundObject* bundle = svc->getBoundObjectBundleForId(bundleId);
+
+		if (bundle == nullptr)
+		{
+			return 0;
+		}
 
 		bundle->args.clear();
-		for (unsigned int i = 1, end = lua_gettop(L); i <= end; ++i)
+
+		const auto inTopSize = lua_gettop(L);
+		for (unsigned int i = 1, end = inTopSize; i <= end; ++i)
 		{
 			const auto value = convertStackLocationToString(L, i);
 			if (!value.empty())
@@ -67,7 +76,7 @@ namespace
 			lua_pushstring(L, returnValue.c_str());
 		}
 
-		return (int)bundle->returnValues.size();
+		return lua_gettop(L) - inTopSize;
 	}
 }
 
@@ -126,6 +135,7 @@ namespace AW
 #if _DEBUG
 			__debugbreak();
 #endif
+			lua_pop(L, 1);
 		}
 	}
 
@@ -336,6 +346,7 @@ namespace AW
 		const auto bindingId = callbackObj == nullptr ? globalBindingId : callbackObj->getLuaBindingId();
 		const auto functionBundleKey = std::make_tuple(std::to_string(currentActiveContextId), bindingId, fnName);
 		bindings.emplace(std::piecewise_construct, functionBundleKey, std::make_tuple(fnName, fn, callbackObj, luaBindingAdapter));
+		bindingsLuaAdapterMap[bindings.at(functionBundleKey).bundleId] = &bindings.at(functionBundleKey);
 		keyToBindings[bindingId.empty() ? fnName : bindingId].push_back(functionBundleKey);
 
 		if (bindingId == globalBindingId)
@@ -360,8 +371,9 @@ namespace AW
 			}
 		}
 
-		lua_pushlightuserdata(L, &bindings.at(functionBundleKey));
-		lua_pushcclosure(L, bindings.at(functionBundleKey).luaFunction, 1);
+		lua_pushlightuserdata(L, (void*)this);
+		lua_pushinteger(L, bindings.at(functionBundleKey).bundleId);
+		lua_pushcclosure(L, bindings.at(functionBundleKey).luaFunction, 2);
 		lua_setfield(L, -2, fnName.c_str());
 
 		lua_pop(L, bindingId == globalBindingId ? 1 : 2);
@@ -539,13 +551,19 @@ namespace AW
 				const auto bindingKey = (*it);
 				if (bindings.count(bindingKey) == 1)
 				{
+					const auto bundle = bindings.at(bindingKey);
+					if (bindingsLuaAdapterMap.count(bundle.bundleId) == 1)
+					{
+						bindingsLuaAdapterMap.erase(bundle.bundleId);
+					}
+
 					bindings.erase(bindingKey);
 				}
 			}
 
 			keyToBindings.erase(bindingId);
 		}
-
+		
 		for (const auto idtoContext : contexts)
 		{
 			const auto L = idtoContext.second;
@@ -571,10 +589,16 @@ namespace AW
 			auto& fns = keyToBindings.at(fnName);
 			for (auto it = fns.begin(); it != fns.end(); ++it)
 			{
-				const auto key = (*it);
-				if (bindings.count(key) == 1)
+				const auto bindingKey = (*it);
+				if (bindings.count(bindingKey) == 1)
 				{
-					bindings.erase(key);
+					const auto bundle = bindings.at(bindingKey);
+					if (bindingsLuaAdapterMap.count(bundle.bundleId) == 1)
+					{
+						bindingsLuaAdapterMap.erase(bundle.bundleId);
+					}
+
+					bindings.erase(bindingKey);
 				}
 			}
 
@@ -739,6 +763,13 @@ namespace AW
 		return result;
 	}
 
+	LuaBoundObject* Lua::getBoundObjectBundleForId(int id)
+	{
+		return (bindingsLuaAdapterMap.count(id) == 1)
+			? bindingsLuaAdapterMap.at(id)
+			: nullptr;
+	}
+
 	void Lua::onInit()
 	{
 		createDefaultContext();
@@ -755,11 +786,6 @@ namespace AW
 		callGlobalFunctionForContext("AW_loadImplResources", defaultContext);
 	}
 
-	void Lua::onEnterFrame(const double& frameTime)
-	{
-		callGlobalFunctionForContext("AW_enterFrame", defaultContext, { std::to_string(frameTime) });
-	}
-
 	void Lua::onCleanup()
 	{
 		cleanupUserCreatedContexts();
@@ -769,6 +795,7 @@ namespace AW
 		fileScriptCache.clear();
 		bindings.clear();
 		keyToBindings.clear();
+		bindingsLuaAdapterMap.clear();
 	}
 
 	void Lua::onLuaCallback(const std::string& func, LuaBoundObject* obj)

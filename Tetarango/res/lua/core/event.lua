@@ -1,5 +1,5 @@
 
-exports = {
+return {
 	nextCallbackId = 0,
 	callbackFns = {},
 	module = function(self)

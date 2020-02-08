@@ -260,6 +260,7 @@ python scripts/generateSerializationList.py .</Command>
     </ClCompile>
     <ClCompile Include="src\core\debug\monitor\DebugMonitor.cpp" />
     <ClCompile Include="src\core\engine\module\lua\Lua.cpp" />
+    <ClCompile Include="src\core\engine\module\lua\LuaBoundObject.cpp" />
     <ClCompile Include="src\core\engine\module\network\Network.cpp" />
     <ClCompile Include="src\core\engine\module\physic\Physic.cpp" />
     <ClCompile Include="src\core\engine\module\physic\PhysicRenderer.cpp" />

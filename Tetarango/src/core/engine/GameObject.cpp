@@ -5,6 +5,7 @@ namespace
 	int nextGameObjectId = 100;
 	const auto orderLambda = [](const std::shared_ptr<AW::GameObject>& a, const std::shared_ptr<AW::GameObject>& b) { return a->zIndex < b->zIndex; };
 	const auto luaImplKeyParamName = "go_lua_impl_key";
+	const auto luaEnterFrameFunctionName = "AW_enterFrame";
 }
 
 namespace AW
@@ -579,6 +580,14 @@ namespace AW
 		}
 
 		*timeoutIdLocation = setTimeout(timeoutMS);
+	}
+
+	void GameObject::onEnterFrame(const double& frameTime)
+	{
+		if (getTag(GTags::LuaBindingsEnabled))
+		{
+			modules->lua->callBoundFunction(getLuaBindingId(), luaEnterFrameFunctionName, { std::to_string(frameTime) });
+		}
 	}
 
 	std::string GameObject::getAwType()

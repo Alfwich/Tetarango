@@ -1,6 +1,6 @@
 local logger = require("core/logger")
 
-exports = {
+return {
 	resource_loaded_for_impl = {},
 	impls = {},
 	next_impl_key = nil,
@@ -16,9 +16,15 @@ exports = {
 				obj[key] = fn
 			end
 
-			if obj.onLoadResources ~= nil and self.resource_loaded_for_impl[impl_key] == false then
+			local shouldLoadImplResources = obj.onLoadResources ~= nil and self.resource_loaded_for_impl[impl_key] == false
+			if shouldLoadImplResources then
 				obj:onLoadResources()
 				self.resource_loaded_for_impl[impl_key] = true
+			end
+
+			local shouldRegisterHostCallableEnterFrame = obj.onEnterFrame ~= nil
+			if shouldRegisterHostCallableEnterFrame then
+				obj.AW_enterFrame = function(frameTime) obj:onEnterFrame(frameTime) end
 			end
 
 			if obj.onInit ~= nil then
