@@ -22,9 +22,10 @@ namespace AW
 		setScreenSize(modules->screen->getWidth(), modules->screen->getHeight());
 	}
 
-	void Container::onRegisterLuaHooks()
+	void Container::onBindLuaHooks()
 	{
-		Renderable::onRegisterLuaHooks(modules->lua, sharedPtr());
+		GameObject::onBindLuaHooks();
+		Renderable::onBindLuaHooks(modules->lua, sharedPtr());
 	}
 
 	std::shared_ptr<SerializationClient> Container::doSerialize(SerializationHint hint)
@@ -95,6 +96,7 @@ namespace AW
 
 	void Container::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
+		GameObject::onLuaCallback(func, obj);
 		Renderable::onLuaCallback(func, obj);
 	}
 

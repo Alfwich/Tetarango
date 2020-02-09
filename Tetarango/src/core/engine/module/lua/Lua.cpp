@@ -1,4 +1,5 @@
 #include "Lua.h"
+#include "engine/module/serialization/Hydrater.h"
 
 namespace
 {
@@ -657,6 +658,11 @@ namespace AW
 	void Lua::setObjectImplementation(const std::string& bindingId, const std::string& implKey)
 	{
 		callGlobalFunctionForContext("AW_setObjectImpl", defaultContext, { bindingId, implKey });
+	}
+
+	bool Lua::hasObjectImplementation(const std::string& implKey)
+	{
+		return registeredImpls.count(implKey) == 1;
 	}
 
 	int Lua::getGlobalInt(const std::string& name)

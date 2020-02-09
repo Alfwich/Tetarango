@@ -11,9 +11,10 @@ return {
 			aw_objects[binding_id] = {}
 		end
 
-		if self.impls[impl_key] ~= nil then
-			local obj = aw_objects[binding_id]
+		local obj = aw_objects[binding_id]
+		if self.impls[impl_key] ~= nil and obj ~= nil then
 			obj.id = binding_id
+			obj.impl = self.impls[impl_key]
 			for key, fn in pairs(self.impls[impl_key]) do
 				obj[key] = fn
 			end
@@ -40,7 +41,7 @@ return {
 
 	define = function(self, impl_table)
 		if self.next_impl_key ~= nil then
-			impl_table.impl_key = self.next_impl_key
+			impl_table.name = self.next_impl_key
 			self.impls[self.next_impl_key] = impl_table
 			self.resource_loaded_for_impl[self.next_impl_key] = false
 			self.next_impl_key = nil

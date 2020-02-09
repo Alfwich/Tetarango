@@ -13,9 +13,14 @@ namespace AW
 	{
 	public:
 		Schematic() {};
-		Schematic(std::string name, std::shared_ptr<ISerializable>(*factory)()) { this->typeName = name; this->factory = factory; };
+		Schematic(std::string name, std::shared_ptr<ISerializable>(*factory)())
+			: factory(factory), typeName(name), shortTypeName(StringHelper::toLower(name.substr(name.find_last_of(':') + 1)))
+		{
+		}
+
 		std::shared_ptr<ISerializable>(*factory)();
-		std::string typeName;
+		const std::string typeName;
+		std::string shortTypeName;
 	};
 
 	class ISerializableDataSubscriber

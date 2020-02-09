@@ -8,12 +8,13 @@ namespace
 
 	const auto luaEnterFrameFunctionName = "AW_enterFrame";
 	const auto luaOnKeyFunctionName = "AW_onKey";
+	const auto luaCreateGameObjectFunctionName = "AW_createGameObject";
+	const auto luaSetParentGameObjectFunctionName = "AW_setParentGameObject";
+	const auto luaMoveToParentContainerGameObjectFunctionName = "AW_moveToParentGameObject";
 }
 
 namespace AW
 {
-
-
 	int GameObject::nextId()
 	{
 		return nextGameObjectId++;
@@ -100,7 +101,7 @@ namespace AW
 	{
 		if (!luaBindingsEnabled() && !getTag(GTags::HasRegisteredLuaBindings) && flag)
 		{
-			onRegisterLuaHooks();
+			onBindLuaHooks();
 			setTag(GTags::HasRegisteredLuaBindings, true);
 
 			const auto implKey = serializationClient->getString(luaImplKeyParamName);
@@ -365,7 +366,7 @@ namespace AW
 
 		if (luaBindingsEnabled() && !getTag(GTags::HasRegisteredLuaBindings))
 		{
-			onRegisterLuaHooks();
+			onBindLuaHooks();
 			setTag(GTags::HasRegisteredLuaBindings, true);
 			const auto implKey = serializationClient->getString(luaImplKeyParamName);
 			if (!implKey.empty())
@@ -589,7 +590,7 @@ namespace AW
 
 	std::string GameObject::getAwType()
 	{
-		return schematic == nullptr ? "" : schematic->typeName.substr(schematic->typeName.find_last_of(':') + 1);
+		return schematic == nullptr ? "" : schematic->shortTypeName;
 	}
 
 	std::string GameObject::getLuaBindingId()
@@ -597,9 +598,62 @@ namespace AW
 		return idString;
 	}
 
+	void GameObject::onBindLuaHooks()
+	{
+		modules->lua->registerBoundFunction(luaCreateGameObjectFunctionName, shared_from_this());
+		modules->lua->registerBoundFunction(luaSetParentGameObjectFunctionName, shared_from_this());
+		modules->lua->registerBoundFunction(luaMoveToParentContainerGameObjectFunctionName, shared_from_this());
+	}
+
 	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		// TODO: Implement GO related callbacks
+		if (func == luaCreateGameObjectFunctionName && obj->args.size() == 2)
+		{
+			const auto schematic = Hydrater::getShortNameSchematic(obj->args[0]);
+			auto luaImplKey = StringHelper::toLower(obj->args[1]);
+
+			if (schematic != nullptr && modules->lua->hasObjectImplementation(luaImplKey))
+			{
+				const auto gameObject = std::dynamic_pointer_cast<GameObject>(schematic->factory());
+				gameObject->setLuaImplementation(luaImplKey);
+				add(gameObject);
+				obj->returnValues.push_back(gameObject->getLuaBindingId());
+			}
+			else
+			{
+				Logger::instance()->logCritical("GameObject::Failed to create game object for lua with typeName=" + obj->args[0] + ", and luaImpl=" + luaImplKey);
+#ifdef _DEBUG
+				__debugbreak();
+#endif // _DEBUG
+
+			}
+		}
+		else if (func == luaSetParentGameObjectFunctionName && obj->args.size() == 1)
+		{
+			const auto newParent = std::dynamic_pointer_cast<GameObject>(modules->lua->getILuaObjectObjectForBindingId(obj->args[0]));
+			if (newParent != nullptr)
+			{
+				const auto self = sharedPtr(); // Grab self ref to prevent destruction during move
+				removeFromParent();
+				newParent->add(self);
+			}
+		}
+		else if (func == luaMoveToParentContainerGameObjectFunctionName && obj->args.size() == 0)
+		{
+			const auto parent = getParent().lock();
+			if (parent != nullptr)
+			{
+				const auto parentParent = parent->getParent().lock();
+				if (parentParent != nullptr)
+				{
+					const auto self = sharedPtr(); // Grab self ref to prevent destruction during move
+
+					removeFromParent();
+					parentParent->add(self);
+				}
+			}
+		}
+
 	}
 
 	void GameObject::onKey(AWKey code, bool pressed)

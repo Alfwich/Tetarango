@@ -14,10 +14,10 @@ namespace AW
 		GORegister(Element);
 	}
 
-	void Element::onRegisterLuaHooks()
+	void Element::onBindLuaHooks()
 	{
-		GameObject::onRegisterLuaHooks();
-		Renderable::onRegisterLuaHooks(modules->lua, sharedPtr());
+		GameObject::onBindLuaHooks();
+		Renderable::onBindLuaHooks(modules->lua, sharedPtr());
 		registerBoundLuaMethod("setTexture");
 	}
 

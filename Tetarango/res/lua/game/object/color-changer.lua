@@ -14,6 +14,7 @@ local moveDistance = 1000
 
 impl:define({
 	onLoadResources = function (self)
+		texture:loadTexture("tile/grass.png", "my-g2")
 	end,
 
 	onInit = function (self)
@@ -22,8 +23,9 @@ impl:define({
 		self.b = math.random(0, 255)
 		self.x = math.random(-1000, 1000)
 		self.y = math.random(-1000, 1000)
+		self.hasMadeObj = false
 
-		self.moveSpeed = 100 + math.random() * 50;
+		self.moveSpeed = 800 + math.random() * 50;
 
 		for i = 1,10 do
 			self:addScreenPoint(math.random(-50, 50), math.random(-50, 50))
@@ -31,8 +33,10 @@ impl:define({
 
 		self:updateColor()
 		self:setPosition(self.x, self.y)
-		input:registerKey({ keys.W, keys.A, keys.S, keys.D }, self)
+		input:registerKey({ keys.W, keys.A, keys.S, keys.D, keys.Q }, self)
 		event:registerOnEnterFrame(self)
+
+		self:setTexture("my-g2")
 	end,
 
 	updateColor = function(self)
@@ -62,5 +66,13 @@ impl:define({
 		if math.abs(dX) + math.abs(dY) > 0 then
 			self:movePosition(dX, dY)
 		end
+	end,
+
+	onKey = function(self, key, pressed)
+		if key == keys.Q and not pressed and not self.hasMadeObj then
+			local obj = self:clone()
+			self.hasMadeObj = true
+		end
 	end
 })
+

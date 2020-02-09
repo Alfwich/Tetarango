@@ -263,6 +263,19 @@ namespace AW
 			return a.find(b) != std::string::npos;
 		}
 
+		static inline std::string toLower(const std::string& other)
+		{
+			std::locale loc;
+			std::string result;
+
+			for (auto i = size_t{ 0 }; i < other.size(); ++i)
+			{
+				result.push_back(std::tolower(other[i], loc));
+			}
+
+			return result;
+		}
+
 	};
 
 }

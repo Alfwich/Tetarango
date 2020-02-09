@@ -8,9 +8,10 @@ namespace AW
 		renderMode = RenderMode::Primitive;
 	}
 
-	void Primitive::onRegisterLuaHooks()
+	void Primitive::onBindLuaHooks()
 	{
-		Renderable::onRegisterLuaHooks(modules->lua, sharedPtr());
+		GameObject::onBindLuaHooks();
+		Renderable::onBindLuaHooks(modules->lua, sharedPtr());
 	}
 
 	std::shared_ptr<SerializationClient> Primitive::doSerialize(SerializationHint hint)
@@ -37,6 +38,7 @@ namespace AW
 
 	void Primitive::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
+		GameObject::onLuaCallback(func, obj);
 		Renderable::onLuaCallback(func, obj);
 	}
 }

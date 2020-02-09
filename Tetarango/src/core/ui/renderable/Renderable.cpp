@@ -1008,7 +1008,7 @@ namespace AW
 		return std::string();
 	}
 
-	void Renderable::onRegisterLuaHooks(std::shared_ptr<Lua>& lua, const std::shared_ptr<ILuaObject>& obj)
+	void Renderable::onBindLuaHooks(std::shared_ptr<Lua>& lua, const std::shared_ptr<ILuaObject>& obj)
 	{
 		lua->registerBoundFunction("setColor", obj);
 		lua->registerBoundFunction("setShaderUniform", obj);

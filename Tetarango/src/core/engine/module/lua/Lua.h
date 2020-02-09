@@ -84,6 +84,7 @@ namespace AW
 
 		void registerObjectImplementation(const std::string& implFilePath, const std::string& implKey);
 		void setObjectImplementation(const std::string& bindingId, const std::string& implKey);
+		bool hasObjectImplementation(const std::string& implKey);
 
 		int getGlobalInt(const std::string& name);
 		double getGlobalDouble(const std::string& name);

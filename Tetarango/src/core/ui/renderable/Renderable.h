@@ -277,7 +277,7 @@ namespace AW
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 		virtual void doManualSerialize(SerializationHint hint, std::shared_ptr<SerializationClient> injectedClient);
 
-		void onRegisterLuaHooks(std::shared_ptr<Lua>& lua, const std::shared_ptr<ILuaObject>& obj);
+		void onBindLuaHooks(std::shared_ptr<Lua>& lua, const std::shared_ptr<ILuaObject>& obj);
 
 		// Inherited via ILuaObject
 		virtual std::string getLuaBindingId() override;

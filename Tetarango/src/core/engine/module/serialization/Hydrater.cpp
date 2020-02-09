@@ -4,13 +4,14 @@ namespace AW
 {
 
 	std::unordered_map<std::string, std::shared_ptr<Schematic>> Hydrater::schematics;
+	std::unordered_map<std::string, std::shared_ptr<Schematic>> Hydrater::shortNameSchematics;
 
 	bool Hydrater::hasSchematic(const std::string& name)
 	{
 		return Hydrater::schematics.count(name) == 1;
 	}
 
-	void Hydrater::registerSchematic(std::shared_ptr<Schematic> schematic)
+	void Hydrater::registerSchematic(const std::shared_ptr<Schematic>& schematic)
 	{
 		if (Hydrater::schematics.count(schematic->typeName) == 1)
 		{
@@ -18,9 +19,15 @@ namespace AW
 		}
 
 		Hydrater::schematics[schematic->typeName] = schematic;
+
+		if (Hydrater::shortNameSchematics.count(schematic->shortTypeName))
+		{
+			Logger::instance()->logFatal("Hydrater::Attempted to define multiple types for shortName=" + schematic->shortTypeName);
+		}
+		Hydrater::shortNameSchematics[schematic->shortTypeName] = schematic;
 	}
 
-	std::shared_ptr<Schematic> Hydrater::getSchematic(const std::string& name)
+	const std::shared_ptr<Schematic> Hydrater::getSchematic(const std::string& name)
 	{
 		if (Hydrater::schematics.count(name) == 0)
 		{
@@ -29,6 +36,23 @@ namespace AW
 		}
 
 		return Hydrater::schematics[name];
+	}
+
+	const std::shared_ptr<Schematic> Hydrater::getShortNameSchematic(const std::string& name)
+	{
+		if (Hydrater::shortNameSchematics.count(name) == 0)
+		{
+			Logger::instance()->logCritical("Hydrater::Failed to find short name schematic for name=" + name);
+			return nullptr;
+		}
+
+		return Hydrater::shortNameSchematics[name];
+	}
+
+
+	const std::unordered_map<std::string, std::shared_ptr<Schematic>>& Hydrater::getAllSchemeatics()
+	{
+		return Hydrater::schematics;
 	}
 
 	Hydrater::Hydrater(const std::string& data)

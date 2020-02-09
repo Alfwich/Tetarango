@@ -16,7 +16,7 @@ namespace AW
 
 		void setSizeToScreenSize();
 
-		virtual void onRegisterLuaHooks() override;
+		virtual void onBindLuaHooks() override;
 
 		virtual std::shared_ptr<SerializationClient> doSerialize(SerializationHint hint);
 

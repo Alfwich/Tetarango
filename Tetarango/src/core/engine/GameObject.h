@@ -151,8 +151,8 @@ namespace AW
 		virtual void onTransitionedTo() { /* NO-OP */ };
 		virtual void onTransitionedTo(SceneTransitionBundle& bundle) { onTransitionedTo(); };
 		virtual void onBindShaders() { /* NO-OP */ };
+		virtual void onBindLuaHooks();
 		virtual void onEnterFrame(const double& frameTime) override;
-		virtual void onRegisterLuaHooks() { /* NO-OP */ };
 		virtual void onInitialAttach() { /* NO-OP */ };
 		virtual void onCreateChildren() { /* NO-OP */ };
 		virtual void onLayoutChildren() { /* NO-OP */ };

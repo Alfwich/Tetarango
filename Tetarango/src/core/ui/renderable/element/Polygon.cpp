@@ -240,9 +240,9 @@ namespace AW
 		return result;
 	}
 
-	void Polygon::onRegisterLuaHooks()
+	void Polygon::onBindLuaHooks()
 	{
-		Element::onRegisterLuaHooks();
+		Element::onBindLuaHooks();
 		modules->lua->registerBoundFunction("addScreenPoint", shared_from_this());
 		modules->lua->registerBoundFunction("centerBalancePoints", shared_from_this());
 	}

@@ -6,6 +6,7 @@
 #include <memory>
 #include <thread>
 #include <utility>
+#include <locale>
 
 #include <list>
 #include <string>

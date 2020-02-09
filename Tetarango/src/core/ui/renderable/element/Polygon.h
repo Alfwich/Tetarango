@@ -48,7 +48,7 @@ namespace AW
 
 		std::vector<AWVec2<float>> getRenderPoints();
 
-		void onRegisterLuaHooks() override;
+		void onBindLuaHooks() override;
 
 		void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 	};

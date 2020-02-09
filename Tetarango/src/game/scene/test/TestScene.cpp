@@ -180,7 +180,7 @@ namespace AWGame
 			obj4 = poly;
 		}
 
-		for (auto i = 0; i < 100; ++i)
+		for (auto i = 0; i < 1; ++i)
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
 			poly->setLuaImplementation("color-changer");
@@ -430,7 +430,7 @@ namespace AWGame
 		if (key == AWKey::FIVE && isPressed)
 		{
 			modules->lua->registerObjectImplementation("res/lua/game/object/color-changer.lua", "color-changer");
-			for (const auto poly: findChildWithName<GameObject>("cc")->getChildrenOfType<AW::Polygon>())
+			for (const auto poly : findChildWithName<GameObject>("cc")->getChildrenOfType<AW::Polygon>())
 			{
 				poly->setLuaImplementation("color-changer");
 			}

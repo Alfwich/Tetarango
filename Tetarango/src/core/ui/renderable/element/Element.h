@@ -20,7 +20,7 @@ namespace AW
 		Element();
 
 		void onLoadResources() override;
-		void onRegisterLuaHooks() override;
+		void onBindLuaHooks() override;
 		void onBindShaders() override;
 
 		virtual void setTexture(std::string key);

@@ -9,6 +9,7 @@ namespace AW
 	class Hydrater
 	{
 		static std::unordered_map<std::string, std::shared_ptr<Schematic>> schematics;
+		static std::unordered_map<std::string, std::shared_ptr<Schematic>> shortNameSchematics;
 
 		unsigned int cursorPosition;
 		const std::string& data;
@@ -30,8 +31,10 @@ namespace AW
 
 	public:
 		static bool hasSchematic(const std::string& name);
-		static void registerSchematic(std::shared_ptr<Schematic> schematic);
-		static std::shared_ptr<Schematic> getSchematic(const std::string& name);
+		static void registerSchematic(const std::shared_ptr<Schematic>& schematic);
+		static const std::shared_ptr<Schematic> getSchematic(const std::string& name);
+		static const std::shared_ptr<Schematic> getShortNameSchematic(const std::string& name);
+		static const std::unordered_map<std::string, std::shared_ptr<Schematic>>& getAllSchemeatics();
 
 		Hydrater(const std::string& data);
 
