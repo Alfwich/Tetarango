@@ -24,7 +24,8 @@ namespace Config
 		visualizeClipRects,
 		useAssetPack,
 		enableTestScenes,
-		immediateDebugOutput
+		immediateDebugOutput,
+		PutPhysicOnBackgroundThread
 	};
 
 	class GameConfig : public BaseConfig<Param>
@@ -56,7 +57,8 @@ namespace Config
 				{ Param::visualizeClipRects, injectedConfig.at("visualizeClipRects") },
 				{ Param::useAssetPack, injectedConfig.at("useAssetPack") },
 				{ Param::enableTestScenes, injectedConfig.at("enableTestScenes") },
-				{ Param::immediateDebugOutput, injectedConfig.at("immediateDebugOutput") }
+				{ Param::immediateDebugOutput, injectedConfig.at("immediateDebugOutput") },
+				{ Param::PutPhysicOnBackgroundThread, injectedConfig.at("putPhysicOnBackgroundThread") },
 			};
 		}
 	};

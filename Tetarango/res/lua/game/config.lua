@@ -25,7 +25,8 @@ local base_config =
 	visualizeClipRects = FALSE,
 	useAssetPack = TRUE,
 	enableTestScenes = FALSE,
-	immediateDebugOutput = FALSE
+	immediateDebugOutput = FALSE,
+	putPhysicOnBackgroundThread = TRUE
 }
 
 dev_config = table_helper:copy(base_config)

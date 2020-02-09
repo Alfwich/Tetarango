@@ -343,7 +343,7 @@ namespace AW
 		registerWorld(0);
 
 		// Only step on BG thread if we have extra threads for other operations
-		shouldStepOnBackgroundThread = thread->hasExtraWorkerThreads();
+		shouldStepOnBackgroundThread = gameConfig->getConfigBool(Config::Param::PutPhysicOnBackgroundThread) && thread->hasExtraWorkerThreads();
 		if (shouldStepOnBackgroundThread)
 		{
 			Logger::instance()->log("Physic::Running physic on background thread");

@@ -1,6 +1,11 @@
 #include "Event.h"
 #include "GL/glew.h"
 
+namespace
+{
+	const auto eventExecureTimeoutFunctionName = "AW_exe_timeout";
+}
+
 namespace AW
 {
 
@@ -180,7 +185,7 @@ namespace AW
 				}
 				else if (luaBindingIdToTimeoutId.count(bundle->luaId) == 1)
 				{
-					lua->fireTimeoutCallback(bundle->luaId);
+					lua->callGlobalFunction(eventExecureTimeoutFunctionName, { std::to_string(bundle->luaId) });
 					luaBindingIdToTimeoutId.erase(bundle->luaId);
 				}
 

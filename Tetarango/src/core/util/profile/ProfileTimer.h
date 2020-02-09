@@ -25,7 +25,7 @@ namespace AW
 
 		void report()
 		{
-			std::cout << label << " took " << (end - start) / 1000.0 << "(ms)" << std::endl;
+			std::cout << label << " took " << (end - start) / 10000.0 << "(ms)" << std::endl;
 		}
 
 	public:

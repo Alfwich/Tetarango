@@ -27,8 +27,11 @@ impl:define({
 
 		self.moveSpeed = 800 + math.random() * 50;
 
-		for i = 1,10 do
-			self:addScreenPoint(math.random(-50, 50), math.random(-50, 50))
+		if self.hasPoints == nil then
+			for i = 1,3 do
+				self:addScreenPoint(math.random(-50, 50), math.random(-50, 50))
+			end
+			self.hasPoints = true
 		end
 
 		self:updateColor()

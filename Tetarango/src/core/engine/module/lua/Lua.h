@@ -104,8 +104,7 @@ namespace AW
 
 		std::unordered_map<int, int> debugInfo();
 
-		void fireTimeoutCallback(int timeoutBindingId);
-
 		std::shared_ptr<ILuaObject> getILuaObjectObjectForBindingId(std::string luaBindingKey);
 	};
+
 }

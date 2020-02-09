@@ -16,6 +16,10 @@ namespace
 	const auto doStringMethodName = "doString";
 	const auto doFileMethodName = "doFile";
 
+	const auto implRegisterFunctionName = "AW_registerObjectImpl";
+	const auto implLoadResourcesFunctionName = "AW_loadImplResources";
+	const auto implSetObjectImpl = "AW_setObjectImpl";
+
 	std::string convertStackLocationToString(lua_State* L, unsigned int loc)
 	{
 		const auto valueType = lua_type(L, loc);
@@ -635,7 +639,7 @@ namespace AW
 	{
 		if (defaultContext != -1)
 		{
-			callGlobalFunctionForContext("AW_registerObjectImpl", defaultContext, { implFilePath, implKey });
+			callGlobalFunctionForContext(implRegisterFunctionName, defaultContext, { implFilePath, implKey });
 
 			if (registeredImpls.count(implKey) == 1)
 			{
@@ -657,7 +661,7 @@ namespace AW
 
 	void Lua::setObjectImplementation(const std::string& bindingId, const std::string& implKey)
 	{
-		callGlobalFunctionForContext("AW_setObjectImpl", defaultContext, { bindingId, implKey });
+		callGlobalFunctionForContext(implSetObjectImpl, defaultContext, { bindingId, implKey });
 	}
 
 	bool Lua::hasObjectImplementation(const std::string& implKey)
@@ -789,14 +793,14 @@ namespace AW
 
 		for (const auto implKeyToImplFilePath : registeredImpls)
 		{
-			callGlobalFunctionForContext("AW_registerObjectImpl", defaultContext, { implKeyToImplFilePath.second, implKeyToImplFilePath.first });
+			callGlobalFunctionForContext(implRegisterFunctionName, defaultContext, { implKeyToImplFilePath.second, implKeyToImplFilePath.first });
 			Logger::instance()->log("Lua::Registered object implementation for implKey=" + implKeyToImplFilePath.first);
 		}
 	}
 
 	void Lua::onLoadResources()
 	{
-		callGlobalFunctionForContext("AW_loadImplResources", defaultContext);
+		callGlobalFunctionForContext(implLoadResourcesFunctionName, defaultContext);
 	}
 
 	void Lua::onCleanup()
@@ -828,12 +832,6 @@ namespace AW
 		}
 
 		return result;
-	}
-
-	void Lua::fireTimeoutCallback(int timeoutBindingId)
-	{
-		// TODO: Move into Event module
-		callGlobalFunctionForContext("AW_exe_timeout", defaultContext, { std::to_string(timeoutBindingId) });
 	}
 
 	std::shared_ptr<ILuaObject> Lua::getILuaObjectObjectForBindingId(std::string luaBindingId)
