@@ -183,14 +183,7 @@ namespace AWGame
 		for (auto i = 0; i < 100; ++i)
 		{
 			const auto poly = std::make_shared<AW::Polygon>();
-			//modules->input->keyboard->registerKey(AWKey::A, poly->weak_from_this());
-			poly->setLuaImplementationAndEnable("color-changer");
-			poly->enableEnterFrame();
-			const auto numP = AW::NumberHelper::randomInt(3, 5);
-			for (auto j = 0; j < numP; ++j)
-			{
-				poly->addScreenPoint(AW::NumberHelper::random(-50, 50), AW::NumberHelper::random(-50, 50));
-			}
+			poly->setLuaImplementation("color-changer");
 			contentContainer->add(poly);
 		}
 
@@ -439,7 +432,7 @@ namespace AWGame
 			modules->lua->registerObjectImplementation("res/lua/game/object/color-changer.lua", "color-changer");
 			for (const auto poly: findChildWithName<GameObject>("cc")->getChildrenOfType<AW::Polygon>())
 			{
-				poly->setLuaImplementationAndEnable("color-changer");
+				poly->setLuaImplementation("color-changer");
 			}
 		}
 	}

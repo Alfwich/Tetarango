@@ -7,6 +7,7 @@ local logger = require("core/logger")
 local event = require("core/event")
 local input = require("core/input")
 local keys = require("core/keymap")
+local event = require("core/event")
 
 local moveI = 100
 local moveDistance = 1000
@@ -24,9 +25,14 @@ impl:define({
 
 		self.moveSpeed = 100 + math.random() * 50;
 
+		for i = 1,10 do
+			self:addScreenPoint(math.random(-50, 50), math.random(-50, 50))
+		end
+
 		self:updateColor()
 		self:setPosition(self.x, self.y)
 		input:registerKey({ keys.W, keys.A, keys.S, keys.D }, self)
+		event:registerOnEnterFrame(self)
 	end,
 
 	updateColor = function(self)

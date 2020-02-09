@@ -114,7 +114,6 @@ namespace AW
 		void enableLuaBindings();
 		void disableLuaBindings();
 		void setLuaImplementation(const std::string& implKey);
-		void setLuaImplementationAndEnable(const std::string& implKey);
 		bool luaBindingsEnabled();
 
 		bool isAttached();

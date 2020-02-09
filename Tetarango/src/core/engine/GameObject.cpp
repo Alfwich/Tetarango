@@ -135,11 +135,6 @@ namespace AW
 		{
 			modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
 		}
-	}
-
-	void GameObject::setLuaImplementationAndEnable(const std::string& implKey)
-	{
-		setLuaImplementation(implKey);
 		enableLuaBindings();
 	}
 

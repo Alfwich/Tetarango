@@ -239,4 +239,19 @@ namespace AW
 
 		return result;
 	}
+
+	void Polygon::onRegisterLuaHooks()
+	{
+		Element::onRegisterLuaHooks();
+		modules->lua->registerBoundFunction("addScreenPoint", shared_from_this());
+		modules->lua->registerBoundFunction("centerBalancePoints", shared_from_this());
+	}
+
+	void Polygon::onLuaCallback(const std::string& func, LuaBoundObject* obj)
+	{
+		Element::onLuaCallback(func, obj);
+
+		if (func == "addScreenPoint" && obj->args.size() == 2) addScreenPoint(std::stof(obj->args[0]), std::stof(obj->args[1]));
+		else if (func == "centerBalancePoints" && obj->args.size() == 0) centerBalancePoints();
+	}
 }

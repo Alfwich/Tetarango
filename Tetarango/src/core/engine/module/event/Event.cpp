@@ -311,6 +311,9 @@ namespace AW
 	{
 		lua->registerBoundFunction("setTimeout", shared_from_this());
 		lua->registerBoundFunction("clearTimeout", shared_from_this());
+
+		lua->registerBoundFunction("registerOnEnterFrame", shared_from_this());
+		lua->registerBoundFunction("unregisterOnEnterFrame", shared_from_this());
 	}
 
 	void Event::onLuaCallback(const std::string& func, LuaBoundObject* obj)
@@ -324,5 +327,17 @@ namespace AW
 			luaBindingIdToTimeoutId[luaId] = timeoutId;
 		}
 		else if (func == "clearTimeout" && obj->args.size() == 1) clearLuaTimeout(std::stoi(obj->args[0]));
+		else if (func == "registerOnEnterFrame" && obj->args.size() == 1)
+		{
+			auto ptr = std::dynamic_pointer_cast<EnterFrameListener>(lua->getILuaObjectObjectForBindingId(obj->args[0]));
+			registerOnEnterFrame(ptr);
+			ptr->enterFrameActivated = true;
+		}
+		else if (func == "unregisterOnEnterFrame" && obj->args.size() == 1)
+		{
+			auto ptr = std::dynamic_pointer_cast<EnterFrameListener>(lua->getILuaObjectObjectForBindingId(obj->args[0]));
+			unregisterOnEnterFrame(ptr);
+			ptr->enterFrameActivated = false;
+		}
 	}
 }

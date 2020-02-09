@@ -4,7 +4,8 @@ return {
 		return aw_objects.input
 	end,
 
-	registerKey = function(self, keys, obj)
+	registerKey = function(self, keys, obj) self:registerKeys(keys, obj) end,
+	registerKeys = function(self, keys, obj)
 		if type(keys) == "table" then
 			self:module().registerKey(obj.id, table.unpack(keys))
 		else

@@ -29,12 +29,11 @@ return {
 		end
 	end,
 
-	enterFrames = function(self, frameTime)
-		frameTime = tonumber(frameTime)
-		for key, obj in pairs(aw_objects) do
-			if obj.onEnterFrame ~= nil then
-				obj:onEnterFrame(frameTime)
-			end
-		end
+	registerOnEnterFrame = function(self, obj)
+		self:module().registerOnEnterFrame(obj.id)
+	end,
+
+	unregisterOnEnterFrame = function(self, obj)
+		self:module().unregisterOnEnterFrame(obj.id)
 	end
 }
