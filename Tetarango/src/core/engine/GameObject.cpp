@@ -8,9 +8,12 @@ namespace
 
 	const auto luaEnterFrameFunctionName = "AW_enterFrame";
 	const auto luaOnKeyFunctionName = "AW_onKey";
+	const auto luaValidGameObjectFunctionName = "AW_validGameObject";
 	const auto luaCreateGameObjectFunctionName = "AW_createGameObject";
 	const auto luaSetParentGameObjectFunctionName = "AW_setParentGameObject";
 	const auto luaMoveToParentContainerGameObjectFunctionName = "AW_moveToParentGameObject";
+	const auto luaGetChildrenGameObjectFunctionName = "AW_getChildrenGameObject";
+	const auto luaGetParentGameObjectFunctionName = "AW_getParentGameObject";
 }
 
 namespace AW
@@ -600,14 +603,20 @@ namespace AW
 
 	void GameObject::onBindLuaHooks()
 	{
+		modules->lua->registerBoundFunction(luaValidGameObjectFunctionName, shared_from_this());
 		modules->lua->registerBoundFunction(luaCreateGameObjectFunctionName, shared_from_this());
 		modules->lua->registerBoundFunction(luaSetParentGameObjectFunctionName, shared_from_this());
 		modules->lua->registerBoundFunction(luaMoveToParentContainerGameObjectFunctionName, shared_from_this());
+		modules->lua->registerBoundFunction(luaGetChildrenGameObjectFunctionName, shared_from_this());
 	}
 
 	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)
 	{
-		if (func == luaCreateGameObjectFunctionName && obj->args.size() == 2)
+		if (func == luaValidGameObjectFunctionName)
+		{
+			obj->returnValues.push_back("1");
+		}
+		else if (func == luaCreateGameObjectFunctionName && obj->args.size() == 2)
 		{
 			const auto schematic = Hydrater::getShortNameSchematic(obj->args[0]);
 			auto luaImplKey = StringHelper::toLower(obj->args[1]);
@@ -626,6 +635,13 @@ namespace AW
 				__debugbreak();
 #endif // _DEBUG
 
+			}
+		}
+		else if (func == luaGetChildrenGameObjectFunctionName && obj->args.size() == 0)
+		{
+			for (const auto child : getChildren())
+			{
+				obj->returnValues.push_back(child->getLuaBindingId());
 			}
 		}
 		else if (func == luaSetParentGameObjectFunctionName && obj->args.size() == 1)

@@ -13,6 +13,10 @@ return {
 			end
 		end
 
+		obj.valid = function(self)
+			return self:AW_validGameObject() == "1"
+		end
+
 		obj.create = function(self, awType, luaImplKey)
 			local objId = self:AW_createGameObject(awType, luaImplKey)
 			local obj = aw_objects[objId]
@@ -32,6 +36,25 @@ return {
 
 		obj.setParent = function(self, obj)
 			self:AW_setParentGameObject(obj.id)
+		end
+
+		obj.children = function(self)
+			local results = {}
+			local children = { self:AW_getChildrenGameObject() }
+
+			for id = 1, #children do
+				local child = aw_objects[id]
+				if child ~= nil then
+					results[#results + 1] = child
+				end
+			end
+
+			return results
+		end
+
+		obj.parent = function(self)
+			local pId = self:AW_getParentGameObject()
+			return aw_objects[pId]
 		end
 	end
 }
