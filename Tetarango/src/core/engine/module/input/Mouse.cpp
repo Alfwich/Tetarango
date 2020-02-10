@@ -8,7 +8,7 @@ namespace AW
 		{
 			for (auto listener : mouseMoveListeners)
 			{
-				auto ptr = (listener).lock();
+				auto ptr = (listener).ptr.lock();
 				if (ptr != nullptr)
 				{
 					ptr->mouseMove(x, y);
@@ -56,7 +56,7 @@ namespace AW
 		isProcessing = true;
 		for (auto listener : mouseWheelListeners)
 		{
-			auto ptr = (listener).lock();
+			auto ptr = (listener).ptr.lock();
 			if (ptr != nullptr)
 			{
 				ptr->mouseWheel(wheelX, wheelY);
@@ -78,7 +78,7 @@ namespace AW
 			if (listenerVtr.first == button)
 				for (auto listener : listenerVtr.second)
 				{
-					auto ptr = listener.lock();
+					auto ptr = listener.ptr.lock();
 					if (ptr != nullptr)
 					{
 						ptr->mouseButton(button, pressed);
@@ -89,17 +89,29 @@ namespace AW
 
 	void Mouse::registerMouseButton(AWMouseButton button, std::weak_ptr<IInputListener> listener)
 	{
-		mouseButtonListeners[button].push_back(listener);
+		const auto ptr = listener.lock();
+		if (ptr != nullptr)
+		{
+			mouseButtonListeners[button].insert(IInputListenerObjectBundle{ ptr->inputListenerObjectId(), listener });
+		}
 	}
 
 	void Mouse::registerMouseMotion(std::weak_ptr<IInputListener> listener)
 	{
-		mouseMoveListeners.push_back(listener);
+		const auto ptr = listener.lock();
+		if (ptr != nullptr)
+		{
+			mouseMoveListeners.insert(IInputListenerObjectBundle{ ptr->inputListenerObjectId(), listener });
+		}
 	}
 
 	void Mouse::registerMouseWheel(std::weak_ptr<IInputListener> listener)
 	{
-		mouseWheelListeners.push_back(listener);
+		const auto ptr = listener.lock();
+		if (ptr != nullptr)
+		{
+			mouseWheelListeners.insert(IInputListenerObjectBundle{ ptr->inputListenerObjectId(), listener });
+		}
 	}
 
 	void Mouse::updateMouseState(SDL_Event* event)
@@ -123,7 +135,7 @@ namespace AW
 	{
 		for (auto it = mouseMoveListeners.begin(); it != mouseMoveListeners.end();)
 		{
-			const auto ptr = (*it).lock();
+			const auto ptr = (*it).ptr.lock();
 			if (ptr == nullptr)
 			{
 				it = mouseMoveListeners.erase(it);
@@ -136,7 +148,7 @@ namespace AW
 
 		for (auto it = mouseWheelListeners.begin(); it != mouseWheelListeners.end();)
 		{
-			const auto ptr = (*it).lock();
+			const auto ptr = (*it).ptr.lock();
 			if (ptr == nullptr)
 			{
 				it = mouseWheelListeners.erase(it);
@@ -151,7 +163,7 @@ namespace AW
 		{
 			for (auto it = mouseButtonListener.second.begin(); it != mouseButtonListener.second.end();)
 			{
-				const auto ptr = (*it).lock();
+				const auto ptr = (*it).ptr.lock();
 				if (ptr == nullptr)
 				{
 					it = mouseButtonListener.second.erase(it);
@@ -174,7 +186,7 @@ namespace AW
 		{
 			for (auto it = mouseButtonListeners[button].begin(); it != mouseButtonListeners[button].end();)
 			{
-				const auto objPtr = (*it).lock();
+				const auto objPtr = (*it).ptr.lock();
 				if (objPtr == nullptr || objPtr->inputListenerObjectId() == obj->inputListenerObjectId())
 				{
 					it = mouseButtonListeners[button].erase(it);
@@ -197,7 +209,7 @@ namespace AW
 		{
 			for (auto it = mouseWheelListeners.begin(); it != mouseWheelListeners.end();)
 			{
-				const auto objPtr = (*it).lock();
+				const auto objPtr = (*it).ptr.lock();
 				if (objPtr == nullptr || objPtr->inputListenerObjectId() == obj->inputListenerObjectId())
 				{
 					it = mouseWheelListeners.erase(it);

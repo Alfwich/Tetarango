@@ -4,8 +4,12 @@ namespace AW
 {
 	void Keyboard::registerKey(AWKey code, std::weak_ptr<IInputListener> listener)
 	{
-		onKeyListeners[code].push_back(listener);
-		oldKeyValues[code] = 0;
+		const auto ptr = listener.lock();
+		if (ptr != nullptr)
+		{
+			onKeyListeners[code].insert(IInputListenerObjectBundle{ ptr->inputListenerObjectId(), listener });
+			oldKeyValues[code] = 0;
+		}
 	}
 
 	void Keyboard::registerKeys(const std::vector<AWKey>& codes, std::weak_ptr<IInputListener> listener)
@@ -21,7 +25,7 @@ namespace AW
 		const auto objectToRemovePtr = listener.lock();
 		for (auto it = onKeyListeners[code].begin(); it != onKeyListeners[code].end();)
 		{
-			if (const auto ptr = (*it).lock())
+			if (const auto ptr = (*it).ptr.lock())
 			{
 				if (ptr == objectToRemovePtr)
 				{
@@ -57,7 +61,7 @@ namespace AW
 			{
 				for (auto listener : listenerKeyPair.second)
 				{
-					const auto ptr = listener.lock();
+					const auto ptr = listener.ptr.lock();
 					if (ptr != nullptr)
 					{
 						ptr->key(listenerKeyPair.first, keyStates[(SDL_Scancode)listenerKeyPair.first]);
@@ -78,7 +82,7 @@ namespace AW
 		{
 			for (auto it = listenerKeyPair.second.begin(); it != listenerKeyPair.second.end();)
 			{
-				const auto ptr = (*it).lock();
+				const auto ptr = (*it).ptr.lock();
 				if (ptr == nullptr)
 				{
 					it = listenerKeyPair.second.erase(it);

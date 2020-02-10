@@ -17,11 +17,12 @@ namespace AW
 	{
 		int stickAxisDeadzone;
 		bool hapticsEnabled;
+
 		std::unordered_map<std::string, int> GUIDToAssociatedIndex;
 		std::unordered_map<int, int> instanceIdToAssociatedIdOverride;
 		std::unordered_map<int, std::unique_ptr<GamepadIDBundle>> deviceIdToGamepadBundle;
-		std::unordered_map<int, std::map<GamepadAxisMapping, std::list<std::weak_ptr<IInputListener>>>> axisListeners;
-		std::unordered_map<int, std::map<GamepadButtonMapping, std::list<std::weak_ptr<IInputListener>>>> buttonListeners;
+		std::unordered_map<int, std::map<GamepadAxisMapping, std::unordered_set<IInputListenerObjectBundle, input_listener_bundle_object_hash>>> axisListeners;
+		std::unordered_map<int, std::map<GamepadButtonMapping, std::unordered_set<IInputListenerObjectBundle, input_listener_bundle_object_hash>>> buttonListeners;
 
 		void handleAxisEvent(SDL_Event* event);
 		double processAxisValue(GamepadAxisMapping axis, int axisValue);

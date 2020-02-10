@@ -36,6 +36,7 @@ impl:define({
 
 		self:updateColor()
 		self:setPosition(self.x, self.y)
+
 		input:registerKey({ keys.W, keys.A, keys.S, keys.D, keys.Q }, self)
 		event:registerOnEnterFrame(self)
 
@@ -73,7 +74,7 @@ impl:define({
 
 	onKey = function(self, key, pressed)
 		if key == keys.Q and not pressed and not self.hasMadeObj then
-			local obj = self:clone()
+			self:clone()
 			self.hasMadeObj = true
 		end
 	end

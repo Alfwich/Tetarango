@@ -68,7 +68,7 @@ namespace AW
 			{
 				for (auto it = buttonListener.second.begin(); it != buttonListener.second.end();)
 				{
-					const auto ptr = (*it).lock();
+					const auto ptr = (*it).ptr.lock();
 					if (ptr == nullptr)
 					{
 						it = buttonListener.second.erase(it);
@@ -87,7 +87,7 @@ namespace AW
 			{
 				for (auto it = axisListener.second.begin(); it != axisListener.second.end();)
 				{
-					const auto ptr = (*it).lock();
+					const auto ptr = (*it).ptr.lock();
 					if (ptr == nullptr)
 					{
 						it = axisListener.second.erase(it);
@@ -106,9 +106,9 @@ namespace AW
 		int gamepadIndex = mapDeviceIdToBoundId(event->jaxis.which);
 		GamepadAxisMapping mappedAxis = (GamepadAxisMapping)event->jaxis.axis;
 
-		for (const auto listener : axisListeners[gamepadIndex][mappedAxis])
+		for (const auto& listener : axisListeners[gamepadIndex][mappedAxis])
 		{
-			const auto ptr = listener.lock();
+			const auto ptr = listener.ptr.lock();
 			if (ptr != nullptr)
 			{
 				ptr->gamepadAxis(event->jaxis.which, mappedAxis, processAxisValue(mappedAxis, event->jaxis.value));
@@ -166,9 +166,9 @@ namespace AW
 
 	void Gamepad::fireButtonEvent(int gamepadIndex, GamepadButtonMapping button, bool pressed)
 	{
-		for (const auto listener : buttonListeners[gamepadIndex][button])
+		for (const auto& listener : buttonListeners[gamepadIndex][button])
 		{
-			const auto ptr = listener.lock();
+			const auto ptr = listener.ptr.lock();
 			if (ptr != nullptr)
 			{
 				ptr->gamepadButton(gamepadIndex, button, pressed);
@@ -332,12 +332,21 @@ namespace AW
 			return;
 		}
 
-		axisListeners[gamepadIndex][axis].push_back(listener);
+		const auto ptr = listener.lock();
+		if (ptr != nullptr)
+		{
+			axisListeners[gamepadIndex][axis].insert(IInputListenerObjectBundle{ ptr->inputListenerObjectId(), listener });
+		}
 	}
 
 	void Gamepad::registerButton(int gamepadIndex, GamepadButtonMapping button, std::weak_ptr<IInputListener> listener)
 	{
-		buttonListeners[gamepadIndex][button].push_back(listener);
+		const auto ptr = listener.lock();
+
+		if (ptr != nullptr)
+		{
+			buttonListeners[gamepadIndex][button].insert(IInputListenerObjectBundle{ ptr->inputListenerObjectId(), listener });
+		}
 	}
 
 	void Gamepad::unregisterAxis(int gamepadIndex, GamepadAxisMapping axis, std::weak_ptr<IInputListener> listener)
@@ -358,7 +367,7 @@ namespace AW
 		const auto objectToRemovePtr = listener.lock();
 		for (auto it = axisListeners[gamepadIndex][axis].begin(); it != axisListeners[gamepadIndex][axis].end();)
 		{
-			if (const auto ptr = (*it).lock())
+			if (const auto ptr = (*it).ptr.lock())
 			{
 				if (ptr == objectToRemovePtr)
 				{
@@ -382,7 +391,7 @@ namespace AW
 		const auto objectToRemovePtr = listener.lock();
 		for (auto it = buttonListeners[gamepadIndex][button].begin(); it != buttonListeners[gamepadIndex][button].end();)
 		{
-			if (const auto ptr = (*it).lock())
+			if (const auto ptr = (*it).ptr.lock())
 			{
 				if (ptr == objectToRemovePtr)
 				{

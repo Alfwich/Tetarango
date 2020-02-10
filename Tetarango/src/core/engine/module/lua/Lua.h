@@ -8,21 +8,18 @@
 
 #include "lua.hpp"
 
-namespace
+namespace AW
 {
-	std::hash<std::string> hasher;
-	class tuple_hash : public std::unary_function<std::tuple<std::string, std::string, std::string>, std::size_t>
+	class lua_tuple_hash : public std::unary_function<std::tuple<std::string, std::string, std::string>, std::size_t>
 	{
 	public:
 		std::size_t operator()(const std::tuple<std::string, std::string, std::string>& k) const
 		{
-			return hasher(std::get<0>(k) + std::get<1>(k) + std::get<2>(k));
+			static std::hash<std::string> lua_hasher;
+			return lua_hasher(std::get<0>(k) + std::get<1>(k) + std::get<2>(k));
 		}
 	};
-}
 
-namespace AW
-{
 	class Lua : public IBaseModule
 	{
 		std::shared_ptr<Asset> asset;
@@ -30,7 +27,7 @@ namespace AW
 
 		std::unordered_map<int, std::shared_ptr<LuaBoundObject>> bindingsLuaAdapterMap;
 		std::unordered_map<std::string, std::shared_ptr<ILuaObject>> bindingIdToBoundObject;
-		std::unordered_map<std::tuple<std::string, std::string, std::string>, std::shared_ptr<LuaBoundObject>, tuple_hash> bindings;
+		std::unordered_map<std::tuple<std::string, std::string, std::string>, std::shared_ptr<LuaBoundObject>, lua_tuple_hash> bindings;
 		std::unordered_map<std::string, std::vector<std::tuple<std::string, std::string, std::string>>> keyToBindings;
 
 		std::unordered_map<std::string, std::string> fileScriptCache;

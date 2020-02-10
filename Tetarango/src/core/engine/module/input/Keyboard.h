@@ -6,7 +6,7 @@ namespace AW
 {
 	class Keyboard
 	{
-		std::unordered_map<AWKey, std::list<std::weak_ptr<IInputListener>>> onKeyListeners;
+		std::unordered_map<AWKey, std::unordered_set<IInputListenerObjectBundle, input_listener_bundle_object_hash>> onKeyListeners;
 		std::unordered_map<AWKey, Uint8> oldKeyValues;
 	public:
 

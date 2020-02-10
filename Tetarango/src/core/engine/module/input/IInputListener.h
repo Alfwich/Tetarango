@@ -12,6 +12,27 @@ namespace AW
 		Disabled
 	};
 
+	class IInputListener;
+	class IInputListenerObjectBundle
+	{
+	public:
+		int id;
+		std::weak_ptr<AW::IInputListener> ptr;
+
+		bool operator==(const IInputListenerObjectBundle& other) const
+		{
+			return id == other.id;
+		}
+	};
+
+	class input_listener_bundle_object_hash : public std::unary_function<std::tuple<std::string, std::string, std::string>, std::size_t>
+	{
+	public:
+		std::size_t operator()(const IInputListenerObjectBundle& b) const
+		{
+			return (size_t)b.id;
+		}
+	};
 
 	class IInputListener
 	{

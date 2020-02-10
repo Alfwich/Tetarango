@@ -2,7 +2,7 @@ local table_helper = require("core/table-helper")
 
 local TRUE = "true"
 local FALSE = "false"
-local ver = "v0.20"
+local ver = "v0.21"
 local gName = "Tetarango"
 
 local base_config = 
