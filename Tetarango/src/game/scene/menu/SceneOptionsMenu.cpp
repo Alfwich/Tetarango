@@ -504,7 +504,7 @@ namespace AWGame
 
 		if (shouldNotifyApplication)
 		{
-			modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
+			modules->event->pushEvent(AW::ApplicationEvent(AW::Events::ReprovisionScreen, &config));
 			applyButton->setEnabled(false);
 			applyButton->setColor(applyButtonDisabledColor);
 		}
@@ -517,7 +517,7 @@ namespace AWGame
 		case AWKey::RETURN:
 			if (applyButton->getEnabled() == true)
 			{
-				modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
+				modules->event->pushEvent(AW::ApplicationEvent(AW::Events::ReprovisionScreen, &config));
 				applyButton->setEnabled(false);
 			}
 			break;
@@ -527,7 +527,7 @@ namespace AWGame
 			modules->sound->setMasterVolume(1.0);
 			modules->sound->setEffectVolume(0.8);
 			modules->sound->setMusicVolume(0.6);
-			modules->event->pushEvent(std::make_shared<AW::ReprovisionScreenApplicationEvent>(config));
+			modules->event->pushEvent(AW::ApplicationEvent(AW::Events::ReprovisionScreen, &config));
 			applyButton->setEnabled(false);
 			applyButton->setColor(applyButtonDisabledColor);
 		}

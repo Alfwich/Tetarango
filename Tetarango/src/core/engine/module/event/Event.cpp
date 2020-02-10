@@ -8,6 +8,7 @@ namespace
 	const auto eventClearTimeoutFunctionName = "clearTimeout";
 	const auto eventRegisterOnEventFrameFunctionName = "registerOnEnterFrame";
 	const auto eventUnregisterOnEnterFrameFunctionName = "unregisterOnEnterFrame";
+	const auto eventPushEventFunctionName = "pushEvent";
 }
 
 namespace AW
@@ -28,12 +29,12 @@ namespace AW
 		this->lua = lua;
 	}
 
-	void Event::pushEvent(std::shared_ptr<ApplicationEvent> event)
+	void Event::pushEvent(const ApplicationEvent& event)
 	{
 		events.push_back(event);
 	}
 
-	const std::list<std::shared_ptr<ApplicationEvent>>& Event::getEvents()
+	const std::list<ApplicationEvent> Event::getEvents()
 	{
 		return events;
 	}
@@ -51,7 +52,7 @@ namespace AW
 			switch (sldE.type)
 			{
 			case SDL_QUIT:
-				events.push_back(std::make_shared<ApplicationEvent>(Events::QuitRequested));
+				events.push_back(ApplicationEvent(Events::QuitRequested));
 				break;
 
 			case SDL_KEYDOWN:
@@ -323,6 +324,8 @@ namespace AW
 
 		lua->registerBoundFunction(eventRegisterOnEventFrameFunctionName, shared_from_this());
 		lua->registerBoundFunction(eventUnregisterOnEnterFrameFunctionName, shared_from_this());
+
+		lua->registerBoundFunction(eventPushEventFunctionName, shared_from_this());
 	}
 
 	void Event::onLuaCallback(const std::string& func, LuaBoundObject* obj)
@@ -336,13 +339,14 @@ namespace AW
 			luaBindingIdToTimeoutId[luaId] = timeoutId;
 		}
 		else if (func == eventClearTimeoutFunctionName && obj->args.size() == 1) clearLuaTimeout(std::stoi(obj->args[0]));
+		else if (func == eventPushEventFunctionName && obj->args.size() == 1) pushEvent(ApplicationEvent(obj->args[0], EventDirection::Down));
 		else if (func == eventRegisterOnEventFrameFunctionName && obj->args.size() == 1)
 		{
 			auto ptr = std::dynamic_pointer_cast<EnterFrameListener>(lua->getILuaObjectObjectForBindingId(obj->args[0]));
 			registerOnEnterFrame(ptr);
 			ptr->enterFrameActivated = true;
 		}
-		else if (func == eventUnregisterOnEnterFrameFunctionName&& obj->args.size() == 1)
+		else if (func == eventUnregisterOnEnterFrameFunctionName && obj->args.size() == 1)
 		{
 			auto ptr = std::dynamic_pointer_cast<EnterFrameListener>(lua->getILuaObjectObjectForBindingId(obj->args[0]));
 			unregisterOnEnterFrame(ptr);

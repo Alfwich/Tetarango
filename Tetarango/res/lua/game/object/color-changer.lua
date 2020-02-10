@@ -27,11 +27,9 @@ impl:define({
 
 		self.moveSpeed = 800 + math.random() * 50;
 
-		if self.hasPoints == nil then
-			for i = 1,3 do
-				self:addScreenPoint(math.random(-50, 50), math.random(-50, 50))
-			end
-			self.hasPoints = true
+		self:clearScreenPoints()
+		for i = 1,3 do
+			self:addScreenPoint(math.random(-50, 50), math.random(-50, 50))
 		end
 
 		self:updateColor()
@@ -72,7 +70,7 @@ impl:define({
 		end
 	end,
 
-	onKey = function(self, key, pressed)
+	onKey = function (self, key, pressed)
 		if key == keys.Q and not pressed and not self.hasMadeObj then
 			self:clone()
 			self.hasMadeObj = true

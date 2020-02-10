@@ -61,7 +61,7 @@ namespace AW
 		Logger::instance()->log("SceneContainer::Removed scene name=" + scene->getSceneName());
 	}
 
-	void SceneContainer::removeScene(std::string name)
+	void SceneContainer::removeScene(const std::string& name)
 	{
 		if (sceneMap.count(name) == 1)
 		{
@@ -69,7 +69,7 @@ namespace AW
 		}
 	}
 
-	bool SceneContainer::transitionToScene(std::string sceneName)
+	bool SceneContainer::transitionToScene(const std::string& sceneName)
 	{
 		if (currentScene != nullptr && currentScene->getSceneName() == sceneName)
 		{
@@ -100,7 +100,7 @@ namespace AW
 		return true;
 	}
 
-	bool SceneContainer::transitionToSceneWithBundle(std::string sceneName, SceneTransitionBundle& bundle)
+	bool SceneContainer::transitionToSceneWithBundle(const std::string& sceneName, SceneTransitionBundle& bundle)
 	{
 		if (currentScene && currentScene->getSceneName() == sceneName)
 		{
@@ -176,7 +176,7 @@ namespace AW
 		return keys;
 	}
 
-	bool SceneContainer::hasScene(std::string name)
+	bool SceneContainer::hasScene(const std::string& name)
 	{
 		const auto sceneNames = getAvailableScenes();
 		return std::find(sceneNames.begin(), sceneNames.end(), name) != sceneNames.end();
@@ -215,6 +215,21 @@ namespace AW
 		{
 			transitionToScene(currentSceneName);
 		}
+	}
+
+	void SceneContainer::onHandleApplicationEvent(ApplicationEvent* event)
+	{
+		if (event->code == Events::UpEvent && event->message == "ChangeScene" && event->data != nullptr)
+		{
+			const auto sceneName = *(std::string*)event->data;
+			if (hasScene(sceneName))
+			{
+				transitionToScene(sceneName);
+				event->stopPropagation = true;
+			}
+		}
+
+		GameObject::onHandleApplicationEvent(event);
 	}
 
 	void SceneContainer::onDisplayProvisioned()

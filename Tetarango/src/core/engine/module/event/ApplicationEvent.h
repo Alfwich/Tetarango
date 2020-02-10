@@ -9,23 +9,27 @@ namespace AW
 	{
 		Unspecified,
 		QuitRequested,
-		ReprovisionScreen
+		ReprovisionScreen,
+		UpEvent
+	};
+
+	enum class EventDirection
+	{
+		Down,
+		Up
 	};
 
 	class ApplicationEvent
 	{
 	public:
-		ApplicationEvent(Events code) : code(code) {};
+		ApplicationEvent(Events code, void* data = nullptr) : code(code), data(data) {};
+		ApplicationEvent(const std::string& message, EventDirection direction = EventDirection::Down) : message(message), direction(direction) {};
 
-		const Events code;
-	};
-
-	class ReprovisionScreenApplicationEvent : public ApplicationEvent
-	{
-	public:
-		ReprovisionScreenApplicationEvent(ScreenConfig config) : ApplicationEvent(Events::ReprovisionScreen), config(config) {}
-
-		const ScreenConfig config;
+		Events code = Events::Unspecified;
+		EventDirection direction = EventDirection::Down;
+		std::string message;
+		bool handled = false, stopPropagation = false;
+		void* data = nullptr;
 	};
 
 }

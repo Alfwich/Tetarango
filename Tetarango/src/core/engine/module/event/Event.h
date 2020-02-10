@@ -44,7 +44,7 @@ namespace AW
 		std::list<std::shared_ptr<TimeoutBundle>> timeoutCallbacks;
 		std::list<std::shared_ptr<TimeoutBundle>> timeoutProcessedCallbacks;
 		std::list<int> timeoutProcessedRemoveCallbacks;
-		std::list<std::shared_ptr<ApplicationEvent>> events;
+		std::list<ApplicationEvent> events;
 
 		void reportSdlErrors();
 		void processEnterFrames(const double& frameTime);
@@ -58,8 +58,8 @@ namespace AW
 		void bindThread(std::shared_ptr<Thread> thread);
 		void bindLua(std::shared_ptr<Lua> lua);
 
-		void pushEvent(std::shared_ptr<ApplicationEvent> event);
-		const std::list<std::shared_ptr<ApplicationEvent>>& getEvents();
+		void pushEvent(const ApplicationEvent& event);
+		const std::list<ApplicationEvent> getEvents();
 
 		void registerOnEnterFrame(std::shared_ptr<EnterFrameListener> listener, int priority = 0.0);
 		void unregisterOnEnterFrame(std::shared_ptr<EnterFrameListener> listener);

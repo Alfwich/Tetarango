@@ -18,7 +18,12 @@ namespace AW
 
 	void Polygon::updateSize()
 	{
-		if (screenPoints.size() < 2) return;
+		if (screenPoints.size() < 2)
+		{
+			setScreenSize(0.0, 0.0);
+			vertexBuffer = nullptr;
+			return;
+		}
 
 		float minX = -sizeLimit, maxX = sizeLimit, minY = -sizeLimit, maxY = sizeLimit;
 		for (const auto& p : screenPoints)
@@ -134,6 +139,12 @@ namespace AW
 		updateSize();
 	}
 
+	void Polygon::clearScreenPoints()
+	{
+		screenPoints.clear();
+		updateSize();
+	}
+
 	const std::vector<AWVec2<float>>& Polygon::getScreenPoints()
 	{
 		return screenPoints;
@@ -244,6 +255,7 @@ namespace AW
 	{
 		Element::onBindLuaHooks();
 		modules->lua->registerBoundFunction("addScreenPoint", shared_from_this());
+		modules->lua->registerBoundFunction("clearScreenPoints", shared_from_this());
 		modules->lua->registerBoundFunction("centerBalancePoints", shared_from_this());
 	}
 
@@ -252,6 +264,7 @@ namespace AW
 		Element::onLuaCallback(func, obj);
 
 		if (func == "addScreenPoint" && obj->args.size() == 2) addScreenPoint(std::stof(obj->args[0]), std::stof(obj->args[1]));
+		else if (func == "clearScreenPoints" && obj->args.size() == 0) clearScreenPoints();
 		else if (func == "centerBalancePoints" && obj->args.size() == 0) centerBalancePoints();
 	}
 }

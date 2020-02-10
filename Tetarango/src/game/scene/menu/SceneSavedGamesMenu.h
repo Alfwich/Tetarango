@@ -11,7 +11,7 @@ namespace AWGame
 		std::shared_ptr<AW::Text> savedGamesMenuTitle;
 
 		std::shared_ptr<ButtonBasic> saveSlot1, saveSlot2, saveSlot3, backButton;
-		std::shared_ptr<ButtonBasic> testScene1, testScene2, testScene3;
+		std::shared_ptr<ButtonBasic> testScene1, testScene2, testScene3, testScene4;
 
 		void disableButtons();
 		void enableButtons();

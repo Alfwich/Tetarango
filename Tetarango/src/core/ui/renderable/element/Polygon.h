@@ -35,6 +35,7 @@ namespace AW
 		void centerBalancePoints();
 		void shiftScreenPoints(double xOffset, double yOffset);
 		void shiftWorldPoints(double xOffset, double yOffset);
+		void clearScreenPoints();
 
 		const std::vector<AWVec2<float>>& getScreenPoints();
 		void setScreenPoint(unsigned int id, float x, float y);

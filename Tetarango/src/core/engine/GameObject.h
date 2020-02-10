@@ -7,6 +7,7 @@
 #include "engine/module/serialization/ISerializable.h"
 #include "engine/module/event/EnterFrameListener.h"
 #include "engine/module/physic/RigidBody.h"
+#include "engine/module/event/ApplicationEvent.h"
 
 #define GORegister(x) registerGameObject<x>(__FUNCTION__);
 
@@ -43,6 +44,7 @@ namespace AW
 	{
 		const int id;
 		const std::string idString;
+		std::string currentActiveLuaImpl;
 		int bindingId;
 
 		std::bitset<32> tags;
@@ -155,6 +157,7 @@ namespace AW
 		virtual void onEnterFrame(const double& frameTime) override;
 		virtual void onInitialAttach() { /* NO-OP */ };
 		virtual void onCreateChildren() { /* NO-OP */ };
+		virtual void onHandleApplicationEvent(ApplicationEvent* event);
 		virtual void onLayoutChildren() { /* NO-OP */ };
 		virtual void onDestroyChildren() { /* NO-OP */ };
 		virtual void onChildrenHydrated() { /* NO-OP */ };
@@ -195,6 +198,9 @@ namespace AW
 		virtual void onLuaCallback(const std::string& func, LuaBoundObject* obj) override;
 
 		virtual void onKey(AWKey code, bool pressed) override;
+
+		void fireEvent(const ApplicationEvent& event);
+		void fireUpEvent(const std::string& msg, std::string data = "");
 	};
 
 	template<typename T>

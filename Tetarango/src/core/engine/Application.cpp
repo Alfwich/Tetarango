@@ -208,21 +208,24 @@ namespace AW
 		AW_PROFILE_METHOD();
 		for (auto e : modules->event->getEvents())
 		{
-			switch (e->code)
+			switch (e.code)
 			{
 			case AW::Events::QuitRequested:
 				exit();
 				break;
 
 			case AW::Events::ReprovisionScreen:
-				const auto reprovisionScreenEvent = std::static_pointer_cast<AW::ReprovisionScreenApplicationEvent>(e);
-				if (e != nullptr)
+			{
+				if (e.data != nullptr)
 				{
-					screenConfig = reprovisionScreenEvent->config;
+					screenConfig = *((ScreenConfig*)(e.data));
 					provisionScreen();
 				}
-				break;
+
+			} break;
 			}
+
+			root->onHandleApplicationEvent(&e);
 		}
 	}
 

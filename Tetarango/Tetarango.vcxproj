@@ -246,6 +246,7 @@ python scripts/generateSerializationList.py .</Command>
     <None Include="res\lua\core\texture.lua" />
     <None Include="res\lua\game\config.lua" />
     <None Include="res\lua\game\object\color-changer.lua" />
+    <None Include="res\lua\game\scene\test-3.lua" />
     <None Include="res\lua\test\test-logger.lua" />
     <None Include="res\lua\test\test.lua" />
     <None Include="SDL2.dll" />
@@ -388,6 +389,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClCompile Include="src\game\scene\test\TestScene.cpp" />
     <ClCompile Include="src\core\ui\renderable\Zone.cpp" />
     <ClCompile Include="src\core\ui\renderable\primitive\trace\Trace.cpp" />
+    <ClCompile Include="src\game\scene\test\TestScene3.cpp" />
     <ClCompile Include="src\game\scene\test\tetris\SceneTetris.cpp" />
     <ClCompile Include="src\game\scene\test\TestScene2.cpp" />
     <ClCompile Include="src\game\scene\world\WorldTetarango.cpp" />
@@ -549,6 +551,7 @@ python scripts/generateSerializationList.py .</Command>
     <ClInclude Include="src\core\engine\module\serialization\SerializationTags.h" />
     <ClInclude Include="src\game\gui\IGuiListener.h" />
     <ClInclude Include="src\game\scene\Scenes.h" />
+    <ClInclude Include="src\game\scene\test\TestScene3.h" />
     <ClInclude Include="src\game\scene\test\tetris\SceneTetris.h" />
     <ClInclude Include="src\game\scene\test\TestScene2.h" />
     <ClInclude Include="src\game\scene\world\WorldTetarango.h" />

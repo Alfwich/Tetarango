@@ -14,6 +14,9 @@ namespace
 	const auto luaMoveToParentContainerGameObjectFunctionName = "AW_moveToParentGameObject";
 	const auto luaGetChildrenGameObjectFunctionName = "AW_getChildrenGameObject";
 	const auto luaGetParentGameObjectFunctionName = "AW_getParentGameObject";
+
+	const auto luaFireEventGameObjectFunctionName = "fireEvent";
+	const auto luaFireUpEventGameObjectFunctionName = "fireUpEvent";
 }
 
 namespace AW
@@ -108,9 +111,10 @@ namespace AW
 			setTag(GTags::HasRegisteredLuaBindings, true);
 
 			const auto implKey = serializationClient->getString(luaImplKeyParamName);
-			if (!implKey.empty())
+			if (currentActiveLuaImpl != implKey && !implKey.empty())
 			{
 				modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
+				currentActiveLuaImpl = implKey;
 			}
 		}
 		else if (luaBindingsEnabled() && getTag(GTags::HasRegisteredLuaBindings) && !flag)
@@ -135,9 +139,10 @@ namespace AW
 	void GameObject::setLuaImplementation(const std::string& implKey)
 	{
 		serializationClient->setString(luaImplKeyParamName, implKey);
-		if (getTag(GTags::HasRegisteredLuaBindings))
+		if (currentActiveLuaImpl != implKey && getTag(GTags::HasRegisteredLuaBindings))
 		{
 			modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
+			currentActiveLuaImpl = implKey;
 		}
 		enableLuaBindings();
 	}
@@ -372,9 +377,10 @@ namespace AW
 			onBindLuaHooks();
 			setTag(GTags::HasRegisteredLuaBindings, true);
 			const auto implKey = serializationClient->getString(luaImplKeyParamName);
-			if (!implKey.empty())
+			if (currentActiveLuaImpl != implKey && !implKey.empty())
 			{
 				modules->lua->setObjectImplementation(getLuaBindingId(), implKey);
+				currentActiveLuaImpl = implKey;
 			}
 		}
 
@@ -591,6 +597,29 @@ namespace AW
 		}
 	}
 
+	void GameObject::onHandleApplicationEvent(ApplicationEvent* event)
+	{
+		if (event->stopPropagation) return;
+
+		if (event->direction == EventDirection::Up)
+		{
+			const auto parentPtr = parent.lock();
+			if (parentPtr != nullptr && !parentPtr->isRootElement())
+			{
+				parentPtr->onHandleApplicationEvent(event);
+			}
+		}
+		else
+		{
+			for (const auto child : getChildren())
+			{
+				child->onHandleApplicationEvent(event);
+
+				if (event->stopPropagation) return;
+			}
+		}
+	}
+
 	std::string GameObject::getAwType()
 	{
 		return schematic == nullptr ? "" : schematic->shortTypeName;
@@ -608,6 +637,10 @@ namespace AW
 		modules->lua->registerBoundFunction(luaSetParentGameObjectFunctionName, shared_from_this());
 		modules->lua->registerBoundFunction(luaMoveToParentContainerGameObjectFunctionName, shared_from_this());
 		modules->lua->registerBoundFunction(luaGetChildrenGameObjectFunctionName, shared_from_this());
+
+		modules->lua->registerBoundFunction(luaGetParentGameObjectFunctionName, shared_from_this());
+		modules->lua->registerBoundFunction(luaFireEventGameObjectFunctionName, shared_from_this());
+		modules->lua->registerBoundFunction(luaFireUpEventGameObjectFunctionName, shared_from_this());
 	}
 
 	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)
@@ -618,7 +651,7 @@ namespace AW
 		}
 		else if (func == luaCreateGameObjectFunctionName && obj->args.size() == 2)
 		{
-			const auto schematic = Hydrater::getShortNameSchematic(obj->args[0]);
+			const auto schematic = Hydrater::getShortNameSchematic(StringHelper::toLower(obj->args[0]));
 			auto luaImplKey = StringHelper::toLower(obj->args[1]);
 
 			if (schematic != nullptr && modules->lua->hasObjectImplementation(luaImplKey))
@@ -637,13 +670,27 @@ namespace AW
 
 			}
 		}
+		else if (func == luaGetParentGameObjectFunctionName)
+		{
+			const auto parentPtr = getParent().lock();
+
+			if (parentPtr != nullptr)
+			{
+				parentPtr->enableLuaBindings();
+				obj->returnValues.push_back(parentPtr->getLuaBindingId());
+			}
+		}
 		else if (func == luaGetChildrenGameObjectFunctionName && obj->args.size() == 0)
 		{
 			for (const auto child : getChildren())
 			{
+				child->enableLuaBindings();
 				obj->returnValues.push_back(child->getLuaBindingId());
 			}
 		}
+		else if (func == luaFireEventGameObjectFunctionName && obj->args.size() == 1) fireEvent(ApplicationEvent(obj->args[0]));
+		else if (func == luaFireUpEventGameObjectFunctionName && obj->args.size() == 1) fireUpEvent(obj->args[0]);
+		else if (func == luaFireUpEventGameObjectFunctionName && obj->args.size() == 2) fireUpEvent(obj->args[0], obj->args[1]);
 		else if (func == luaSetParentGameObjectFunctionName && obj->args.size() == 1)
 		{
 			const auto newParent = std::dynamic_pointer_cast<GameObject>(modules->lua->getILuaObjectObjectForBindingId(obj->args[0]));
@@ -677,6 +724,23 @@ namespace AW
 		if (getTag(GTags::LuaBindingsEnabled))
 		{
 			modules->lua->callBoundFunction(getLuaBindingId(), luaOnKeyFunctionName, { std::to_string((int)code), pressed ? "1" : "0" });
+		}
+	}
+
+	void GameObject::fireEvent(const ApplicationEvent& event)
+	{
+		modules->event->pushEvent(event);
+	}
+
+	void GameObject::fireUpEvent(const std::string& message, std::string data)
+	{
+		const auto parentPtr = getParent().lock();
+		if (parentPtr != nullptr)
+		{
+			auto e = ApplicationEvent(Events::UpEvent, &data);
+			e.message = message;
+			e.direction = EventDirection::Up;
+			parentPtr->onHandleApplicationEvent(&e);
 		}
 	}
 

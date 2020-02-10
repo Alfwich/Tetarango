@@ -7,6 +7,7 @@
 
 #include "scene/test/TestScene.h"
 #include "scene/test/TestScene2.h"
+#include "scene/test/TestScene3.h"
 #include "scene/test/tetris/SceneTetris.h"
 
 #include "scene/menu/SceneSplash.h"
@@ -135,6 +136,7 @@ namespace AWGame
 			{
 				masterSceneContainer->add(std::make_shared<TestScene>());
 				masterSceneContainer->add(std::make_shared<TestScene2>());
+				masterSceneContainer->add(std::make_shared<TestScene3>());
 				masterSceneContainer->add(std::make_shared<SceneTetris>());
 			}
 

@@ -79,7 +79,7 @@ namespace AWGame
 
 		if (id == exitButton->getId())
 		{
-			modules->event->pushEvent(std::make_shared<AW::ApplicationEvent>(AW::Events::QuitRequested));
+			modules->event->pushEvent(AW::ApplicationEvent {AW::Events::QuitRequested});
 		}
 	}
 }

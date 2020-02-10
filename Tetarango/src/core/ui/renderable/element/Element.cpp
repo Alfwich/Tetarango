@@ -51,8 +51,11 @@ namespace AW
 
 	void Element::setTexture(std::string key)
 	{
-		currentTextureName = key;
-		setTexture(modules->texture->getTexture(key));
+		if (modules->texture->hasTexture(key))
+		{
+			currentTextureName = key;
+			setTexture(modules->texture->getTexture(key));
+		}
 	}
 
 	bool Element::hasTexture()
