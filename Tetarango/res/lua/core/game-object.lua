@@ -18,20 +18,20 @@ return {
 		end
 
 		obj.create = function(self, awType, luaImplKey)
-			local objId = self:AW_createGameObject(awType, luaImplKey)
+			local objId = obj:AW_createGameObject(awType, luaImplKey)
 			local obj = aw_objects[objId]
 
 			return obj
 		end
 
 		obj.clone = function(self)
-			local newMe = self:create(self.aw_type, self.impl.name)
-			newMe:moveUpParent()
+			local newMe = obj:create(self.aw_type, self.impl.type_name)
+			newMe.moveUpParent()
 			return newMe
 		end
 
 		obj.moveUpParent = function(self)
-			self:AW_moveToParentGameObject()
+			obj:AW_moveToParentGameObject()
 		end
 
 		obj.setParent = function(self, obj)
@@ -43,13 +43,17 @@ return {
 			local children = { self:AW_getChildrenGameObject() }
 
 			for id = 1, #children do
-				local child = aw_objects[id]
+				local child = aw_objects[children[id]]
 				if child ~= nil then
 					results[#results + 1] = child
 				end
 			end
 
 			return results
+		end
+
+		obj.destroy = function(self)
+			obj:AW_destroy()
 		end
 
 		obj.parent = function(self)

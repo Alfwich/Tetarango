@@ -100,7 +100,7 @@ namespace AW
 			const auto bundle = asset->getAssetBundle(path, allowCached);
 			if (bundle != nullptr)
 			{
-				fileScriptCache[path] = std::string(bundle->data.get(), bundle->size);
+				fileScriptCache[path] = "-- file=" + path + "\n" + std::string(bundle->data.get(), bundle->size);
 			}
 		}
 
