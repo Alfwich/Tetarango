@@ -46,7 +46,7 @@ return {
 
 	define = function(self, impl_table)
 		if self.next_impl_key ~= nil then
-			impl_table.name = self.next_impl_key
+			impl_table.type_name = self.next_impl_key
 			self.impls[self.next_impl_key] = impl_table
 			self.resource_loaded_for_impl[self.next_impl_key] = false
 			self.next_impl_key = nil

@@ -12,11 +12,15 @@ return {
 		  local s = '{ '
 		  for k,v in pairs(o) do
 			 if type(k) ~= 'number' then k = '"'..k..'"' end
-			 s = s .. '['..k..'] = ' .. self.dump(v) .. ','
+			 s = s .. '['..k..'] = ' .. self:dump(v) .. ','
 		  end
 		  return s .. '} '
 	   else
 		  return tostring(o)
 	   end
+	end,
+
+	print = function(self, o)
+		print(self:dump(o))
 	end
 }

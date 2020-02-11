@@ -14,6 +14,7 @@ namespace
 	const auto luaMoveToParentContainerGameObjectFunctionName = "AW_moveToParentGameObject";
 	const auto luaGetChildrenGameObjectFunctionName = "AW_getChildrenGameObject";
 	const auto luaGetParentGameObjectFunctionName = "AW_getParentGameObject";
+	const auto luaDestroyGameObjectFunctionName = "AW_destroy";
 
 	const auto luaFireEventGameObjectFunctionName = "fireEvent";
 	const auto luaFireUpEventGameObjectFunctionName = "fireUpEvent";
@@ -641,6 +642,7 @@ namespace AW
 		modules->lua->registerBoundFunction(luaGetParentGameObjectFunctionName, shared_from_this());
 		modules->lua->registerBoundFunction(luaFireEventGameObjectFunctionName, shared_from_this());
 		modules->lua->registerBoundFunction(luaFireUpEventGameObjectFunctionName, shared_from_this());
+		modules->lua->registerBoundFunction(luaDestroyGameObjectFunctionName, shared_from_this());
 	}
 
 	void GameObject::onLuaCallback(const std::string& func, LuaBoundObject* obj)
@@ -716,7 +718,10 @@ namespace AW
 				}
 			}
 		}
-
+		else if (func == luaDestroyGameObjectFunctionName && obj->args.size() == 0)
+		{
+			removeFromParent();
+		}
 	}
 
 	void GameObject::onKey(AWKey code, bool pressed)
