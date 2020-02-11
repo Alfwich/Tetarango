@@ -67,9 +67,9 @@ namespace AW
 		int registerTimeoutCallback(std::shared_ptr<EnterFrameListener> listener, double timeoutMS);
 		void unregisterTimeoutCallback(int id);
 
-		void onCleanup();
-		void onEnterFrame(const double& frameTime);
-		virtual void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+		void onBindLuaHooks(const std::shared_ptr<Lua>& lua) override;
+		void onEnterFrame(const double& frameTime) override;
+		void onCleanup() override;
 
 		// Inherited via ILuaObject
 		virtual std::string getLuaBindingId() override { return "event"; };

@@ -1,5 +1,6 @@
 local logger = require("core/logger")
 local gameObject = require("core/game-object")
+local lua = require("core/lua")
 
 return {
 	resource_loaded_for_impl = {},
@@ -37,6 +38,10 @@ return {
 
 	setNextImplKey = function(self, key)
 		self.next_impl_key = key
+	end,
+
+	load = function(self, path, key)
+		lua:registerImpl(path, key)
 	end,
 
 	define = function(self, impl_table)

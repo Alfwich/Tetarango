@@ -738,7 +738,7 @@ namespace AW
 		if (parentPtr != nullptr)
 		{
 			auto e = ApplicationEvent(Events::UpEvent, &data);
-			e.message = message;
+			e.message = StringHelper::toLower(message);
 			e.direction = EventDirection::Up;
 			parentPtr->onHandleApplicationEvent(&e);
 		}

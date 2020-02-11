@@ -86,6 +86,7 @@ namespace AWGame
 	{
 		modules->font->loadFont("res/font/Roboto-Medium.ttf", "medium");
 		modules->font->loadFont("res/font/fixedsys.ttf", "console");
+		modules->lua->executeLuaScript("res/lua/game/init.lua");
 	}
 
 	void GameApplication::onReady()

@@ -101,6 +101,11 @@ namespace AW
 			return true;
 		}
 
+		int static inline distanceToLeft(const std::string& source, std::string val)
+		{
+			return StringHelper::distanceToLeft_offset(source, 0, val);
+		}
+
 		int static inline distanceToLeft(std::string* source, std::string val)
 		{
 			return StringHelper::distanceToLeft_offset(source, 0, val);

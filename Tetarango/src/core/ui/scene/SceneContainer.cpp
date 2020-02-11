@@ -219,7 +219,7 @@ namespace AW
 
 	void SceneContainer::onHandleApplicationEvent(ApplicationEvent* event)
 	{
-		if (event->code == Events::UpEvent && event->message == "ChangeScene" && event->data != nullptr)
+		if (event->code == Events::UpEvent && event->message == "changescene" && event->data != nullptr)
 		{
 			const auto sceneName = *(std::string*)event->data;
 			if (hasScene(sceneName))

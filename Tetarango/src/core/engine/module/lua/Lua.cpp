@@ -15,6 +15,7 @@ namespace
 
 	const auto doStringMethodName = "doString";
 	const auto doFileMethodName = "doFile";
+	const auto registerImplMethodName = "registerImpl";
 
 	const auto implRegisterFunctionName = "AW_registerObjectImpl";
 	const auto implLoadResourcesFunctionName = "AW_loadImplResources";
@@ -391,6 +392,7 @@ namespace AW
 		executeLuaStringForContext(primeInlineScript + contextIdBindingName + "=" + std::to_string(contextId), contextId);
 		registerBoundFunctionForContext(doStringMethodName, shared_from_this(), contextId);
 		registerBoundFunctionForContext(doFileMethodName, shared_from_this(), contextId);
+		registerBoundFunctionForContext(registerImplMethodName, shared_from_this(), contextId);
 		executeLuaScriptForContext(awCoreLibLocation, contextId);
 	}
 
@@ -637,6 +639,12 @@ namespace AW
 
 	void Lua::registerObjectImplementation(const std::string& implFilePath, const std::string& implKey)
 	{
+		if (implKey.empty())
+		{
+			const auto luaPos = StringHelper::distanceToLeft(implFilePath, "/lua/") + 5;
+			const auto implKeyFromFilePath = StringHelper::toLower(implFilePath.substr(luaPos, implFilePath.size() - luaPos - 4));
+			return registerObjectImplementation(implFilePath, implKeyFromFilePath);
+		}
 		if (defaultContext != -1)
 		{
 			callGlobalFunctionForContext(implRegisterFunctionName, defaultContext, { implFilePath, implKey });
@@ -820,6 +828,8 @@ namespace AW
 		if (func == doStringMethodName && obj->args.size() == 1) executeLuaString(obj->args[0]);
 		else if (func == doFileMethodName && obj->args.size() == 1) executeLuaScript(obj->args[0]);
 		else if (func == doFileMethodName && obj->args.size() == 2) executeLuaScript(obj->args[0], obj->args[1] == "1");
+		else if (func == registerImplMethodName && obj->args.size() == 1) registerObjectImplementation("res/lua/" + obj->args[0] + ".lua");
+		else if (func == registerImplMethodName && obj->args.size() == 2) registerObjectImplementation("res/lua/" + obj->args[0] + ".lua", obj->args[1]);
 	}
 
 	std::unordered_map<int, int> Lua::debugInfo()

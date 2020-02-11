@@ -10,7 +10,8 @@ namespace AW
 		Unspecified,
 		QuitRequested,
 		ReprovisionScreen,
-		UpEvent
+		UpEvent,
+		Count // Needs to be at the end to get accurate count
 	};
 
 	enum class EventDirection
@@ -23,7 +24,7 @@ namespace AW
 	{
 	public:
 		ApplicationEvent(Events code, void* data = nullptr) : code(code), data(data) {};
-		ApplicationEvent(const std::string& message, EventDirection direction = EventDirection::Down) : message(message), direction(direction) {};
+		ApplicationEvent(const std::string& message, EventDirection direction = EventDirection::Down) : message(StringHelper::toLower(message)), direction(direction) {};
 
 		Events code = Events::Unspecified;
 		EventDirection direction = EventDirection::Down;

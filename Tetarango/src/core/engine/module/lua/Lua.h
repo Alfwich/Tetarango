@@ -79,7 +79,7 @@ namespace AW
 
 		void unregisterGlobalFunctions(const std::string& fnName);
 
-		void registerObjectImplementation(const std::string& implFilePath, const std::string& implKey);
+		void registerObjectImplementation(const std::string& implFilePath, const std::string& implKey = "");
 		void setObjectImplementation(const std::string& bindingId, const std::string& implKey);
 		bool hasObjectImplementation(const std::string& implKey);
 
